@@ -24,6 +24,7 @@ The stable architecture is:
 - multiple compiled task contracts when one compact IR is not enough:
   - `nano` capsules for ultra-cheap routes
   - typed capsule-mini contracts when `nano` throws away too much structure
+  - `targeted` compiled context when macro prompts need task-aware prefix compression
 
 ## Why People Pay Attention To This
 

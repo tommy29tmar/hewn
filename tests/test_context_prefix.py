@@ -35,6 +35,37 @@ class ContextPrefixTests(unittest.TestCase):
         self.assertLess(approx_token_count(focused), approx_token_count(cacheable))
         self.assertIn("spoof", focused.lower())
 
+    def test_targeted_prefix_is_shorter_than_focused_and_keeps_anchors(self) -> None:
+        source = (ROOT / "evals" / "prefixes" / "service_context_v1.txt").read_text(encoding="utf-8")
+        task = {
+            "id": "t1",
+            "category": "debugging",
+            "prompt": "Fix auth expiry bug around x-user-id and 401 boundary with next(err).",
+            "exact_literals": ["x-user-id", "401", "next(err)"],
+            "must_include": ["auth", "expiry", "boundary"],
+        }
+        focused = compile_context_prefix(source, category="debugging", style="focused", task=task)
+        targeted = compile_context_prefix(source, category="debugging", style="targeted", task=task)
+        self.assertIn("[ctx targeted debugging]", targeted)
+        self.assertIn('anchors: "x-user-id" | "401" | "next(err)"', targeted)
+        self.assertIn("`401`", targeted)
+        self.assertIn("`x-user-id`", targeted)
+        self.assertLess(approx_token_count(targeted), approx_token_count(focused))
+
+    def test_targeted_prefix_for_architecture_keeps_deadline_and_store(self) -> None:
+        source = (ROOT / "evals" / "prefixes" / "service_context_v1.txt").read_text(encoding="utf-8")
+        task = {
+            "id": "a1",
+            "category": "architecture",
+            "prompt": "Recommend the default architecture for a team shipping in 4 months using PostgreSQL.",
+            "exact_literals": ["PostgreSQL", "4 months"],
+            "must_include": ["modular monolith", "low ops"],
+        }
+        targeted = compile_context_prefix(source, category="architecture", style="targeted", task=task)
+        self.assertIn('"PostgreSQL"', targeted)
+        self.assertIn('"4 months"', targeted)
+        self.assertIn("PostgreSQL is the default SoR.", targeted)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -106,6 +106,45 @@ class CliTests(unittest.TestCase):
             self.assertEqual(row["benchmark_scale"], "macro-focused")
             self.assertEqual(row["context_style"], "focused")
 
+    def test_bench_build_compiled_macro_targeted_command(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            root = Path(tmpdir)
+            source = root / "tasks.jsonl"
+            prefix = ROOT / "evals" / "prefixes" / "service_context_v1.txt"
+            out = root / "macro_targeted.jsonl"
+            source.write_text(
+                json.dumps(
+                    {
+                        "id": "t1",
+                        "prompt": "Fix auth expiry around x-user-id and 401.",
+                        "category": "debugging",
+                        "mode": "hybrid",
+                        "exact_literals": ["x-user-id", "401"],
+                        "must_include": ["expiry", "boundary"],
+                    }
+                )
+                + "\n",
+                encoding="utf-8",
+            )
+            buffer = io.StringIO()
+            with redirect_stdout(buffer):
+                exit_code = main(
+                    [
+                        "bench",
+                        "build-compiled-macro",
+                        str(source),
+                        str(prefix),
+                        str(out),
+                        "--context-style",
+                        "targeted",
+                    ]
+                )
+            self.assertEqual(exit_code, 0)
+            row = json.loads(out.read_text(encoding="utf-8").splitlines()[0])
+            self.assertEqual(row["benchmark_scale"], "macro-targeted")
+            self.assertEqual(row["context_style"], "targeted")
+            self.assertIn('anchors: "x-user-id" | "401"', row["cache_prefix"])
+
     def test_bench_build_capsules_command(self) -> None:
         with tempfile.TemporaryDirectory() as tmpdir:
             root = Path(tmpdir)

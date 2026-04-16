@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import re
 from pathlib import Path
+from typing import Any
 
 from .metrics import approx_token_count
 
@@ -177,22 +178,106 @@ def _section_keys_for(category: str, style: str) -> tuple[str, ...]:
     return SECTION_ORDER
 
 
-def compile_context_prefix(text: str, *, category: str, style: str = "cacheable") -> str:
-    if style not in {"cacheable", "focused"}:
+def _match_text(value: str) -> str:
+    return re.sub(r"[^a-z0-9]+", " ", value.lower()).strip()
+
+
+def _extract_task_terms(task: dict[str, Any] | None) -> tuple[list[str], set[str]]:
+    if not task:
+        return [], set()
+    anchors = [str(item).strip() for item in task.get("exact_literals", []) if str(item).strip()]
+    raw_values: list[str] = anchors[:]
+    raw_values.extend(str(item).strip() for item in task.get("must_include", []) if str(item).strip())
+    raw_values.extend(str(item).strip() for item in task.get("focus", []) if str(item).strip())
+    prompt = str(task.get("prompt") or "")
+    raw_values.extend(match.group(0) for match in re.finditer(r"`([^`]+)`", prompt))
+    terms: set[str] = set()
+    for value in raw_values:
+        parts = _match_text(value).split()
+        for part in parts:
+            if len(part) >= 3:
+                terms.add(part)
+    return anchors, terms
+
+
+def _score_item(item: str, *, anchors: list[str], terms: set[str]) -> int:
+    lowered = item.lower()
+    score = 0
+    for anchor in anchors:
+        if anchor and anchor.lower() in lowered:
+            score += 4
+    match_text = _match_text(item)
+    words = set(match_text.split())
+    score += sum(1 for term in terms if term in words)
+    return score
+
+
+def _select_targeted_items(
+    section_name: str,
+    items: list[str],
+    *,
+    anchors: list[str],
+    terms: set[str],
+) -> list[str]:
+    if not items:
+        return []
+    scored = [(_score_item(item, anchors=anchors, terms=terms), item) for item in items]
+    scored.sort(key=lambda pair: (pair[0], len(pair[1])), reverse=True)
+    selected = [item for score, item in scored if score > 0]
+    if section_name in {"repository norms", "domain glossary"}:
+        return selected[:2]
+    if section_name in {"answer-style heuristics", "what not to do", "what a strong answer usually contains"}:
+        return selected[:2] or items[:1]
+    if section_name in {"product snapshot", "operational posture"}:
+        return selected[:2] or items[:2]
+    if section_name in {"authentication and session rules", "token and expiry rules", "security review heuristics", "architecture heuristics", "refactor heuristics", "testing heuristics"}:
+        return selected[:3] or items[:1]
+    if section_name in {"code and review conventions"}:
+        return selected[:2] or items[:1]
+    return selected[:2] or items[:1]
+
+
+def _render_targeted_section(
+    section_name: str,
+    items: list[str],
+    *,
+    anchors: list[str],
+    terms: set[str],
+) -> str | None:
+    selected = _select_targeted_items(section_name, items, anchors=anchors, terms=terms)
+    return _render_section(selected, label=LABELS.get(section_name, section_name), tight=True)
+
+
+def compile_context_prefix(
+    text: str,
+    *,
+    category: str,
+    style: str = "cacheable",
+    task: dict[str, Any] | None = None,
+) -> str:
+    if style not in {"cacheable", "focused", "targeted"}:
         raise ValueError(f"Unsupported context style: {style}")
     sections = parse_handbook_sections(text)
     preamble = [_collapse(item) for item in sections.get("preamble", []) if item.strip()]
     title = preamble[0] if preamble else "Project handbook"
     intro = preamble[1] if len(preamble) > 1 else "Shared durable project context."
+    anchors, terms = _extract_task_terms(task)
     lines = [
         f"[ctx {style} {category}]",
         f"title: {title}",
         f"scope: {intro}",
         f"focus: {category}",
     ]
-    tight = style == "focused"
-    for key in _section_keys_for(category, style):
-        rendered = _render_section(sections.get(key, []), label=LABELS.get(key, key), tight=tight)
+    if style == "targeted" and anchors:
+        encoded = " | ".join(f'"{anchor}"' for anchor in anchors[:4])
+        lines.append(f"anchors: {encoded}")
+    tight = style in {"focused", "targeted"}
+    keys = _section_keys_for(category, "focused" if style == "targeted" else style)
+    for key in keys:
+        if style == "targeted":
+            rendered = _render_targeted_section(key, sections.get(key, []), anchors=anchors, terms=terms)
+        else:
+            rendered = _render_section(sections.get(key, []), label=LABELS.get(key, key), tight=tight)
         if rendered:
             lines.append(rendered)
 
@@ -209,6 +294,19 @@ def compile_context_prefix(text: str, *, category: str, style: str = "cacheable"
                 rendered = "\n".join(lines)
                 if approx_token_count(rendered) >= 680:
                     break
+    if style == "targeted":
+        token_count = approx_token_count(rendered)
+        if token_count > 340:
+            compact_lines = lines[:5]
+            for key in keys:
+                rendered = _render_targeted_section(key, sections.get(key, []), anchors=anchors, terms=terms)
+                if rendered:
+                    label = rendered.split(":", 1)[0]
+                    if label in {"core", "ops", "auth", "expiry", "review", "arch", "refactor", "test", "glossary", "norms"}:
+                        compact_lines.append(rendered)
+                if approx_token_count("\n".join(compact_lines)) >= 300:
+                    break
+            lines = compact_lines
     return "\n".join(lines)
 
 

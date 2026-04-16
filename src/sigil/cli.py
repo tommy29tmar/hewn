@@ -58,7 +58,7 @@ def _build_parser() -> argparse.ArgumentParser:
     bench_compiled_macro_parser.add_argument("source", type=Path)
     bench_compiled_macro_parser.add_argument("prefix", type=Path)
     bench_compiled_macro_parser.add_argument("out", type=Path)
-    bench_compiled_macro_parser.add_argument("--context-style", choices=["cacheable", "focused"], default="cacheable")
+    bench_compiled_macro_parser.add_argument("--context-style", choices=["cacheable", "focused", "targeted"], default="cacheable")
     bench_compiled_macro_parser.add_argument("--task-label", default="Task")
 
     bench_capsule_parser = bench_subparsers.add_parser("build-capsules", help="Build local task capsules from a task file.")

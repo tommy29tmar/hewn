@@ -19,7 +19,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("source", type=Path)
     parser.add_argument("prefix", type=Path)
     parser.add_argument("out", type=Path)
-    parser.add_argument("--context-style", choices=["cacheable", "focused"], default="cacheable")
+    parser.add_argument("--context-style", choices=["cacheable", "focused", "targeted"], default="cacheable")
     parser.add_argument("--task-label", default="Task")
     args = parser.parse_args(argv)
 
@@ -29,7 +29,7 @@ def main(argv: list[str] | None = None) -> int:
     for row in source_rows:
         prompt_suffix = str(row["prompt"]).strip()
         category = str(row.get("category") or "unknown")
-        compiled_prefix = compile_context_prefix(prefix_text, category=category, style=args.context_style)
+        compiled_prefix = compile_context_prefix(prefix_text, category=category, style=args.context_style, task=row)
         combined_prompt = f"{compiled_prefix}\n\n[{args.task_label}]\n{prompt_suffix}"
         updated = dict(row)
         updated["prompt_suffix"] = prompt_suffix
