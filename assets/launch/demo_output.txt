@@ -1,0 +1,96 @@
+Model: claude-opus-4-7
+Question: Review: const sql='SELECT * FROM invoices ORDER BY '+req.query.sort; — risks, mitigation, verification.
+
+calling baseline-terse…
+calling primitive-english…
+calling sigil-nano…
+
+1. Terse baseline
+────────────────────────────────────────
+prompt: baseline-terse
+input:  153 tok
+output: 611 tok
+total:  764 tok
+time:   11080 ms
+────────────────────────────────────────
+**Risk:** SQL injection via `req.query.sort`. Attacker can append arbitrary SQL (e.g., `id; DROP TABLE invoices--` or subqueries via UNION). `ORDER BY` cannot be parameterized in most drivers, so prepared statements alone don't fix it.
+
+Secondary: information disclosure via error-based injection, DoS via expensive sorts, and broken pagination/logic.
+
+**Mitigation:** Whitelist allowed columns and directions.
+
+```js
+const allowedCols = ['id', 'date', 'amount', 'customer_id'];
+const allowedDirs = ['ASC', 'DESC'];
+
+const { sort = 'id', dir = 'ASC' } = req.query;
+if (!allowedCols.includes(sort) || !allowedDirs.includes(String(dir).toUpperCase())) {
+  return res.status(400).send('Invalid sort');
+}
+const sql = `SELECT * FROM invoices ORDER BY ${sort} ${dir.toUpperCase()}`;
+```
+
+Also: replace `SELECT *` with explicit columns, add authz checks, index sort columns, enforce pagination (`LIMIT`/`OFFSET` with bounds).
+
+**Verification:**
+1. Unit tests: valid values succeed; invalid (`name); DROP--`, `1,(SELECT...)`, `amount/**/ASC`, empty, unicode) return 400.
+2. Static analysis: semgrep/CodeQL rule for string-concatenated SQL (`js/sql-injection`).
+3. Dynamic: sqlmap against the endpoint — expect no injection reported.
+4. DB logs: confirm only queries with whitelisted identifiers reach the DB.
+... (1 more lines)
+
+2. Primitive English (Caveman-style)
+────────────────────────────────────────
+prompt: primitive-english
+input:  179 tok
+output: 653 tok
+total:  832 tok
+time:   11215 ms
+vs terse total: +8.9%
+vs terse time:  +1.2%
+────────────────────────────────────────
+Risks:
+- SQL injection via `req.query.sort`.
+- Attacker injects subqueries, UNION, stacked statements.
+- Data exfiltration, auth bypass, DoS via heavy ORDER BY.
+- Blind/time-based extraction possible even if ORDER BY.
+- Error-based leaks of schema.
+- Log poisoning, audit evasion.
+
+Mitigation:
+- Never concatenate user input into SQL.
+- Whitelist allowed columns: `['id','date','amount','status']`.
+- Map input → safe identifier; reject else 400.
+- Separate direction: whitelist `ASC`/`DESC`.
+- Use query builder (Knex, Prisma) with identifier escaping.
+- Principle of least privilege on DB user.
+- Disable stacked queries at driver level.
+- Add pagination limits.
+- WAF as defense-in-depth, not primary.
+
+Example fix:
+```
+const cols = new Set(['id','date','amount']);
+const dirs = new Set(['ASC','DESC']);
+const col = cols.has(req.query.sort) ? req.query.sort : 'id';
+... (14 more lines)
+
+3. SIGIL
+────────────────────────────────────────
+prompt: sigil-nano
+input:  233 tok
+output: 185 tok
+total:  418 tok
+time:   3959 ms
+vs terse total: -45.3%
+vs terse time:  -64.3%
+────────────────────────────────────────
+G: harden_sort_param
+C: sql_injection ∧ ORDER_BY ∧ req.query.sort ∧ string_concat
+P: allowlist_columns ∧ map_to_identifier ∧ validate_direction_asc_desc ∧ reject_unknown
+V: unit_tests_malicious_input ∧ sqli_fuzz ∧ static_analysis_taint
+A: replace_concat_with_allowlist ∧ parameterize_or_quote_identifier ∧ log_reject ∧ add_regression_tests
+
+Summary (vs terse baseline):
+  Primitive English total tokens: +8.9%, time: +1.2%
+  SIGIL total tokens:             -45.3%, time: -64.3%
