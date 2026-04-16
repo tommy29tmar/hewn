@@ -1,0 +1,109 @@
+Project handbook: Atlas API service
+
+This static context is shared across many requests. Treat it as durable project background, not as the immediate task. Use it to preserve conventions, trust boundaries, naming rules, and architecture assumptions while answering the specific task at the end.
+
+Product snapshot:
+- Atlas API is a mid-stage SaaS backend for authenticated dashboards, billing operations, and internal audit logging.
+- The service is primarily a Node.js and TypeScript codebase with some older callback-driven modules still present in middleware and data adapters.
+- The team prefers minimal-diff changes when fixing production issues because weekly releases are small and regression risk is expensive.
+- Most user-facing traffic flows through a public API gateway, then into service middleware, then into a monolithic application with clear module boundaries.
+- Session-backed identity is the primary authentication mechanism for first-party clients.
+- Some internal services inject trusted headers, but the public edge must never trust client-supplied identity headers unless there is an explicit signed gateway contract.
+
+Operational posture:
+- Security-sensitive fixes should prefer narrow patches over broad rewrites.
+- Incident-response fixes should preserve current behavior unless the current behavior is itself the bug.
+- Backward compatibility matters for gateway contracts, mobile clients, and internal analytics hooks.
+- The team wants observability and reproducibility: if a recommendation changes auth, expiry, retries, or error paths, the answer should include concrete verification ideas.
+- Avoid speculative microservice splits unless there is a clear scaling or release-boundary reason.
+
+Code and review conventions:
+- Prefer small composable helpers over large generic abstractions.
+- Prefer named invariants over descriptive prose when summarizing a patch.
+- Preserve execution order when refactoring callbacks to async/await.
+- Preserve a single error-mapping site when legacy callback code already routes failures through `next(err)`.
+- Do not introduce new trust on request headers coming from the public boundary.
+- Prefer explicit session derivation over user identifiers passed in mutable transport fields.
+- Keep middleware behavior deterministic at boundary conditions like exact expiry timestamps, absent headers, missing ids, and null records.
+
+Authentication and session rules:
+- `session.userId` is authoritative for first-party authenticated requests.
+- `x-user-id` is not authoritative at the public boundary.
+- If a trusted internal proxy injects `x-user-id`, it must strip all client-supplied duplicates and the downstream code must still validate provenance.
+- Missing session and missing trusted identity should resolve to an auth failure, usually `401`.
+- Header spoofing is treated as a trust-boundary problem, not just input validation.
+- Session confusion, impersonation, and horizontal privilege escalation are high-severity classes.
+
+Token and expiry rules:
+- JWT expiry values are normalized to milliseconds before comparison in the middleware layer.
+- A small skew tolerance may be acceptable when the team has already committed to supporting clock drift across gateway and service nodes.
+- Boundary handling matters: exactly-on-threshold timestamps often trigger loops if reject logic and refresh logic disagree.
+- If the service already accepts a grace window operationally, the safest patch is usually to encode that rule explicitly rather than rely on inconsistent comparisons scattered across modules.
+- A fix should avoid widening acceptance beyond the intended skew budget.
+- Unit tests should include boundary examples like exact threshold pass, just-over-threshold fail, missing token, malformed payload, and time-unit mismatch.
+
+Security review heuristics:
+- Any flow where public request headers can override authenticated identity is presumptively unsafe.
+- Any flow where authorization happens before identity normalization is suspicious.
+- Any flow where a request can select another user’s record via mutable user id inputs is suspicious.
+- Review findings should be short but concrete: finding, exploit path, mitigation, verification, and main risks.
+- Good mitigations are usually actions like drop the untrusted header, bind user scope from session only, or verify a trusted gateway assertion before use.
+
+Architecture heuristics:
+- Small teams under deadline should default to a modular monolith unless there is a compelling reason to pay distributed-systems overhead.
+- PostgreSQL is the default system of record.
+- Split after release is acceptable if domain boundaries are kept clean now.
+- “Future split readiness” means clear module seams, stable APIs, and avoiding shared mutable coupling across domains.
+- Architecture answers should keep operational cost visible: low ops, fast shipping, and deferred decomposition often beat aspirational service graphs.
+
+Refactor heuristics:
+- For legacy callback refactors, preserve order: validate request inputs, load data, branch on not-found, then perform side effects, then respond.
+- Do not change callback signatures accidentally.
+- `next(err)` should usually stay the single path for operational failures if that is already the existing convention.
+- If a callback API may depend on `this` binding or non-Promise semantics, that is a risk worth calling out.
+- Minimal change is preferred over large stylistic rewrites when the task is reliability-oriented.
+
+Testing heuristics:
+- Prefer one or two precise regression tests over a large vague suite when patching a boundary bug.
+- Verification should name the exact edge or abuse case, not just “add tests”.
+- For auth bugs, include spoofed-header checks, missing-session checks, and cross-user denial checks.
+- For expiry bugs, include exact boundary and just-outside-boundary cases.
+- For refactors, include success path, early validation failure, downstream error path, and duplicate-callback avoidance.
+
+Answer-style heuristics:
+- Keep the answer compact.
+- Prefer symbolic atoms or short typed phrases over long prose.
+- Preserve exact literals when they are central to the bug or review, such as `x-user-id`, `401`, `next(err)`, `PostgreSQL`, or `4 months`.
+- When there is uncertainty, surface it as a bounded risk or verification need, not as a long narrative.
+
+Domain glossary:
+- modular monolith: one deployable service with internal domain boundaries.
+- trust boundary: the point where untrusted client input enters the system.
+- spoofed header: a client-supplied header pretending to come from trusted infrastructure.
+- skew window: the allowed clock drift budget for time comparisons.
+- single error mapping: one canonical place that translates lower-level errors into framework-level error handling.
+- split readiness: code structure that can be extracted later without immediate operational overhead.
+
+Repository norms:
+- `auth/` owns session resolution and expiry middleware.
+- `gateway/` owns public-edge header stripping and normalization.
+- `billing/` and `core_app/` are internal module names often used in architecture discussions.
+- `audit.log` and `cache.set` are common side effects in legacy callback flows.
+- `db.findUser` is a representative old callback-style dependency.
+- `loadUser` is a representative middleware helper that often appears in refactor examples.
+
+What not to do:
+- Do not recommend trusting `x-user-id` directly from the public request.
+- Do not recommend microservices by default for a six-person team with a short delivery window.
+- Do not recommend broad rewrites when the task clearly asks for a minimal fix.
+- Do not ignore literal retention for things like `401`, `next(err)`, `async`, `await`, or `PostgreSQL`.
+- Do not drop verification requirements when the task is about auth, expiry, or refactoring safety.
+
+What a strong answer usually contains:
+- a precise target or decision
+- a small set of invariants
+- a short causal hypothesis or exploit path
+- a compact plan or mitigation sequence
+- concrete verification edges
+- the main bounded risks
+- a terse answer target

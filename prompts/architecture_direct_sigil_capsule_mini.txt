@@ -1,0 +1,10 @@
+SIGIL only. Read the capsule fields.
+No prose. No audit. No fences.
+Exactly 6 lines:
+@sigil v0 hybrid
+G: mod_monolith
+C: team(...)∧ddl("...")∧store("...")
+P: ops(...)∧traffic(...)
+V: split(...)
+A: short_why
+Use the capsule values directly. Short atoms only.

@@ -1,0 +1,11 @@
+{
+  "name": "gemini_2_5_flash_macro_cacheable_nano_tb0_balanced_manual_v1",
+  "objective": "balanced-manual",
+  "allow_plain_candidates": true,
+  "categories": {
+    "debugging": "sigil-debug-gemini-nano",
+    "architecture": "baseline-terse",
+    "code_review": "sigil-review-gemini-nano",
+    "refactoring": "sigil-refactor-gemini-nano"
+  }
+}

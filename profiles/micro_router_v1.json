@@ -1,0 +1,9 @@
+{
+  "name": "micro_router_v1",
+  "categories": {
+    "debugging": "sigil-debug-wire",
+    "architecture": "sigil-architecture",
+    "code_review": "sigil-review-wire",
+    "refactoring": "sigil-refactor"
+  }
+}

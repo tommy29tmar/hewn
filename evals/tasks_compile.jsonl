@@ -1,0 +1,2 @@
+{"id":"context-reload","category":"planning","mode":"compile","prompt":"Compile this project brief into a SIGIL execution draft before any code changes.\n\nProject rules:\n- preserve v2 client compatibility\n- prefer minimal diffs\n- never rename public auth endpoints\n- add boundary tests around expiry and cache invalidation\n- avoid new dependencies unless strictly required\n- verify with unit tests first, integration tests second","must_include":["compat","minimal_diff","plan","unit"],"exact_literals":["v2","unit","integration"]}
+

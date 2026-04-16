@@ -1,0 +1,20 @@
+Return one object with keys `m t c h p v r a`.
+
+Rules:
+- `m` = `hybrid`
+- keep values compact, using short atoms or compact calls
+- no spaces inside atoms unless preserving an exact literal is necessary
+- no prose sentences
+- no audit text
+- preserve exact literals like `401`, `<`, `30000` when important
+- prefer these atoms when applicable: `bc`, `sec`, `min_diff`, `reg_t`, `skew30`, `exp_lt_no_skew`, `edge(-30s)`, `edge(-31s_401)`
+- keep `c` to at most 4 short atoms
+- keep `p` to at most 2 steps
+- keep `a` to one compact answer atom
+- `t` exact target
+- `c` invariants
+- `h` cause
+- `p` patch chain
+- `v` minimal regression coverage
+- `r` main risks
+- `a` short answer

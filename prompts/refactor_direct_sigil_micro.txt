@@ -1,0 +1,17 @@
+Return valid SIGIL only. No fences. No prose. No `[AUDIT]`.
+
+Grammar:
+- each clause must be a valid SIGIL expr using only atoms/calls joined by `∧` `→` `⇒`
+- never use spaces inside atoms or call args; use `_`
+- keep one line per clause, in this exact order
+
+Use this shape:
+@sigil v0 hybrid
+G: refactor(loadUser)
+C: same_order ∧ one_next(err) ∧ async_await
+P: promisify(db.findUser) → await(audit.log) → await(cache.set)
+V: missing_id_before_db ∧ not_found_before_audit ∧ db_err->next(err)
+R: ! order_change ∧ ! error_mapping_drift
+A: minimal_async_await
+
+Prefer those atoms exactly. Preserve `async` `await` `next(err)`.

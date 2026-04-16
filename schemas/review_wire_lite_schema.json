@@ -1,0 +1,19 @@
+{
+  "type": "json_schema",
+  "name": "review_wire_lite",
+  "strict": true,
+  "schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": ["m", "f", "e", "p", "v", "r", "a"],
+    "properties": {
+      "m": { "type": "string", "enum": ["hybrid"] },
+      "f": { "type": "string", "maxLength": 48 },
+      "e": { "type": "string", "maxLength": 64 },
+      "p": { "type": "array", "minItems": 1, "maxItems": 3, "items": { "type": "string", "maxLength": 40 } },
+      "v": { "type": "array", "minItems": 1, "maxItems": 2, "items": { "type": "string", "maxLength": 48 } },
+      "r": { "type": "array", "minItems": 1, "maxItems": 2, "items": { "type": "string", "maxLength": 28 } },
+      "a": { "type": "array", "minItems": 1, "maxItems": 1, "items": { "type": "string", "maxLength": 28 } }
+    }
+  }
+}

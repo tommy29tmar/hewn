@@ -1,0 +1,80 @@
+{
+  "name": "gpt54_micro_efficiency_router_v2",
+  "objective": "efficiency",
+  "categories": {
+    "debugging": "sigil-debug-direct-gpt54",
+    "architecture": "sigil-architecture-direct-gpt54-v2",
+    "code_review": "sigil-review-direct-gpt54",
+    "refactoring": "sigil-refactor-direct-gpt54"
+  },
+  "diagnostics": {
+    "debugging": {
+      "sigil-debug-direct-gpt54": {
+        "score": 10.0,
+        "parse_rate": 1.0,
+        "repair_parse_rate": 1.0,
+        "mode_match_rate": 1.0,
+        "repair_mode_match_rate": 1.0,
+        "must_include_rate": 1.0,
+        "exact_literal_rate": 1.0,
+        "output_tokens": 79.0,
+        "effective_total_tokens": 323.0,
+        "elapsed_ms": 1576.88
+      }
+    },
+    "architecture": {
+      "sigil-architecture-direct-gpt54-v2": {
+        "score": 10.0,
+        "parse_rate": 1.0,
+        "repair_parse_rate": 1.0,
+        "mode_match_rate": 1.0,
+        "repair_mode_match_rate": 1.0,
+        "must_include_rate": 1.0,
+        "exact_literal_rate": 0.6667,
+        "output_tokens": 99.0,
+        "effective_total_tokens": 341.0,
+        "elapsed_ms": 3305.08
+      }
+    },
+    "code_review": {
+      "sigil-review-direct-gpt54": {
+        "score": 10.0,
+        "parse_rate": 1.0,
+        "repair_parse_rate": 1.0,
+        "mode_match_rate": 1.0,
+        "repair_mode_match_rate": 1.0,
+        "must_include_rate": 1.0,
+        "exact_literal_rate": 1.0,
+        "output_tokens": 71.0,
+        "effective_total_tokens": 304.0,
+        "elapsed_ms": 1668.75
+      }
+    },
+    "refactoring": {
+      "sigil-refactor-direct-gpt54": {
+        "score": 10.0,
+        "parse_rate": 1.0,
+        "repair_parse_rate": 1.0,
+        "mode_match_rate": 1.0,
+        "repair_mode_match_rate": 1.0,
+        "must_include_rate": 1.0,
+        "exact_literal_rate": 1.0,
+        "output_tokens": 93.0,
+        "effective_total_tokens": 344.0,
+        "elapsed_ms": 1924.2
+      },
+      "sigil-refactor-wire-lite-gpt54": {
+        "score": 5.5,
+        "parse_rate": 1.0,
+        "repair_parse_rate": 1.0,
+        "mode_match_rate": 1.0,
+        "repair_mode_match_rate": 1.0,
+        "must_include_rate": 1.0,
+        "exact_literal_rate": 1.0,
+        "output_tokens": 97.0,
+        "effective_total_tokens": 473.0,
+        "elapsed_ms": 2450.14
+      }
+    }
+  }
+}

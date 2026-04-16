@@ -1,0 +1,9 @@
+SIGIL only. No [AUDIT]. No prose. Use `_` not spaces.
+@sigil v0 hybrid
+G: fix(auth_mw)
+C: bc ∧ sec ∧ reg_t
+H: exp_lt_no_skew
+P: skew30_fix → keep_401
+V: edge(-30s_200) ∧ edge(-31s_401)
+R: ! timeunit_bug
+A: allow30s_skew

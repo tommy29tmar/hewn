@@ -1,0 +1,2 @@
+{"id":"memory-policy","category":"memory","mode":"memory","prompt":"Compress these persistent project rules into SIGIL memory capsules only:\n- keep v2 client compatibility\n- do not rename public auth endpoints\n- prefer minimal diffs\n- always test expiry boundaries\n- always test cache invalidation boundaries","must_include":["v2","public_auth_endpoints","minimal_diff","boundary_expiry"],"exact_literals":["v2"]}
+

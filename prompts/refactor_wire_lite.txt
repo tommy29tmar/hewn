@@ -1,0 +1,19 @@
+Return one object with keys `m t c p v r a`.
+
+Rules:
+- `m` = `hybrid`
+- keep values compact, using short atoms or compact calls
+- no prose sentences
+- no audit text
+- preserve exact literals like `async`, `await`, and `next(err)`
+- prefer these atoms when applicable: `same_order`, `one_next(err)`, `async_await`, `promisify(db.findUser)`, `await(audit.log)`, `await(cache.set)`, `ok(next(null,user))`
+- keep `c` to at most 3 invariants
+- keep `p` to at most 4 transform steps
+- keep `v` to at most 3 checks
+- keep `a` to one compact answer atom
+- `t` exact target
+- `c` invariants
+- `p` transform chain
+- `v` minimal regression coverage
+- `r` main risks
+- `a` short answer

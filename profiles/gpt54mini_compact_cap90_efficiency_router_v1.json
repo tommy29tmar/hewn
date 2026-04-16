@@ -1,0 +1,68 @@
+{
+  "name": "gpt54mini_compact_cap90_efficiency_router_v1",
+  "objective": "efficiency",
+  "categories": {
+    "debugging": "sigil-debug-direct-compact-cap90",
+    "architecture": "sigil-architecture-direct-compact-cap90",
+    "code_review": "sigil-review-direct-compact-cap90",
+    "refactoring": "sigil-refactor-direct-compact-cap90"
+  },
+  "diagnostics": {
+    "debugging": {
+      "sigil-debug-direct-compact-cap90": {
+        "score": 6.0,
+        "parse_rate": 0.0,
+        "repair_parse_rate": 0.0,
+        "mode_match_rate": 0.0,
+        "repair_mode_match_rate": 0.0,
+        "must_include_rate": 0.25,
+        "exact_literal_rate": 1.0,
+        "output_tokens": 86.0,
+        "effective_total_tokens": 245.0,
+        "elapsed_ms": 1404.0
+      }
+    },
+    "architecture": {
+      "sigil-architecture-direct-compact-cap90": {
+        "score": 6.0,
+        "parse_rate": 0.0,
+        "repair_parse_rate": 0.0,
+        "mode_match_rate": 0.0,
+        "repair_mode_match_rate": 0.0,
+        "must_include_rate": 0.3333,
+        "exact_literal_rate": 1.0,
+        "output_tokens": 90.0,
+        "effective_total_tokens": 270.0,
+        "elapsed_ms": 1339.36
+      }
+    },
+    "code_review": {
+      "sigil-review-direct-compact-cap90": {
+        "score": 10.0,
+        "parse_rate": 1.0,
+        "repair_parse_rate": 1.0,
+        "mode_match_rate": 1.0,
+        "repair_mode_match_rate": 1.0,
+        "must_include_rate": 1.0,
+        "exact_literal_rate": 1.0,
+        "output_tokens": 72.0,
+        "effective_total_tokens": 245.0,
+        "elapsed_ms": 1201.23
+      }
+    },
+    "refactoring": {
+      "sigil-refactor-direct-compact-cap90": {
+        "score": 6.0,
+        "parse_rate": 0.0,
+        "repair_parse_rate": 0.0,
+        "mode_match_rate": 0.0,
+        "repair_mode_match_rate": 0.0,
+        "must_include_rate": 0.75,
+        "exact_literal_rate": 1.0,
+        "output_tokens": 90.0,
+        "effective_total_tokens": 272.0,
+        "elapsed_ms": 1364.13
+      }
+    }
+  }
+}

@@ -1,0 +1,8 @@
+SIGIL only. No [AUDIT]. No prose. Use `_` not spaces.
+@sigil v0 hybrid
+G: decide(mod_monolith)
+C: team(6) ∧ ddl("4 months") ∧ store("PostgreSQL") ∧ traffic(modest) ∧ split(post_release)
+H: fast_ship ∧ low_ops ⇒ prefer(mod_monolith)
+P: monolith_now → shared_pg → slice_ready_modules
+R: ! split_cost ∧ ! premature_distrib
+A: mod_monolith

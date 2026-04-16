@@ -1,0 +1,11 @@
+{
+  "name": "gemini_2_5_flash_nano_efficiency_router_v1",
+  "objective": "efficiency",
+  "allow_plain_candidates": true,
+  "categories": {
+    "debugging": "baseline-terse",
+    "architecture": "sigil-architecture-direct-minimal",
+    "code_review": "baseline-terse",
+    "refactoring": "sigil-refactor-direct-minimal"
+  }
+}

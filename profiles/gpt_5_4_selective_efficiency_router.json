@@ -1,0 +1,197 @@
+{
+  "name": "gpt_5_4_micro_selective_efficiency_router",
+  "objective": "efficiency",
+  "allow_plain_candidates": true,
+  "categories": {
+    "debugging": "sigil-debug-direct-gpt54",
+    "architecture": "sigil-architecture-direct-gpt54-v3",
+    "code_review": "sigil-review-direct-gpt54",
+    "refactoring": "sigil-refactor-direct-gpt54"
+  },
+  "diagnostics": {
+    "debugging": {
+      "baseline-terse": {
+        "score": 1.5,
+        "parse_rate": 0.0,
+        "repair_parse_rate": 0.0,
+        "mode_match_rate": 0.0,
+        "repair_mode_match_rate": 0.0,
+        "must_include_rate": 1.0,
+        "exact_literal_rate": 1.0,
+        "output_tokens": 320.0,
+        "effective_total_tokens": 578.0,
+        "elapsed_ms": 6033.0,
+        "structured_expected_rate": 0.0,
+        "efficiency_eligible": true,
+        "efficiency_key": [
+          0.0,
+          578.0,
+          6033.0,
+          320.0,
+          -1.0,
+          -1.0
+        ]
+      },
+      "sigil-debug-direct-gpt54": {
+        "score": 10.0,
+        "parse_rate": 1.0,
+        "repair_parse_rate": 1.0,
+        "mode_match_rate": 1.0,
+        "repair_mode_match_rate": 1.0,
+        "must_include_rate": 1.0,
+        "exact_literal_rate": 1.0,
+        "output_tokens": 79.0,
+        "effective_total_tokens": 323.0,
+        "elapsed_ms": 1576.88,
+        "structured_expected_rate": 1.0,
+        "efficiency_eligible": true,
+        "efficiency_key": [
+          0.0,
+          323.0,
+          1576.88,
+          79.0,
+          -1.0,
+          -1.0
+        ]
+      }
+    },
+    "architecture": {
+      "baseline-terse": {
+        "score": 2.5,
+        "parse_rate": 0.0,
+        "repair_parse_rate": 0.0,
+        "mode_match_rate": 0.0,
+        "repair_mode_match_rate": 0.0,
+        "must_include_rate": 0.3333,
+        "exact_literal_rate": 1.0,
+        "output_tokens": 215.0,
+        "effective_total_tokens": 337.0,
+        "elapsed_ms": 5089.58,
+        "structured_expected_rate": 0.0,
+        "efficiency_eligible": false,
+        "efficiency_key": [
+          1.0,
+          337.0,
+          5089.58,
+          215.0,
+          -0.3333,
+          -1.0
+        ]
+      },
+      "sigil-architecture-direct-gpt54-v3": {
+        "score": 10.0,
+        "parse_rate": 1.0,
+        "repair_parse_rate": 1.0,
+        "mode_match_rate": 1.0,
+        "repair_mode_match_rate": 1.0,
+        "must_include_rate": 1.0,
+        "exact_literal_rate": 1.0,
+        "output_tokens": 95.0,
+        "effective_total_tokens": 337.0,
+        "elapsed_ms": 2313.78,
+        "structured_expected_rate": 1.0,
+        "efficiency_eligible": true,
+        "efficiency_key": [
+          0.0,
+          337.0,
+          2313.78,
+          95.0,
+          -1.0,
+          -1.0
+        ]
+      }
+    },
+    "code_review": {
+      "baseline-terse": {
+        "score": 1.0,
+        "parse_rate": 0.0,
+        "repair_parse_rate": 0.0,
+        "mode_match_rate": 0.0,
+        "repair_mode_match_rate": 0.0,
+        "must_include_rate": 1.0,
+        "exact_literal_rate": 0.5,
+        "output_tokens": 169.0,
+        "effective_total_tokens": 317.0,
+        "elapsed_ms": 3877.91,
+        "structured_expected_rate": 0.0,
+        "efficiency_eligible": true,
+        "efficiency_key": [
+          0.0,
+          317.0,
+          3877.91,
+          169.0,
+          -1.0,
+          -0.5
+        ]
+      },
+      "sigil-review-direct-gpt54": {
+        "score": 10.0,
+        "parse_rate": 1.0,
+        "repair_parse_rate": 1.0,
+        "mode_match_rate": 1.0,
+        "repair_mode_match_rate": 1.0,
+        "must_include_rate": 1.0,
+        "exact_literal_rate": 1.0,
+        "output_tokens": 71.0,
+        "effective_total_tokens": 304.0,
+        "elapsed_ms": 1668.75,
+        "structured_expected_rate": 1.0,
+        "efficiency_eligible": true,
+        "efficiency_key": [
+          0.0,
+          304.0,
+          1668.75,
+          71.0,
+          -1.0,
+          -1.0
+        ]
+      }
+    },
+    "refactoring": {
+      "baseline-terse": {
+        "score": 0.5,
+        "parse_rate": 0.0,
+        "repair_parse_rate": 0.0,
+        "mode_match_rate": 0.0,
+        "repair_mode_match_rate": 0.0,
+        "must_include_rate": 0.75,
+        "exact_literal_rate": 1.0,
+        "output_tokens": 241.0,
+        "effective_total_tokens": 469.0,
+        "elapsed_ms": 4123.28,
+        "structured_expected_rate": 0.0,
+        "efficiency_eligible": true,
+        "efficiency_key": [
+          0.0,
+          469.0,
+          4123.28,
+          241.0,
+          -0.75,
+          -1.0
+        ]
+      },
+      "sigil-refactor-direct-gpt54": {
+        "score": 10.0,
+        "parse_rate": 1.0,
+        "repair_parse_rate": 1.0,
+        "mode_match_rate": 1.0,
+        "repair_mode_match_rate": 1.0,
+        "must_include_rate": 1.0,
+        "exact_literal_rate": 1.0,
+        "output_tokens": 93.0,
+        "effective_total_tokens": 344.0,
+        "elapsed_ms": 1924.2,
+        "structured_expected_rate": 1.0,
+        "efficiency_eligible": true,
+        "efficiency_key": [
+          0.0,
+          344.0,
+          1924.2,
+          93.0,
+          -1.0,
+          -1.0
+        ]
+      }
+    }
+  }
+}

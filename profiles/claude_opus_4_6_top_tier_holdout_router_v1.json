@@ -1,0 +1,12 @@
+{
+  "name": "claude_opus_4_6_top_tier_holdout_router_v1",
+  "objective": "efficiency",
+  "granularity": "category",
+  "allow_plain_candidates": true,
+  "categories": {
+    "debugging": "sigil-debug-gemini-transfer-cap56",
+    "architecture": "sigil-architecture-capsule-mini72",
+    "code_review": "sigil-review-gemini-transfer",
+    "refactoring": "sigil-refactor-gemini-transfer-cap56"
+  }
+}

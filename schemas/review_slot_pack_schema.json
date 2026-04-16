@@ -1,0 +1,20 @@
+{
+  "type": "json_schema",
+  "name": "review_slot_pack",
+  "strict": true,
+  "schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": ["d"],
+    "properties": {
+      "d": {
+        "type": "array",
+        "minItems": 7,
+        "maxItems": 7,
+        "items": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

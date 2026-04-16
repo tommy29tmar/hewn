@@ -1,0 +1,9 @@
+SIGIL only. 6 lines. No audit. No prose.
+Task is a compact bridge capsule using calls like team(...), ddl(...), store(...), ops(...), split(...), focus(...).
+@sigil v0 hybrid
+G:
+C:
+P:
+V:
+A:
+Reuse task literals and focus atoms. Fill all lines.

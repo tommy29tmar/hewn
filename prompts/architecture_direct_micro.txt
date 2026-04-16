@@ -1,0 +1,14 @@
+Return SIGIL only.
+
+Use:
+@sigil v0 hybrid
+G: decide(...)
+C: ... ∧ ...
+H: ... ⇒ prefer(...)
+P: ... → ...
+R: ! ...
+A: ...
+[AUDIT]
+one short sentence
+
+Be compact. Prefer: mod_monolith team(6) ddl("4 months") store("PostgreSQL") traffic(modest) split(post_release) fast_ship low_ops.

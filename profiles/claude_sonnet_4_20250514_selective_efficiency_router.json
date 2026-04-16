@@ -1,0 +1,285 @@
+{
+  "name": "claude_sonnet_4_20250514_selective_efficiency_router",
+  "objective": "efficiency",
+  "allow_plain_candidates": true,
+  "categories": {
+    "debugging": "baseline-terse",
+    "architecture": "sigil-architecture-direct-compact-v4",
+    "code_review": "baseline-terse",
+    "refactoring": "sigil-refactor-direct-compact-v4"
+  },
+  "diagnostics": {
+    "debugging": {
+      "baseline-terse": {
+        "score": 1.9242,
+        "parse_rate": 0.0,
+        "repair_parse_rate": 0.0,
+        "mode_match_rate": 0.0,
+        "repair_mode_match_rate": 0.0,
+        "must_include_rate": 0.75,
+        "exact_literal_rate": 1.0,
+        "output_tokens": 148.0,
+        "effective_total_tokens": 288.0,
+        "elapsed_ms": 4853.04,
+        "structured_expected_rate": 0.0,
+        "efficiency_eligible": true,
+        "efficiency_key": [
+          0.0,
+          288.0,
+          4853.04,
+          148.0,
+          -0.75,
+          -1.0
+        ]
+      },
+      "sigil-debug-direct-compact": {
+        "score": 7.6897,
+        "parse_rate": 1.0,
+        "repair_parse_rate": 1.0,
+        "mode_match_rate": 1.0,
+        "repair_mode_match_rate": 1.0,
+        "must_include_rate": 0.75,
+        "exact_literal_rate": 1.0,
+        "output_tokens": 102.0,
+        "effective_total_tokens": 295.0,
+        "elapsed_ms": 2607.53,
+        "structured_expected_rate": 1.0,
+        "efficiency_eligible": true,
+        "efficiency_key": [
+          0.0,
+          295.0,
+          2607.53,
+          102.0,
+          -0.75,
+          -1.0
+        ]
+      },
+      "sigil-debug-direct-compact-v4": {
+        "score": 4.8779,
+        "parse_rate": 0.0,
+        "repair_parse_rate": 0.0,
+        "mode_match_rate": 0.0,
+        "repair_mode_match_rate": 0.0,
+        "must_include_rate": 0.25,
+        "exact_literal_rate": 1.0,
+        "output_tokens": 90.0,
+        "effective_total_tokens": 262.0,
+        "elapsed_ms": 2881.77,
+        "structured_expected_rate": 1.0,
+        "efficiency_eligible": false,
+        "efficiency_key": [
+          1.0,
+          262.0,
+          2881.77,
+          90.0,
+          -0.25,
+          -1.0
+        ]
+      }
+    },
+    "architecture": {
+      "baseline-terse": {
+        "score": 0.5,
+        "parse_rate": 0.0,
+        "repair_parse_rate": 0.0,
+        "mode_match_rate": 0.0,
+        "repair_mode_match_rate": 0.0,
+        "must_include_rate": 0.3333,
+        "exact_literal_rate": 1.0,
+        "output_tokens": 210.0,
+        "effective_total_tokens": 357.0,
+        "elapsed_ms": 7234.03,
+        "structured_expected_rate": 0.0,
+        "efficiency_eligible": false,
+        "efficiency_key": [
+          1.0,
+          357.0,
+          7234.03,
+          210.0,
+          -0.3333,
+          -1.0
+        ]
+      },
+      "sigil-architecture-direct-compact": {
+        "score": 7.9335,
+        "parse_rate": 1.0,
+        "repair_parse_rate": 1.0,
+        "mode_match_rate": 1.0,
+        "repair_mode_match_rate": 1.0,
+        "must_include_rate": 1.0,
+        "exact_literal_rate": 1.0,
+        "output_tokens": 119.0,
+        "effective_total_tokens": 339.0,
+        "elapsed_ms": 3731.51,
+        "structured_expected_rate": 1.0,
+        "efficiency_eligible": true,
+        "efficiency_key": [
+          0.0,
+          339.0,
+          3731.51,
+          119.0,
+          -1.0,
+          -1.0
+        ]
+      },
+      "sigil-architecture-direct-compact-v4": {
+        "score": 10.0,
+        "parse_rate": 1.0,
+        "repair_parse_rate": 1.0,
+        "mode_match_rate": 1.0,
+        "repair_mode_match_rate": 1.0,
+        "must_include_rate": 1.0,
+        "exact_literal_rate": 1.0,
+        "output_tokens": 90.0,
+        "effective_total_tokens": 286.0,
+        "elapsed_ms": 2794.58,
+        "structured_expected_rate": 1.0,
+        "efficiency_eligible": true,
+        "efficiency_key": [
+          0.0,
+          286.0,
+          2794.58,
+          90.0,
+          -1.0,
+          -1.0
+        ]
+      }
+    },
+    "code_review": {
+      "baseline-terse": {
+        "score": 3.6364,
+        "parse_rate": 0.0,
+        "repair_parse_rate": 0.0,
+        "mode_match_rate": 0.0,
+        "repair_mode_match_rate": 0.0,
+        "must_include_rate": 1.0,
+        "exact_literal_rate": 1.0,
+        "output_tokens": 100.0,
+        "effective_total_tokens": 255.0,
+        "elapsed_ms": 4000.41,
+        "structured_expected_rate": 0.0,
+        "efficiency_eligible": true,
+        "efficiency_key": [
+          0.0,
+          255.0,
+          4000.41,
+          100.0,
+          -1.0,
+          -1.0
+        ]
+      },
+      "sigil-review-direct-compact": {
+        "score": 6.5,
+        "parse_rate": 1.0,
+        "repair_parse_rate": 1.0,
+        "mode_match_rate": 1.0,
+        "repair_mode_match_rate": 1.0,
+        "must_include_rate": 1.0,
+        "exact_literal_rate": 1.0,
+        "output_tokens": 101.0,
+        "effective_total_tokens": 319.0,
+        "elapsed_ms": 2702.91,
+        "structured_expected_rate": 1.0,
+        "efficiency_eligible": true,
+        "efficiency_key": [
+          0.0,
+          319.0,
+          2702.91,
+          101.0,
+          -1.0,
+          -1.0
+        ]
+      },
+      "sigil-review-direct-compact-v4": {
+        "score": 9.1309,
+        "parse_rate": 1.0,
+        "repair_parse_rate": 1.0,
+        "mode_match_rate": 1.0,
+        "repair_mode_match_rate": 1.0,
+        "must_include_rate": 1.0,
+        "exact_literal_rate": 1.0,
+        "output_tokens": 90.0,
+        "effective_total_tokens": 282.0,
+        "elapsed_ms": 2735.8,
+        "structured_expected_rate": 1.0,
+        "efficiency_eligible": true,
+        "efficiency_key": [
+          0.0,
+          282.0,
+          2735.8,
+          90.0,
+          -1.0,
+          -1.0
+        ]
+      }
+    },
+    "refactoring": {
+      "baseline-terse": {
+        "score": 1.7593,
+        "parse_rate": 0.0,
+        "repair_parse_rate": 0.0,
+        "mode_match_rate": 0.0,
+        "repair_mode_match_rate": 0.0,
+        "must_include_rate": 0.5,
+        "exact_literal_rate": 1.0,
+        "output_tokens": 177.0,
+        "effective_total_tokens": 324.0,
+        "elapsed_ms": 3365.99,
+        "structured_expected_rate": 0.0,
+        "efficiency_eligible": true,
+        "efficiency_key": [
+          0.0,
+          324.0,
+          3365.99,
+          177.0,
+          -0.5,
+          -1.0
+        ]
+      },
+      "sigil-refactor-direct-compact": {
+        "score": 6.5867,
+        "parse_rate": 1.0,
+        "repair_parse_rate": 1.0,
+        "mode_match_rate": 1.0,
+        "repair_mode_match_rate": 1.0,
+        "must_include_rate": 1.0,
+        "exact_literal_rate": 1.0,
+        "output_tokens": 147.0,
+        "effective_total_tokens": 375.0,
+        "elapsed_ms": 3029.3,
+        "structured_expected_rate": 1.0,
+        "efficiency_eligible": true,
+        "efficiency_key": [
+          0.0,
+          375.0,
+          3029.3,
+          147.0,
+          -1.0,
+          -1.0
+        ]
+      },
+      "sigil-refactor-direct-compact-v4": {
+        "score": 10.0,
+        "parse_rate": 1.0,
+        "repair_parse_rate": 1.0,
+        "mode_match_rate": 1.0,
+        "repair_mode_match_rate": 1.0,
+        "must_include_rate": 1.0,
+        "exact_literal_rate": 1.0,
+        "output_tokens": 90.0,
+        "effective_total_tokens": 294.0,
+        "elapsed_ms": 2774.73,
+        "structured_expected_rate": 1.0,
+        "efficiency_eligible": true,
+        "efficiency_key": [
+          0.0,
+          294.0,
+          2774.73,
+          90.0,
+          -1.0,
+          -1.0
+        ]
+      }
+    }
+  }
+}

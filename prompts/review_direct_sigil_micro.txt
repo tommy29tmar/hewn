@@ -1,0 +1,17 @@
+Return valid SIGIL only. No fences. No prose. No `[AUDIT]`.
+
+Grammar:
+- each clause must be a valid SIGIL expr using only atoms/calls joined by `∧` `→` `⇒`
+- never use spaces inside atoms or call args; use `_`
+- keep one line per clause, in this exact order
+
+Use this shape:
+@sigil v0 hybrid
+G: review(patch)
+H: hdr_override ∧ authz_bypass ⇒ spoof(x-user-id)
+P: drop_hdr → sess_only
+V: spoof_denied ∧ keep_401
+R: ! authz_bypass ∧ ! data_tamper
+A: sess_only
+
+Prefer those atoms exactly. Preserve `x-user-id` and `401`.

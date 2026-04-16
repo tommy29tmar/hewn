@@ -1,0 +1,68 @@
+{
+  "name": "gpt54mini_compact_efficiency_router_v3",
+  "objective": "efficiency",
+  "categories": {
+    "debugging": "sigil-debug-direct-compact-v3",
+    "architecture": "sigil-architecture-direct-compact-v3",
+    "code_review": "sigil-review-direct-compact-v3",
+    "refactoring": "sigil-refactor-direct-compact-v3"
+  },
+  "diagnostics": {
+    "debugging": {
+      "sigil-debug-direct-compact-v3": {
+        "score": 6.0,
+        "parse_rate": 0.0,
+        "repair_parse_rate": 0.0,
+        "mode_match_rate": 0.0,
+        "repair_mode_match_rate": 0.0,
+        "must_include_rate": 0.5,
+        "exact_literal_rate": 1.0,
+        "output_tokens": 111.0,
+        "effective_total_tokens": 256.0,
+        "elapsed_ms": 1482.18
+      }
+    },
+    "architecture": {
+      "sigil-architecture-direct-compact-v3": {
+        "score": 6.0,
+        "parse_rate": 0.0,
+        "repair_parse_rate": 0.0,
+        "mode_match_rate": 0.0,
+        "repair_mode_match_rate": 0.0,
+        "must_include_rate": 0.3333,
+        "exact_literal_rate": 1.0,
+        "output_tokens": 123.0,
+        "effective_total_tokens": 289.0,
+        "elapsed_ms": 2294.23
+      }
+    },
+    "code_review": {
+      "sigil-review-direct-compact-v3": {
+        "score": 6.0,
+        "parse_rate": 0.0,
+        "repair_parse_rate": 0.0,
+        "mode_match_rate": 0.0,
+        "repair_mode_match_rate": 0.0,
+        "must_include_rate": 1.0,
+        "exact_literal_rate": 1.0,
+        "output_tokens": 123.0,
+        "effective_total_tokens": 282.0,
+        "elapsed_ms": 1644.61
+      }
+    },
+    "refactoring": {
+      "sigil-refactor-direct-compact-v3": {
+        "score": 6.0,
+        "parse_rate": 0.0,
+        "repair_parse_rate": 0.0,
+        "mode_match_rate": 0.0,
+        "repair_mode_match_rate": 0.0,
+        "must_include_rate": 0.5,
+        "exact_literal_rate": 1.0,
+        "output_tokens": 160.0,
+        "effective_total_tokens": 330.0,
+        "elapsed_ms": 1902.41
+      }
+    }
+  }
+}

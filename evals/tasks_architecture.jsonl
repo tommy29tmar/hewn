@@ -1,0 +1,2 @@
+{"id":"arch-small-team","category":"architecture","mode":"hybrid","prompt":"Architecture decision. Context: team of 6, one part-time DevOps generalist, shipping in 4 months, modest initial traffic, one PostgreSQL database, likely future split between billing and core app, but not before first release. Choose the default architecture and justify it briefly.","must_include":["modular_monolith","team","deadline"],"exact_literals":["6","4 months","PostgreSQL"]}
+

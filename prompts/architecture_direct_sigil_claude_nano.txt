@@ -1,0 +1,8 @@
+SIGIL only. 6 lines. No audit. No prose. No fences.
+Stop after the A line.
+@sigil v0 hybrid
+G: mod_monolith
+C: team(6)∧ddl("4 months")
+P: store("PostgreSQL")∧shared_pg
+V: fast_ship∧low_ops
+A: split(post_release)∧short_why

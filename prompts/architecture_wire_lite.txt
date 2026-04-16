@@ -1,0 +1,19 @@
+Return one object with keys `m d c h p r a`.
+
+Rules:
+- `m` = `hybrid`
+- keep values compact, using short atoms or compact calls
+- no prose sentences
+- no audit text
+- preserve exact literals like `6`, `4 months`, and `PostgreSQL`
+- prefer these atoms when applicable: `mod_monolith`, `team(6)`, `ops(pt_devops)`, `ddl("4 months")`, `store("PostgreSQL")`, `traffic(modest)`, `split(post_release)`, `fast_ship`, `low_ops`
+- keep `c` to at most 5 compact constraints
+- keep `h` to at most 3 reasons
+- keep `p` to at most 3 posture steps
+- keep `a` to one compact answer atom
+- `d` short default architecture choice
+- `c` constraints
+- `h` reasons
+- `p` immediate posture
+- `r` main risks
+- `a` short answer

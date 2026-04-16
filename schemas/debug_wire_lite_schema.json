@@ -1,0 +1,20 @@
+{
+  "type": "json_schema",
+  "name": "debug_wire_lite",
+  "strict": true,
+  "schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": ["m", "t", "c", "h", "p", "v", "r", "a"],
+    "properties": {
+      "m": { "type": "string", "enum": ["hybrid"] },
+      "t": { "type": "string", "maxLength": 40 },
+      "c": { "type": "array", "minItems": 1, "maxItems": 4, "items": { "type": "string", "maxLength": 24 } },
+      "h": { "type": "string", "maxLength": 48 },
+      "p": { "type": "array", "minItems": 1, "maxItems": 2, "items": { "type": "string", "maxLength": 56 } },
+      "v": { "type": "array", "minItems": 1, "maxItems": 2, "items": { "type": "string", "maxLength": 40 } },
+      "r": { "type": "array", "minItems": 1, "maxItems": 2, "items": { "type": "string", "maxLength": 32 } },
+      "a": { "type": "array", "minItems": 1, "maxItems": 1, "items": { "type": "string", "maxLength": 40 } }
+    }
+  }
+}

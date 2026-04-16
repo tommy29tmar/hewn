@@ -1,0 +1,116 @@
+{
+  "name": "gpt54mini_micro_efficiency_router_v2",
+  "objective": "efficiency",
+  "categories": {
+    "debugging": "sigil-debug-direct-micro-v4",
+    "architecture": "sigil-architecture-direct-micro-v3",
+    "code_review": "sigil-review-direct-micro-v3",
+    "refactoring": "sigil-refactor-wire-lite-micro"
+  },
+  "diagnostics": {
+    "debugging": {
+      "sigil-debug-wire-lite-micro": {
+        "score": 5.5,
+        "parse_rate": 1.0,
+        "repair_parse_rate": 1.0,
+        "mode_match_rate": 1.0,
+        "repair_mode_match_rate": 1.0,
+        "must_include_rate": 1.0,
+        "exact_literal_rate": 1.0,
+        "output_tokens": 119.0,
+        "effective_total_tokens": 500.0,
+        "elapsed_ms": 1686.52
+      },
+      "sigil-debug-direct-micro-v4": {
+        "score": 10.0,
+        "parse_rate": 1.0,
+        "repair_parse_rate": 1.0,
+        "mode_match_rate": 1.0,
+        "repair_mode_match_rate": 1.0,
+        "must_include_rate": 1.0,
+        "exact_literal_rate": 1.0,
+        "output_tokens": 79.0,
+        "effective_total_tokens": 323.0,
+        "elapsed_ms": 1312.49
+      }
+    },
+    "architecture": {
+      "sigil-architecture-wire-lite-micro": {
+        "score": 5.5,
+        "parse_rate": 1.0,
+        "repair_parse_rate": 1.0,
+        "mode_match_rate": 1.0,
+        "repair_mode_match_rate": 1.0,
+        "must_include_rate": 1.0,
+        "exact_literal_rate": 1.0,
+        "output_tokens": 97.0,
+        "effective_total_tokens": 486.0,
+        "elapsed_ms": 1633.79
+      },
+      "sigil-architecture-direct-micro-v3": {
+        "score": 10.0,
+        "parse_rate": 1.0,
+        "repair_parse_rate": 1.0,
+        "mode_match_rate": 1.0,
+        "repair_mode_match_rate": 1.0,
+        "must_include_rate": 1.0,
+        "exact_literal_rate": 1.0,
+        "output_tokens": 96.0,
+        "effective_total_tokens": 338.0,
+        "elapsed_ms": 1500.69
+      }
+    },
+    "code_review": {
+      "sigil-review-wire-lite-micro": {
+        "score": 5.5,
+        "parse_rate": 1.0,
+        "repair_parse_rate": 1.0,
+        "mode_match_rate": 1.0,
+        "repair_mode_match_rate": 1.0,
+        "must_include_rate": 1.0,
+        "exact_literal_rate": 1.0,
+        "output_tokens": 95.0,
+        "effective_total_tokens": 450.0,
+        "elapsed_ms": 1496.84
+      },
+      "sigil-review-direct-micro-v3": {
+        "score": 10.0,
+        "parse_rate": 1.0,
+        "repair_parse_rate": 1.0,
+        "mode_match_rate": 1.0,
+        "repair_mode_match_rate": 1.0,
+        "must_include_rate": 1.0,
+        "exact_literal_rate": 1.0,
+        "output_tokens": 71.0,
+        "effective_total_tokens": 304.0,
+        "elapsed_ms": 1135.07
+      }
+    },
+    "refactoring": {
+      "sigil-refactor-wire-lite-micro": {
+        "score": 7.0,
+        "parse_rate": 1.0,
+        "repair_parse_rate": 1.0,
+        "mode_match_rate": 1.0,
+        "repair_mode_match_rate": 1.0,
+        "must_include_rate": 1.0,
+        "exact_literal_rate": 1.0,
+        "output_tokens": 91.0,
+        "effective_total_tokens": 467.0,
+        "elapsed_ms": 2665.99
+      },
+      "sigil-refactor-direct-micro-v3": {
+        "score": 3.5,
+        "parse_rate": 0.0,
+        "repair_parse_rate": 0.0,
+        "mode_match_rate": 0.0,
+        "repair_mode_match_rate": 0.0,
+        "must_include_rate": 0.75,
+        "exact_literal_rate": 1.0,
+        "output_tokens": 95.0,
+        "effective_total_tokens": 346.0,
+        "elapsed_ms": 1400.52
+      }
+    }
+  }
+}

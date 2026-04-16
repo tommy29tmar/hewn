@@ -1,0 +1,198 @@
+{
+  "name": "claude_sonnet_4_20250514_macro_focused_nano_efficiency_router_v1",
+  "objective": "efficiency",
+  "granularity": "category",
+  "allow_plain_candidates": true,
+  "diagnostics": {
+    "debugging": {
+      "baseline-terse": {
+        "score": 1.5,
+        "parse_rate": 0.0,
+        "repair_parse_rate": 0.0,
+        "mode_match_rate": 0.0,
+        "repair_mode_match_rate": 0.0,
+        "must_include_rate": 1.0,
+        "exact_literal_rate": 0.5,
+        "output_tokens": 240.0,
+        "effective_total_tokens": 1491.0,
+        "elapsed_ms": 4974.95,
+        "structured_expected_rate": 0.0,
+        "efficiency_eligible": true,
+        "efficiency_key": [
+          0.0,
+          1491.0,
+          4974.95,
+          240.0,
+          -1.0,
+          -0.5
+        ]
+      },
+      "sigil-debug-gemini-transfer-cap56": {
+        "score": 10.0,
+        "parse_rate": 1.0,
+        "repair_parse_rate": 1.0,
+        "mode_match_rate": 1.0,
+        "repair_mode_match_rate": 1.0,
+        "must_include_rate": 1.0,
+        "exact_literal_rate": 0.5,
+        "output_tokens": 56.0,
+        "effective_total_tokens": 1296.0,
+        "elapsed_ms": 3280.14,
+        "structured_expected_rate": 1.0,
+        "efficiency_eligible": true,
+        "efficiency_key": [
+          0.0,
+          1296.0,
+          3280.14,
+          56.0,
+          -1.0,
+          -0.5
+        ]
+      }
+    },
+    "architecture": {
+      "baseline-terse": {
+        "score": 0.0,
+        "parse_rate": 0.0,
+        "repair_parse_rate": 0.0,
+        "mode_match_rate": 0.0,
+        "repair_mode_match_rate": 0.0,
+        "must_include_rate": 0.0,
+        "exact_literal_rate": 0.6667,
+        "output_tokens": 220.0,
+        "effective_total_tokens": 1091.0,
+        "elapsed_ms": 7439.88,
+        "structured_expected_rate": 0.0,
+        "efficiency_eligible": false,
+        "efficiency_key": [
+          1.0,
+          1091.0,
+          7439.88,
+          220.0,
+          -0.0,
+          -0.6667
+        ]
+      },
+      "sigil-architecture-capsule-mini72": {
+        "score": 10.0,
+        "parse_rate": 1.0,
+        "repair_parse_rate": 1.0,
+        "mode_match_rate": 1.0,
+        "repair_mode_match_rate": 1.0,
+        "must_include_rate": 1.0,
+        "exact_literal_rate": 1.0,
+        "output_tokens": 72.0,
+        "effective_total_tokens": 972.0,
+        "elapsed_ms": 2635.79,
+        "structured_expected_rate": 1.0,
+        "efficiency_eligible": true,
+        "efficiency_key": [
+          0.0,
+          972.0,
+          2635.79,
+          72.0,
+          -1.0,
+          -1.0
+        ]
+      }
+    },
+    "code_review": {
+      "baseline-terse": {
+        "score": 1.5,
+        "parse_rate": 0.0,
+        "repair_parse_rate": 0.0,
+        "mode_match_rate": 0.0,
+        "repair_mode_match_rate": 0.0,
+        "must_include_rate": 0.75,
+        "exact_literal_rate": 1.0,
+        "output_tokens": 240.0,
+        "effective_total_tokens": 1429.0,
+        "elapsed_ms": 6934.07,
+        "structured_expected_rate": 0.0,
+        "efficiency_eligible": true,
+        "efficiency_key": [
+          0.0,
+          1429.0,
+          6934.07,
+          240.0,
+          -0.75,
+          -1.0
+        ]
+      },
+      "sigil-review-gemini-transfer": {
+        "score": 9.5,
+        "parse_rate": 1.0,
+        "repair_parse_rate": 1.0,
+        "mode_match_rate": 1.0,
+        "repair_mode_match_rate": 1.0,
+        "must_include_rate": 0.75,
+        "exact_literal_rate": 0.5,
+        "output_tokens": 80.0,
+        "effective_total_tokens": 1258.0,
+        "elapsed_ms": 3466.41,
+        "structured_expected_rate": 1.0,
+        "efficiency_eligible": true,
+        "efficiency_key": [
+          0.0,
+          1258.0,
+          3466.41,
+          80.0,
+          -0.75,
+          -0.5
+        ]
+      }
+    },
+    "refactoring": {
+      "baseline-terse": {
+        "score": 0.5,
+        "parse_rate": 0.0,
+        "repair_parse_rate": 0.0,
+        "mode_match_rate": 0.0,
+        "repair_mode_match_rate": 0.0,
+        "must_include_rate": 0.5,
+        "exact_literal_rate": 1.0,
+        "output_tokens": 240.0,
+        "effective_total_tokens": 1328.0,
+        "elapsed_ms": 5032.06,
+        "structured_expected_rate": 0.0,
+        "efficiency_eligible": true,
+        "efficiency_key": [
+          0.0,
+          1328.0,
+          5032.06,
+          240.0,
+          -0.5,
+          -1.0
+        ]
+      },
+      "sigil-refactor-gemini-transfer-cap56": {
+        "score": 10.0,
+        "parse_rate": 1.0,
+        "repair_parse_rate": 1.0,
+        "mode_match_rate": 1.0,
+        "repair_mode_match_rate": 1.0,
+        "must_include_rate": 1.0,
+        "exact_literal_rate": 1.0,
+        "output_tokens": 56.0,
+        "effective_total_tokens": 1133.0,
+        "elapsed_ms": 2540.26,
+        "structured_expected_rate": 1.0,
+        "efficiency_eligible": true,
+        "efficiency_key": [
+          0.0,
+          1133.0,
+          2540.26,
+          56.0,
+          -1.0,
+          -1.0
+        ]
+      }
+    }
+  },
+  "categories": {
+    "debugging": "sigil-debug-gemini-transfer-cap56",
+    "architecture": "sigil-architecture-capsule-mini72",
+    "code_review": "sigil-review-gemini-transfer",
+    "refactoring": "sigil-refactor-gemini-transfer-cap56"
+  }
+}

@@ -1,0 +1,68 @@
+{
+  "name": "gpt54mini_compact_efficiency_router_v2",
+  "objective": "efficiency",
+  "categories": {
+    "debugging": "sigil-debug-direct-compact-v2",
+    "architecture": "sigil-architecture-direct-compact",
+    "code_review": "sigil-review-direct-compact",
+    "refactoring": "sigil-refactor-direct-compact-v2"
+  },
+  "diagnostics": {
+    "debugging": {
+      "sigil-debug-direct-compact-v2": {
+        "score": 6.0,
+        "parse_rate": 1.0,
+        "repair_parse_rate": 1.0,
+        "mode_match_rate": 0.0,
+        "repair_mode_match_rate": 0.0,
+        "must_include_rate": 1.0,
+        "exact_literal_rate": 1.0,
+        "output_tokens": 85.0,
+        "effective_total_tokens": 234.0,
+        "elapsed_ms": 3578.5
+      }
+    },
+    "architecture": {
+      "sigil-architecture-direct-compact": {
+        "score": 10.0,
+        "parse_rate": 1.0,
+        "repair_parse_rate": 1.0,
+        "mode_match_rate": 1.0,
+        "repair_mode_match_rate": 1.0,
+        "must_include_rate": 1.0,
+        "exact_literal_rate": 1.0,
+        "output_tokens": 94.0,
+        "effective_total_tokens": 274.0,
+        "elapsed_ms": 1441.93
+      }
+    },
+    "code_review": {
+      "sigil-review-direct-compact": {
+        "score": 10.0,
+        "parse_rate": 1.0,
+        "repair_parse_rate": 1.0,
+        "mode_match_rate": 1.0,
+        "repair_mode_match_rate": 1.0,
+        "must_include_rate": 1.0,
+        "exact_literal_rate": 1.0,
+        "output_tokens": 73.0,
+        "effective_total_tokens": 246.0,
+        "elapsed_ms": 1149.8
+      }
+    },
+    "refactoring": {
+      "sigil-refactor-direct-compact-v2": {
+        "score": 6.0,
+        "parse_rate": 0.0,
+        "repair_parse_rate": 0.0,
+        "mode_match_rate": 0.0,
+        "repair_mode_match_rate": 0.0,
+        "must_include_rate": 0.75,
+        "exact_literal_rate": 1.0,
+        "output_tokens": 106.0,
+        "effective_total_tokens": 280.0,
+        "elapsed_ms": 1791.42
+      }
+    }
+  }
+}

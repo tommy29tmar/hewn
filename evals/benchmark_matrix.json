@@ -1,0 +1,201 @@
+{
+  "title": "SIGIL Provider Benchmark Matrix",
+  "thesis": [
+    "SIGIL is not a universal compact prompt; it is a transport runtime calibrated per provider, model, and operating regime.",
+    "The most honest benchmark today is task-level selective extended routing with plain baseline allowed as a first-class candidate.",
+    "In that harder regime, Claude, Gemini, GPT-5.4, and now GPT-5.4-mini are all positive on aggregate total cost under the right routed policy.",
+    "The newest OpenAI lift comes from cross-provider task-contract transfer: `gemini-nano` is now a winning family on review, architecture, and part of debugging once the local runtime absorbs its drift.",
+    "A second new lever now compounds that: tighter per-lane output caps on already-winning families. `cap56` lanes improve OpenAI debug routing and Claude debug/refactor routing without changing the core grammar.",
+    "A third lever now compounds both: compiled shared context. On Gemini macro, compiled cacheable prefixes plus nano task contracts and low/zero thinking budgets beat both the older long-prefix steady-state row and the plain compiled-context baseline.",
+    "The strongest breakthrough rows still come from narrower calibrated regimes, but Anthropic is no longer limited to starter nano: the extended task-level matrix is now a clear win once transfer lanes and aggressive caps are allowed to compete across debug, review, architecture, and refactor.",
+    "A new top-tier holdout now confirms the pattern on newer Anthropic models too: `claude-sonnet-4-6` and `claude-opus-4-6` stay positive on total cost and latency with full parseability after local rerender."
+  ],
+  "entries": [
+    {
+      "label": "OpenAI GPT-5.4 micro breakthrough",
+      "provider": "openai",
+      "model": "gpt-5.4",
+      "regime": "micro",
+      "router": "full SIGIL",
+      "tasks": "evals/tasks_hybrid_micro.jsonl",
+      "run": "evals/runs/gpt_5_4_selective_efficiency.jsonl",
+      "baseline": "baseline-terse",
+      "variant": "sigil-routed",
+      "primary_metric": "total",
+      "notes": "The focused micro benchmark is still the cleanest OpenAI breakthrough row: full SIGIL wins end-to-end on total cost, output size, and latency."
+    },
+    {
+      "label": "OpenAI GPT-5.4 extended task selective",
+      "provider": "openai",
+      "model": "gpt-5.4",
+      "regime": "task-level extended selective",
+      "router": "task-level multi-IR + transferred gemini-nano review/debug lanes + cap56 debug",
+      "tasks": "evals/tasks_hybrid_nano_extended.jsonl",
+      "run": "evals/runs/exp_gpt54_transfer_v3/gpt_5_4_hybrid_multi_ir_extended_selective_efficiency.jsonl",
+      "baseline": "baseline-terse",
+      "variant": "sigil-routed",
+      "primary_metric": "total",
+      "notes": "OpenAI strong-tier is now more clearly positive on the harder extended matrix. The newest lift comes from a tighter `cap56` debug lane on top of task-level routing plus cross-provider task-contract transfer across review, part of debug, and part of architecture, while refactor still stays plain."
+    },
+    {
+      "label": "OpenAI GPT-5.4-mini extended task selective",
+      "provider": "openai",
+      "model": "gpt-5.4-mini",
+      "regime": "task-level extended selective",
+      "router": "task-level selective with transferred gemini-nano debug/review/architecture lanes + cap56 debug",
+      "tasks": "evals/tasks_hybrid_nano_extended.jsonl",
+      "run": "evals/runs/exp_gpt54mini_transfer_v3/gpt_5_4_mini_hybrid_multi_ir_extended_selective_efficiency.jsonl",
+      "baseline": "baseline-terse",
+      "variant": "sigil-routed",
+      "primary_metric": "total",
+      "notes": "OpenAI mini is now materially positive on the harder extended matrix. The newest lift is a tighter `cap56` debug lane on top of broader contract transfer: gemini-nano now wins on most review tasks, a large share of debugging, and part of architecture, while plain stays available where SIGIL is still not worth it."
+    },
+    {
+      "label": "OpenAI GPT-5.4-mini macro compiled cold-start",
+      "provider": "openai",
+      "model": "gpt-5.4-mini",
+      "regime": "macro cold-start",
+      "router": "focused compiled context + transferred gemini-nano + cap56 debug + plain refactor",
+      "tasks": "evals/tasks_hybrid_macro_focused_nano.jsonl",
+      "run": "evals/runs/openai_macro_compiled_focus_v1/gpt_5_4_mini_hybrid_macro_focused_nano_selective_efficiency.jsonl",
+      "baseline": "baseline-terse",
+      "variant": "sigil-routed",
+      "primary_metric": "total",
+      "notes": "Compiled shared context generalizes to OpenAI too: the macro cold-start row stays positive on total cost while improving retention."
+    },
+    {
+      "label": "Claude Sonnet 4 nano starter",
+      "provider": "anthropic",
+      "model": "claude-sonnet-4-20250514",
+      "regime": "micro + nano task contract",
+      "router": "full SIGIL",
+      "tasks": "evals/tasks_hybrid_nano.jsonl",
+      "run": "evals/runs/claude_sonnet_4_20250514_hybrid_nano_efficiency_v1.jsonl",
+      "baseline": "baseline-terse",
+      "variant": "sigil-routed",
+      "primary_metric": "total",
+      "notes": "Starter nano tasks remain Claude's strongest full-route result: materially lower total cost, much smaller visible output, and high parseability."
+    },
+    {
+      "label": "Claude Sonnet 4 extended task selective",
+      "provider": "anthropic",
+      "model": "claude-sonnet-4-20250514",
+      "regime": "task-level extended selective",
+      "router": "task-level multi-IR selective + gemini-transfer debug/review/refactor lanes + cap56 debug/refactor",
+      "tasks": "evals/tasks_hybrid_nano_extended.jsonl",
+      "run": "evals/runs/exp_claude_transfer_v4/claude_sonnet_4_20250514_hybrid_multi_ir_extended_selective_efficiency.jsonl",
+      "baseline": "baseline-terse",
+      "variant": "sigil-routed",
+      "primary_metric": "total",
+      "notes": "Claude is now even more strongly positive on the harder extended corpus. The newest lift comes from `cap56` on winning gemini-transfer lanes, especially in debug and refactor, on top of family transfer at scale across review and part of architecture."
+    },
+    {
+      "label": "Claude Sonnet 4 macro compiled cold-start",
+      "provider": "anthropic",
+      "model": "claude-sonnet-4-20250514",
+      "regime": "macro cold-start",
+      "router": "focused compiled context + gemini-transfer + capsule-mini architecture",
+      "tasks": "evals/tasks_hybrid_macro_focused_nano.jsonl",
+      "run": "evals/runs/claude_macro_compiled_focus_v1/claude_sonnet_4_20250514_hybrid_macro_focused_nano_selective_efficiency.jsonl",
+      "baseline": "baseline-terse",
+      "variant": "sigil-routed",
+      "primary_metric": "total",
+      "notes": "Claude also benefits from compiled shared context: macro cold-start is positive on total cost, much smaller on visible output, and much faster."
+    },
+    {
+      "label": "Claude Sonnet 4.6 top-tier holdout",
+      "provider": "anthropic",
+      "model": "claude-sonnet-4-6",
+      "regime": "top-tier holdout",
+      "router": "gemini-transfer debug/review/refactor + capsule-mini architecture",
+      "tasks": "evals/tasks_top_tier_holdout.jsonl",
+      "run": "evals/runs/top_tier_claude46_holdout_v1/claude_sonnet_4_6_routed_holdout.jsonl",
+      "baseline": "baseline-terse",
+      "variant": "sigil-routed",
+      "primary_metric": "total",
+      "notes": "Top-tier Anthropic holdout on a harder 8-task subset. After strengthening local repair for standalone `SIGIL:` lines and comparator drift, Sonnet 4.6 is positive on total cost, much smaller on visible output, and materially faster than baseline."
+    },
+    {
+      "label": "Claude Opus 4.6 top-tier holdout",
+      "provider": "anthropic",
+      "model": "claude-opus-4-6",
+      "regime": "top-tier holdout",
+      "router": "gemini-transfer debug/review/refactor + capsule-mini architecture",
+      "tasks": "evals/tasks_top_tier_holdout.jsonl",
+      "run": "evals/runs/top_tier_opus46_holdout_v1/claude_opus_4_6_routed_holdout.jsonl",
+      "baseline": "baseline-terse",
+      "variant": "sigil-routed",
+      "primary_metric": "total",
+      "notes": "Top-tier Anthropic validation on the same harder holdout. Opus 4.6 confirms that the transport/runtime wins are not confined to Sonnet-tier models."
+    },
+    {
+      "label": "Gemini 2.5 Flash extended task selective",
+      "provider": "gemini",
+      "model": "gemini-2.5-flash",
+      "regime": "task-level extended selective",
+      "router": "task-level nano direct + capsule-mini",
+      "tasks": "evals/tasks_hybrid_nano_extended.jsonl",
+      "run": "evals/runs/multi_ir_gemini_ext_v1/gemini_2_5_flash_hybrid_task_extended_selective_efficiency_v1.jsonl",
+      "baseline": "baseline-terse",
+      "variant": "sigil-routed",
+      "primary_metric": "total",
+      "notes": "Gemini stays positive on the harder corpus under task-level routing as well. The main effect of task routing here is better retention, not radically larger savings."
+    },
+    {
+      "label": "Gemini 2.5 Flash macro compiled cold-start",
+      "provider": "gemini",
+      "model": "gemini-2.5-flash",
+      "regime": "macro cold-start",
+      "router": "focused compiled context + nano contract + tb0 + selective routing",
+      "tasks": "evals/tasks_hybrid_macro_focused_nano.jsonl",
+      "run": "evals/runs/macro_compiled_gemini_focus_nocache_tb0_v1/gemini_2_5_flash_hybrid_macro_focused_nano_tb0_selective_efficiency.jsonl",
+      "baseline": "baseline-terse",
+      "variant": "sigil-routed",
+      "primary_metric": "total",
+      "notes": "Compiled focused context removes the need for cache and still wins on total cost, retention, and latency."
+    },
+    {
+      "label": "Gemini 2.5 Flash macro compiled + cache",
+      "provider": "gemini",
+      "model": "gemini-2.5-flash",
+      "regime": "macro steady-state compiled",
+      "router": "cacheable compiled context + nano contract + tb0 + selective routing",
+      "tasks": "evals/tasks_hybrid_macro_cacheable_nano.jsonl",
+      "run": "evals/runs/macro_compiled_gemini_cacheable_tb0_v1/gemini_2_5_flash_hybrid_macro_cacheable_nano_tb0_balanced_manual_v1.jsonl",
+      "baseline": "baseline-terse",
+      "variant": "sigil-routed",
+      "primary_metric": "effective_total",
+      "notes": "Best current Gemini macro row: compiled shared context beats the compiled plain baseline on raw and effective total, and beats the older long-prefix cache row on effective total."
+    }
+  ],
+  "corpora": [
+    {
+      "label": "Micro starter",
+      "path": "evals/tasks_hybrid_micro.jsonl"
+    },
+    {
+      "label": "Nano starter",
+      "path": "evals/tasks_hybrid_nano.jsonl"
+    },
+    {
+      "label": "Nano extended",
+      "path": "evals/tasks_hybrid_nano_extended.jsonl"
+    },
+    {
+      "label": "Macro starter",
+      "path": "evals/tasks_hybrid_macro.jsonl"
+    },
+    {
+      "label": "Macro focused compiled",
+      "path": "evals/tasks_hybrid_macro_focused_nano.jsonl"
+    },
+    {
+      "label": "Macro cacheable compiled",
+      "path": "evals/tasks_hybrid_macro_cacheable_nano.jsonl"
+    },
+    {
+      "label": "Top-tier holdout",
+      "path": "evals/tasks_top_tier_holdout.jsonl"
+    }
+  ]
+}

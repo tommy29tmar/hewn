@@ -1,0 +1,1 @@
+{"id": "refactor-callback", "category": "refactoring", "mode": "hybrid", "prompt": "[f] \"async\"|\"await\"|\"next(err)\" target async await verify minimal same_order next(err)", "must_include": ["async", "await", "verify", "minimal"], "exact_literals": ["async", "await", "next(err)"], "capsule": "nano"}

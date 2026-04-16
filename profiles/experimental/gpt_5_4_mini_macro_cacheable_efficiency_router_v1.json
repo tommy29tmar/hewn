@@ -1,0 +1,198 @@
+{
+  "name": "gpt_5_4_mini_macro_cacheable_efficiency_router_v1",
+  "objective": "efficiency",
+  "granularity": "category",
+  "allow_plain_candidates": true,
+  "diagnostics": {
+    "debugging": {
+      "baseline-terse": {
+        "score": 1.5,
+        "parse_rate": 0.0,
+        "repair_parse_rate": 0.0,
+        "mode_match_rate": 0.0,
+        "repair_mode_match_rate": 0.0,
+        "must_include_rate": 1.0,
+        "exact_literal_rate": 0.5,
+        "output_tokens": 121.0,
+        "effective_total_tokens": 1664.0,
+        "elapsed_ms": 1686.11,
+        "structured_expected_rate": 0.0,
+        "efficiency_eligible": true,
+        "efficiency_key": [
+          0.0,
+          1664.0,
+          1686.11,
+          121.0,
+          -1.0,
+          -0.5
+        ]
+      },
+      "sigil-debug-openai-gemini-nano-cap56": {
+        "score": 10.0,
+        "parse_rate": 1.0,
+        "repair_parse_rate": 1.0,
+        "mode_match_rate": 1.0,
+        "repair_mode_match_rate": 1.0,
+        "must_include_rate": 1.0,
+        "exact_literal_rate": 0.5,
+        "output_tokens": 56.0,
+        "effective_total_tokens": 1591.0,
+        "elapsed_ms": 1359.74,
+        "structured_expected_rate": 1.0,
+        "efficiency_eligible": true,
+        "efficiency_key": [
+          0.0,
+          1591.0,
+          1359.74,
+          56.0,
+          -1.0,
+          -0.5
+        ]
+      }
+    },
+    "architecture": {
+      "baseline-terse": {
+        "score": 0.5,
+        "parse_rate": 0.0,
+        "repair_parse_rate": 0.0,
+        "mode_match_rate": 0.0,
+        "repair_mode_match_rate": 0.0,
+        "must_include_rate": 0.6667,
+        "exact_literal_rate": 1.0,
+        "output_tokens": 198.0,
+        "effective_total_tokens": 1740.0,
+        "elapsed_ms": 2075.38,
+        "structured_expected_rate": 0.0,
+        "efficiency_eligible": true,
+        "efficiency_key": [
+          0.0,
+          1740.0,
+          2075.38,
+          198.0,
+          -0.6667,
+          -1.0
+        ]
+      },
+      "sigil-architecture-openai-gemini-nano": {
+        "score": 9.5,
+        "parse_rate": 1.0,
+        "repair_parse_rate": 1.0,
+        "mode_match_rate": 1.0,
+        "repair_mode_match_rate": 1.0,
+        "must_include_rate": 1.0,
+        "exact_literal_rate": 0.3333,
+        "output_tokens": 80.0,
+        "effective_total_tokens": 1614.0,
+        "elapsed_ms": 1522.59,
+        "structured_expected_rate": 1.0,
+        "efficiency_eligible": false,
+        "efficiency_key": [
+          1.0,
+          1614.0,
+          1522.59,
+          80.0,
+          -1.0,
+          -0.3333
+        ]
+      }
+    },
+    "code_review": {
+      "baseline-terse": {
+        "score": 1.5,
+        "parse_rate": 0.0,
+        "repair_parse_rate": 0.0,
+        "mode_match_rate": 0.0,
+        "repair_mode_match_rate": 0.0,
+        "must_include_rate": 1.0,
+        "exact_literal_rate": 1.0,
+        "output_tokens": 177.0,
+        "effective_total_tokens": 1716.0,
+        "elapsed_ms": 2048.84,
+        "structured_expected_rate": 0.0,
+        "efficiency_eligible": true,
+        "efficiency_key": [
+          0.0,
+          1716.0,
+          2048.84,
+          177.0,
+          -1.0,
+          -1.0
+        ]
+      },
+      "sigil-review-openai-gemini-nano": {
+        "score": 10.0,
+        "parse_rate": 1.0,
+        "repair_parse_rate": 1.0,
+        "mode_match_rate": 1.0,
+        "repair_mode_match_rate": 1.0,
+        "must_include_rate": 1.0,
+        "exact_literal_rate": 1.0,
+        "output_tokens": 80.0,
+        "effective_total_tokens": 1611.0,
+        "elapsed_ms": 1416.74,
+        "structured_expected_rate": 1.0,
+        "efficiency_eligible": true,
+        "efficiency_key": [
+          0.0,
+          1611.0,
+          1416.74,
+          80.0,
+          -1.0,
+          -1.0
+        ]
+      }
+    },
+    "refactoring": {
+      "baseline-terse": {
+        "score": 1.5,
+        "parse_rate": 0.0,
+        "repair_parse_rate": 0.0,
+        "mode_match_rate": 0.0,
+        "repair_mode_match_rate": 0.0,
+        "must_include_rate": 1.0,
+        "exact_literal_rate": 1.0,
+        "output_tokens": 174.0,
+        "effective_total_tokens": 1713.0,
+        "elapsed_ms": 1877.84,
+        "structured_expected_rate": 0.0,
+        "efficiency_eligible": true,
+        "efficiency_key": [
+          0.0,
+          1713.0,
+          1877.84,
+          174.0,
+          -1.0,
+          -1.0
+        ]
+      },
+      "sigil-refactor-direct-compact-v4-cap72": {
+        "score": 5.0,
+        "parse_rate": 0.0,
+        "repair_parse_rate": 0.0,
+        "mode_match_rate": 0.0,
+        "repair_mode_match_rate": 0.0,
+        "must_include_rate": 0.5,
+        "exact_literal_rate": 1.0,
+        "output_tokens": 72.0,
+        "effective_total_tokens": 1654.0,
+        "elapsed_ms": 1378.0,
+        "structured_expected_rate": 1.0,
+        "efficiency_eligible": false,
+        "efficiency_key": [
+          1.0,
+          1654.0,
+          1378.0,
+          72.0,
+          -0.5,
+          -1.0
+        ]
+      }
+    }
+  },
+  "categories": {
+    "debugging": "sigil-debug-openai-gemini-nano-cap56",
+    "architecture": "baseline-terse",
+    "code_review": "sigil-review-openai-gemini-nano",
+    "refactoring": "baseline-terse"
+  }
+}

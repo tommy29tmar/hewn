@@ -1,0 +1,11 @@
+{
+  "name": "gemini_2_5_flash_macro_selective_efficiency_router",
+  "objective": "efficiency",
+  "allow_plain_candidates": true,
+  "categories": {
+    "debugging": "sigil-debug-wire-lite-micro",
+    "architecture": "sigil-architecture-wire-lite-micro",
+    "code_review": "sigil-review-direct-compact",
+    "refactoring": "sigil-refactor-wire-lite-micro"
+  }
+}

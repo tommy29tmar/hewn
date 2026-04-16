@@ -1,0 +1,8 @@
+SIGIL only. 6 lines. No audit.
+@sigil v0 hybrid
+G:
+H:
+P:
+V:
+A:
+Atoms/calls only. No code or prose. Fill all lines. Reuse task literals.

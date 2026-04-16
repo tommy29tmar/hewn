@@ -1,0 +1,20 @@
+{
+  "type": "json_schema",
+  "name": "debug_slot_pack",
+  "strict": true,
+  "schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": ["d"],
+    "properties": {
+      "d": {
+        "type": "array",
+        "minItems": 8,
+        "maxItems": 8,
+        "items": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

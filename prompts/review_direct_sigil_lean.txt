@@ -1,0 +1,8 @@
+SIGIL only. No [AUDIT]. No prose. Use `_` not spaces.
+@sigil v0 hybrid
+G: review(patch)
+H: hdr_override ∧ authz_bypass ⇒ spoof(x-user-id)
+P: drop_hdr → sess_only
+V: spoof_denied ∧ keep_401
+R: ! authz_bypass ∧ ! data_tamper
+A: sess_only

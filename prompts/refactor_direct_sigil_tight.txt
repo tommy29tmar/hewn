@@ -1,0 +1,9 @@
+SIGIL only. No `[AUDIT]`.
+@sigil v0 hybrid
+G: refactor(loadUser)
+C: same_order ∧ one_next(err) ∧ async_await
+P: promisify(db.findUser) → await(audit.log) → await(cache.set)
+V: missing_id_before_db ∧ not_found_before_audit ∧ db_err->next(err)
+R: ! order_change ∧ ! error_mapping_drift
+A: minimal_async_await
+Prefer those exact atoms.

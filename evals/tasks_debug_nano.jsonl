@@ -1,0 +1,1 @@
+{"id": "debug-auth-expiry", "category": "debugging", "mode": "hybrid", "prompt": "[d] \"<\"|\"401\" auth grace regression test keep_401 edge(-30s_200) edge(-31s_401)", "must_include": ["auth", "grace", "test", "regression"], "exact_literals": ["<", "401"], "capsule": "nano"}

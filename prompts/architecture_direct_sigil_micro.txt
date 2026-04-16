@@ -1,0 +1,17 @@
+Return valid SIGIL only. No fences. No prose. No `[AUDIT]`.
+
+Grammar:
+- each clause must be a valid SIGIL expr using only atoms/calls joined by `∧` `→` `⇒`
+- never use spaces inside atoms; use `_`
+- keep one line per clause, in this exact order
+
+Use this shape:
+@sigil v0 hybrid
+G: decide(mod_monolith)
+C: team(6) ∧ ddl("4 months") ∧ store("PostgreSQL") ∧ traffic(modest) ∧ split(post_release)
+H: fast_ship ∧ low_ops ⇒ prefer(mod_monolith)
+P: monolith_now → shared_pg → slice_ready_modules
+R: ! split_cost ∧ ! premature_distrib
+A: mod_monolith
+
+Prefer those atoms exactly.

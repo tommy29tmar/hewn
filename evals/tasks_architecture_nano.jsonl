@@ -1,0 +1,1 @@
+{"id": "arch-small-team", "category": "architecture", "mode": "hybrid", "prompt": "[a] \"6\"|\"4 months\"|\"PostgreSQL\" modular_monolith team deadline low_ops fast_ship split(post_release)", "must_include": ["modular_monolith", "team", "deadline"], "exact_literals": ["6", "4 months", "PostgreSQL"], "capsule": "nano"}

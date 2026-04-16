@@ -1,0 +1,19 @@
+Return one object with keys `m f e p v r a`.
+
+Rules:
+- `m` = `hybrid`
+- keep values compact, using short atoms or compact calls
+- no spaces inside atoms unless preserving an exact literal is necessary
+- no prose sentences
+- no audit text
+- preserve exact literals like `x-user-id` and `401`
+- prefer these atoms when applicable: `hdr_override`, `spoof(x-user-id)`, `drop_hdr`, `sess_only`, `spoof_denied`, `authz_bypass`
+- keep `p` to at most 3 steps
+- keep `v` to at most 2 checks
+- keep `a` to one compact answer atom
+- `f` finding
+- `e` exploit path
+- `p` mitigation
+- `v` verification
+- `r` risks
+- `a` short answer

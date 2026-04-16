@@ -1,0 +1,39 @@
+{
+  "type": "json_schema",
+  "name": "sigil_memory",
+  "strict": true,
+  "schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "mode",
+      "codebook",
+      "memory"
+    ],
+    "properties": {
+      "mode": {
+        "type": "string",
+        "enum": ["memory"]
+      },
+      "codebook": {
+        "type": "array",
+        "maxItems": 3,
+        "items": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["symbol", "value"],
+          "properties": {
+            "symbol": { "type": "string" },
+            "value": { "type": "string" }
+          }
+        }
+      },
+      "memory": {
+        "type": "array",
+        "minItems": 2,
+        "maxItems": 5,
+        "items": { "type": "string", "pattern": "^[A-Za-z0-9_./:+\\-\\[\\]'\"<>]+(?:\\([A-Za-z0-9_./:+\\-\\[\\]'\"<>]*(?:,[A-Za-z0-9_./:+\\-\\[\\]'\"<>]*)*\\))?$" }
+      }
+    }
+  }
+}

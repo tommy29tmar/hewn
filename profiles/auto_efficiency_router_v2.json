@@ -1,0 +1,236 @@
+{
+  "name": "auto_efficiency_router_v1",
+  "objective": "efficiency",
+  "categories": {
+    "debugging": "sigil-debug-wire-lite",
+    "architecture": "sigil-architecture-wire-capsule",
+    "code_review": "sigil-review-wire-lite",
+    "refactoring": "sigil-refactor-wire-capsule"
+  },
+  "diagnostics": {
+    "debugging": {
+      "sigil-debug": {
+        "score": 4.5,
+        "parse_rate": 1.0,
+        "repair_parse_rate": 1.0,
+        "mode_match_rate": 1.0,
+        "repair_mode_match_rate": 1.0,
+        "must_include_rate": 0.5,
+        "exact_literal_rate": 1.0,
+        "output_tokens": 115.0,
+        "effective_total_tokens": 680.0,
+        "elapsed_ms": 2562.41
+      },
+      "sigil-debug-wire": {
+        "score": 6.4993,
+        "parse_rate": 1.0,
+        "repair_parse_rate": 1.0,
+        "mode_match_rate": 1.0,
+        "repair_mode_match_rate": 1.0,
+        "must_include_rate": 0.625,
+        "exact_literal_rate": 0.75,
+        "output_tokens": 89.0,
+        "effective_total_tokens": 640.0,
+        "elapsed_ms": 1812.08
+      },
+      "sigil-debug-wire-lite": {
+        "score": 8.3519,
+        "parse_rate": 1.0,
+        "repair_parse_rate": 1.0,
+        "mode_match_rate": 1.0,
+        "repair_mode_match_rate": 1.0,
+        "must_include_rate": 0.5,
+        "exact_literal_rate": 0.5,
+        "output_tokens": 64.0,
+        "effective_total_tokens": 505.0,
+        "elapsed_ms": 1637.58
+      },
+      "sigil-debug-wire-capsule": {
+        "score": 6.8363,
+        "parse_rate": 1.0,
+        "repair_parse_rate": 1.0,
+        "mode_match_rate": 1.0,
+        "repair_mode_match_rate": 1.0,
+        "must_include_rate": 1.0,
+        "exact_literal_rate": 0.5,
+        "output_tokens": 93.0,
+        "effective_total_tokens": 621.0,
+        "elapsed_ms": 2039.97
+      },
+      "sigil-debug-wire-lite-capsule": {
+        "score": 8.0755,
+        "parse_rate": 1.0,
+        "repair_parse_rate": 1.0,
+        "mode_match_rate": 1.0,
+        "repair_mode_match_rate": 1.0,
+        "must_include_rate": 0.5,
+        "exact_literal_rate": 0.5,
+        "output_tokens": 73.0,
+        "effective_total_tokens": 491.0,
+        "elapsed_ms": 1785.36
+      }
+    },
+    "architecture": {
+      "sigil-architecture": {
+        "score": 7.2468,
+        "parse_rate": 1.0,
+        "repair_parse_rate": 1.0,
+        "mode_match_rate": 1.0,
+        "repair_mode_match_rate": 1.0,
+        "must_include_rate": 1.0,
+        "exact_literal_rate": 1.0,
+        "output_tokens": 131.0,
+        "effective_total_tokens": 558.0,
+        "elapsed_ms": 2290.84
+      },
+      "sigil-architecture-wire": {
+        "score": 6.5941,
+        "parse_rate": 1.0,
+        "repair_parse_rate": 1.0,
+        "mode_match_rate": 1.0,
+        "repair_mode_match_rate": 1.0,
+        "must_include_rate": 0.6667,
+        "exact_literal_rate": 0.6667,
+        "output_tokens": 127.0,
+        "effective_total_tokens": 531.0,
+        "elapsed_ms": 2555.5
+      },
+      "sigil-architecture-capsule": {
+        "score": 4.0,
+        "parse_rate": 1.0,
+        "repair_parse_rate": 1.0,
+        "mode_match_rate": 1.0,
+        "repair_mode_match_rate": 1.0,
+        "must_include_rate": 0.6667,
+        "exact_literal_rate": 0.6667,
+        "output_tokens": 138.0,
+        "effective_total_tokens": 570.0,
+        "elapsed_ms": 3176.64
+      },
+      "sigil-architecture-wire-capsule": {
+        "score": 8.4771,
+        "parse_rate": 1.0,
+        "repair_parse_rate": 1.0,
+        "mode_match_rate": 1.0,
+        "repair_mode_match_rate": 1.0,
+        "must_include_rate": 0.6667,
+        "exact_literal_rate": 0.6667,
+        "output_tokens": 105.0,
+        "effective_total_tokens": 514.0,
+        "elapsed_ms": 2311.14
+      }
+    },
+    "code_review": {
+      "sigil-review": {
+        "score": 5.3764,
+        "parse_rate": 1.0,
+        "repair_parse_rate": 1.0,
+        "mode_match_rate": 1.0,
+        "repair_mode_match_rate": 1.0,
+        "must_include_rate": 0.5,
+        "exact_literal_rate": 0.5,
+        "output_tokens": 119.0,
+        "effective_total_tokens": 534.0,
+        "elapsed_ms": 2293.35
+      },
+      "sigil-review-wire": {
+        "score": 6.9407,
+        "parse_rate": 1.0,
+        "repair_parse_rate": 1.0,
+        "mode_match_rate": 1.0,
+        "repair_mode_match_rate": 1.0,
+        "must_include_rate": 0.5,
+        "exact_literal_rate": 0.5,
+        "output_tokens": 96.0,
+        "effective_total_tokens": 474.0,
+        "elapsed_ms": 2157.125
+      },
+      "sigil-review-wire-lite": {
+        "score": 8.9992,
+        "parse_rate": 1.0,
+        "repair_parse_rate": 1.0,
+        "mode_match_rate": 1.0,
+        "repair_mode_match_rate": 1.0,
+        "must_include_rate": 0.5,
+        "exact_literal_rate": 0.5,
+        "output_tokens": 73.0,
+        "effective_total_tokens": 376.0,
+        "elapsed_ms": 1987.9
+      },
+      "sigil-review-wire-capsule": {
+        "score": 6.3213,
+        "parse_rate": 1.0,
+        "repair_parse_rate": 1.0,
+        "mode_match_rate": 1.0,
+        "repair_mode_match_rate": 1.0,
+        "must_include_rate": 0.75,
+        "exact_literal_rate": 0.5,
+        "output_tokens": 114.0,
+        "effective_total_tokens": 482.0,
+        "elapsed_ms": 4474.89
+      },
+      "sigil-review-wire-lite-capsule": {
+        "score": 8.6739,
+        "parse_rate": 1.0,
+        "repair_parse_rate": 1.0,
+        "mode_match_rate": 1.0,
+        "repair_mode_match_rate": 1.0,
+        "must_include_rate": 0.5,
+        "exact_literal_rate": 0.5,
+        "output_tokens": 83.0,
+        "effective_total_tokens": 376.0,
+        "elapsed_ms": 1985.81
+      }
+    },
+    "refactoring": {
+      "sigil-refactor": {
+        "score": 6.022,
+        "parse_rate": 1.0,
+        "repair_parse_rate": 1.0,
+        "mode_match_rate": 1.0,
+        "repair_mode_match_rate": 1.0,
+        "must_include_rate": 1.0,
+        "exact_literal_rate": 0.6667,
+        "output_tokens": 127.0,
+        "effective_total_tokens": 649.0,
+        "elapsed_ms": 2532.23
+      },
+      "sigil-refactor-wire": {
+        "score": 6.1336,
+        "parse_rate": 1.0,
+        "repair_parse_rate": 1.0,
+        "mode_match_rate": 1.0,
+        "repair_mode_match_rate": 1.0,
+        "must_include_rate": 0.75,
+        "exact_literal_rate": 0.6667,
+        "output_tokens": 131.0,
+        "effective_total_tokens": 576.0,
+        "elapsed_ms": 3060.32
+      },
+      "sigil-refactor-capsule": {
+        "score": 5.1914,
+        "parse_rate": 1.0,
+        "repair_parse_rate": 1.0,
+        "mode_match_rate": 1.0,
+        "repair_mode_match_rate": 1.0,
+        "must_include_rate": 0.25,
+        "exact_literal_rate": 0.0,
+        "output_tokens": 119.0,
+        "effective_total_tokens": 608.0,
+        "elapsed_ms": 2722.9
+      },
+      "sigil-refactor-wire-capsule": {
+        "score": 10.0,
+        "parse_rate": 1.0,
+        "repair_parse_rate": 1.0,
+        "mode_match_rate": 1.0,
+        "repair_mode_match_rate": 1.0,
+        "must_include_rate": 1.0,
+        "exact_literal_rate": 0.6667,
+        "output_tokens": 86.0,
+        "effective_total_tokens": 498.0,
+        "elapsed_ms": 1701.69
+      }
+    }
+  }
+}

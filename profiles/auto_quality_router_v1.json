@@ -1,0 +1,140 @@
+{
+  "name": "auto_quality_router_v1",
+  "objective": "quality",
+  "categories": {
+    "debugging": "sigil-debug-wire",
+    "architecture": "sigil-architecture",
+    "code_review": "sigil-review-wire-lite",
+    "refactoring": "sigil-refactor"
+  },
+  "diagnostics": {
+    "debugging": {
+      "sigil-debug": {
+        "score": 7.0,
+        "parse_rate": 1.0,
+        "repair_parse_rate": 1.0,
+        "mode_match_rate": 1.0,
+        "repair_mode_match_rate": 1.0,
+        "must_include_rate": 0.5,
+        "exact_literal_rate": 1.0,
+        "output_tokens": 115.0,
+        "effective_total_tokens": 680.0,
+        "elapsed_ms": 2562.41
+      },
+      "sigil-debug-wire": {
+        "score": 8.8171,
+        "parse_rate": 1.0,
+        "repair_parse_rate": 1.0,
+        "mode_match_rate": 1.0,
+        "repair_mode_match_rate": 1.0,
+        "must_include_rate": 0.625,
+        "exact_literal_rate": 0.75,
+        "output_tokens": 89.0,
+        "effective_total_tokens": 640.0,
+        "elapsed_ms": 1812.08
+      },
+      "sigil-debug-wire-lite": {
+        "score": 5.75,
+        "parse_rate": 1.0,
+        "repair_parse_rate": 1.0,
+        "mode_match_rate": 1.0,
+        "repair_mode_match_rate": 1.0,
+        "must_include_rate": 0.5,
+        "exact_literal_rate": 0.5,
+        "output_tokens": 64.0,
+        "effective_total_tokens": 505.0,
+        "elapsed_ms": 1637.58
+      }
+    },
+    "architecture": {
+      "sigil-architecture": {
+        "score": 9.75,
+        "parse_rate": 1.0,
+        "repair_parse_rate": 1.0,
+        "mode_match_rate": 1.0,
+        "repair_mode_match_rate": 1.0,
+        "must_include_rate": 1.0,
+        "exact_literal_rate": 1.0,
+        "output_tokens": 131.0,
+        "effective_total_tokens": 558.0,
+        "elapsed_ms": 2290.84
+      },
+      "sigil-architecture-wire": {
+        "score": 5.5,
+        "parse_rate": 1.0,
+        "repair_parse_rate": 1.0,
+        "mode_match_rate": 1.0,
+        "repair_mode_match_rate": 1.0,
+        "must_include_rate": 0.6667,
+        "exact_literal_rate": 0.6667,
+        "output_tokens": 127.0,
+        "effective_total_tokens": 531.0,
+        "elapsed_ms": 2555.5
+      }
+    },
+    "code_review": {
+      "sigil-review": {
+        "score": 9.5,
+        "parse_rate": 1.0,
+        "repair_parse_rate": 1.0,
+        "mode_match_rate": 1.0,
+        "repair_mode_match_rate": 1.0,
+        "must_include_rate": 0.5,
+        "exact_literal_rate": 0.5,
+        "output_tokens": 119.0,
+        "effective_total_tokens": 534.0,
+        "elapsed_ms": 2293.35
+      },
+      "sigil-review-wire": {
+        "score": 9.8014,
+        "parse_rate": 1.0,
+        "repair_parse_rate": 1.0,
+        "mode_match_rate": 1.0,
+        "repair_mode_match_rate": 1.0,
+        "must_include_rate": 0.5,
+        "exact_literal_rate": 0.5,
+        "output_tokens": 96.0,
+        "effective_total_tokens": 474.0,
+        "elapsed_ms": 2157.125
+      },
+      "sigil-review-wire-lite": {
+        "score": 10.25,
+        "parse_rate": 1.0,
+        "repair_parse_rate": 1.0,
+        "mode_match_rate": 1.0,
+        "repair_mode_match_rate": 1.0,
+        "must_include_rate": 0.5,
+        "exact_literal_rate": 0.5,
+        "output_tokens": 73.0,
+        "effective_total_tokens": 376.0,
+        "elapsed_ms": 1987.9
+      }
+    },
+    "refactoring": {
+      "sigil-refactor": {
+        "score": 9.75,
+        "parse_rate": 1.0,
+        "repair_parse_rate": 1.0,
+        "mode_match_rate": 1.0,
+        "repair_mode_match_rate": 1.0,
+        "must_include_rate": 1.0,
+        "exact_literal_rate": 0.6667,
+        "output_tokens": 127.0,
+        "effective_total_tokens": 649.0,
+        "elapsed_ms": 2532.23
+      },
+      "sigil-refactor-wire": {
+        "score": 7.5,
+        "parse_rate": 1.0,
+        "repair_parse_rate": 1.0,
+        "mode_match_rate": 1.0,
+        "repair_mode_match_rate": 1.0,
+        "must_include_rate": 0.75,
+        "exact_literal_rate": 0.6667,
+        "output_tokens": 131.0,
+        "effective_total_tokens": 576.0,
+        "elapsed_ms": 3060.32
+      }
+    }
+  }
+}

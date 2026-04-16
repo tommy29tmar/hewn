@@ -1,0 +1,1 @@
+{"id": "security-review-header-auth", "category": "code_review", "mode": "hybrid", "prompt": "[r] \"x-user-id\"|\"401\" header auth risk verify drop_hdr keep_401 spoof_denied", "must_include": ["risk", "verify", "header", "auth"], "exact_literals": ["x-user-id", "401"], "capsule": "nano"}

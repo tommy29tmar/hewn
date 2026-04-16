@@ -1,0 +1,2 @@
+{"id":"security-review-header-auth","category":"code_review","mode":"hybrid","prompt":"Review this patch for likely security regressions and give the shortest actionable report.\n\nDiff:\n```diff\n- const userId = session.userId;\n+ const userId = req.headers['x-user-id'] || session.userId;\n  if (!userId) return res.status(401).end();\n```\n\nContext: this handler is behind the public API gateway. Keep the report concise but include risk and verification.","must_include":["risk","verify","header","auth"],"exact_literals":["x-user-id","401"]}
+

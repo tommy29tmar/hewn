@@ -1,0 +1,50 @@
+# SIGIL structured-document grammar.
+# This grammar covers symbolic outputs (`draft`, `hybrid`, `memory`, `compile`).
+# Pure audit-only natural-language replies are intentionally out of scope.
+
+program        ::= spacing? header? spacing? codebook? spacing? clause+ spacing? audit_block? spacing?
+header         ::= "@sigil" ws version (ws mode)?
+version        ::= "v0"
+mode           ::= "draft" | "audit" | "hybrid" | "memory" | "compile"
+
+codebook       ::= "@cb[" spacing? binding_list? spacing? "]"
+binding_list   ::= binding (";" spacing? binding)* ";"?
+binding        ::= symbol "=" scalar
+
+clause         ::= tag ":" ws? expr line_end
+tag            ::= "G" | "C" | "H" | "P" | "V" | "R" | "Q" | "M" | "A"
+
+expr           ::= factor (ws? binary_op ws? factor)*
+factor         ::= prefix_mark* primary postfix_mark*
+primary        ::= call | group | atom
+call           ::= ident "(" ws? args? ws? ")"
+args           ::= expr (ws? "," ws? expr)*
+group          ::= "(" ws? expr ws? ")"
+atom           ::= symbol | scalar
+
+binary_op      ::= "∧" | "∨" | "⇒" | "→" | "≈" | "⊥" | "&" | "|" | "=>" | "->"
+prefix_mark    ::= "?" | "!"
+postfix_mark   ::= "?" | "!"
+
+audit_block    ::= "[AUDIT]" line_end audit_text
+audit_text     ::= audit_line+
+audit_line     ::= (!end_of_input .)* line_end?
+
+symbol         ::= ident
+scalar         ::= ident | number | quoted
+ident          ::= ident_char+
+number         ::= digit+ ("." digit+)?
+quoted         ::= "\"" quoted_char* "\"" | "'" quoted_char* "'"
+
+ident_char     ::= letter | digit | "_" | "." | "/" | "-" | "<" | ">" | "=" | "+"
+quoted_char    ::= "\\" . | !("\"" | "'") .
+line_end       ::= ws? newline | ws? end_of_input
+spacing        ::= (blank_line | comment_line)*
+blank_line     ::= ws? newline
+comment_line   ::= ws? "#" (!newline .)* newline
+ws             ::= " " | "\t"
+newline        ::= "\r\n" | "\n"
+digit          ::= "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+letter         ::= ? any Unicode letter ?
+end_of_input   ::= ? end of file ?
+

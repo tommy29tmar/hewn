@@ -1,0 +1,1 @@
+{"id": "debug-auth-expiry", "category": "debugging", "mode": "hybrid", "prompt": "[capsule micro debugging]\nanchors: \"<\" | \"401\"\nctx: auth_mw expiry\nrule: expMs<nowMs=>401\nneed: allow skew30 only\nissue: skew30 boundary refresh_loop\ndeliver: min_fix reg_test", "must_include": ["auth", "grace", "test", "regression"], "exact_literals": ["<", "401"], "capsule": "micro"}
