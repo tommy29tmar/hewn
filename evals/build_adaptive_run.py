@@ -9,8 +9,8 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
-from sigil.eval_common import load_jsonl
-from sigil.verification import assess_output, verification_failures
+from flint.eval_common import load_jsonl
+from flint.verification import assess_output, verification_failures
 
 
 def append_jsonl(path: Path, rows: list[dict[str, Any]]) -> None:

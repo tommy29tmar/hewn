@@ -5,7 +5,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from sigil.calibration import (
+from flint.calibration import (
     baseline_multi_ir_extended_run_path,
     build_multi_ir_extended_profile_name,
     calibration_label,

@@ -9,17 +9,17 @@ import io
 import unittest
 from contextlib import redirect_stdout
 
-from sigil.cli import main
-from sigil.normalize import repair_direct_sigil_text
-from sigil.parser import SIGILParseError, parse_document
+from flint.cli import main
+from flint.normalize import repair_direct_flint_text
+from flint.parser import FlintParseError, parse_document
 
 
 class RepairRegressionTests(unittest.TestCase):
     def _assert_parses_after_repair(self, raw: str, category: str) -> str:
-        repaired = repair_direct_sigil_text(raw, category)
+        repaired = repair_direct_flint_text(raw, category)
         try:
             parse_document(repaired)
-        except SIGILParseError as exc:
+        except FlintParseError as exc:
             self.fail(f"repaired document failed to parse: {exc}\nrepaired:\n{repaired}")
         return repaired
 
@@ -27,7 +27,7 @@ class RepairRegressionTests(unittest.TestCase):
         """`team_"9"`, `ddl_"12 weeks"`, `store_"PostgreSQL"` must repair into
         proper calls instead of dropping the whole C clause."""
         raw = (
-            "@sigil v0 hybrid\n"
+            "@flint v0 hybrid\n"
             "G: default_arch\n"
             'C: team_"9" ∧ ddl_"12 weeks" ∧ store_"PostgreSQL"\n'
             "P: modular_monolith ∧ bounded_contexts\n"
@@ -42,7 +42,7 @@ class RepairRegressionTests(unittest.TestCase):
     def test_refactor_quoted_suffix_preserves_literal(self) -> None:
         """`db_err_forwards_"next(err)"` must keep the quoted literal intact."""
         raw = (
-            "@sigil v0 hybrid\n"
+            "@flint v0 hybrid\n"
             "G: reconcileBatch_async\n"
             'C: callback_style ∧ db_err_forwards_"next(err)"\n'
             "P: convert_to_async ∧ await_each_step\n"
@@ -57,7 +57,7 @@ class RepairRegressionTests(unittest.TestCase):
         `valid_passes` and leave dangling `es`. Verify both raw and repaired
         parse cleanly and the atom survives verbatim."""
         raw = (
-            "@sigil v0 hybrid\n"
+            "@flint v0 hybrid\n"
             "G: fix_skew\n"
             "C: webhook_verify ∧ valid_passes\n"
             "P: widen_window ∧ reg_test\n"
@@ -74,7 +74,7 @@ class HybridWithoutAuditTests(unittest.TestCase):
         """The shipped /sigil skill produces 6-line hybrid documents with no
         trailing [AUDIT] block. These must parse without error."""
         raw = (
-            "@sigil v0 hybrid\n"
+            "@flint v0 hybrid\n"
             "G: webhook_skew_fix\n"
             "C: webhook_verify ∧ valid_webhook_rejected\n"
             "P: widen_tolerance ∧ allow_provider_skew\n"
@@ -92,14 +92,14 @@ class AuditExplainTests(unittest.TestCase):
         import tempfile
 
         sample = (
-            "@sigil v0 hybrid\n"
+            "@flint v0 hybrid\n"
             "G: webhook_skew_fix\n"
             'C: webhook_verify ∧ team_"9"\n'
             "P: widen_tolerance ∧ reg_test\n"
             "V: edge(-299s,200) ∧ edge(301s,401)\n"
             "A: adjust_skew_check ∧ add_regression_test\n"
         )
-        with tempfile.NamedTemporaryFile("w", suffix=".sigil", delete=False) as fh:
+        with tempfile.NamedTemporaryFile("w", suffix=".flint", delete=False) as fh:
             fh.write(sample)
             path = Path(fh.name)
         try:

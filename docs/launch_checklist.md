@@ -1,4 +1,4 @@
-# Launch checklist — SIGIL viral release
+# Launch checklist — Flint viral release
 
 Everything in the repo is ready. This is your step-by-step for go-live.
 
@@ -6,7 +6,7 @@ Everything in the repo is ready. This is your step-by-step for go-live.
 
 **Benchmark on `tasks_top_tier_holdout.jsonl` (8 tasks × 3 variants × 4 models, every cell gate-clean):**
 
-| Model | SIGIL tokens | SIGIL latency | must_include |
+| Model | Flint tokens | Flint latency | must_include |
 | --- | ---: | ---: | ---: |
 | Sonnet 4   | -3.1%   | -43.7%  | 86.5% (↑ from 66.7% baseline) |
 | Sonnet 4.6 | -24.4%  | -52.3%  | 79.2% (↑ from 70.8%) |
@@ -36,9 +36,9 @@ You asked whether to laser-focus this release on Opus 4.7 only and ignore the ot
 - `docs/manifesto.md` — the old README_SIGIL (preserved)
 - `docs/launch_opus47.md` — launch post draft (600-800 words, HN-ready)
 - `docs/launch_benchmark_table.md` — machine-generated benchmark table
-- `integrations/claude-code/skill/SKILL.md` — the `/sigil` Claude Code skill
-- `integrations/claude-code/output-styles/sigil.md` — persistent output-style variant
-- `integrations/claude-code/sigil_system_prompt.txt` — the single shipped prompt (source of truth)
+- `integrations/claude-code/skill/SKILL.md` — the `/flint` Claude Code skill
+- `integrations/claude-code/output-styles/flint.md` — persistent output-style variant
+- `integrations/claude-code/flint_system_prompt.txt` — the single shipped prompt (source of truth)
 - `integrations/claude-code/install.sh` — one-command installer (curl-piped)
 - `scripts/bench_cell.py` / `publish_gate.py` / `launch_table.py` — benchmark tooling
 - `scripts/demo.py` — 3-way side-by-side demo (used to generate the launch screenshot)
@@ -49,7 +49,7 @@ You asked whether to laser-focus this release on Opus 4.7 only and ignore the ot
 ## What NOT been done (intentional, your call)
 
 - **Nothing has been pushed to GitHub.** All changes are local commits. Push when you decide.
-- **Nothing published to PyPI.** The `pip install sigil-ir` path currently fails because the package isn't on PyPI. The installer uses `pipx install git+...` which works from the public repo.
+- **Nothing published to PyPI.** The `pip install flint-ir` path currently fails because the package isn't on PyPI. The installer uses `pipx install git+...` which works from the public repo.
 - **No social posts.** Launch post is in `docs/launch_opus47.md`. You press publish.
 - **No GIF.** There's a PNG screenshot at `assets/launch/demo.png`. Record a real GIF/video when you have time — it'll lift CTR on X/HN.
 
@@ -58,7 +58,7 @@ You asked whether to laser-focus this release on Opus 4.7 only and ignore the ot
 ### 1. Review the artifacts
 
 ```bash
-cd /home/tommaso/dev/playground/SIGIL
+cd /home/tommaso/dev/playground/Flint
 git log --oneline -20                       # see what was done
 git status                                  # anything uncommitted?
 cat README.md                               # scan the landing page
@@ -86,25 +86,25 @@ Commit and update the README `<img>` reference from `demo.png` to `demo.gif`.
 git push origin main
 ```
 
-Verify https://github.com/tommy29tmar/SIGIL renders the new README.
+Verify https://github.com/tommy29tmar/Flint renders the new README.
 
 ### 4. Test the one-line installer in a clean env
 
 ```bash
 # In a fresh container or VM:
-curl -fsSL https://raw.githubusercontent.com/tommy29tmar/SIGIL/main/integrations/claude-code/install.sh | bash
-ls ~/.claude/skills/sigil/
-# Then try /output-style sigil in a Claude Code session and ask a technical question.
+curl -fsSL https://raw.githubusercontent.com/tommy29tmar/Flint/main/integrations/claude-code/install.sh | bash
+ls ~/.claude/skills/flint/
+# Then try /output-style flint in a Claude Code session and ask a technical question.
 ```
 
 If install breaks, fix before posting. This is the single point of failure in the launch.
 
 ### 5. (Optional) Publish to PyPI
 
-If you want `pip install sigil-ir` to work instead of `pipx install git+...`:
+If you want `pip install flint-ir` to work instead of `pipx install git+...`:
 
 ```bash
-cd /home/tommaso/dev/playground/SIGIL
+cd /home/tommaso/dev/playground/Flint
 python3 -m build                # needs `pip install build`
 python3 -m twine upload dist/*  # needs a PyPI token
 ```
@@ -115,13 +115,13 @@ Then bump the installer to prefer PyPI. Not blocking — the curl installer alre
 
 Order matters. Stack them roughly 15–30 min apart so traffic converges.
 
-1. **HN Show HN**: title `Show HN: SIGIL – compress the work Claude does, not the fluff (-27% tokens on Opus 4.7)`. Body: first paragraph of `docs/launch_opus47.md`. Link: the repo.
+1. **HN Show HN**: title `Show HN: Flint – compress the work Claude does, not the fluff (-27% tokens on Opus 4.7)`. Body: first paragraph of `docs/launch_opus47.md`. Link: the repo.
 2. **X / Twitter**: hook + table screenshot + link. Character budget example:
    > Made Claude Opus 4.7 27% cheaper with a prompt-level IR.
    > -56% latency. Validated across 4 Claude models.
    > Not a Caveman-style voice trick — real work compression vs a terse baseline.
    > One install. MIT.
-   > github.com/tommy29tmar/SIGIL
+   > github.com/tommy29tmar/Flint
 3. **r/LocalLLaMA** and **r/ClaudeAI**: adapt post, lead with the benchmark table.
 4. **Claude Code Discord**: `#share-your-work` channel or equivalent, lead with the skill install line.
 
@@ -129,10 +129,10 @@ Order matters. Stack them roughly 15–30 min apart so traffic converges.
 
 HN dies fast. If you answer top comments in the first 2 hours you multiply signal. Expected objections to have ready answers for:
 
-- *"Why not just use Caveman?"* — The primitive-english row in the table is Caveman-style. On Sonnet 4.6 it hurts must_include. On Opus 4.6 it saves only 7%. SIGIL does both better.
+- *"Why not just use Caveman?"* — The primitive-english row in the table is Caveman-style. On Sonnet 4.6 it hurts must_include. On Opus 4.6 it saves only 7%. Flint does both better.
 - *"8 tasks is too few."* — Fair. Reproducible with `scripts/run_launch_bench.sh` against any corpus. Plan a larger run in v2.
 - *"Must_include isn't quality."* — True. It's a literal-retention proxy, the honest measure the repo supports. Semantic judge is roadmap.
-- *"Why should I care, Claude Code already has skills."* — Because `/sigil` is just a way to install; the actual artifact is a provider-agnostic prompt that works via any API.
+- *"Why should I care, Claude Code already has skills."* — Because `/flint` is just a way to install; the actual artifact is a provider-agnostic prompt that works via any API.
 
 ## If the launch lands
 
@@ -143,7 +143,7 @@ HN dies fast. If you answer top comments in the first 2 hours you multiply signa
 ## If it flops
 
 - Don't retract — that's worse than silence.
-- Archive the repo under `launches/sigil-v1` and keep going. The methodology and tooling are good even if the angle didn't land. Next angle: reframe as "SIGIL: the serving IR for self-hosted Claude replacements" and target r/LocalLLaMA specifically.
+- Archive the repo under `launches/flint-v1` and keep going. The methodology and tooling are good even if the angle didn't land. Next angle: reframe as "Flint: the serving IR for self-hosted Claude replacements" and target r/LocalLLaMA specifically.
 
 ## Open questions for you in the morning
 

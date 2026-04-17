@@ -746,7 +746,7 @@ def render_claude_code_md(*, profile: dict[str, Any], model: str, provider: str 
             "",
             "## Raw SIGIL Rules",
             "",
-            "- Start with `@sigil v0 hybrid`.",
+            "- Start with `@flint v0 hybrid`.",
             "- Keep one clause per line.",
             "- Use only atoms/calls joined by `∧`, `→`, `⇒`.",
             "- Avoid prose inside clauses.",

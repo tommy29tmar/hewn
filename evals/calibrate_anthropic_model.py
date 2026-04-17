@@ -8,7 +8,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
-from sigil.calibration import (  # noqa: E402
+from flint.calibration import (  # noqa: E402
     baseline_micro_run_path,
     build_profile_name,
     default_anthropic_micro_jobs,

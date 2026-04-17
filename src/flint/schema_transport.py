@@ -213,7 +213,7 @@ def render_schema_payload(payload: dict[str, Any], schema_name: str | None = Non
     if isinstance(payload, dict) and schema_name in {"debug_wire_lite", "architecture_wire_lite", "review_wire_lite", "refactor_wire_lite"}:
         payload = _canonicalize_lite_payload(payload)
     mode = payload.get("mode") or payload.get("m")
-    lines = [f"@sigil v0 {mode}", *_render_codebook(payload.get("codebook", []))]
+    lines = [f"@flint v0 {mode}", *_render_codebook(payload.get("codebook", []))]
 
     if mode == "memory":
         for memory_expr in payload["memory"]:

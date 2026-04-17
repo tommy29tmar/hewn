@@ -14,8 +14,8 @@ from .bench import (
     render_report,
 )
 from .metrics import document_metrics
-from .normalize import normalize_document_text, repair_direct_sigil_text
-from .parser import SIGILParseError, document_to_data, parse_document
+from .normalize import normalize_document_text, repair_direct_flint_text
+from .parser import FlintParseError, document_to_data, parse_document
 from .render import generate_audit
 
 
@@ -193,7 +193,7 @@ def main(argv: list[str] | None = None) -> int:
 
     try:
         document = parse_document(args.path)
-    except SIGILParseError as exc:
+    except FlintParseError as exc:
         parser.exit(status=1, message=f"sigil: {exc}\n")
 
     if args.command == "validate":
@@ -227,14 +227,14 @@ def main(argv: list[str] | None = None) -> int:
 
 def _run_audit_explain(path: Path, anchors: list[str], category: str) -> int:
     raw = path.read_text(encoding="utf-8")
-    repaired = repair_direct_sigil_text(raw, category)
+    repaired = repair_direct_flint_text(raw, category)
     parse_state: str
     prose: str
     try:
         document = parse_document(repaired)
         parse_state = "OK"
         prose = generate_audit(document)
-    except SIGILParseError as exc:
+    except FlintParseError as exc:
         parse_state = f"FAIL: {exc}"
         prose = "(unparseable — showing repaired SIGIL only)"
 

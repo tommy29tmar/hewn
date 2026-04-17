@@ -1,18 +1,18 @@
 # Provider Strategy
 
-SIGIL should not be framed as a single compact language that wins unchanged across every provider.
+Flint should not be framed as a single compact language that wins unchanged across every provider.
 
 The data in this repo supports a stronger and more honest claim:
 
-> SIGIL is a transport runtime with a stable core and calibrated front-ends.
+> Flint is a transport runtime with a stable core and calibrated front-ends.
 
 The newest result suggests an even stronger version:
 
-> SIGIL works best as a multi-IR runtime, not as one compact notation.
+> Flint works best as a multi-IR runtime, not as one compact notation.
 
 And the newest macro evidence suggests an even more deployment-shaped extension:
 
-> SIGIL should compile shared context too, not only task contracts and outputs.
+> Flint should compile shared context too, not only task contracts and outputs.
 
 That means four layers:
 
@@ -27,7 +27,7 @@ If the goal is “same efficiency or better on Claude and Gemini too”, parity 
 
 It has to mean:
 
-- OpenAI has at least one clear positive benchmark regime and does not force SIGIL where it loses
+- OpenAI has at least one clear positive benchmark regime and does not force Flint where it loses
 - Claude is at least near-parity on the harder extended selective matrix and positive on starter `nano`
 - Gemini reaches positive savings in a calibrated micro or macro regime
 
@@ -46,11 +46,11 @@ Today that is already true in a qualified way:
 
 So the right industry claim is not:
 
-> SIGIL beats terse natural language with one universal prompt.
+> Flint beats terse natural language with one universal prompt.
 
 It is:
 
-> SIGIL beats terse natural language when the transport is calibrated to the provider and the benchmark matches the provider’s operating regime.
+> Flint beats terse natural language when the transport is calibrated to the provider and the benchmark matches the provider’s operating regime.
 
 ## Provider Playbook
 
@@ -58,13 +58,13 @@ It is:
 
 OpenAI is the cleanest case today.
 
-- `gpt-5.4` prefers full SIGIL on the focused micro benchmark, and on the harder extended matrix it now reaches positive aggregate total savings with task-level routing:
+- `gpt-5.4` prefers full Flint on the focused micro benchmark, and on the harder extended matrix it now reaches positive aggregate total savings with task-level routing:
   - `debug ->` transferred `openai-gemini-nano`, now often in `cap56` form on the tasks that clear the quality floor
   - `architecture -> capsule-mini` or transferred `openai-gemini-nano`
   - `review -> openai-gemini-nano` on the winning tasks
   - `refactor -> plain`
   - aggregate total-token savings vs baseline: `7.07%`
-- `gpt-5.4-mini` now uses a real selective SIGIL share on the extended matrix and still stays below baseline on aggregate total cost:
+- `gpt-5.4-mini` now uses a real selective Flint share on the extended matrix and still stays below baseline on aggregate total cost:
   - `debug ->` mostly transferred `gemini-nano`, often with `cap56`
   - `review ->` mostly transferred `gemini-nano`
   - `architecture ->` mixed `gemini-nano`, `capsule-mini`, and plain
@@ -74,7 +74,7 @@ OpenAI is the cleanest case today.
 Implication:
 
 - use micro capsules aggressively
-- keep full SIGIL on stronger models only when the benchmark actually supports it
+- keep full Flint on stronger models only when the benchmark actually supports it
 - use transferred ultra-short contracts selectively when the task-level scorer says they beat plain
 - keep selective or full plain fallback available on smaller models, but do not assume they must collapse to all-plain
 - compiled shared context now looks worth carrying into OpenAI macro workloads too, at least for cold-start paths
@@ -83,7 +83,7 @@ Implication:
 
 Claude is now the second clear proof-point for task-contract transfer.
 
-As of April 16, 2026, the Anthropic Models API on this workspace exposes newer Anthropic targets including `claude-sonnet-4-6`, `claude-opus-4-6`, and `claude-opus-4-7`. SIGIL should therefore treat `claude-sonnet-4-6` as the current Sonnet target, not only the older `claude-sonnet-4-20250514` row.
+As of April 16, 2026, the Anthropic Models API on this workspace exposes newer Anthropic targets including `claude-sonnet-4-6`, `claude-opus-4-6`, and `claude-opus-4-7`. Flint should therefore treat `claude-sonnet-4-6` as the current Sonnet target, not only the older `claude-sonnet-4-20250514` row.
 
 - starter `nano` is strongly positive on total cost
 - on the extended corpus, the strongest route is no longer mostly-plain:
@@ -91,7 +91,7 @@ As of April 16, 2026, the Anthropic Models API on this workspace exposes newer A
   - `architecture ->` mixed `gemini-transfer`, `claude-nano`, and `capsule-mini`
   - `code_review ->` mostly `gemini-transfer`
   - `refactoring ->` almost entirely `gemini-transfer`, with `cap56` now winning much of the category
-- forcing one single SIGIL lane is still not optimal
+- forcing one single Flint lane is still not optimal
 - but the front-end prompt contract is now more portable than before: some of the strongest Claude lanes are transferred from the Gemini family, not native Claude prompts
 - aggregate total-token savings vs baseline on the current extended matrix: `28.37%`
 - on a separate top-tier holdout, `claude-sonnet-4-6` now lands at:
@@ -110,7 +110,7 @@ Implication:
 - optimize Claude as a selective transport target
 - use `nano` task compilation when the caller can tolerate a more specialized contract
 - use typed capsule-mini contracts when `nano` loses too much task structure
-- do not force the OpenAI “all SIGIL” story onto Claude
+- do not force the OpenAI “all Flint” story onto Claude
 - but do test cross-provider contract transfer aggressively, because Claude now benefits from it materially
 - treat Claude as evidence that the runtime layer, not the prompt family alone, is what makes transfer work
 - Claude also now benefits from compiled shared context on macro cold-start, which makes the architecture story stronger than “Gemini-only cache trick”
@@ -125,11 +125,11 @@ Legacy micro reality:
 
 Current extended selective reality:
 
-- after rerendering direct SIGIL rows with the stronger local repair runtime
+- after rerendering direct Flint rows with the stronger local repair runtime
 - after letting `nano` direct transports and capsule-mini compete together
 - Gemini extended selective is now:
   - baseline: `159.75` avg total tokens
-  - SIGIL routed: `150.16`
+  - Flint routed: `150.16`
   - aggregate total-token savings: `6.01%`
   - aggregate latency savings: `30.32%`
   - `parse_rate = 1.0`
@@ -141,7 +141,7 @@ Macro reality:
 - once explicit cache is enabled
 - once one-time cache creation latency is excluded from steady-state measurement
 
-SIGIL becomes clearly positive on effective total cost.
+Flint becomes clearly positive on effective total cost.
 
 Newest macro reality:
 
@@ -168,7 +168,7 @@ Implication:
 
 ## Why This Is Still Valuable
 
-This does not weaken SIGIL. It strengthens it.
+This does not weaken Flint. It strengthens it.
 
 If the repo claimed a universal compact prompt, it would be fragile and easy to falsify.
 
@@ -213,7 +213,7 @@ One more constraint is now visible too:
 - `gemini-nano -> Claude` works
 - `claude-nano -> Gemini` does not currently work on either `review` or `architecture`
 
-That suggests some task contracts are simply better compile targets than others. SIGIL should therefore evolve toward a library of benchmarked transport contracts, not a one-prompt-per-provider story. The new [docs/portability.md](portability.md) report is the first explicit artifact for that thesis.
+That suggests some task contracts are simply better compile targets than others. Flint should therefore evolve toward a library of benchmarked transport contracts, not a one-prompt-per-provider story. The new [docs/portability.md](portability.md) report is the first explicit artifact for that thesis.
 
 Everything else is no longer a conceptual blocker:
 
@@ -226,7 +226,7 @@ Everything else is no longer a conceptual blocker:
 
 So the next work should not be generic prompt tweaking. It should be:
 
-1. better `debug` and `architecture` nano transports for Claude and OpenAI strong-tier, because those are the categories where SIGIL still struggles under plain competition
+1. better `debug` and `architecture` nano transports for Claude and OpenAI strong-tier, because those are the categories where Flint still struggles under plain competition
 2. multi-IR routing for Gemini micro, not just prompt-family tuning
 3. a smarter scorer that can reward quality and latency separately from total-cost parity
 4. bigger benchmark corpora

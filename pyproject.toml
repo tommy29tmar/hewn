@@ -3,9 +3,9 @@ requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "sigil-ir"
+name = "flint-ir"
 version = "0.1.0"
-description = "A minimal parser and audit runtime for the SIGIL reasoning IR."
+description = "A minimal parser and audit runtime for the Flint reasoning IR."
 readme = "README.md"
 requires-python = ">=3.11"
 authors = [
@@ -14,7 +14,7 @@ authors = [
 dependencies = []
 
 [project.scripts]
-sigil = "sigil.cli:main"
+flint = "flint.cli:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

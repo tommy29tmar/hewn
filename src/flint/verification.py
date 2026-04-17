@@ -4,8 +4,8 @@ from pathlib import Path
 from typing import Any
 
 from .metrics import approx_token_count, document_metrics
-from .normalize import normalize_document_text, repair_direct_sigil_text
-from .parser import SIGILParseError, parse_document
+from .normalize import normalize_document_text, repair_direct_flint_text
+from .parser import FlintParseError, parse_document
 
 
 def rate(hit_count: int, total: int) -> float | None:
@@ -69,7 +69,7 @@ def assess_output(
 
     try:
         document = parse_document(content)
-    except SIGILParseError as exc:
+    except FlintParseError as exc:
         result["parse_error"] = str(exc)
     else:
         stats = document_metrics(document, content)
@@ -78,12 +78,12 @@ def assess_output(
         result["has_audit"] = stats["has_audit"]
 
     if row.get("transport") == "sigil":
-        repaired_content = repair_direct_sigil_text(content, str(task.get("category") or ""))
+        repaired_content = repair_direct_flint_text(content, str(task.get("category") or ""))
     else:
         repaired_content = normalize_document_text(content)
     try:
         repaired_document = parse_document(repaired_content)
-    except SIGILParseError as exc:
+    except FlintParseError as exc:
         result["repair_parse_error"] = str(exc)
     else:
         repaired_stats = document_metrics(repaired_document, repaired_content)

@@ -1,12 +1,12 @@
-# SIGIL
+# Flint
 
-[![CI](https://github.com/tommy29tmar/SIGIL/actions/workflows/ci.yml/badge.svg)](https://github.com/tommy29tmar/SIGIL/actions/workflows/ci.yml)
+[![CI](https://github.com/tommy29tmar/Flint/actions/workflows/ci.yml/badge.svg)](https://github.com/tommy29tmar/Flint/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-informational.svg)](LICENSE)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue.svg)](pyproject.toml)
 
 **Compress the work, not just the words.**
 
-SIGIL is a proposed reasoning IR for LLM workflows. The core idea is simple:
+Flint is a proposed reasoning IR for LLM workflows. The core idea is simple:
 
 > compile first, expand second, explain last.
 
@@ -33,7 +33,7 @@ The stable architecture is:
 
 ## Why People Pay Attention To This
 
-Most token-compression projects stop at style compression. SIGIL is trying to
+Most token-compression projects stop at style compression. Flint is trying to
 compress the actual work surface:
 
 - task contracts
@@ -58,12 +58,12 @@ Full generated numbers live in [docs/results.md](docs/results.md).
 This repository now contains both:
 
 - the long-form project framing in [README_SIGIL.md](README_SIGIL.md)
-- a minimal executable prototype for parsing, validating, and auditing SIGIL drafts
+- a minimal executable prototype for parsing, validating, and auditing Flint drafts
 
 ## What Is In This Repo
 
-- [grammar/sigil.ebnf](grammar/sigil.ebnf): formal grammar for structured SIGIL documents
-- [grammar/sigil_ascii.md](grammar/sigil_ascii.md): ASCII-safe operator aliases
+- [grammar/flint.ebnf](grammar/flint.ebnf): formal grammar for structured Flint documents
+- [grammar/flint_ascii.md](grammar/flint_ascii.md): ASCII-safe operator aliases
 - [prompts/system.txt](prompts/system.txt): prompt-only system prompt
 - [prompts/hybrid_strict.txt](prompts/hybrid_strict.txt): strict hybrid-mode prompt for benchmarks
 - [prompts/memory_strict.txt](prompts/memory_strict.txt): strict memory-mode prompt
@@ -81,7 +81,7 @@ This repository now contains both:
 - [prompts/refactor_wire_lite.txt](prompts/refactor_wire_lite.txt): lighter refactor wire prompt
 - [.env.example](.env.example): local API configuration template
 - [examples/](examples): example `draft`, `hybrid`, and `memory` documents
-- [src/sigil/](src/sigil): stdlib-only parser, validator, and audit renderer
+- [src/flint/](src/flint): stdlib-only parser, validator, and audit renderer
 - [tests/](tests): regression tests for the prototype
 - [evals/](evals): task corpus and offline measurement harness
 - [profiles/](profiles): transport-routing profiles
@@ -92,16 +92,16 @@ This repository now contains both:
 - [docs/results.md](docs/results.md): generated provider benchmark matrix
 - [docs/portability.md](docs/portability.md): generated contract-family portability matrix
 - [docs/provider_strategy.md](docs/provider_strategy.md): provider-aware thesis and current optimization wall
-- [docs/frontier.md](docs/frontier.md): stronger architecture directions beyond prompt-only SIGIL
-- [docs/breakthroughs.md](docs/breakthroughs.md): external research directions that could move SIGIL toward a real serving/runtime breakthrough
+- [docs/frontier.md](docs/frontier.md): stronger architecture directions beyond prompt-only Flint
+- [docs/breakthroughs.md](docs/breakthroughs.md): external research directions that could move Flint toward a real serving/runtime breakthrough
 
 ## Current Status
 
 What is real today:
 
-- a prompt-only SIGIL contract
+- a prompt-only Flint contract
 - a formalized grammar for structured outputs
-- a parser/validator CLI for `.sigil` files
+- a parser/validator CLI for `.flint` files
 - a deterministic audit path from symbolic draft to human-readable summary
 
 What remains research:
@@ -113,12 +113,12 @@ What remains research:
 
 What now looks credible in practice:
 
-- typed transport plus local render is more reliable than prompt-only freeform SIGIL
+- typed transport plus local render is more reliable than prompt-only freeform Flint
 - `wire_lite` plus local canonicalization is the best current route to reducing input overhead
-- `direct SIGIL` plus local repair is now viable when the task itself is precompiled into a micro capsule
+- `direct Flint` plus local repair is now viable when the task itself is precompiled into a micro capsule
 - multi-IR routing is stronger than forcing one contract everywhere
 - routed policies expose a real Pareto surface between total cost and semantic retention
-- stronger models improve SIGIL markedly, but they also compress terse natural-language baselines better, so transfer between model families requires retuning
+- stronger models improve Flint markedly, but they also compress terse natural-language baselines better, so transfer between model families requires retuning
 - `layered-needle` is the most promising current macro warm-path regime: shared cacheable prefix plus a smaller task overlay, instead of a full targeted task summary
 - verifier-gated fallback is now implemented as a first-class runtime pattern, not just an eval trick
 
@@ -203,7 +203,7 @@ Latest selective extended matrix:
   - aggregate total-token savings vs baseline: `7.07%`
   - aggregate latency savings vs baseline: `20.60%`
 - `gpt-5.4-mini` extended selective latest:
-  - route: selective SIGIL on most `debug`, most `review`, and part of `architecture`, with a tighter `cap56` debug lane and plain fallback still allowed
+  - route: selective Flint on most `debug`, most `review`, and part of `architecture`, with a tighter `cap56` debug lane and plain fallback still allowed
   - `parse_rate = 1.0`
   - `must_include_rate = 0.7083` vs baseline `0.5469`
   - `exact_literal_rate = 0.9583` vs baseline `0.9010`
@@ -228,7 +228,7 @@ Latest selective extended matrix:
 
 The honest boundary is now clearer:
 
-- SIGIL has clear win regimes, neutral regimes, and fallback-to-plain regimes
+- Flint has clear win regimes, neutral regimes, and fallback-to-plain regimes
 - the best shape is provider-specific and model-specific, not only provider-specific
 - OpenAI now also has a new lever: cross-provider task-contract transfer, where `gemini-nano` contracts outperform older OpenAI-native compact prompts on `review`, a large share of `debug`, and part of `architecture`
 - Anthropic now shows the same effect at larger scale: `gemini-transfer` lanes improve the harder extended matrix materially on `debug`, `review`, most `refactor`, and part of `architecture`
@@ -236,12 +236,12 @@ The honest boundary is now clearer:
 - a third lever now compounds both: compiled shared context, which now wins on Gemini macro in both cold-start and cached steady-state regimes and is also positive on OpenAI mini and Claude cold-start
 - `gpt-5.4` is still the strongest focused micro breakthrough, and now also clearly positive on the harder extended matrix
 - `gpt-5.4-mini` is no longer an all-plain fallback case on the extended corpus
-- `claude-sonnet-4` is strongest when SIGIL is used selectively, not universally, but it is no longer just “near parity”: it now has a clear extended breakthrough row too
+- `claude-sonnet-4` is strongest when Flint is used selectively, not universally, but it is no longer just “near parity”: it now has a clear extended breakthrough row too
 - `gemini-2.5-flash` stays positive on the harder extended matrix, but its newer gains now come from routing, local repair, and compiled shared context rather than from a single dominant prompt family
 - the best shape is provider-specific:
-  - `gpt-5.4`: full SIGIL wins on the focused micro benchmark; selective architecture-only routing is the current honest extended result
+  - `gpt-5.4`: full Flint wins on the focused micro benchmark; selective architecture-only routing is the current honest extended result
   - `gpt-5.4-mini`: `selective` routing may collapse fully to plain baseline
-  - `claude-sonnet-4`: starter `nano` can use full-route; extended selective prefers mostly plain plus one typed SIGIL lane
+  - `claude-sonnet-4`: starter `nano` can use full-route; extended selective prefers mostly plain plus one typed Flint lane
 - `gemini-2.5-flash`: provider-specific ultra-short prompts plus stronger local repair now win on extended selective micro, macro cold-start, and macro cache regimes
 - compiled shared context is now a real runtime lever:
   - `focused` compiled context is the current cold-start winner
@@ -264,22 +264,22 @@ uv venv
 uv pip install -e .
 ```
 
-Validate a SIGIL document:
+Validate a Flint document:
 
 ```bash
-sigil validate examples/debugging.sigil
+flint validate examples/debugging.flint
 ```
 
 Inspect the parsed AST as JSON:
 
 ```bash
-sigil parse examples/debugging.sigil --json
+flint parse examples/debugging.flint --json
 ```
 
 Render or reuse the audit view:
 
 ```bash
-sigil audit examples/debugging.sigil
+flint audit examples/debugging.flint
 ```
 
 ## Community
@@ -292,7 +292,7 @@ sigil audit examples/debugging.sigil
 Inspect structural metrics:
 
 ```bash
-sigil stats examples/debugging.sigil --json
+flint stats examples/debugging.flint --json
 ```
 
 Run the test suite:
@@ -310,13 +310,13 @@ python3 evals/measure.py evals/tasks.jsonl evals/sample_run.jsonl
 Build the extended benchmark corpus:
 
 ```bash
-sigil bench build-corpus --out-dir evals
+flint bench build-corpus --out-dir evals
 ```
 
 Build macro tasks with a shared cache prefix:
 
 ```bash
-sigil bench build-macro \
+flint bench build-macro \
   evals/tasks_hybrid_micro.jsonl \
   evals/prefixes/service_context_v1.txt \
   evals/tasks_hybrid_macro.jsonl
@@ -325,7 +325,7 @@ sigil bench build-macro \
 Build macro tasks with a compiled shared context prefix:
 
 ```bash
-sigil bench build-compiled-macro \
+flint bench build-compiled-macro \
   evals/tasks_hybrid_nano.jsonl \
   evals/prefixes/service_context_v1.txt \
   evals/tasks_hybrid_macro_focused_nano.jsonl \
@@ -335,13 +335,13 @@ sigil bench build-compiled-macro \
 Render the published provider matrix:
 
 ```bash
-sigil bench report evals/benchmark_matrix.json --out docs/results.md
+flint bench report evals/benchmark_matrix.json --out docs/results.md
 ```
 
 Render the contract portability matrix:
 
 ```bash
-sigil bench portability-report \
+flint bench portability-report \
   evals/tasks_hybrid_nano_extended.jsonl \
   evals/runs/exp_gpt54mini_transfer_v2/gpt_5_4_mini_hybrid_multi_ir_extended_selective_efficiency.jsonl \
   evals/runs/exp_claude_transfer_v3/claude_sonnet_4_20250514_hybrid_multi_ir_extended_selective_efficiency.jsonl \
@@ -353,7 +353,7 @@ sigil bench portability-report \
 Build nano task capsules:
 
 ```bash
-sigil bench build-capsules \
+flint bench build-capsules \
   evals/tasks_hybrid.jsonl \
   evals/tasks_hybrid_nano.jsonl \
   --style nano
@@ -367,7 +367,7 @@ python3 evals/run_openai.py \
   --model gpt-5.2 \
   --out evals/runs/openai_gpt52_hybrid.jsonl \
   --variant baseline-terse@plain=prompts/baseline_terse.txt \
-  --variant sigil-hybrid@structured=prompts/hybrid_strict.txt
+  --variant flint-hybrid@structured=prompts/hybrid_strict.txt
 ```
 
 The benchmark runner loads credentials from local `.env` by default.
@@ -379,14 +379,14 @@ python3 evals/run_openai.py \
   --tasks evals/tasks_debug.jsonl \
   --model gpt-4o-mini \
   --out evals/runs/debug_compare.jsonl \
-  --variant sigil-debug@schema-debug_hybrid=prompts/debug_hybrid_schema.txt \
-  --variant sigil-debug-d2s@draft2schema-debug_hybrid=prompts/hybrid_strict.txt::prompts/debug_hybrid_schema.txt
+  --variant flint-debug@schema-debug_hybrid=prompts/debug_hybrid_schema.txt \
+  --variant flint-debug-d2s@draft2schema-debug_hybrid=prompts/hybrid_strict.txt::prompts/debug_hybrid_schema.txt
 ```
 
 Then inspect both output compression and end-to-end cost:
 
 ```bash
-python3 evals/measure.py evals/tasks_debug.jsonl evals/runs/debug_compare.jsonl --baseline sigil-debug
+python3 evals/measure.py evals/tasks_debug.jsonl evals/runs/debug_compare.jsonl --baseline flint-debug
 ```
 
 To compose a routed policy from several category-specific runs:
@@ -418,7 +418,7 @@ python3 evals/suggest_profile.py \
   --run evals/runs/refactor_wire_v1.jsonl
 ```
 
-To let the baseline compete against SIGIL and produce a `selective` router:
+To let the baseline compete against Flint and produce a `selective` router:
 
 ```bash
 python3 evals/suggest_profile.py \
@@ -433,7 +433,7 @@ python3 evals/suggest_profile.py \
   --run evals/runs/gpt_5_4_mini_sigil-refactor-direct-compact-v4_r2.jsonl
 ```
 
-To benchmark the compiler-first `direct SIGIL` lane on micro capsules:
+To benchmark the compiler-first `direct Flint` lane on micro capsules:
 
 ```bash
 python3 evals/build_task_capsules.py \
@@ -445,14 +445,14 @@ python3 evals/run_openai.py \
   --tasks evals/tasks_debug_micro.jsonl \
   --model gpt-5.4 \
   --out evals/runs/gpt54_debug_direct_sigil_micro.jsonl \
-  --variant sigil-debug-direct@sigil=prompts/debug_direct_sigil_micro.txt \
+  --variant flint-debug-direct@flint=prompts/debug_direct_sigil_micro.txt \
   --max-output-tokens 180 \
   --verbosity low
 ```
 
 ## Design Notes
 
-The formal grammar in this repo intentionally covers structured SIGIL artifacts:
+The formal grammar in this repo intentionally covers structured Flint artifacts:
 
 - `draft`
 - `hybrid`
@@ -465,8 +465,8 @@ Pure `audit` mode is ordinary natural language and therefore lives outside the E
 
 The main framing stays the same:
 
-- SIGIL is not a novelty dialect
-- SIGIL is a reasoning IR
+- Flint is not a novelty dialect
+- Flint is a reasoning IR
 - Caveman is a useful baseline for surface compression
 - the serious claim is compiler-first task compression plus typed transport plus local rendering plus routing, not magic token savings
 

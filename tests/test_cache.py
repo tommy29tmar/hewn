@@ -5,7 +5,7 @@ import sys
 import unittest
 from pathlib import Path
 
-from sigil.cache import cache_eligibility, resolve_cache_policy
+from flint.cache import cache_eligibility, resolve_cache_policy
 
 
 ROOT = Path(__file__).resolve().parents[1]

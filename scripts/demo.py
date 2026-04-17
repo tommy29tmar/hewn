@@ -4,7 +4,7 @@
 Calls Anthropic API three times:
   1. baseline-terse   (prompts/baseline_terse.txt)
   2. primitive-english (prompts/primitive_english.txt, Caveman-style)
-  3. sigil-nano       (integrations/claude-code/sigil_system_prompt.txt)
+  3. sigil-nano       (integrations/claude-code/flint_system_prompt.txt)
 
 Prints side-by-side output with token counts and latency.
 Used for launch screenshots and live demos.

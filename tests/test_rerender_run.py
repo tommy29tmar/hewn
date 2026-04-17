@@ -37,7 +37,7 @@ class RerenderRunTests(unittest.TestCase):
         }
         updated = RERENDER_RUN.rerender_row(row)
         content = updated["content"]
-        self.assertIn("@sigil v0 hybrid", content)
+        self.assertIn("@flint v0 hybrid", content)
         self.assertIn("backward compatibility", content)
         self.assertIn("30-second grace window", content)
 
@@ -51,7 +51,7 @@ class RerenderRunTests(unittest.TestCase):
         }
         updated = RERENDER_RUN.rerender_row(row)
         content = updated["content"]
-        self.assertTrue(content.startswith("@sigil v0 hybrid"))
+        self.assertTrue(content.startswith("@flint v0 hybrid"))
         self.assertNotIn("[d]", content)
         self.assertIn("A: keep_401 ∧ edge(-30s_200) ∧ edge(-31s_401)", content)
 

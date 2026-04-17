@@ -11,12 +11,12 @@ from urllib import error, parse, request
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
-from sigil.eval_common import (
+from flint.eval_common import (
     DEFAULT_ENV_FILE,
     append_jsonl,
     build_cached_task_prompt,
     decode_variant_output,
-    direct_sigil_stop_sequences,
+    direct_flint_stop_sequences,
     gemini_generation_config,
     load_jsonl,
     parse_variant,
@@ -264,7 +264,7 @@ def main(argv: list[str] | None = None) -> int:
                 transport=variant.transport,
                 thinking_budget=args.thinking_budget,
                 cached_content_name=cached_content_name,
-                stop_sequences=direct_sigil_stop_sequences(variant.transport),
+                stop_sequences=direct_flint_stop_sequences(variant.transport),
             )
             response = call_generate_content(
                 api_key=api_key,

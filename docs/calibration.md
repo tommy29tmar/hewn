@@ -1,6 +1,6 @@
 # Model Calibration
 
-SIGIL should be split into three layers:
+Flint should be split into three layers:
 
 ## 1. Stable Core
 
@@ -16,7 +16,7 @@ These parts should stay mostly model-agnostic:
 
 These parts should be calibrated per model family:
 
-- direct SIGIL prompt family
+- direct Flint prompt family
 - wire vs direct routing
 - max output token caps
 - literal-preservation bias
@@ -34,9 +34,9 @@ These parts are provider-specific:
 
 ## Why the mini model differs
 
-`gpt-5.4-mini` compresses terse natural language well enough that SIGIL must be extremely cheap to beat it on total cost.
+`gpt-5.4-mini` compresses terse natural language well enough that Flint must be extremely cheap to beat it on total cost.
 
-`gpt-5.4` has enough capacity to follow the symbolic contract more efficiently once the task is locally compiled, so SIGIL wins end-to-end.
+`gpt-5.4` has enough capacity to follow the symbolic contract more efficiently once the task is locally compiled, so Flint wins end-to-end.
 
 That does **not** mean the project must choose one model forever. It means:
 
@@ -56,7 +56,7 @@ python3 evals/calibrate_openai_model.py \
 This script will:
 
 1. run the baseline terse benchmark on micro tasks
-2. run the candidate SIGIL transports
+2. run the candidate Flint transports
 3. auto-suggest a profile
 4. build a routed benchmark run
 5. print the measured summary
@@ -103,7 +103,7 @@ Current micro-benchmark reality:
 - Anthropic Sonnet 4: current prompts are also far below the `1024`-token caching floor
 - Gemini 2.5 Flash: current prompts are far below the `1024`-token caching floor
 
-So caching is not the reason SIGIL wins today. The current wins come from a better transport/runtime, not from cache discounts.
+So caching is not the reason Flint wins today. The current wins come from a better transport/runtime, not from cache discounts.
 
 For the current cross-provider snapshot, see:
 
@@ -112,10 +112,10 @@ For the current cross-provider snapshot, see:
 
 ## Claude Code flow
 
-Claude Code is configurable via `CLAUDE.md` and `--append-system-prompt`, so SIGIL can be integrated there too. The right approach is not “reuse OpenAI prompts blindly”, but:
+Claude Code is configurable via `CLAUDE.md` and `--append-system-prompt`, so Flint can be integrated there too. The right approach is not “reuse OpenAI prompts blindly”, but:
 
 1. benchmark the chosen Claude model
-2. produce a Claude-specific SIGIL profile
+2. produce a Claude-specific Flint profile
 3. render that profile into `CLAUDE.md`
 
 ## Anthropic calibration flow
@@ -132,7 +132,7 @@ python3 evals/calibrate_anthropic_model.py \
 
 Current scope:
 
-- plain baseline and direct SIGIL are supported
+- plain baseline and direct Flint are supported
 - prompt caching can be tested with `--cache-system-prompt`
 - extended thinking can be tested with `--thinking-budget`
 - schema transports are not first-class on Anthropic in this repo yet
@@ -152,7 +152,7 @@ python3 evals/calibrate_gemini_model.py \
 
 Current scope:
 
-- direct SIGIL is supported
+- direct Flint is supported
 - wire-lite schema transport is supported through a Gemini-compatible schema transform
 - for `gemini-2.5-flash`, `--thinking-budget 0` is usually the right default for transport benchmarking
 - `--allow-plain-candidates` is often the right mode on Gemini today, because selective routing materially narrows the total-cost gap
@@ -164,7 +164,7 @@ For Gemini micro specifically, there is now a second lever beyond transport choi
 Example:
 
 ```bash
-sigil bench build-capsules \
+flint bench build-capsules \
   evals/tasks_hybrid.jsonl \
   evals/tasks_hybrid_nano.jsonl \
   --style nano
@@ -199,7 +199,7 @@ python3 evals/run_gemini.py \
   --cache-ttl 3600s
 ```
 
-Then route category-specific SIGIL runs and compare on `avg_effective_total_tokens`, not just raw total tokens.
+Then route category-specific Flint runs and compare on `avg_effective_total_tokens`, not just raw total tokens.
 
 ## One Command To Publish The Current Matrix
 
@@ -208,5 +208,5 @@ The current benchmark matrix manifest lives in [evals/benchmark_matrix.json](../
 Render it with:
 
 ```bash
-sigil bench report evals/benchmark_matrix.json --out docs/results.md
+flint bench report evals/benchmark_matrix.json --out docs/results.md
 ```

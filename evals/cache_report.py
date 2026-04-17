@@ -10,8 +10,8 @@ from statistics import mean
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
-from sigil.cache import CachePolicy, cache_eligibility, resolve_cache_policy  # noqa: E402
-from sigil.eval_common import load_jsonl  # noqa: E402
+from flint.cache import CachePolicy, cache_eligibility, resolve_cache_policy  # noqa: E402
+from flint.eval_common import load_jsonl  # noqa: E402
 
 
 def summarize_variant(rows: list[dict[str, object]], policy: CachePolicy) -> dict[str, object]:

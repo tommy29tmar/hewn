@@ -1,4 +1,4 @@
-@sigil v0 hybrid
+@flint v0 hybrid
 @cb[
   μ1=auth.middleware;
   κ1=backcompat;

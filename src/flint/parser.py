@@ -8,7 +8,7 @@ from typing import Iterable
 
 from .model import Atom, Binary, Call, Clause, Document, Expr, Header, Unary
 
-HEADER_RE = re.compile(r"^@sigil\s+(v0)(?:\s+(draft|audit|hybrid|memory|compile))?\s*$")
+HEADER_RE = re.compile(r"^@flint\s+(v0)(?:\s+(draft|audit|hybrid|memory|compile))?\s*$")
 CLAUSE_RE = re.compile(r"^(G|C|H|P|V|R|Q|M|A):\s*(.+?)\s*$")
 BINDING_RE = re.compile(r"^([^\s=;]+)\s*=\s*(.+)$")
 BINARY_OPS = ("=>", "->", "∧", "∨", "⇒", "→", "≈", "⊥", "&", "|")
@@ -16,7 +16,7 @@ MARKERS = {"?", "!"}
 PUNCTUATION = {"(", ")", ","}
 
 
-class SIGILParseError(ValueError):
+class FlintParseError(ValueError):
     pass
 
 
@@ -73,7 +73,7 @@ class _ExpressionTokenizer:
                         break
                     j += 1
                 if j >= len(self.source) or self.source[j] != quote:
-                    raise SIGILParseError(f"Unterminated string literal: {self.source[i:]}")
+                    raise FlintParseError(f"Unterminated string literal: {self.source[i:]}")
                 tokens.append(self.source[i : j + 1])
                 i = j + 1
                 continue
@@ -98,7 +98,7 @@ class _ExpressionTokenizer:
     def pop(self) -> str:
         token = self.peek()
         if token is None:
-            raise SIGILParseError("Unexpected end of expression")
+            raise FlintParseError("Unexpected end of expression")
         self.index += 1
         return token
 
@@ -132,13 +132,13 @@ def _parse_expr(source: str) -> Expr:
     def parse_primary() -> Expr:
         token = tokenizer.peek()
         if token is None:
-            raise SIGILParseError("Missing expression")
+            raise FlintParseError("Missing expression")
 
         if token == "(":
             tokenizer.pop()
             expr = parse_expression()
             if tokenizer.pop() != ")":
-                raise SIGILParseError("Expected ')' to close grouped expression")
+                raise FlintParseError("Expected ')' to close grouped expression")
             return expr
 
         name = tokenizer.pop()
@@ -153,14 +153,14 @@ def _parse_expr(source: str) -> Expr:
                         continue
                     break
             if tokenizer.pop() != ")":
-                raise SIGILParseError("Expected ')' to close function call")
+                raise FlintParseError("Expected ')' to close function call")
             return Call(name=name, args=args)
 
         return Atom(value=name)
 
     expression = parse_expression()
     if tokenizer.peek() is not None:
-        raise SIGILParseError(f"Unexpected trailing token: {tokenizer.peek()}")
+        raise FlintParseError(f"Unexpected trailing token: {tokenizer.peek()}")
     return expression
 
 
@@ -237,7 +237,7 @@ def parse_document(source: str | Path) -> Document:
         while "]" not in codebook_lines[-1]:
             index += 1
             if index >= len(lines):
-                raise SIGILParseError("Unterminated codebook block")
+                raise FlintParseError("Unterminated codebook block")
             codebook_lines.append(lines[index])
         joined = "\n".join(codebook_lines)
         start = joined.find("@cb[") + len("@cb[")
@@ -246,11 +246,11 @@ def parse_document(source: str | Path) -> Document:
         for binding in _split_bindings(raw_bindings):
             match = BINDING_RE.match(binding)
             if not match:
-                raise SIGILParseError(f"Invalid codebook binding: {binding}")
+                raise FlintParseError(f"Invalid codebook binding: {binding}")
             symbol = match.group(1).strip()
             value = match.group(2).strip()
             if symbol in document.codebook:
-                raise SIGILParseError(f"Duplicate codebook symbol: {symbol}")
+                raise FlintParseError(f"Duplicate codebook symbol: {symbol}")
             document.codebook[symbol] = value
         index += 1
 
@@ -267,7 +267,7 @@ def parse_document(source: str | Path) -> Document:
 
         match = CLAUSE_RE.match(lines[index])
         if not match:
-            raise SIGILParseError(f"Invalid clause on line {index + 1}: {lines[index]}")
+            raise FlintParseError(f"Invalid clause on line {index + 1}: {lines[index]}")
         tag = match.group(1)
         raw_expr = match.group(2)
         clause = Clause(tag=tag, expr=_parse_expr(raw_expr), raw=raw_expr, line=index + 1)
@@ -280,11 +280,11 @@ def parse_document(source: str | Path) -> Document:
 
 def validate_document(document: Document) -> None:
     if not document.clauses:
-        raise SIGILParseError("A SIGIL document must contain at least one clause")
+        raise FlintParseError("A SIGIL document must contain at least one clause")
 
     mode = document.header.mode if document.header else None
     if mode == "memory" and any(clause.tag != "M" for clause in document.clauses):
-        raise SIGILParseError("Mode=memory documents may only contain M: clauses")
+        raise FlintParseError("Mode=memory documents may only contain M: clauses")
     # Hybrid documents may optionally carry an [AUDIT] block; consumers can
     # check document.audit to know whether a prose rerender is attached.
 

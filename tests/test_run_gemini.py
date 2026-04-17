@@ -108,8 +108,8 @@ class RunGeminiTests(unittest.TestCase):
         self.assertEqual(payload["contents"][0]["parts"][0]["text"], "Long static project context.")
 
     def test_extract_output_text(self) -> None:
-        response = {"candidates": [{"content": {"parts": [{"text": "@sigil v0 hybrid"}]}}]}
-        self.assertEqual(RUN_GEMINI.extract_output_text(response), "@sigil v0 hybrid")
+        response = {"candidates": [{"content": {"parts": [{"text": "@flint v0 hybrid"}]}}]}
+        self.assertEqual(RUN_GEMINI.extract_output_text(response), "@flint v0 hybrid")
 
     def test_extract_usage(self) -> None:
         usage = RUN_GEMINI.extract_usage(

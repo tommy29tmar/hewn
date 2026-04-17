@@ -1,4 +1,4 @@
-@sigil v0 memory
+@flint v0 memory
 M: compat(v2_clients) ∧ keep(public_auth_endpoints)
 M: pref(minimal_diff)
 M: test(boundary_expiry) ∧ test(cache_invalidation)

@@ -1,20 +1,20 @@
 #!/usr/bin/env bash
-# SIGIL — Claude Code skill installer.
+# Flint — Claude Code skill installer.
 # One-line install:
-#   curl -fsSL https://raw.githubusercontent.com/tommy29tmar/SIGIL/main/integrations/claude-code/install.sh | bash
+#   curl -fsSL https://raw.githubusercontent.com/tommy29tmar/flint/main/integrations/claude-code/install.sh | bash
 #
 # What this does:
-#   1. Installs the /sigil Claude Code skill.
-#   2. Installs the SIGIL output-style (optional, only if output-styles dir exists or can be created).
-#   3. Installs the sigil-ir Python package (provides the `sigil` CLI for local parse/rerender).
+#   1. Installs the /flint Claude Code skill.
+#   2. Installs the Flint output-style (optional, only if output-styles dir exists or can be created).
+#   3. Installs the flint-ir Python package (provides the `flint` CLI for local parse/rerender).
 #
 # Refuses to run if ~/.claude is not present (i.e. Claude Code not installed).
 
 set -euo pipefail
 
 CLAUDE_DIR="${HOME}/.claude"
-REPO_URL="https://github.com/tommy29tmar/SIGIL.git"
-RAW_URL="https://raw.githubusercontent.com/tommy29tmar/SIGIL/main"
+REPO_URL="https://github.com/tommy29tmar/flint.git"
+RAW_URL="https://raw.githubusercontent.com/tommy29tmar/flint/main"
 
 if [ ! -d "$CLAUDE_DIR" ]; then
   echo "error: ~/.claude not found. Install Claude Code first."
@@ -33,7 +33,6 @@ if [ -n "$SCRIPT_DIR" ] && [ -f "$SCRIPT_DIR/skill/SKILL.md" ]; then
 fi
 
 fetch() {
-  # fetch <relative_path> <dest>
   local rel="$1"
   local dest="$2"
   if [ "$IS_LOCAL" = "1" ]; then
@@ -43,29 +42,29 @@ fetch() {
   fi
 }
 
-echo "==> Installing /sigil skill"
-mkdir -p "$CLAUDE_DIR/skills/sigil"
-fetch "skill/SKILL.md" "$CLAUDE_DIR/skills/sigil/SKILL.md"
+echo "==> Installing /flint skill"
+mkdir -p "$CLAUDE_DIR/skills/flint"
+fetch "skill/SKILL.md" "$CLAUDE_DIR/skills/flint/SKILL.md"
 
-echo "==> Installing SIGIL output-style"
+echo "==> Installing Flint output-style"
 mkdir -p "$CLAUDE_DIR/output-styles"
-fetch "output-styles/sigil.md" "$CLAUDE_DIR/output-styles/sigil.md" || \
+fetch "output-styles/flint.md" "$CLAUDE_DIR/output-styles/flint.md" || \
   echo "   (output-style install failed — skill alone is sufficient)"
 
-echo "==> Installing sigil-ir Python package (optional)"
+echo "==> Installing flint-ir Python package (optional)"
 if command -v pipx >/dev/null 2>&1; then
   pipx install "git+${REPO_URL}" || pipx install --force "git+${REPO_URL}" || true
 elif command -v pip >/dev/null 2>&1; then
   pip install --user "git+${REPO_URL}" || true
 else
-  echo "   (skipping — install pipx or pip to get the \`sigil\` CLI)"
+  echo "   (skipping — install pipx or pip to get the \`flint\` CLI)"
 fi
 
 echo ""
-echo "✓ SIGIL installed."
+echo "✓ Flint installed."
 echo ""
 echo "Use:"
-echo "  /sigil <your question>              # one-shot, in any Claude Code session"
-echo "  /output-style sigil                 # persistent, every response in SIGIL"
+echo "  /flint <your question>              # one-shot, in any Claude Code session"
+echo "  /output-style flint                 # persistent, every response in Flint"
 echo ""
 echo "Toggle off with /output-style default."

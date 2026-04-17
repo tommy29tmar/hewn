@@ -1,12 +1,12 @@
 # Frontier Directions
 
-SIGIL is strongest when treated as a layered system rather than a single prompt trick.
+Flint is strongest when treated as a layered system rather than a single prompt trick.
 
-## 1. Text-First SIGIL
+## 1. Text-First Flint
 
 This is the simplest lane:
 
-- prompt the model directly into SIGIL text
+- prompt the model directly into Flint text
 - parse the result
 - measure raw parse rate
 
@@ -20,14 +20,14 @@ Weaknesses:
 - raw parseability is fragile
 - prompt drift can reintroduce prose
 
-## 2. Schema-First SIGIL
+## 2. Schema-First Flint
 
 This is the strongest current engineering direction.
 
 Pipeline:
 
 1. model emits structured JSON under a strict schema
-2. local renderer turns that JSON into SIGIL text
+2. local renderer turns that JSON into Flint text
 3. parser validates the rendered document
 
 Why this matters:
@@ -38,7 +38,7 @@ Why this matters:
 
 This architecture is closer to how serious compilers and toolchains are built.
 
-## 3. Repairable SIGIL
+## 3. Repairable Flint
 
 The runtime should distinguish:
 
@@ -64,17 +64,17 @@ The stronger direction is a family of small IRs:
 - refactor IR
 - memory-capsule IR
 
-All of them can compile down to the same surface SIGIL syntax, but their transport schemas should be specialized.
+All of them can compile down to the same surface Flint syntax, but their transport schemas should be specialized.
 
 This is likely the path to improving both quality and compression at once.
 
-## 5. Cache-Aware SIGIL
+## 5. Cache-Aware Flint
 
-If SIGIL becomes a real product, speed gains will come from more than shorter outputs.
+If Flint becomes a real product, speed gains will come from more than shorter outputs.
 
 Use:
 
-- prompt caching for static SIGIL system prefixes and schemas
+- prompt caching for static Flint system prefixes and schemas
 - compact memory capsules instead of verbose repo summaries
 - deterministic renderers so cache hits apply across runs
 
@@ -92,18 +92,18 @@ The current practical rule is:
 
 This matters because some early semantic loss came from the schema grammar itself being too restrictive.
 
-## 7. Wire Protocol SIGIL
+## 7. Wire Protocol Flint
 
 There is now a strong distinction between:
 
 - transport schema
-- rendered SIGIL document
+- rendered Flint document
 - human audit materialization
 
 The strongest current pattern is:
 
 - emit a compact typed wire object
-- render SIGIL locally
+- render Flint locally
 - synthesize the audit locally when possible
 
 This is closer to wire-protocol design than prompt design.
@@ -124,7 +124,7 @@ It is:
 
 - lighter provider-side constraints
 - local canonicalization of relaxed fields
-- deterministic render into the canonical SIGIL surface form
+- deterministic render into the canonical Flint surface form
 
 This is a compiler move:
 
@@ -134,14 +134,14 @@ This is a compiler move:
 
 That pattern is likely more scalable than forcing maximal structure at generation time.
 
-## 9. Compiler-First Direct SIGIL
+## 9. Compiler-First Direct Flint
 
 The strongest new path in the repo is not a smaller schema.
 
 It is:
 
 1. compile the long task into a deterministic micro capsule
-2. ask the model for direct SIGIL, not JSON
+2. ask the model for direct Flint, not JSON
 3. repair small syntax drift locally
 4. synthesize audit locally
 
@@ -208,7 +208,7 @@ Two-stage transport is now a real benchmark lane:
 1. free draft
 2. constrained final render
 
-This is inspired by draft-conditioned constrained decoding work, but the current SIGIL result is negative:
+This is inspired by draft-conditioned constrained decoding work, but the current Flint result is negative:
 
 - validity stays high
 - total token cost rises sharply
@@ -231,7 +231,7 @@ It is this:
 
 - smaller strong models already compress terse natural language very well
 - if the baseline also gets a compiled local capsule
-- direct SIGIL still pays too much prompt-contract overhead
+- direct Flint still pays too much prompt-contract overhead
 
 That suggests the next frontier is:
 
@@ -247,14 +247,14 @@ The last round of experiments adds one more conclusion:
 
 ## 14. Future Research Track
 
-Prompt-only SIGIL is only phase one.
+Prompt-only Flint is only phase one.
 
 The deeper research direction is:
 
 - codebook induction from repo/task statistics
 - tokenizer-aware symbol selection
 - structured transport tuned per model family
-- distillation of SIGIL outputs into smaller fast models
+- distillation of Flint outputs into smaller fast models
 - latent/discrete backends for the highest-frequency reasoning motifs
 
 The likely winning stack is not:

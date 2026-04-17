@@ -71,7 +71,7 @@ Recommended:
 
 ```json
 {"task_id":"debug-auth-expiry","variant":"baseline-terse","model":"gpt-5.2","content":"Likely bug in auth middleware expiry handling...","usage":{"output_tokens":81,"reasoning_tokens":0}}
-{"task_id":"debug-auth-expiry","variant":"sigil-hybrid","model":"gpt-5.2","content":"@sigil v0 hybrid\n...","usage":{"output_tokens":46,"reasoning_tokens":128}}
+{"task_id":"debug-auth-expiry","variant":"sigil-hybrid","model":"gpt-5.2","content":"@flint v0 hybrid\n...","usage":{"output_tokens":46,"reasoning_tokens":128}}
 ```
 
 You can also store outputs in files and reference them by path:

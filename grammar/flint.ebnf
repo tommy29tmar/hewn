@@ -3,7 +3,7 @@
 # Pure audit-only natural-language replies are intentionally out of scope.
 
 program        ::= spacing? header? spacing? codebook? spacing? clause+ spacing? audit_block? spacing?
-header         ::= "@sigil" ws version (ws mode)?
+header         ::= "@flint" ws version (ws mode)?
 version        ::= "v0"
 mode           ::= "draft" | "audit" | "hybrid" | "memory" | "compile"
 

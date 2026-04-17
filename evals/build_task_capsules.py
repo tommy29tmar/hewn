@@ -3,7 +3,7 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
-from sigil.task_capsule import build_capsule_task_row, dump_jsonl, load_jsonl
+from flint.task_capsule import build_capsule_task_row, dump_jsonl, load_jsonl
 
 
 def main(argv: list[str] | None = None) -> int:

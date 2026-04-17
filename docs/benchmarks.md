@@ -38,7 +38,7 @@ Observed:
 Interpretation:
 
 - the Anthropic story now survives a holdout that was not used as the main tuning target
-- the local repair/runtime matters more on the newer Anthropic models, because they drift into standalone `SIGIL:` labels and refactor pseudo-signatures more often
+- the local repair/runtime matters more on the newer Anthropic models, because they drift into standalone `Flint:` labels and refactor pseudo-signatures more often
 - once the compiler absorbs that drift, the token win still holds on both Sonnet-tier and Opus-tier Anthropic models
 
 ### Latest selective extended matrix
@@ -46,7 +46,7 @@ Interpretation:
 These are the current top-line rows after three important fixes:
 
 - `allow-plain-candidates` now really lets the router choose `baseline-terse`
-- `rerender_run.py` now re-materializes direct SIGIL rows with the latest local repair/runtime
+- `rerender_run.py` now re-materializes direct Flint rows with the latest local repair/runtime
 - OpenAI extended calibration now also tests transferred `gemini-nano` prompt contracts for `review` and `architecture`
 
 Observed on `evals/tasks_hybrid_nano_extended.jsonl`:
@@ -85,11 +85,11 @@ Observed on `evals/tasks_hybrid_nano_extended.jsonl`:
 
 Interpretation:
 
-- the most honest benchmark is no longer “best SIGIL prompt wins”, but “what does the router choose when plain is a valid option?”
+- the most honest benchmark is no longer “best Flint prompt wins”, but “what does the router choose when plain is a valid option?”
 - the newest OpenAI lift comes from cross-provider task-contract transfer: `gemini-nano` is now a winning OpenAI lane on `review`, much of `debug`, and part of `architecture`
 - a second lift now compounds that: aggressive `cap56` variants improve already-winning debug/refactor lanes without changing the core transport family
 - the same transfer idea now works on Claude too, and there it improves the full extended routed matrix materially across `debug`, `review`, and `refactor`
-- architecture is still the category where SIGIL survives hardest competition most consistently
+- architecture is still the category where Flint survives hardest competition most consistently
 - Gemini benefited the most from the stronger local repair/runtime
 - the smaller OpenAI model is no longer an all-plain fallback case on the harder extended corpus
 
@@ -147,7 +147,7 @@ Interpretation:
 
 ### Stop-sequence experiment
 
-We also added provider-side stop sequences for direct SIGIL on Anthropic and Gemini.
+We also added provider-side stop sequences for direct Flint on Anthropic and Gemini.
 
 Current reading:
 
@@ -189,7 +189,7 @@ Run:
 Observed:
 
 - baseline terse: `450` output tokens, `0` reasoning tokens
-- SIGIL hybrid: `193` output tokens, `0` reasoning tokens
+- Flint hybrid: `193` output tokens, `0` reasoning tokens
 - `parse_rate = 1.0`
 - `mode_match_rate = 1.0`
 - token savings vs baseline: about `57%`
@@ -211,7 +211,7 @@ Run:
 Observed:
 
 - baseline terse average: `235` output tokens
-- SIGIL hybrid average: `164.75` output tokens
+- Flint hybrid average: `164.75` output tokens
 - raw `parse_rate = 0.75`
 - repaired `repair_parse_rate = 1.0`
 - raw token savings vs baseline: about `19%`
@@ -233,7 +233,7 @@ Runs:
 
 Observed:
 
-- `gpt-5.4` routed SIGIL beats the original natural-language baseline end-to-end:
+- `gpt-5.4` routed Flint beats the original natural-language baseline end-to-end:
   - `parse_rate = 1.0`
   - `must_include_rate = 1.0`
   - `exact_literal_rate = 1.0`
@@ -253,7 +253,7 @@ Observed:
   - `avg_total_tokens = 280.75` vs baseline `306`
   - total-token savings vs baseline: about `7.29%`
   - latency savings vs baseline: about `19.73%`
-- `gemini-2.5-flash` selective efficiency routing is materially better than all-SIGIL routing, but still loses on total cost:
+- `gemini-2.5-flash` selective efficiency routing is materially better than all-Flint routing, but still loses on total cost:
   - `parse_rate = 1.0`
   - `must_include_rate = 0.6875`
   - `exact_literal_rate = 0.875`
@@ -275,7 +275,7 @@ Observed:
   - `avg_total_tokens = 246`
   - `must_include_rate = 0.6875`
   - `exact_literal_rate = 0.7083`
-- SIGIL full-route nano:
+- Flint full-route nano:
   - `parse_rate = 1.0`
   - `must_include_rate = 1.0`
   - `exact_literal_rate = 0.875`
@@ -295,7 +295,7 @@ Observed:
   - `avg_total_tokens = 245.12`
   - `must_include_rate = 0.6042`
   - `exact_literal_rate = 0.9062`
-- SIGIL multi-IR extended:
+- Flint multi-IR extended:
   - `parse_rate = 0.9375`
   - `must_include_rate = 0.8073`
   - `exact_literal_rate = 0.849`
@@ -306,19 +306,19 @@ Observed:
 Interpretation:
 
 - Claude benefits from the same structural idea that unlocked Gemini: compress the task contract, not only the response
-- full-route SIGIL is already strong on the starter nano set
+- full-route Flint is already strong on the starter nano set
 - on the extended set, the best Claude policy is now multi-IR:
 - typed capsule-mini for `debugging`
 - typed capsule-mini for `architecture`
-- nano direct SIGIL for `code_review`
-- nano direct SIGIL for `refactoring`
+- nano direct Flint for `code_review`
+- nano direct Flint for `refactoring`
 
 ### `gemini-2.5-flash`, micro tasks with `nano` task capsules
 
 Run:
 
 - tasks: `evals/tasks_hybrid_nano.jsonl`
-- builder: `sigil bench build-capsules ... --style nano`
+- builder: `flint bench build-capsules ... --style nano`
 - routed profile: `profiles/gemini_2_5_flash_gemini_nano_efficiency_router_v1.json`
 
 Observed:
@@ -326,7 +326,7 @@ Observed:
 - baseline terse nano:
   - `avg_total_tokens = 183`
   - `must_include_rate = 0.5833`
-- SIGIL routed nano:
+- Flint routed nano:
   - `parse_rate = 1.0`
   - `must_include_rate = 0.7292`
   - `exact_literal_rate = 0.8333`
@@ -345,7 +345,7 @@ Interpretation:
 Run:
 
 - tasks: `evals/tasks_hybrid_nano_extended.jsonl`
-- builder: `sigil bench build-capsules ... --style nano`
+- builder: `flint bench build-capsules ... --style nano`
 - routed profile: `profiles/gemini_2_5_flash_gemini_nano_extended_efficiency_router_v1.json`
 
 Observed:
@@ -354,7 +354,7 @@ Observed:
   - `avg_total_tokens = 160.25`
   - `must_include_rate = 0.5469`
   - `exact_literal_rate = 0.8646`
-- SIGIL routed nano extended:
+- Flint routed nano extended:
   - `parse_rate = 0.9583`
   - `must_include_rate = 0.5807`
   - `exact_literal_rate = 0.7708`
@@ -384,7 +384,7 @@ Observed:
   - `avg_input_tokens = 1772.5`
   - `avg_cached_tokens = 1700`
   - `avg_effective_total_tokens = 277.5`
-- SIGIL routed:
+- Flint routed:
   - `parse_rate = 1.0`
   - `must_include_rate = 1.0`
   - `exact_literal_rate = 0.875`
@@ -400,8 +400,8 @@ Observed:
 
 Interpretation:
 
-- Gemini was not fundamentally “bad for SIGIL”; the micro benchmark was simply too small for caching to matter
-- once the task is moved into a realistic cached-prefix regime, SIGIL plus routing starts to win materially on effective cost
+- Gemini was not fundamentally “bad for Flint”; the micro benchmark was simply too small for caching to matter
+- once the task is moved into a realistic cached-prefix regime, Flint plus routing starts to win materially on effective cost
 - for Gemini, the architectural lesson is stronger than for the other providers:
   - micro tasks need ultra-cheap transports
   - macro tasks need explicit cached context and steady-state measurement
@@ -425,7 +425,7 @@ Observed:
   - `avg_input_tokens = 1025.75`
   - `avg_total_tokens = 1216`
   - `avg_output_tokens = 190.25`
-- SIGIL routed:
+- Flint routed:
   - `parse_rate = 1.0`
   - `must_include_rate = 0.8542` vs baseline `0.7292`
   - `exact_literal_rate = 0.7917` vs baseline `0.7917`
@@ -468,7 +468,7 @@ Observed:
   - `avg_total_tokens = 1791.75`
   - `avg_effective_total_tokens = 231.25`
   - `avg_output_tokens = 198.25`
-- SIGIL routed:
+- Flint routed:
   - `parse_rate = 1.0`
   - `must_include_rate = 0.5833` vs baseline `0.4583`
   - `exact_literal_rate = 0.5000` vs baseline `0.7083`
@@ -513,7 +513,7 @@ Observed:
   - `avg_input_tokens = 990.25`
   - `avg_total_tokens = 1191`
   - `avg_output_tokens = 200.75`
-- SIGIL routed:
+- Flint routed:
   - `parse_rate = 1.0`
   - `must_include_rate = 0.9375` vs baseline `0.8750`
   - `exact_literal_rate = 0.9167` vs baseline `0.8750`
@@ -553,7 +553,7 @@ Observed:
   - `avg_input_tokens = 1099.75`
   - `avg_total_tokens = 1334.75`
   - `avg_output_tokens = 235`
-- SIGIL routed:
+- Flint routed:
   - `parse_rate = 1.0`
   - `must_include_rate = 0.9375` vs baseline `0.5625`
   - `exact_literal_rate = 0.7500` vs baseline `0.7917`
@@ -576,14 +576,14 @@ Interpretation:
 
 Interpretation:
 
-- SIGIL is no longer OpenAI-only; the transport/runtime generalizes across providers
+- Flint is no longer OpenAI-only; the transport/runtime generalizes across providers
 - the value is provider-specific:
   - OpenAI strong
   - Anthropic positive when routing is allowed to be selective
   - Gemini currently benefits from selective routing, but not enough to beat the terse baseline yet
-- on `gpt-5.4`, a selective efficiency router collapses back to the same full-SIGIL routing, which is a good sign rather than a failure
+- on `gpt-5.4`, a selective efficiency router collapses back to the same full-Flint routing, which is a good sign rather than a failure
 - this validates the architecture decision to calibrate per model/provider instead of chasing one universal prompt
-- it also validates the stronger claim that SIGIL is a policy layer, not just a compact notation
+- it also validates the stronger claim that Flint is a policy layer, not just a compact notation
 
 ### Cache viability on current micro benchmarks
 
@@ -621,7 +621,7 @@ Changes made:
 Interpretation:
 
 - benchmark reliability is part of the product, not just convenience
-- provider noise and runtime hardening matter if SIGIL is meant to be a real transport layer rather than a lab demo
+- provider noise and runtime hardening matter if Flint is meant to be a real transport layer rather than a lab demo
 
 ### `hybrid` mode, schema-first transport
 
@@ -707,7 +707,7 @@ Observed:
 
 Interpretation:
 
-- a lighter schema can work if the runtime performs a local canonicalization pass before rendering SIGIL
+- a lighter schema can work if the runtime performs a local canonicalization pass before rendering Flint
 - this is currently the strongest answer to the input-overhead problem on categories where the wire lane already works
 - the key insight is compiler-like: relax the transport contract slightly, then recover structure in a deterministic local pass
 
@@ -735,7 +735,7 @@ Interpretation:
 
 Run:
 
-- task compiler: `src/sigil/task_capsule.py`
+- task compiler: `src/flint/task_capsule.py`
 - generated task files: `evals/tasks_*_capsule.jsonl`
 - model: `gpt-4o-mini`
 
@@ -782,11 +782,11 @@ Observed:
 - `avg_output_tokens = 106` vs baseline terse `235`
 - output token savings vs baseline: about `45.84%`
 - `avg_total_tokens = 575.5` vs baseline `424`
-- still much better than monolithic prompt-only SIGIL on the same task set (`886.75`)
+- still much better than monolithic prompt-only Flint on the same task set (`886.75`)
 
 Interpretation:
 
-- the first credible SIGIL architecture is now a router, not a single prompt
+- the first credible Flint architecture is now a router, not a single prompt
 - mixed transport beats one-size-fits-all transport
 - the output-side win is large, but input overhead is still the main remaining economic problem
 
@@ -848,7 +848,7 @@ Observed:
 Interpretation:
 
 - this is the clearest current frontier in the repo
-- SIGIL now has a real Pareto surface:
+- Flint now has a real Pareto surface:
   - efficiency-first gets very close to baseline total cost while crushing visible output size
   - balanced matches baseline `must_include_rate` while pushing `exact_literal_rate` to `1.0`
   - quality-first gives the best semantic retention, but still pays a clear input-cost premium
@@ -881,7 +881,7 @@ Run:
 
 Observed:
 
-- first transfer from `gpt-4o-mini` prompts was bad: the terse baseline shrank to `131` output tokens on average while SIGIL became too verbose
+- first transfer from `gpt-4o-mini` prompts was bad: the terse baseline shrank to `131` output tokens on average while Flint became too verbose
 - after tightening the `wire_lite` schema and prompt, and moving semantic recovery into the local audit renderer:
   - efficiency router: `parse_rate = 1.0`
   - `must_include_rate = 0.9375`
@@ -895,8 +895,8 @@ Observed:
 Interpretation:
 
 - model transfer is not automatic
-- stronger models compress their own terse baseline better, so SIGIL must become more typed and more bounded to stay competitive
-- once the transport is tightened, SIGIL can beat the baseline on output size, latency, and retention simultaneously
+- stronger models compress their own terse baseline better, so Flint must become more typed and more bounded to stay competitive
+- once the transport is tightened, Flint can beat the baseline on output size, latency, and retention simultaneously
 - but the input-cost wall remains dominant on `gpt-5.4-mini`
 
 ### Model transfer: `gpt-5.4`
@@ -921,7 +921,7 @@ Observed:
 Interpretation:
 
 - the stronger model helps a lot
-- with `gpt-5.4`, SIGIL now wins clearly on visible output compression, latency, and task-retention quality
+- with `gpt-5.4`, Flint now wins clearly on visible output compression, latency, and task-retention quality
 - the remaining failure mode is narrow and concrete: uncached input overhead still prevents a total-token win
 
 ### Compiler-first micro capsules: `gpt-5.4-mini`
@@ -945,12 +945,12 @@ Observed:
 
 Interpretation:
 
-- compiler-first direct SIGIL is now syntactically stable on `gpt-5.4-mini`
+- compiler-first direct Flint is now syntactically stable on `gpt-5.4-mini`
 - it wins strongly on visible output size
 - but it still loses on total cost once the baseline also benefits from the same local task compiler
 - this is the clearest current wall on smaller strong models
 
-### Prompt-compressed direct SIGIL: `gpt-5.4-mini`
+### Prompt-compressed direct Flint: `gpt-5.4-mini`
 
 Run:
 
@@ -990,7 +990,7 @@ Runs:
 
 Observed:
 
-- lean prompts reduced cost sharply but often collapsed into non-SIGIL bullets or headings
+- lean prompts reduced cost sharply but often collapsed into non-Flint bullets or headings
 - tight prompts overfit on some categories and regressed parseability or mode match
 - `compact v3` and `cap90` crossed the same boundary from a different angle: cheaper contracts, but unstable formal outputs
 
@@ -1028,14 +1028,14 @@ Interpretation:
 - this is the first real end-to-end breakthrough in the repo
 - the winning recipe is:
   - local task compiler
-  - direct SIGIL surface form
+  - direct Flint surface form
   - local repair plus audit materialization
   - strong model (`gpt-5.4`)
 - the claim is still narrow:
   - it beats the original natural-language terse baseline
   - it does not yet beat an already-compiled terse baseline on `gpt-5.4-mini`
 
-### Direct SIGIL repair lane
+### Direct Flint repair lane
 
 Observed:
 
@@ -1045,7 +1045,7 @@ Observed:
 
 Interpretation:
 
-- direct SIGIL no longer needs to be treated as a toy freeform lane
+- direct Flint no longer needs to be treated as a toy freeform lane
 - it is now a realistic low-overhead transport candidate
 - the important lesson is architectural: the cheapest lane became viable only after moving more work into deterministic local repair
 
@@ -1061,7 +1061,7 @@ Purpose:
 
 Interpretation:
 
-- this matters because more of SIGIL's semantic recovery now lives in deterministic local rendering
+- this matters because more of Flint's semantic recovery now lives in deterministic local rendering
 - it also makes iteration faster: prompt changes require new API calls, renderer changes do not
 
 ### `draft2schema` transport
@@ -1086,7 +1086,7 @@ Interpretation:
 
 - the two-stage transport is now implemented and benchmarkable
 - on the current task set and prompt design, it is not worth the extra stage
-- this is a useful negative result: draft conditioning should be treated as a selective fallback, not the default SIGIL lane
+- this is a useful negative result: draft conditioning should be treated as a selective fallback, not the default Flint lane
 
 ### Literal-aware schema correction
 
@@ -1145,14 +1145,14 @@ Observed:
 Interpretation:
 
 - compile mode became stable after switching from “symbolic but permissive” to a tighter typed template
-- this supports the main SIGIL hypothesis: the gain comes from a compact IR plus strict production rules, not from freeform symbolic style
+- this supports the main Flint hypothesis: the gain comes from a compact IR plus strict production rules, not from freeform symbolic style
 
 ## Main Lessons
 
 1. Underspecified prompts destroy benchmark validity. The model asks for more context instead of solving the task.
 2. Mixed-mode evaluation is too noisy at the start. Benchmark each mode separately.
 3. Parseability depends more on hard syntax constraints than on generic “be symbolic” instructions.
-4. Reasoning-effort `none` is a useful pressure test for SIGIL because it isolates representation discipline from hidden thinking budgets.
+4. Reasoning-effort `none` is a useful pressure test for Flint because it isolates representation discipline from hidden thinking budgets.
 
 ## Next Technical Targets
 
@@ -1161,6 +1161,6 @@ Interpretation:
 3. Add quality checks beyond keyword retention, especially for patch correctness and risk localization.
 4. Route `draft2schema` only when the cheaper direct schema lane shows low confidence or poor literal retention.
 5. Keep tightening micro-schemas so exact literals survive without inflating output tokens too much.
-6. Reduce direct-prompt overhead further, because compiler-first SIGIL still loses to a compiled terse baseline on `gpt-5.4-mini`.
+6. Reduce direct-prompt overhead further, because compiler-first Flint still loses to a compiled terse baseline on `gpt-5.4-mini`.
 7. Learn better category policies from larger eval sets so the auto-router is less noisy and less sample-sensitive.
 8. Test whether cache-aware prefix reuse or provider-side grammar constraints can close the remaining mini-model gap.

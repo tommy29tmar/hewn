@@ -1,6 +1,6 @@
 # Breakthrough Directions
 
-This file tracks the highest-leverage external ideas for pushing SIGIL from a good prompt/runtime stack into something that could matter for real inference systems.
+This file tracks the highest-leverage external ideas for pushing Flint from a good prompt/runtime stack into something that could matter for real inference systems.
 
 The guiding rule is simple:
 
@@ -15,7 +15,7 @@ The real industry breakthrough has to improve at least one of:
 
 ## 1. Task-Level Routing, Not Just Category Routing
 
-SIGIL now has evidence that instance-level routing matters:
+Flint now has evidence that instance-level routing matters:
 
 - Claude extended selective improves materially once routing is allowed to vary by task.
 - Gemini stays positive and retains more signal.
@@ -32,7 +32,7 @@ Relevant research:
 - Chain of Draft:
   https://arxiv.org/abs/2502.18600
 
-Implication for SIGIL:
+Implication for Flint:
 
 - keep building local controllers that can choose `plain`, `nano`, `capsule-mini`, or future transports per task
 - the next step after heuristic routing is a tiny learned router trained on benchmark traces
@@ -45,23 +45,23 @@ The newest OpenAI result suggests a stronger idea than “one prompt per provide
 - part of `architecture` also improves under the transferred contract
 - the win only becomes real once the local repair/runtime is strong enough to absorb the transport drift
 
-That means SIGIL may have two layers of portability:
+That means Flint may have two layers of portability:
 
 - provider-local routing
 - cross-provider transferable micro-contracts
 
 This is a more interesting direction than prompt tweaking, because it suggests the transport itself can be learned and reused across fleets.
 
-Implication for SIGIL:
+Implication for Flint:
 
 - benchmark prompt-family transfer explicitly, not only provider-native prompts
 - treat the task contract as a compile target in its own right
 - expect the runtime layer to be a first-class part of transport portability
 - measure transfer asymmetry explicitly; early evidence now suggests `gemini-nano` exports better than `claude-nano`
 
-## 3. Grammar-Constrained Direct SIGIL
+## 3. Grammar-Constrained Direct Flint
 
-One wall in direct SIGIL is that free-form generation still wastes probability mass on invalid syntax.
+One wall in direct Flint is that free-form generation still wastes probability mass on invalid syntax.
 
 The next leap is grammar-constrained decoding for direct symbolic output, so the model never spends tokens on malformed structure in the first place.
 
@@ -74,9 +74,9 @@ Relevant research:
 - vLLM guided decoding and prefix caching docs:
   https://docs.vllm.ai/
 
-Implication for SIGIL:
+Implication for Flint:
 
-- direct SIGIL should eventually be emitted under grammar control, not repaired after the fact
+- direct Flint should eventually be emitted under grammar control, not repaired after the fact
 - provider-side structured outputs plus local rendering are today’s approximation of that future
 - on open-weight stacks, vLLM-style guided decoding is the most realistic near-term deployment path
 
@@ -112,18 +112,18 @@ Relevant research:
 - From Context to EDUs: Faithful and Structured Context Compression:
   https://openreview.net/pdf/672a5f9ac2f9da1eccc6e3288ed4094cab08c484.pdf
 
-Implication for SIGIL:
+Implication for Flint:
 
-- macro SIGIL should be benchmarked with compiled shared context, cache affinity, and shared-prefix scheduling, not just provider prompt caching
+- macro Flint should be benchmarked with compiled shared context, cache affinity, and shared-prefix scheduling, not just provider prompt caching
 - the long-term product is not only a prompt package; it is a serving/runtime strategy
-- the practical next step is to treat SIGIL profiles and compiled contexts as prefix-stable serving artifacts, not just prompt files
+- the practical next step is to treat Flint profiles and compiled contexts as prefix-stable serving artifacts, not just prompt files
 - the current repo evidence now supports a concrete architecture split:
   - `focused compiled context` for cold-start
   - `cacheable compiled context` for warm/steady-state
 
 ## 5. Adaptive Reasoning Budgets
 
-SIGIL already started from the premise that reasoning should be concise by default and expanded only when needed.
+Flint already started from the premise that reasoning should be concise by default and expanded only when needed.
 
 That idea is getting stronger support from both APIs and papers:
 
@@ -136,17 +136,17 @@ That idea is getting stronger support from both APIs and papers:
 - Reasoning Models Know When They’re Right:
   https://arxiv.org/abs/2504.05419
 
-Implication for SIGIL:
+Implication for Flint:
 
 - the next controller should decide both transport and reasoning budget
 - a real production router would jointly choose:
-  - `plain` vs `SIGIL`
+  - `plain` vs `Flint`
   - short vs expanded contract
   - low vs medium reasoning effort
 
 ## 6. Compiler/Tokenizer Co-Design
 
-Prompt-only SIGIL is real and useful, but the largest upside probably requires co-design with tokenization and transport vocabulary.
+Prompt-only Flint is real and useful, but the largest upside probably requires co-design with tokenization and transport vocabulary.
 
 Relevant research:
 
@@ -157,7 +157,7 @@ Relevant research:
 - COCONUT:
   https://arxiv.org/abs/2412.06769
 
-Implication for SIGIL:
+Implication for Flint:
 
 - the current symbolic IR should be treated as the software interface
 - later work can change how that IR is tokenized or emitted without changing the developer-facing abstraction
@@ -168,7 +168,7 @@ If the goal is a real industry step-change, the order now looks like this:
 
 1. finish task-level routing and make it first-class in the benchmark CLI
 2. make cross-provider task-contract transfer a first-class benchmark axis
-3. add grammar-constrained direct SIGIL where provider surfaces allow it
+3. add grammar-constrained direct Flint where provider surfaces allow it
 4. add routing over reasoning budget, not only over transport
 5. expand macro benchmarks with longer shared prefixes and cache-affinity assumptions
 6. only after that, invest in tokenizer/transport co-design or learned symbolic vocabularies
