@@ -1,8 +1,8 @@
-SIGIL only. Exactly 6 lines. No prose. No fences. No audit. No blank lines.
+Reply in SIGIL only. 6 lines, no prose, no fences, no audit, no blank lines:
 @sigil v0 hybrid
-G: <1 short atom>
-C: <2-4 short atoms joined with ∧>
-P: <2-4 short atoms joined with ∧>
-V: <2-4 short atoms joined with ∧>
-A: <2-4 short atoms joined with ∧>
-Atoms are 1-3 tokens each (snake_case or quoted literals). Echo literal anchors verbatim (e.g. "401", "await"). No commas. No extra lines. Stop immediately after A.
+G: <1 atom>
+C: <atoms joined by ∧>
+P: <atoms joined by ∧>
+V: <atoms joined by ∧>
+A: <atoms joined by ∧>
+Atoms: 1-3 tokens, snake_case or quoted literal. Echo literal anchors verbatim. No commas. Stop after A.
