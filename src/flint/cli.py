@@ -23,17 +23,17 @@ from .routing import load_profile, pick_variant
 
 
 def _build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(prog="sigil", description="Parse and validate SIGIL documents.")
+    parser = argparse.ArgumentParser(prog="flint", description="Parse and validate Flint documents.")
     subparsers = parser.add_subparsers(dest="command", required=True)
 
-    validate_parser = subparsers.add_parser("validate", help="Validate a .sigil file.")
+    validate_parser = subparsers.add_parser("validate", help="Validate a .flint file.")
     validate_parser.add_argument("path", type=Path)
 
-    parse_parser = subparsers.add_parser("parse", help="Parse a .sigil file.")
+    parse_parser = subparsers.add_parser("parse", help="Parse a .flint file.")
     parse_parser.add_argument("path", type=Path)
     parse_parser.add_argument("--json", action="store_true", help="Print parsed output as JSON.")
 
-    audit_parser = subparsers.add_parser("audit", help="Render the audit view for a .sigil file.")
+    audit_parser = subparsers.add_parser("audit", help="Render the audit view for a .flint file.")
     audit_parser.add_argument("path", type=Path)
     audit_parser.add_argument(
         "--explain",
@@ -53,11 +53,11 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Hint for the repair layer (debugging / architecture / code_review / refactoring).",
     )
 
-    stats_parser = subparsers.add_parser("stats", help="Show structural and size metrics for a .sigil file.")
+    stats_parser = subparsers.add_parser("stats", help="Show structural and size metrics for a .flint file.")
     stats_parser.add_argument("path", type=Path)
     stats_parser.add_argument("--json", action="store_true", help="Print metrics as JSON.")
 
-    repair_parser = subparsers.add_parser("repair", help="Apply deterministic normalization to a .sigil-like file.")
+    repair_parser = subparsers.add_parser("repair", help="Apply deterministic normalization to a .flint-like file.")
     repair_parser.add_argument("path", type=Path)
 
     bench_parser = subparsers.add_parser("bench", help="Benchmark helpers for corpus generation and reporting.")
@@ -220,7 +220,7 @@ def main(argv: list[str] | None = None) -> int:
             else:
                 print(f"Wrote {args.out}")
             return 0
-        parser.exit(status=2, message="sigil: unknown bench command\n")
+        parser.exit(status=2, message="flint: unknown bench command\n")
         return 2
 
     if args.command == "claude-code":
@@ -247,7 +247,7 @@ def main(argv: list[str] | None = None) -> int:
     try:
         document = parse_document(args.path)
     except FlintParseError as exc:
-        parser.exit(status=1, message=f"sigil: {exc}\n")
+        parser.exit(status=1, message=f"flint: {exc}\n")
 
     if args.command == "validate":
         mode = document.header.mode if document.header else "unspecified"
@@ -274,7 +274,7 @@ def main(argv: list[str] | None = None) -> int:
             print(json.dumps(stats, ensure_ascii=False))
         return 0
 
-    parser.exit(status=2, message="sigil: unknown command\n")
+    parser.exit(status=2, message="flint: unknown command\n")
     return 2
 
 
