@@ -285,8 +285,8 @@ def validate_document(document: Document) -> None:
     mode = document.header.mode if document.header else None
     if mode == "memory" and any(clause.tag != "M" for clause in document.clauses):
         raise SIGILParseError("Mode=memory documents may only contain M: clauses")
-    if mode == "hybrid" and not document.audit:
-        raise SIGILParseError("Mode=hybrid documents must include an [AUDIT] block")
+    # Hybrid documents may optionally carry an [AUDIT] block; consumers can
+    # check document.audit to know whether a prose rerender is attached.
 
 
 def parse_json(path: str | Path) -> str:

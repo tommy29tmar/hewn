@@ -41,6 +41,10 @@ BARE_TAG_RE = re.compile(r"^([GCHPVRQMA])\s*:?\s*$")
 ARCHITECTURE_TEAM_ASSIGNMENT_RE = re.compile(r"\bteam\s*=\s*([0-9]+)")
 ARCHITECTURE_TEAM_SPACED_RE = re.compile(r"\bteam\s+([0-9]+)\b")
 ARCHITECTURE_TEAM_JOINED_RE = re.compile(r"\bteam\s*∧\s*([0-9]+)\b")
+# Handles atoms like `team_"9"`, `ddl_"12 weeks"`, `store_"PostgreSQL"` that
+# LLMs emit when pattern-matching the capsule anchors format.
+ARCHITECTURE_QUOTED_SUFFIX_RE = re.compile(r'\b(team|ddl|store|ops|traffic|split)_"([^"]+)"')
+REFACTOR_QUOTED_SUFFIX_RE = re.compile(r'\b([A-Za-z][A-Za-z0-9_]*)_"([^"]+)"')
 ARCHITECTURE_ASSIGNMENT_QUOTED_RE = re.compile(r'\b(ops|traffic|split|store)\s*=\s*"([^"]+)"')
 ARCHITECTURE_ASSIGNMENT_RE = re.compile(r"\b(ops|traffic|split|store)\s*=\s*([A-Za-z0-9_./+-]+)")
 ARCHITECTURE_SPACED_CALL_RE = re.compile(r"\b(ops|traffic|split|store)\s+([A-Za-z0-9_./+-]+)")
@@ -58,7 +62,7 @@ ARCHITECTURE_JOINED_DELIVER_RE = re.compile(r"\bdeliver\s*∧\s*([A-Za-z0-9_./+-
 ARCHITECTURE_DURATION_RE = re.compile(r"\b[0-9]+\s+(?:hours?|days?|weeks?|months?)\b")
 ARCHITECTURE_WHY_RE = re.compile(r"\bwhy:\s*(.+)$")
 DEBUG_EDGE_ARROW_RE = re.compile(r"edge\(((?:[^()]|\([^()]*\))+?)\s*(?:=>|->|→|⇒)\s*([A-Za-z0-9_./:+-]+)\)")
-DEBUG_OUTCOME_SUFFIX_RE = re.compile(r"((?:eq\([^()]*\)|[A-Za-z0-9_./:+-]+(?:\([^()]*\))?))_(pass|fail)")
+DEBUG_OUTCOME_SUFFIX_RE = re.compile(r"((?:eq\([^()]*\)|[A-Za-z0-9_./:+-]+(?:\([^()]*\))?))_(pass|fail)(?![A-Za-z0-9_])")
 
 
 def _has_balanced_delimiters(expr: str) -> bool:
@@ -308,6 +312,7 @@ def _normalize_architecture_capsule_text(expr: str) -> str:
 
     expr = re.sub(r"\)\.", ") ", expr)
     expr = re.sub(r"\b([A-Za-z][A-Za-z0-9_]*)\.(?=[A-Za-z])", r"\1 ", expr)
+    expr = ARCHITECTURE_QUOTED_SUFFIX_RE.sub(lambda m: f'{m.group(1)}("{m.group(2)}")', expr)
     expr = ARCHITECTURE_TEAM_ASSIGNMENT_RE.sub(lambda m: f"team({m.group(1)})", expr)
     expr = ARCHITECTURE_TEAM_SPACED_RE.sub(lambda m: f"team({m.group(1)})", expr)
     expr = ARCHITECTURE_TEAM_JOINED_RE.sub(lambda m: f"team({m.group(1)})", expr)
@@ -334,6 +339,9 @@ def _normalize_refactor_capsule_text(expr: str) -> str:
     expr = re.sub(r"\)\.", ") ", expr)
     expr = re.sub(r"\(\s*req\s*,\s*res\s*,\s*next\s*\)", " ", expr)
     expr = re.sub(r"\b([A-Za-z][A-Za-z0-9_]*)\.(?=[A-Za-z])", r"\1 ", expr)
+    # Handles atoms like `db_err_forwards_"next(err)"` → `db_err_forwards("next(err)")`
+    # so the quoted literal survives as a valid call argument instead of breaking parse.
+    expr = REFACTOR_QUOTED_SUFFIX_RE.sub(lambda m: f'{m.group(1)}("{m.group(2)}")', expr)
     expr = re.sub(r"\s+", " ", expr).strip()
     return expr
 

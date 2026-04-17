@@ -14,7 +14,7 @@ from .bench import (
     render_report,
 )
 from .metrics import document_metrics
-from .normalize import normalize_document_text
+from .normalize import normalize_document_text, repair_direct_sigil_text
 from .parser import SIGILParseError, document_to_data, parse_document
 from .render import generate_audit
 
@@ -32,6 +32,23 @@ def _build_parser() -> argparse.ArgumentParser:
 
     audit_parser = subparsers.add_parser("audit", help="Render the audit view for a .sigil file.")
     audit_parser.add_argument("path", type=Path)
+    audit_parser.add_argument(
+        "--explain",
+        action="store_true",
+        help="Show raw / repaired / parse-state / anchor checks / prose audit side by side.",
+    )
+    audit_parser.add_argument(
+        "--anchor",
+        dest="anchors",
+        action="append",
+        default=None,
+        help="Anchor to check (repeat to pass multiple); reports hit/missed against the raw text.",
+    )
+    audit_parser.add_argument(
+        "--category",
+        default="",
+        help="Hint for the repair layer (debugging / architecture / code_review / refactoring).",
+    )
 
     stats_parser = subparsers.add_parser("stats", help="Show structural and size metrics for a .sigil file.")
     stats_parser.add_argument("path", type=Path)
@@ -171,6 +188,9 @@ def main(argv: list[str] | None = None) -> int:
         parser.exit(status=2, message="sigil: unknown bench command\n")
         return 2
 
+    if args.command == "audit" and getattr(args, "explain", False):
+        return _run_audit_explain(args.path, getattr(args, "anchors", None) or [], getattr(args, "category", "") or "")
+
     try:
         document = parse_document(args.path)
     except SIGILParseError as exc:
@@ -203,6 +223,39 @@ def main(argv: list[str] | None = None) -> int:
 
     parser.exit(status=2, message="sigil: unknown command\n")
     return 2
+
+
+def _run_audit_explain(path: Path, anchors: list[str], category: str) -> int:
+    raw = path.read_text(encoding="utf-8")
+    repaired = repair_direct_sigil_text(raw, category)
+    parse_state: str
+    prose: str
+    try:
+        document = parse_document(repaired)
+        parse_state = "OK"
+        prose = generate_audit(document)
+    except SIGILParseError as exc:
+        parse_state = f"FAIL: {exc}"
+        prose = "(unparseable — showing repaired SIGIL only)"
+
+    def _panel(title: str, body: str) -> None:
+        print(f"=== {title} ===")
+        print(body.rstrip())
+        print()
+
+    _panel(f"RAW ({len(raw)} chars)", raw)
+    if repaired.strip() != raw.strip():
+        _panel("REPAIRED", repaired)
+    _panel("PARSE", parse_state)
+    if anchors:
+        hit = [a for a in anchors if a in raw]
+        missed = [a for a in anchors if a not in raw]
+        _panel(
+            "ANCHORS",
+            f"hit:    {hit if hit else '(none)'}\nmissed: {missed if missed else '(none)'}",
+        )
+    _panel("PROSE AUDIT", prose)
+    return 0
 
 
 if __name__ == "__main__":

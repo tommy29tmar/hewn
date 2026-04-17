@@ -1,6 +1,6 @@
 # SIGIL
 
-**Claude answers in 6 lines instead of 872. Same information. -54% tokens. 70% faster.**
+**Claude answers in 6 lines instead of 872. Concepts preserved. -54% tokens. 70% faster.**
 
 ![demo](assets/launch/demo.png)
 
@@ -48,9 +48,17 @@ Against verbose Claude, SIGIL saves **-54% tokens** and cuts latency **-70%**.
 
 ## SIGIL vs Caveman
 
-Caveman-style prompts ("no articles, no filler, primitive English") are the other popular token-compression trick. On the same bench, Caveman saves -49% tokens but **drops must_include from 80% to 66%** — it's saving tokens by cutting concepts.
+Caveman-style prompts ("no articles, no filler, primitive English") are the other popular token-compression trick. On the **same 8-task holdout**, Caveman saves -49% tokens but **drops must_include from 80% to 66%** — it's saving tokens by cutting concepts.
 
-SIGIL saves **more tokens (-54%) and *preserves* must_include (82%)**. It compresses structure, not meaning. And where Caveman is a vibes-based prompting style, SIGIL is an actual IR with a grammar, a parser, and a local repair layer — so when Claude drifts off format, you don't just get garbage.
+SIGIL saves **more tokens (-54%)** and posts **higher must_include on the same corpus (82%)**. It compresses structure, not meaning. And where Caveman is a vibes-based prompting style, SIGIL is an actual IR with a grammar, a parser, and a local repair layer — so when Claude drifts off format, you get the answer repaired, not garbage.
+
+## Debug any SIGIL response
+
+```bash
+sigil audit --explain response.sigil --anchor 300 --anchor 401
+```
+
+Prints 5 side-by-side panels — raw, repaired, parse state, anchor hit/missed, prose audit — so you can trust what SIGIL gave you even when the model drifts off format.
 
 ## Scope honest
 
