@@ -22,12 +22,12 @@ UNICODE_REPLACEMENTS = {
     "≤": "<=",
     "≥": ">=",
 }
-HEADER_DRIFT_RE = re.compile(r"^@sigil(?:[_:\-\s]*)(v0)(?:[_:\-\s]*(draft|audit|hybrid|memory|compile))?$", re.IGNORECASE)
+HEADER_DRIFT_RE = re.compile(r"^@(?:flint|sigil)(?:[_:\-\s]*)(v0)(?:[_:\-\s]*(draft|audit|hybrid|memory|compile))?$", re.IGNORECASE)
 QUOTED_TOKEN_RE = re.compile(r'(["\'])([^"\']+)\1')
 DANGLING_BINARY_RE = re.compile(r"(?:\s*(?:∧|∨|⇒|=>|→|->|≈|⊥|&|\|)\s*)+$")
 META_LINE_RE = re.compile(r"^(?:\[[^\]]+\].*|Atoms?:.*|Calls?:.*|Notes?:.*|Literals?:.*)$", re.IGNORECASE)
 CODE_FENCE_RE = re.compile(r"^```[A-Za-z0-9_-]*\s*$")
-SIGIL_LABEL_RE = re.compile(r"^SIGIL\s*:?\s*$", re.IGNORECASE)
+FLINT_LABEL_RE = re.compile(r"^SIGIL\s*:?\s*$", re.IGNORECASE)
 BINARY_OPERATOR_TOKENS = {"∧", "∨", "⇒", "=>", "→", "->", "≈", "⊥", "&", "|"}
 
 DIRECT_CATEGORY_FALLBACKS = {
@@ -404,7 +404,7 @@ def normalize_document_text(text: str) -> str:
             in_audit = True
             repaired.append(line)
             continue
-        if SIGIL_LABEL_RE.match(stripped):
+        if FLINT_LABEL_RE.match(stripped):
             continue
         if CODE_FENCE_RE.match(stripped):
             continue
@@ -422,7 +422,7 @@ def normalize_document_text(text: str) -> str:
     return "\n".join(repaired)
 
 
-def normalize_direct_sigil_text(text: str) -> str:
+def normalize_direct_flint_text(text: str) -> str:
     lines = text.splitlines()
     repaired: list[str] = []
     in_audit = False
@@ -432,7 +432,7 @@ def normalize_direct_sigil_text(text: str) -> str:
         if header_match:
             version = header_match.group(1).lower()
             mode = (header_match.group(2) or "").lower()
-            repaired.append(f"@sigil {version}{f' {mode}' if mode else ''}")
+            repaired.append(f"@flint {version}{f' {mode}' if mode else ''}")
             continue
         if stripped == "[AUDIT]":
             in_audit = True
@@ -452,8 +452,8 @@ def normalize_direct_sigil_text(text: str) -> str:
     return "\n".join(repaired)
 
 
-def repair_direct_sigil_text(text: str, category: str | None = None) -> str:
-    repaired = normalize_direct_sigil_text(text)
+def repair_direct_flint_text(text: str, category: str | None = None) -> str:
+    repaired = normalize_direct_flint_text(text)
     lines = repaired.splitlines()
     non_empty = [line.strip() for line in lines if line.strip()]
     output: list[str] = []
@@ -461,7 +461,7 @@ def repair_direct_sigil_text(text: str, category: str | None = None) -> str:
     in_audit = False
     header_line = next(
         (
-            f"@sigil {match.group(1).lower()}{f' {match.group(2).lower()}' if match.group(2) else ''}"
+            f"@flint {match.group(1).lower()}{f' {match.group(2).lower()}' if match.group(2) else ''}"
             for line in lines
             if (match := HEADER_DRIFT_RE.match(line.strip()))
         ),
@@ -471,7 +471,7 @@ def repair_direct_sigil_text(text: str, category: str | None = None) -> str:
     has_tagged_clause = any(len(line.strip()) >= 3 and line.strip()[1] == ":" and line.strip()[0] in "GCHPVRQMA" for line in lines)
 
     if non_empty:
-        output.append(header_line or "@sigil v0 hybrid")
+        output.append(header_line or "@flint v0 hybrid")
 
     for line in lines:
         stripped = line.strip()
@@ -481,7 +481,7 @@ def repair_direct_sigil_text(text: str, category: str | None = None) -> str:
             in_audit = True
             output.append(line)
             continue
-        if SIGIL_LABEL_RE.match(stripped):
+        if FLINT_LABEL_RE.match(stripped):
             continue
         if CODE_FENCE_RE.match(stripped):
             continue

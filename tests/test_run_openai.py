@@ -5,8 +5,8 @@ import sys
 import unittest
 from pathlib import Path
 
-from sigil.normalize import normalize_document_text
-from sigil.parser import parse_document
+from flint.normalize import normalize_document_text
+from flint.parser import parse_document
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -72,8 +72,8 @@ class RunOpenAITests(unittest.TestCase):
         self.assertEqual(payload["text"]["verbosity"], "low")
 
     def test_extract_output_text_prefers_top_level_field(self) -> None:
-        response = {"output_text": "@sigil v0 hybrid\nG: fix(auth)"}
-        self.assertEqual(RUN_OPENAI.extract_output_text(response), "@sigil v0 hybrid\nG: fix(auth)")
+        response = {"output_text": "@flint v0 hybrid\nG: fix(auth)"}
+        self.assertEqual(RUN_OPENAI.extract_output_text(response), "@flint v0 hybrid\nG: fix(auth)")
 
     def test_extract_usage_reads_reasoning_tokens(self) -> None:
         response = {
@@ -93,7 +93,7 @@ class RunOpenAITests(unittest.TestCase):
         self.assertEqual(usage["reasoning_tokens"], 20)
 
     def test_normalize_document_text_wraps_await_identifier(self) -> None:
-        text = "@sigil v0 hybrid\nP: try(await db_findUser) → next(err)\n[AUDIT]\nshort\n"
+        text = "@flint v0 hybrid\nP: try(await db_findUser) → next(err)\n[AUDIT]\nshort\n"
         normalized = normalize_document_text(text)
         self.assertIn("await(db_findUser)", normalized)
 
@@ -103,7 +103,7 @@ class RunOpenAITests(unittest.TestCase):
             "output_text": "G: post_release\nC: 4 months\nP: PostgreSQL\nV: modular_monolith\nA: team, deadline, low_ops, fast_ship"
         }
         content, _ = RUN_OPENAI.decode_variant_output(variant, response)
-        self.assertIn("@sigil v0 hybrid", content)
+        self.assertIn("@flint v0 hybrid", content)
         self.assertIn("A: team ∧ deadline ∧ low_ops ∧ fast_ship", content)
 
     def test_decode_variant_output_repairs_headerless_gemini_nano_refactor(self) -> None:
@@ -112,7 +112,7 @@ class RunOpenAITests(unittest.TestCase):
             "output_text": "G: `async`\nC: `await`\nP: `next(err)`\nV: target\nA: same_order"
         }
         content, _ = RUN_OPENAI.decode_variant_output(variant, response)
-        self.assertIn("@sigil v0 hybrid", content)
+        self.assertIn("@flint v0 hybrid", content)
         self.assertIn("G: async", content)
         self.assertIn("C: await", content)
 
@@ -122,7 +122,7 @@ class RunOpenAITests(unittest.TestCase):
             "output_text": '{"mode":"hybrid","codebook":[],"goal":"fix(auth_middleware)","constraints":["backcompat","security"],"has_hypothesis":false,"hypothesis_left":"","hypothesis_right":"","plan":["add(test_boundary)"],"verification":["unit"],"risks":["auth_regression"],"questions":[],"answer":["minimal_patch"],"audit":"short"}'
         }
         content, structured_data = RUN_OPENAI.decode_variant_output(variant, response)
-        self.assertIn("@sigil v0 hybrid", content)
+        self.assertIn("@flint v0 hybrid", content)
         self.assertIsNotNone(structured_data)
 
     def test_decode_variant_output_renders_debug_schema_payload(self) -> None:
@@ -140,7 +140,7 @@ class RunOpenAITests(unittest.TestCase):
             "output_text": '{"m":"hybrid","t":"auth_middleware","c":["backcompat","security"],"h":"cmp(expiry,<,now)","p":["add(grace30)"],"v":["test(boundary_expiry)"],"r":["auth_regression"],"a":["minimal_patch"]}'
         }
         content, _ = RUN_OPENAI.decode_variant_output(variant, response)
-        self.assertIn("@sigil v0 hybrid", content)
+        self.assertIn("@flint v0 hybrid", content)
         self.assertIn("G: fix(auth_middleware)", content)
         self.assertIn("[AUDIT]", content)
         self.assertIn("Fix auth middleware", content)
@@ -151,7 +151,7 @@ class RunOpenAITests(unittest.TestCase):
             "output_text": '{"m":"hybrid","t":"auth_middleware","c":["backcompat","security"],"h":"cmp(expiry,<,now)","p":["add(grace30)"],"v":["test(boundary_expiry)"],"r":["auth_regression"],"a":["minimal_patch"]}'
         }
         content, _ = RUN_OPENAI.decode_variant_output(variant, response)
-        self.assertIn("@sigil v0 hybrid", content)
+        self.assertIn("@flint v0 hybrid", content)
         self.assertIn("G: fix(auth_middleware)", content)
 
     def test_decode_variant_output_expands_compact_audit_terms(self) -> None:
@@ -198,7 +198,7 @@ class RunOpenAITests(unittest.TestCase):
             "output_text": '{"d":["hybrid","auth_middleware",["backcompat","security"],"cmp(expiry,<,now)",["add(grace30)"],["test(boundary_expiry)"],["auth_regression"],["minimal_patch"]]}'
         }
         content, _ = RUN_OPENAI.decode_variant_output(variant, response)
-        self.assertIn("@sigil v0 hybrid", content)
+        self.assertIn("@flint v0 hybrid", content)
         self.assertIn("G: fix(auth_middleware)", content)
         self.assertIn("[AUDIT]", content)
 
@@ -208,7 +208,7 @@ class RunOpenAITests(unittest.TestCase):
             "output_text": '{"d":["hybrid","auth_middleware","backcompat;security","cmp(expiry,<,now)","add(grace30)","test(boundary_expiry)","auth_regression","minimal_patch"]}'
         }
         content, _ = RUN_OPENAI.decode_variant_output(variant, response)
-        self.assertIn("@sigil v0 hybrid", content)
+        self.assertIn("@flint v0 hybrid", content)
         self.assertIn("C: backcompat ∧ security", content)
         self.assertIn("A: minimal_patch", content)
 
@@ -226,7 +226,7 @@ class RunOpenAITests(unittest.TestCase):
     def test_decode_variant_output_materializes_direct_sigil_audit(self) -> None:
         variant = RUN_OPENAI.parse_variant("sigil-debug-direct@sigil=prompts/debug_direct_micro.txt")
         response = {
-            "output_text": "@sigil v0 hybrid\nG: fix(skew30)\nC: bc ∧ sec ∧ reg_t\nH: exp_lt_no_skew\nP: skew30 → edge(-30s_200)\nV: edge(-30s_200) ∧ edge(-31s_401)\nR: ! timeunit_bug\nA: allow30s_skew"
+            "output_text": "@flint v0 hybrid\nG: fix(skew30)\nC: bc ∧ sec ∧ reg_t\nH: exp_lt_no_skew\nP: skew30 → edge(-30s_200)\nV: edge(-30s_200) ∧ edge(-31s_401)\nR: ! timeunit_bug\nA: allow30s_skew"
         }
         content, _ = RUN_OPENAI.decode_variant_output(variant, response)
         self.assertIn("[AUDIT]", content)
@@ -235,7 +235,7 @@ class RunOpenAITests(unittest.TestCase):
     def test_decode_variant_output_repairs_direct_sigil_drift(self) -> None:
         variant = RUN_OPENAI.parse_variant("sigil-debug-direct@sigil=prompts/debug_direct_sigil_micro.txt")
         response = {
-            "output_text": "@sigil v0 hybrid\nG: fix(auth_mw expiry skew30 boundary refresh_loop)\nC: expMs<nowMs−30000⇒401 ∧ expMs≥nowMs−30000⇒allow\nH: bc sec reg_t skew30 edge(-30s_200) edge(-31s_401)\nP: refresh_loop∧expMs≈nowMs−30000 → clamp_to_allow\nV: min_fix ∧ reg_test\nR: ! expMs<nowMs⇒401\nA: auth_mw"
+            "output_text": "@flint v0 hybrid\nG: fix(auth_mw expiry skew30 boundary refresh_loop)\nC: expMs<nowMs−30000⇒401 ∧ expMs≥nowMs−30000⇒allow\nH: bc sec reg_t skew30 edge(-30s_200) edge(-31s_401)\nP: refresh_loop∧expMs≈nowMs−30000 → clamp_to_allow\nV: min_fix ∧ reg_test\nR: ! expMs<nowMs⇒401\nA: auth_mw"
         }
         content, _ = RUN_OPENAI.decode_variant_output(variant, response)
         self.assertIn("[AUDIT]", content)
@@ -248,7 +248,7 @@ class RunOpenAITests(unittest.TestCase):
             "output_text": "@sigil_v0_hybrid\nG:decide(mod_monolith)\nC:team(6)∧ddl(\"4_months\")∧store(\"PostgreSQL\")∧traffic(modest)∧split(post_release)\nH:fast_ship∧low_ops⇒prefer(mod_monolith)\nP:monolith_now→shared_pg→slice_ready_modules\nR:!split_cost∧!premature_distrib\nA:mod_monolith"
         }
         content, _ = RUN_OPENAI.decode_variant_output(variant, response)
-        self.assertIn("@sigil v0 hybrid", content)
+        self.assertIn("@flint v0 hybrid", content)
         self.assertIn("[AUDIT]", content)
         self.assertIn("modular_monolith", content)
         self.assertIn('ddl("4 months")', content)
@@ -256,7 +256,7 @@ class RunOpenAITests(unittest.TestCase):
     def test_decode_variant_output_repairs_dangling_tail_operator(self) -> None:
         variant = RUN_OPENAI.parse_variant("sigil-refactor-direct@sigil=prompts/refactor_direct_sigil_compact_v4.txt")
         response = {
-            "output_text": "@sigil v0 hybrid\nG: refactor(loadUser)\nC: same_order ∧ one_next(err)\nP: await(db.findUser) → await(audit.log)\nV: async_await ∧ minimal_async_await\nR: ! db_err->next(err) ∧"
+            "output_text": "@flint v0 hybrid\nG: refactor(loadUser)\nC: same_order ∧ one_next(err)\nP: await(db.findUser) → await(audit.log)\nV: async_await ∧ minimal_async_await\nR: ! db_err->next(err) ∧"
         }
         content, _ = RUN_OPENAI.decode_variant_output(variant, response)
         self.assertIn("[AUDIT]", content)
@@ -269,13 +269,13 @@ class RunOpenAITests(unittest.TestCase):
             "output_text": "G: fix(auth_mw)\nC: bc ∧ sec\nH: exp_lt_no_skew\nP: skew30_fix → keep_401\nV: reg_t ∧ edge(-31s_401)\nR: ! refresh_loop\nA: reg_t"
         }
         content, _ = RUN_OPENAI.decode_variant_output(variant, response)
-        self.assertTrue(content.startswith("@sigil v0 hybrid"))
+        self.assertTrue(content.startswith("@flint v0 hybrid"))
         self.assertIn("[AUDIT]", content)
 
     def test_decode_variant_output_repairs_empty_tail_slot(self) -> None:
         variant = RUN_OPENAI.parse_variant("sigil-architecture-direct@sigil=prompts/architecture_direct_sigil_claude_nano.txt")
         response = {
-            "output_text": "@sigil v0 hybrid\nG: mod_monolith\nC: team(8)∧ddl(\"6 weeks\")\nP: store(\"PostgreSQL\")∧shared_pg\nV:\nA:"
+            "output_text": "@flint v0 hybrid\nG: mod_monolith\nC: team(8)∧ddl(\"6 weeks\")\nP: store(\"PostgreSQL\")∧shared_pg\nV:\nA:"
         }
         content, _ = RUN_OPENAI.decode_variant_output(variant, response)
         self.assertIn("V: split(post_release)", content)
@@ -284,7 +284,7 @@ class RunOpenAITests(unittest.TestCase):
     def test_decode_variant_output_repairs_bare_slot_tag(self) -> None:
         variant = RUN_OPENAI.parse_variant("sigil-debug-direct@sigil=prompts/debug_direct_sigil_claude_nano.txt")
         response = {
-            "output_text": "@sigil v0 hybrid\nG: keep_401\nC: auth∧grace\nP: regression_test\nV\nA:"
+            "output_text": "@flint v0 hybrid\nG: keep_401\nC: auth∧grace\nP: regression_test\nV\nA:"
         }
         content, _ = RUN_OPENAI.decode_variant_output(variant, response)
         self.assertIn("V: edge(-30s_200)", content)
@@ -296,7 +296,7 @@ class RunOpenAITests(unittest.TestCase):
             "output_text": '[d] "<"\nG: "401"\nC: auth\nP: grace\nV: regression test\nA: keep_401 edge(-30s_200) edge(-31s_401)'
         }
         content, _ = RUN_OPENAI.decode_variant_output(variant, response)
-        self.assertTrue(content.startswith("@sigil v0 hybrid"))
+        self.assertTrue(content.startswith("@flint v0 hybrid"))
         self.assertNotIn("[d]", content)
         self.assertIn("V: regression ∧ test", content)
         self.assertIn("A: keep_401 ∧ edge(-30s_200) ∧ edge(-31s_401)", content)
@@ -305,10 +305,10 @@ class RunOpenAITests(unittest.TestCase):
     def test_decode_variant_output_repairs_header_at_end_and_stray_lines(self) -> None:
         variant = RUN_OPENAI.parse_variant("sigil-refactor-gemini-nano@sigil=prompts/refactor_direct_sigil_gemini_nano.txt")
         response = {
-            "output_text": " G: minimal\nC: same_order\nP: verify\nV: reconcileBatch\nA: async await next(err)\nAtoms: async, await, next(err), verify, minimal\nCalls: reconcileBatch, verify\n@sigil v0 hybrid"
+            "output_text": " G: minimal\nC: same_order\nP: verify\nV: reconcileBatch\nA: async await next(err)\nAtoms: async, await, next(err), verify, minimal\nCalls: reconcileBatch, verify\n@flint v0 hybrid"
         }
         content, _ = RUN_OPENAI.decode_variant_output(variant, response)
-        self.assertTrue(content.startswith("@sigil v0 hybrid"))
+        self.assertTrue(content.startswith("@flint v0 hybrid"))
         self.assertNotIn("Atoms:", content)
         self.assertNotIn("Calls:", content)
         self.assertIn("A: async ∧ await(next(err))", content)
@@ -317,11 +317,11 @@ class RunOpenAITests(unittest.TestCase):
     def test_decode_variant_output_drops_stray_code_fence(self) -> None:
         variant = RUN_OPENAI.parse_variant("sigil-debug-claude-nano@sigil=prompts/debug_direct_sigil_claude_nano.txt")
         response = {
-            "output_text": "```\n@sigil v0 hybrid\nG: auth_grace_regression_test\nC: keep_401 edge(-30s_200) edge(-31s_401)\nP: \"300\"|\"401"
+            "output_text": "```\n@flint v0 hybrid\nG: auth_grace_regression_test\nC: keep_401 edge(-30s_200) edge(-31s_401)\nP: \"300\"|\"401"
         }
         content, _ = RUN_OPENAI.decode_variant_output(variant, response)
         self.assertNotIn("```", content)
-        self.assertTrue(content.startswith("@sigil v0 hybrid"))
+        self.assertTrue(content.startswith("@flint v0 hybrid"))
         parse_document(content)
 
     def test_decode_variant_output_repairs_mixed_operator_fragments(self) -> None:
@@ -356,7 +356,7 @@ class RunOpenAITests(unittest.TestCase):
     def test_decode_variant_output_repairs_debug_delta_prose(self) -> None:
         variant = RUN_OPENAI.parse_variant("sigil-debug-gemini-nano@sigil=prompts/debug_direct_sigil_gemini_nano.txt")
         response = {
-            "output_text": "@sigil v0 hybrid\nG: webhook_ts_validator rejects valid requests at abs(now-ts)==300\nC: rule_is_strict_gt_not_gte ∧ intended_budget_is_300s ∧ provider_skew_hits_boundary\nP: change abs(now-ts)>300 to abs(now-ts)>=301 OR abs(now-ts)>SKEW_BUDGET where SKEW_BUDGET=300\nV: edge(abs==300→200) ∧ edge(abs==301→401)\nA: keep_300s_budget ∧ fix_boundary_to_strict_gt"
+            "output_text": "@flint v0 hybrid\nG: webhook_ts_validator rejects valid requests at abs(now-ts)==300\nC: rule_is_strict_gt_not_gte ∧ intended_budget_is_300s ∧ provider_skew_hits_boundary\nP: change abs(now-ts)>300 to abs(now-ts)>=301 OR abs(now-ts)>SKEW_BUDGET where SKEW_BUDGET=300\nV: edge(abs==300→200) ∧ edge(abs==301→401)\nA: keep_300s_budget ∧ fix_boundary_to_strict_gt"
         }
         content, _ = RUN_OPENAI.decode_variant_output(variant, response)
         self.assertIn("eq(abs(now-ts),300)", content)
@@ -415,7 +415,7 @@ class RunOpenAITests(unittest.TestCase):
     def test_decode_variant_output_repairs_refactor_gemini_pseudocode_chain(self) -> None:
         variant = RUN_OPENAI.parse_variant("sigil-refactor-gemini-nano@sigil=prompts/refactor_direct_sigil_gemini_nano.txt")
         response = {
-            "output_text": "@sigil v0 hybrid\nG: sendEmailReceipt async await verify minimal same_order next(err)\nC: async sendEmailReceipt(order) { await verify(order); next(err); }\nP: sendEmailReceipt(order).then(verify)."
+            "output_text": "@flint v0 hybrid\nG: sendEmailReceipt async await verify minimal same_order next(err)\nC: async sendEmailReceipt(order) { await verify(order); next(err); }\nP: sendEmailReceipt(order).then(verify)."
         }
         content, _ = RUN_OPENAI.decode_variant_output(variant, response)
         self.assertIn("C: async ∧ sendEmailReceipt(order) ∧ await(verify(order)) ∧ next(err)", content)
@@ -425,7 +425,7 @@ class RunOpenAITests(unittest.TestCase):
     def test_decode_variant_output_repairs_refactor_signature_drift(self) -> None:
         variant = RUN_OPENAI.parse_variant("sigil-refactor-gemini-nano@sigil=prompts/refactor_direct_sigil_gemini_nano.txt")
         response = {
-            "output_text": "@sigil v0 hybrid\nG: loadGatewayUser :: async (req, res, next) -> session_check → db.findUser → flags.load → audit.log → next\nC: session_check | db.\nA:"
+            "output_text": "@flint v0 hybrid\nG: loadGatewayUser :: async (req, res, next) -> session_check → db.findUser → flags.load → audit.log → next\nC: session_check | db.\nA:"
         }
         content, _ = RUN_OPENAI.decode_variant_output(variant, response)
         self.assertIn("[AUDIT]", content)
@@ -447,14 +447,14 @@ class RunOpenAITests(unittest.TestCase):
         self.assertEqual(merged["reasoning_tokens"], 1)
 
     def test_build_conditioned_task_prompt_embeds_draft(self) -> None:
-        prompt = RUN_OPENAI.build_conditioned_task_prompt("Original task.", "@sigil v0 hybrid\nG: fix(auth)")
+        prompt = RUN_OPENAI.build_conditioned_task_prompt("Original task.", "@flint v0 hybrid\nG: fix(auth)")
         self.assertIn("Original task.", prompt)
         self.assertIn("<draft>", prompt)
         self.assertIn("G: fix(auth)", prompt)
 
     def test_strip_wrapping_code_fences(self) -> None:
-        fenced = "```plaintext\n@sigil v0 hybrid\nG: fix(auth)\n```"
-        self.assertEqual(RUN_OPENAI.strip_wrapping_code_fences(fenced), "@sigil v0 hybrid\nG: fix(auth)")
+        fenced = "```plaintext\n@flint v0 hybrid\nG: fix(auth)\n```"
+        self.assertEqual(RUN_OPENAI.strip_wrapping_code_fences(fenced), "@flint v0 hybrid\nG: fix(auth)")
 
 
 if __name__ == "__main__":

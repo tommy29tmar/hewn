@@ -1,18 +1,18 @@
-# SIGIL
+# Flint
 
 **Compress the work, not just the words.**
 
-SIGIL is a proposed **reasoning IR** (_intermediate representation_) for LLMs.  
+Flint is a proposed **reasoning IR** (_intermediate representation_) for LLMs.  
 It is **not** another funny output dialect.
 
 The thesis is simple:
 
 > Most current "compression skills" reduce the size of the visible answer.  
-> SIGIL tries to reduce **reasoning overhead**, **context overhead**, and **expansion overhead** by compiling a task into a compact symbolic draft, expanding only uncertain nodes, and always keeping a short human-auditable view.
+> Flint tries to reduce **reasoning overhead**, **context overhead**, and **expansion overhead** by compiling a task into a compact symbolic draft, expanding only uncertain nodes, and always keeping a short human-auditable view.
 
 In one line:
 
-> **Caveman is speech compression. SIGIL is reasoning compilation.**
+> **Caveman is speech compression. Flint is reasoning compilation.**
 
 ---
 
@@ -27,7 +27,7 @@ If the model still:
 
 then you have mostly compressed the **mouth**, not the **mind**.
 
-SIGIL is designed around a stronger question:
+Flint is designed around a stronger question:
 
 > Can we give LLMs a compact, structured, model-friendly language for *working* on the task, while still producing a human-readable answer when needed?
 
@@ -37,13 +37,13 @@ That question is scientifically plausible for three reasons:
 2. **Concise intermediate reasoning can preserve quality** while cutting reasoning budget substantially.
 3. **Reasoning and visible output are already treated as separate channels** by modern APIs.
 
-SIGIL is the bridge between those facts.
+Flint is the bridge between those facts.
 
 ---
 
-## What SIGIL is
+## What Flint is
 
-SIGIL is a **5-layer skill/runtime design**:
+Flint is a **5-layer skill/runtime design**:
 
 1. **Adaptive codebook**  
    Repeated entities and constraints become short local symbols.
@@ -60,7 +60,7 @@ SIGIL is a **5-layer skill/runtime design**:
 5. **Latent-ready backend**  
    On open-weight models, symbolic nodes can later be mapped to learned discrete or latent reasoning tokens.
 
-This makes SIGIL useful in two modes:
+This makes Flint useful in two modes:
 
 - **Prompt-only mode** for closed models and commercial APIs.
 - **Research mode** for open models, where the IR can become a true learned backend.
@@ -72,7 +72,7 @@ This makes SIGIL useful in two modes:
 ### 1. Never invent a random alien language
 A totally arbitrary machine-language usually fails because the model has not learned stable semantics for it.
 
-SIGIL therefore prefers:
+Flint therefore prefers:
 - mathematical operators the model likely already knows,
 - short structured tags,
 - local project-specific aliases,
@@ -81,7 +81,7 @@ SIGIL therefore prefers:
 ### 2. Keep the draft compact, not cryptic
 Compression is only useful if the model can still operate on it reliably.
 
-SIGIL drafts should be:
+Flint drafts should be:
 - short,
 - typed,
 - easy to expand,
@@ -96,7 +96,7 @@ The default should be:
 ### 4. Always keep an audit path
 Any serious system needs a human-readable explanation path.
 
-SIGIL therefore always supports:
+Flint therefore always supports:
 - `draft` view,
 - `audit` view,
 - `hybrid` view.
@@ -104,7 +104,7 @@ SIGIL therefore always supports:
 ### 5. Separate task classes
 Not all tasks benefit equally from compression.
 
-SIGIL is strongest for:
+Flint is strongest for:
 - coding,
 - debugging,
 - planning,
@@ -112,7 +112,7 @@ SIGIL is strongest for:
 - architecture review,
 - repetitive agent workflows.
 
-SIGIL should be conservative for:
+Flint should be conservative for:
 - arithmetic detail,
 - legal/compliance edge cases,
 - safety-critical medical reasoning,
@@ -128,7 +128,7 @@ Repeated concepts get local aliases.
 
 Example:
 
-```sigil
+```flint
 @cb[
   μ1=auth.middleware;
   μ2=jwt.refresh;
@@ -155,9 +155,9 @@ Instead of a long chain like:
 
 > "First I will inspect the middleware, then I will compare expiry handling, then I will consider backward compatibility..."
 
-SIGIL prefers:
+Flint prefers:
 
-```sigil
+```flint
 G: fix(μ1)
 C: κ1 ∧ κ2
 H: cmp(expiry,<) ⇒ τ1
@@ -182,7 +182,7 @@ That draft is short, typed, and still actionable.
 
 Not every node deserves prose.
 
-SIGIL expansion policy:
+Flint expansion policy:
 
 1. Produce draft.
 2. Score uncertainty/risk.
@@ -205,7 +205,7 @@ Example:
 
 ### Draft
 
-```sigil
+```flint
 G: fix(μ1)
 C: κ1 ∧ κ2
 H: cmp(expiry,<) ⇒ τ1
@@ -230,11 +230,11 @@ The runtime may use the draft view.
 
 ## Layer 5 — Latent-ready backend
 
-Prompt-only SIGIL already works as a skill.
+Prompt-only Flint already works as a skill.
 
 But the deeper version is a research track:
 - replace some symbolic nodes with learned discrete tokens,
-- optionally pair SIGIL with tokenizer adaptation,
+- optionally pair Flint with tokenizer adaptation,
 - optionally map high-frequency patterns into latent or compressed reasoning states.
 
 That is the path from:
@@ -246,7 +246,7 @@ to
 
 ## Modes
 
-SIGIL supports 5 operating modes.
+Flint supports 5 operating modes.
 
 ### `draft`
 Output only the compact IR.
@@ -301,7 +301,7 @@ Below is a minimal GitHub-ready grammar.
 
 ```ebnf
 program    ::= header? codebook? clause+
-header     ::= "@sigil" version mode?
+header     ::= "@flint" version mode?
 version    ::= "v0"
 mode       ::= "draft" | "audit" | "hybrid" | "memory" | "compile"
 
@@ -377,10 +377,10 @@ RISK = !
 ### User
 > Review this auth middleware bug and suggest the minimal fix.
 
-### SIGIL draft
+### Flint draft
 
-```sigil
-@sigil v0 hybrid
+```flint
+@flint v0 hybrid
 @cb[
   μ1=auth.middleware;
   κ1=backcompat;
@@ -416,10 +416,10 @@ Watch for session-regression risk.
 ### User
 > Microservices or monolith for a 6-person team shipping in 4 months?
 
-### SIGIL draft
+### Flint draft
 
-```sigil
-@sigil v0 hybrid
+```flint
+@flint v0 hybrid
 
 G: choose(arch)
 C: team(6) ∧ deadline(4m) ∧ ship_fast
@@ -452,25 +452,25 @@ We prefer minimal diffs.
 Always add tests for boundary conditions around expiry and cache invalidation.
 ```
 
-### SIGIL memory capsule
+### Flint memory capsule
 
-```sigil
-@sigil v0 memory
+```flint
+@flint v0 memory
 M: compat(v2_clients) ∧ keep(public_auth_endpoints)
 M: pref(minimal_diff)
 M: test(boundary_expiry) ∧ test(cache_invalidation)
 ```
 
-This is where SIGIL becomes more than a style:
+This is where Flint becomes more than a style:
 it compresses **persistent working context**.
 
 ---
 
-## What makes SIGIL different from Caveman
+## What makes Flint different from Caveman
 
 Caveman is a strong reference point because it proves that aggressive surface compression is useful in practice. Its README reports an average reduction from 1214 to 294 output tokens across benchmark prompts, or about 65% savings, while explicitly noting that reasoning tokens are untouched. That makes it an output-compression skill, not yet a full reasoning-compression stack.
 
-SIGIL differs in three ways:
+Flint differs in three ways:
 
 1. **It compresses task structure, not just prose.**
 2. **It is built to decide what not to expand.**
@@ -493,14 +493,14 @@ plain prose
 Use this as a first prompt-only implementation.
 
 ```text
-You are SIGIL, a reasoning compiler for LLM workflows.
+You are Flint, a reasoning compiler for LLM workflows.
 
 Goal:
 Maximize information density while preserving correctness, actionability, and auditability.
 
 Operating rules:
 1. Do not default to long prose reasoning.
-2. First compile the task into a compact typed draft using SIGIL clauses.
+2. First compile the task into a compact typed draft using Flint clauses.
 3. Use a local codebook for repeated entities, files, modules, constraints, risks, and preferences.
 4. Expand only nodes that are uncertain (?), high-risk (!), precision-critical, or explicitly requested by the user.
 5. Keep the draft semantically transparent: prefer familiar mathematical/symbolic operators over invented opaque codes.
@@ -514,7 +514,7 @@ Output contract by mode:
 
 Mode=draft:
 - Return only:
-  @sigil ...
+  @flint ...
   @cb[...] (optional)
   clauses
 
@@ -523,7 +523,7 @@ Mode=audit:
 
 Mode=hybrid:
 - Return:
-  1) SIGIL draft
+  1) Flint draft
   2) a short audit block
 
 Mode=memory:
@@ -560,7 +560,7 @@ Default behavior:
 
 ## Runtime policy
 
-A practical host loop for SIGIL:
+A practical host loop for Flint:
 
 ```python
 def sigil_run(task, mode="hybrid"):
@@ -599,7 +599,7 @@ The important part is the policy:
 ## Suggested repo structure
 
 ```text
-sigil/
+flint/
 ├─ README.md
 ├─ LICENSE
 ├─ prompts/
@@ -607,7 +607,7 @@ sigil/
 │  ├─ compiler.txt
 │  └─ audit.txt
 ├─ grammar/
-│  ├─ sigil.ebnf
+│  ├─ flint.ebnf
 │  └─ sigil_ascii.md
 ├─ examples/
 │  ├─ debugging.md
@@ -646,11 +646,11 @@ Compare against:
 3. **Caveman-style baseline**  
    Strong surface-compression baseline.
 
-4. **SIGIL draft-only**
+4. **Flint draft-only**
 
-5. **SIGIL hybrid**
+5. **Flint hybrid**
 
-6. **SIGIL + adaptive reasoning budget**  
+6. **Flint + adaptive reasoning budget**  
    Where the API supports it.
 
 Do **not** compare only against verbose output.  
@@ -718,19 +718,19 @@ Add two stress categories:
 These are **targets**, not claims.
 
 ### H1 — Surface efficiency
-SIGIL hybrid should beat normal verbose answers clearly on output-token count.
+Flint hybrid should beat normal verbose answers clearly on output-token count.
 
 ### H2 — Structural efficiency
-SIGIL should also beat a generic "be concise" baseline on repeated workflows because codebooks and memory capsules remove repeated boilerplate.
+Flint should also beat a generic "be concise" baseline on repeated workflows because codebooks and memory capsules remove repeated boilerplate.
 
 ### H3 — Total efficiency
-On tasks where early stopping works, SIGIL + adaptive budgeting should reduce total billed tokens, not just visible output.
+On tasks where early stopping works, Flint + adaptive budgeting should reduce total billed tokens, not just visible output.
 
 ### H4 — Accuracy retention
-On coding/planning/review tasks, SIGIL hybrid should stay within a small quality delta of verbose baselines.
+On coding/planning/review tasks, Flint hybrid should stay within a small quality delta of verbose baselines.
 
 ### H5 — Failure locality
-When SIGIL fails, it should fail in a localized clause that can be expanded, not in a long opaque wall of text.
+When Flint fails, it should fail in a localized clause that can be expanded, not in a long opaque wall of text.
 
 ---
 
@@ -760,7 +760,7 @@ Run these ablations or the project will look hand-wavy.
 
 ## Failure modes
 
-SIGIL is promising, but not magic.
+Flint is promising, but not magic.
 
 ### 1. Overcompression
 The draft becomes too short to preserve important distinctions.
@@ -806,26 +806,26 @@ Mitigation:
 
 ## Research roadmap
 
-## Phase 1 — Prompt-only SIGIL
+## Phase 1 — Prompt-only Flint
 - ship grammar,
 - ship system prompt,
 - add examples,
 - run three-way evals,
 - measure token and quality trade-offs.
 
-## Phase 2 — Stateful SIGIL
+## Phase 2 — Stateful Flint
 - persistent codebooks,
 - memory capsules,
 - expansion policy,
 - per-project optimization.
 
-## Phase 3 — Learned SIGIL
+## Phase 3 — Learned Flint
 - add special tokens or compressed nodes,
 - pair with tokenizer adaptation,
 - train a symbolic/latent translator,
 - keep audit decoder for human visibility.
 
-## Phase 4 — Agent-native SIGIL
+## Phase 4 — Agent-native Flint
 - tool-aware clauses,
 - planner/executor split,
 - verifier-guided early exit,
@@ -835,7 +835,7 @@ Mitigation:
 
 ## Scientific basis
 
-SIGIL is aligned with several strands of current research:
+Flint is aligned with several strands of current research:
 
 - **Caveman** shows that strong output compression is already useful in practice, but also states clearly that reasoning tokens remain untouched.
 - **MetaGlyph** suggests that symbolic compression works best when it uses symbols models already understand rather than an invented opaque code.
@@ -859,7 +859,7 @@ What is real today:
 What is research-grade but plausible:
 - learned symbolic nodes,
 - discrete compressed reasoning tokens,
-- latent backends paired with SIGIL clauses.
+- latent backends paired with Flint clauses.
 
 What is **not** yet proven:
 - that one universal compact language will dominate across models,
@@ -875,7 +875,7 @@ not
 
 ## One-sentence pitch
 
-> **SIGIL is a reasoning compiler for LLMs: it turns verbose natural-language work into a compact symbolic draft, expands only uncertain parts, and always keeps a human-readable audit trail.**
+> **Flint is a reasoning compiler for LLMs: it turns verbose natural-language work into a compact symbolic draft, expands only uncertain parts, and always keeps a human-readable audit trail.**
 
 ---
 

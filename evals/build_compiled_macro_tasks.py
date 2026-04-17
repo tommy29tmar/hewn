@@ -8,9 +8,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
-from sigil.context_prefix import compile_context_prefix, load_context_prefix
-from sigil.context_prefix import compile_context_layers
-from sigil.task_capsule import load_jsonl
+from flint.context_prefix import compile_context_prefix, load_context_prefix
+from flint.context_prefix import compile_context_layers
+from flint.task_capsule import load_jsonl
 
 
 def main(argv: list[str] | None = None) -> int:

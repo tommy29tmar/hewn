@@ -35,7 +35,7 @@ for i in $(seq 1 "$RUNS"); do
   run_cell "verbose"      "plain"  "prompts/verbose_baseline.txt" "$i" &
   run_cell "primitive"    "plain"  "prompts/primitive_english.txt" "$i" &
   run_cell "concise_json" "plain"  "prompts/concise_json.txt" "$i" &
-  run_cell "sigil"        "sigil"  "integrations/claude-code/sigil_system_prompt.txt" "$i" &
+  run_cell "sigil"        "sigil"  "integrations/claude-code/flint_system_prompt.txt" "$i" &
 done
 wait
 echo "all cells done (${RUNS} run(s) per cell)"

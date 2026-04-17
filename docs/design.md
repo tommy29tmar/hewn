@@ -1,6 +1,6 @@
 # Design Scope
 
-This prototype intentionally solves the narrowest useful layer of SIGIL:
+This prototype intentionally solves the narrowest useful layer of Flint:
 
 - represent a symbolic draft as a file format
 - validate that format deterministically
@@ -9,7 +9,7 @@ This prototype intentionally solves the narrowest useful layer of SIGIL:
 
 It does **not** attempt to solve:
 
-- automatic compilation from arbitrary user language into SIGIL
+- automatic compilation from arbitrary user language into Flint
 - confidence estimation
 - adaptive expansion policies
 - latent or learned reasoning tokens
@@ -19,7 +19,7 @@ The parser therefore exists to make the representation concrete, not to overclai
 
 ## Why The Grammar Is Narrow
 
-SIGIL is deliberately line-oriented:
+Flint is deliberately line-oriented:
 
 - one header
 - optional codebook

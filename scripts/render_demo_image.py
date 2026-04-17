@@ -2,7 +2,7 @@
 """Render assets/launch/demo.png — a clean, viral-friendly before/after.
 
 Left: verbose Claude default (truncated with "...").
-Right: SIGIL 6-line reply.
+Right: Flint 6-line reply.
 Bottom: headline numbers.
 """
 from __future__ import annotations
@@ -56,7 +56,7 @@ if delta > MAX_AGE or delta < -MAX_SKEW:
 
   (...continues for 600+ more tokens)"""
 
-SIGIL_BODY = """@sigil v0 hybrid
+SIGIL_BODY = """@flint v0 hybrid
 G: fix_skew
 C: webhook_verify ∧ "300" ∧ "401" ∧ edge_reject
 P: widen_window ∧ provider_skew_only ∧ reg_test
@@ -89,7 +89,7 @@ def main() -> None:
 
     # Header
     draw.text((PAD, 50),
-        "SIGIL vs default Claude — same question, Opus 4.7",
+        "Flint vs default Claude — same question, Opus 4.7",
         fill=HEADLINE, font=_font(40, bold=True))
     draw.text((PAD, 110),
         "Fix a webhook that rejects valid events when abs(now-ts) > 300 returns 401.",
@@ -109,10 +109,10 @@ def main() -> None:
         draw.text((lx + 28, ty), line, fill=TEXT_DIM, font=body_font)
         ty += 26
 
-    # Right panel — SIGIL
+    # Right panel — Flint
     rx, ry = PAD + PANEL_W + GAP, PANEL_Y
     draw_panel(draw, rx, ry, PANEL_W, PANEL_H, SIGIL_BG, SIGIL_BORDER)
-    draw.text((rx + 28, ry + 24), "Claude + SIGIL",
+    draw.text((rx + 28, ry + 24), "Claude + Flint",
               fill=ACCENT, font=_font(28, bold=True))
     draw.text((rx + 28, ry + 64), "415 tokens · 3.3s",
               fill=ACCENT, font=_font(22, bold=True))
@@ -128,7 +128,7 @@ def main() -> None:
         "-54% tokens   ·   -73% latency   ·   same concepts covered",
         fill=HEADLINE, font=_font(38, bold=True))
     draw.text((PAD, banner_y + 60),
-        "Averaged over 4 runs × 8 technical tasks. One /sigil install in Claude Code.",
+        "Averaged over 4 runs × 8 technical tasks. One /flint install in Claude Code.",
         fill=TEXT_DIM, font=_font(20))
 
     img.save(OUT, "PNG", optimize=True)

@@ -33,7 +33,7 @@ python3 scripts/bench_cell.py \
 echo "[$SHORT] === sigil-nano ==="
 python3 scripts/bench_cell.py \
   --model "$MODEL" \
-  --variant "sigil-nano@sigil=integrations/claude-code/sigil_system_prompt.txt" \
+  --variant "sigil-nano@sigil=integrations/claude-code/flint_system_prompt.txt" \
   --tasks "$TASKS" \
   --out "$OUT_DIR/${SHORT}_sigil.jsonl" \
   --start-max-tokens 512 \

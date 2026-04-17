@@ -47,7 +47,7 @@ class SuggestProfileTests(unittest.TestCase):
                 {
                     "task_id": "debug-task",
                     "variant": "fast-parseable",
-                    "content": '@sigil v0 hybrid\nG: fix(auth)\nC: grace ∧ status("401")\nA: ok\n\n[AUDIT]\nshort\n',
+                    "content": '@flint v0 hybrid\nG: fix(auth)\nC: grace ∧ status("401")\nA: ok\n\n[AUDIT]\nshort\n',
                     "usage": {"input_tokens": 10, "output_tokens": 10, "total_tokens": 20},
                     "elapsed_ms": 1000,
                 },

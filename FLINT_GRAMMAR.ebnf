@@ -1,5 +1,5 @@
 program    ::= header? codebook? clause+
-header     ::= "@sigil" version mode?
+header     ::= "@flint" version mode?
 version    ::= "v0"
 mode       ::= "draft" | "audit" | "hybrid" | "memory" | "compile"
 

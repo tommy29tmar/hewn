@@ -83,8 +83,8 @@ class RunAnthropicTests(unittest.TestCase):
         self.assertEqual(payload["stop_sequences"], ["\n[AUDIT]"])
 
     def test_extract_output_text(self) -> None:
-        response = {"content": [{"type": "thinking", "thinking": "hidden"}, {"type": "text", "text": "@sigil v0 hybrid"}]}
-        self.assertEqual(RUN_ANTHROPIC.extract_output_text(response), "@sigil v0 hybrid")
+        response = {"content": [{"type": "thinking", "thinking": "hidden"}, {"type": "text", "text": "@flint v0 hybrid"}]}
+        self.assertEqual(RUN_ANTHROPIC.extract_output_text(response), "@flint v0 hybrid")
 
     def test_extract_usage_includes_cache_reads(self) -> None:
         usage = RUN_ANTHROPIC.extract_usage(

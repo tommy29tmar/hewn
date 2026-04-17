@@ -1,6 +1,6 @@
 # Claude Code Integration
 
-SIGIL can be used from Claude Code in two practical ways:
+Flint can be used from Claude Code in two practical ways:
 
 1. `CLAUDE.md` for interactive terminal sessions
 2. `--append-system-prompt` for `claude -p` print-mode wrappers
@@ -15,7 +15,7 @@ Relevant docs:
 
 ## Render a calibrated `CLAUDE.md`
 
-If you already have a calibrated SIGIL profile:
+If you already have a calibrated Flint profile:
 
 ```bash
 python3 integrations/claude-code/render_claude_md.py \
@@ -47,9 +47,9 @@ python3 integrations/claude-code/render_claude_md.py \
 
 ## Usage model
 
-The generated `CLAUDE.md` keeps normal human-language answers as the default and reserves raw SIGIL for:
+The generated `CLAUDE.md` keeps normal human-language answers as the default and reserves raw Flint for:
 
-- explicit SIGIL requests
+- explicit Flint requests
 - compact capsule generation
 - benchmark or tool-driven symbolic transport
 

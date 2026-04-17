@@ -3,7 +3,7 @@ from __future__ import annotations
 import unittest
 from pathlib import Path
 
-from sigil.verification import assess_output, verification_failures, verification_passes
+from flint.verification import assess_output, verification_failures, verification_passes
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -22,7 +22,7 @@ class VerificationTests(unittest.TestCase):
             "variant": "sigil-debug",
             "transport": "sigil",
             "structured_expected": True,
-            "content": (ROOT / "examples" / "debugging.sigil").read_text(encoding="utf-8"),
+            "content": (ROOT / "examples" / "debugging.flint").read_text(encoding="utf-8"),
             "usage": {"output_tokens": 48, "input_tokens": 120},
         }
         metrics = assess_output(task, row, root=ROOT)
@@ -44,7 +44,7 @@ class VerificationTests(unittest.TestCase):
             "variant": "sigil-arch",
             "transport": "sigil",
             "structured_expected": True,
-            "content": "@sigil v0 hybrid\nG: choose(arch)\nA: service_mesh\n\n[AUDIT]\nwrong\n",
+            "content": "@flint v0 hybrid\nG: choose(arch)\nA: service_mesh\n\n[AUDIT]\nwrong\n",
             "usage": {"output_tokens": 18, "input_tokens": 40},
         }
         metrics = assess_output(task, row, root=ROOT)

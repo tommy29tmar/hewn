@@ -1,4 +1,4 @@
-@sigil v0 hybrid
+@flint v0 hybrid
 
 G: choose(arch)
 C: team(6) ∧ deadline(4m) ∧ ship_fast

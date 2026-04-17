@@ -8,7 +8,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
-from sigil.calibration import (  # noqa: E402
+from flint.calibration import (  # noqa: E402
     baseline_multi_ir_extended_run_path,
     build_multi_ir_extended_profile_name,
     default_anthropic_multi_ir_extended_jobs,

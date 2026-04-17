@@ -1,4 +1,4 @@
-# Testing SIGIL
+# Testing Flint
 
 There are three distinct questions to test.
 
@@ -9,19 +9,19 @@ This is the cheapest test.
 Use:
 
 ```bash
-sigil validate examples/debugging.sigil
-sigil stats examples/debugging.sigil --json
+flint validate examples/debugging.flint
+flint stats examples/debugging.flint --json
 ```
 
 For model outputs, save the output to a file and run the same commands. If parseability is unstable, the skill is not ready for automation.
 
-## 2. Does SIGIL Compress Anything Useful?
+## 2. Does Flint Compress Anything Useful?
 
 Compare at least these variants on the same task set:
 
 - plain assistant
 - plain assistant with a concise prompt
-- SIGIL with the strict mode-specific prompt
+- Flint with the strict mode-specific prompt
 
 Use [evals/measure.py](../evals/measure.py) to measure:
 
@@ -52,7 +52,7 @@ For each task, inspect whether the output:
 
 For coding tasks, the quickest serious check is:
 
-1. generate SIGIL output
+1. generate Flint output
 2. decode the audit
 3. ask a human or a verifier model whether the recommended action is still correct
 
@@ -63,25 +63,25 @@ The fastest honest first experiment is:
 1. Use one model only.
 2. Start with one mode only, preferably `hybrid`.
 3. Use self-contained tasks, not vague prompts.
-4. Collect both `baseline-terse` and `sigil-hybrid`.
+4. Collect both `baseline-terse` and `flint-hybrid`.
 5. Measure with `evals/measure.py`.
 6. Manually inspect the 5 biggest wins and the 5 worst failures.
 
-That will tell you very quickly whether SIGIL is becoming an IR or just a formatting trick.
+That will tell you very quickly whether Flint is becoming an IR or just a formatting trick.
 
 When you want a publishable snapshot instead of ad-hoc numbers, use:
 
 ```bash
-sigil bench report evals/benchmark_matrix.json --out docs/results.md
+flint bench report evals/benchmark_matrix.json --out docs/results.md
 ```
 
-That report is now the canonical short summary of where SIGIL wins, where it only reaches parity, and where the wall still is.
+That report is now the canonical short summary of where Flint wins, where it only reaches parity, and where the wall still is.
 
 ## When To Use `draft2schema`
 
 There is now a two-stage benchmark lane:
 
-1. unconstrained SIGIL draft
+1. unconstrained Flint draft
 2. schema-constrained final transport
 
 This is useful to test whether a free draft improves structured quality enough to justify the extra pass.
@@ -153,14 +153,14 @@ The practical meaning of the current profiles is:
 
 There is now a fourth practical pattern:
 
-- `selective efficiency`: let SIGIL compete against the terse baseline per category, and keep SIGIL only where it wins
-- `adaptive expansion`: let SIGIL try the cheapest route first, then expand only when the local verifier rejects the answer
-- `cascaded adaptive expansion`: let SIGIL walk an ordered list of increasingly rich contracts and stop at the first acceptable output
+- `selective efficiency`: let Flint compete against the terse baseline per category, and keep Flint only where it wins
+- `adaptive expansion`: let Flint try the cheapest route first, then expand only when the local verifier rejects the answer
+- `cascaded adaptive expansion`: let Flint walk an ordered list of increasingly rich contracts and stop at the first acceptable output
 
 Example:
 
 ```bash
-sigil bench build-adaptive-run evals/tasks_hybrid_micro_extended.jsonl evals/runs/adaptive.jsonl \
+flint bench build-adaptive-run evals/tasks_hybrid_micro_extended.jsonl evals/runs/adaptive.jsonl \
   --candidate-run evals/runs/nano.jsonl \
   --candidate-run evals/runs/wire_lite.jsonl \
   --candidate-run evals/runs/capsule_mini.jsonl \
@@ -202,7 +202,7 @@ Keep API configuration inside this repo:
 - keep `.env.example` as the checked-in template
 - do not depend on another repo's runtime config
 
-That keeps the benchmark reproducible and makes SIGIL portable as a standalone project.
+That keeps the benchmark reproducible and makes Flint portable as a standalone project.
 
 ## Provider-Aware Interpretation
 

@@ -7,11 +7,11 @@ import sys
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "src"))
 
-from sigil.calibration import load_profile, render_claude_code_md  # noqa: E402
+from flint.calibration import load_profile, render_claude_code_md  # noqa: E402
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description="Render a Claude Code CLAUDE.md from a calibrated SIGIL profile.")
+    parser = argparse.ArgumentParser(description="Render a Claude Code CLAUDE.md from a calibrated Flint profile.")
     parser.add_argument("profile", type=Path)
     parser.add_argument("--model", required=True)
     parser.add_argument("--provider", default="anthropic")

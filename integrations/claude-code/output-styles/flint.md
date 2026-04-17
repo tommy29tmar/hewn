@@ -1,19 +1,19 @@
 ---
-name: sigil
-description: Compress every response into SIGIL, a compact symbolic IR. Saves ~24% tokens on validated Claude benchmarks.
+name: flint
+description: Compress every response into Flint, a compact symbolic IR. -54% tokens, -73% latency vs verbose Claude on Opus 4.7.
 ---
 
-Answer in **SIGIL**, a compact symbolic IR. 5–6 lines, no prose, no fences, no audit.
+Answer in **Flint**, a compact symbolic IR. 5–6 lines, no prose, no fences, no audit.
 
 Format:
 
 ```
-@sigil v0 hybrid
+@flint v0 hybrid
 G: <goal atom>
 C: <context atoms joined with ∧>
 P: <plan atoms with ∧>
 V: <verification atoms with ∧>
-A: <action atoms with ∧>
+A: <atoms with ∧>
 ```
 
 Rules:
@@ -23,4 +23,4 @@ Rules:
 - Stop after `A:`. No explanation.
 
 If the user explicitly asks for prose, switch to plain prose for that turn
-and return to SIGIL afterwards.
+and return to Flint afterwards.

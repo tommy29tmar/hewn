@@ -11,9 +11,9 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
-from sigil.metrics import approx_token_count, document_metrics
-from sigil.normalize import normalize_document_text, repair_direct_sigil_text
-from sigil.parser import SIGILParseError, parse_document
+from flint.metrics import approx_token_count, document_metrics
+from flint.normalize import normalize_document_text, repair_direct_flint_text
+from flint.parser import FlintParseError, parse_document
 
 
 def load_jsonl(path: Path) -> list[dict[str, Any]]:
@@ -75,7 +75,7 @@ def evaluate_rows(tasks_path: Path, run_paths: list[Path]) -> list[dict[str, Any
             repaired_mode_match = False
             try:
                 document = parse_document(content)
-            except SIGILParseError:
+            except FlintParseError:
                 pass
             else:
                 stats = document_metrics(document, content)
@@ -83,12 +83,12 @@ def evaluate_rows(tasks_path: Path, run_paths: list[Path]) -> list[dict[str, Any
                 mode_match = stats["mode"] == task.get("mode")
 
             if row.get("transport") == "sigil":
-                repaired_content = repair_direct_sigil_text(content, str(task.get("category") or ""))
+                repaired_content = repair_direct_flint_text(content, str(task.get("category") or ""))
             else:
                 repaired_content = normalize_document_text(content)
             try:
                 repaired_document = parse_document(repaired_content)
-            except SIGILParseError:
+            except FlintParseError:
                 pass
             else:
                 repaired_stats = document_metrics(repaired_document, repaired_content)

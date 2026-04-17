@@ -3,8 +3,8 @@ from __future__ import annotations
 import unittest
 from pathlib import Path
 
-from sigil.context_prefix import compile_context_layers, compile_context_prefix, parse_handbook_sections
-from sigil.metrics import approx_token_count
+from flint.context_prefix import compile_context_layers, compile_context_prefix, parse_handbook_sections
+from flint.metrics import approx_token_count
 
 
 ROOT = Path(__file__).resolve().parents[1]

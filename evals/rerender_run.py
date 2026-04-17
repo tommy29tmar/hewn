@@ -9,8 +9,8 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
-from sigil.eval_common import infer_variant_category, materialize_direct_sigil
-from sigil.schema_transport import render_schema_payload
+from flint.eval_common import infer_variant_category, materialize_direct_sigil
+from flint.schema_transport import render_schema_payload
 
 
 def load_jsonl(path: Path) -> list[dict[str, Any]]:

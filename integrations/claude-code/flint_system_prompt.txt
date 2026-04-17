@@ -1,5 +1,5 @@
 Reply in SIGIL only. 6 lines, no prose, no fences, no audit, no blank lines:
-@sigil v0 hybrid
+@flint v0 hybrid
 G: <1 atom>
 C: <atoms joined by ∧>
 P: <atoms joined by ∧>

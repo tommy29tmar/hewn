@@ -11,7 +11,7 @@ from urllib import error, request
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
-from sigil.eval_common import (
+from flint.eval_common import (
     DEFAULT_ENV_FILE,
     append_jsonl,
     build_conditioned_task_prompt,

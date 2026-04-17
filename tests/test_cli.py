@@ -7,7 +7,7 @@ import unittest
 from contextlib import redirect_stdout
 from pathlib import Path
 
-from sigil.cli import main
+from flint.cli import main
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -17,27 +17,27 @@ class CliTests(unittest.TestCase):
     def test_validate_command(self) -> None:
         buffer = io.StringIO()
         with redirect_stdout(buffer):
-            exit_code = main(["validate", str(ROOT / "examples" / "debugging.sigil")])
+            exit_code = main(["validate", str(ROOT / "examples" / "debugging.flint")])
         self.assertEqual(exit_code, 0)
         self.assertIn("OK:", buffer.getvalue())
 
     def test_audit_command(self) -> None:
         buffer = io.StringIO()
         with redirect_stdout(buffer):
-            exit_code = main(["audit", str(ROOT / "examples" / "architecture.sigil")])
+            exit_code = main(["audit", str(ROOT / "examples" / "architecture.flint")])
         self.assertEqual(exit_code, 0)
         self.assertIn("Default recommendation", buffer.getvalue())
 
     def test_stats_command(self) -> None:
         buffer = io.StringIO()
         with redirect_stdout(buffer):
-            exit_code = main(["stats", str(ROOT / "examples" / "debugging.sigil"), "--json"])
+            exit_code = main(["stats", str(ROOT / "examples" / "debugging.flint"), "--json"])
         self.assertEqual(exit_code, 0)
         self.assertIn('"clause_count": 8', buffer.getvalue())
 
     def test_repair_command(self) -> None:
-        path = ROOT / "tests" / "fixtures_repair_input.sigil"
-        path.write_text("@sigil v0 hybrid\nP: try(await db_findUser) → next(err)\n[AUDIT]\nshort\n", encoding="utf-8")
+        path = ROOT / "tests" / "fixtures_repair_input.flint"
+        path.write_text("@flint v0 hybrid\nP: try(await db_findUser) → next(err)\n[AUDIT]\nshort\n", encoding="utf-8")
         buffer = io.StringIO()
         try:
             with redirect_stdout(buffer):
@@ -320,7 +320,7 @@ class CliTests(unittest.TestCase):
                         "variant": "sigil-primary",
                         "transport": "sigil",
                         "structured_expected": True,
-                        "content": "@sigil v0 hybrid\nG: fix(auth)\nA: patch\n\n[AUDIT]\nwrong\n",
+                        "content": "@flint v0 hybrid\nG: fix(auth)\nA: patch\n\n[AUDIT]\nwrong\n",
                         "usage": {"output_tokens": 18, "input_tokens": 40},
                     }
                 )
@@ -334,7 +334,7 @@ class CliTests(unittest.TestCase):
                         "variant": "sigil-fallback",
                         "transport": "sigil",
                         "structured_expected": True,
-                        "content": (ROOT / "examples" / "debugging.sigil").read_text(encoding="utf-8"),
+                        "content": (ROOT / "examples" / "debugging.flint").read_text(encoding="utf-8"),
                         "usage": {"output_tokens": 48, "input_tokens": 120},
                     }
                 )
@@ -393,7 +393,7 @@ class CliTests(unittest.TestCase):
                         "variant": "sigil-nano",
                         "transport": "sigil",
                         "structured_expected": True,
-                        "content": "@sigil v0 hybrid\nG: x\nA: y\n\n[AUDIT]\nwrong\n",
+                        "content": "@flint v0 hybrid\nG: x\nA: y\n\n[AUDIT]\nwrong\n",
                         "usage": {"output_tokens": 12, "input_tokens": 20},
                     }
                 )
@@ -407,7 +407,7 @@ class CliTests(unittest.TestCase):
                         "variant": "sigil-wire",
                         "transport": "sigil",
                         "structured_expected": True,
-                        "content": (ROOT / "examples" / "debugging.sigil").read_text(encoding="utf-8"),
+                        "content": (ROOT / "examples" / "debugging.flint").read_text(encoding="utf-8"),
                         "usage": {"output_tokens": 48, "input_tokens": 120},
                     }
                 )
@@ -461,7 +461,7 @@ class CliTests(unittest.TestCase):
                 encoding="utf-8",
             )
             sigil_text = (
-                "@sigil v0 hybrid\n"
+                "@flint v0 hybrid\n"
                 "G: fix(auth)\n"
                 "P: keep_401\n"
                 "A: auth\n\n"
@@ -558,7 +558,7 @@ class CliTests(unittest.TestCase):
                 encoding="utf-8",
             )
             sigil_text = (
-                "@sigil v0 hybrid\n"
+                "@flint v0 hybrid\n"
                 "G: auth_review\n"
                 "P: keep_401\n"
                 "A: sess_only\n\n"

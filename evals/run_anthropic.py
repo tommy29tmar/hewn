@@ -11,12 +11,12 @@ from urllib import error, request
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
-from sigil.eval_common import (
+from flint.eval_common import (
     DEFAULT_ENV_FILE,
     append_jsonl,
     build_cached_task_prompt,
     decode_variant_output,
-    direct_sigil_stop_sequences,
+    direct_flint_stop_sequences,
     load_jsonl,
     parse_variant,
     resolve_runtime_env,
@@ -198,7 +198,7 @@ def main(argv: list[str] | None = None) -> int:
                 thinking_budget=args.thinking_budget,
                 cache_system_prompt=args.cache_system_prompt,
                 cache_prefix=cache_prefix if args.cache_task_prefix and cache_prefix else None,
-                stop_sequences=direct_sigil_stop_sequences(variant.transport),
+                stop_sequences=direct_flint_stop_sequences(variant.transport),
             )
             response = call_messages_api(
                 api_key=api_key,

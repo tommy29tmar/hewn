@@ -11,8 +11,8 @@ from contextlib import redirect_stdout
 
 from .eval_common import load_jsonl
 from .metrics import approx_token_count
-from .normalize import normalize_document_text, repair_direct_sigil_text
-from .parser import SIGILParseError, parse_document
+from .normalize import normalize_document_text, repair_direct_flint_text
+from .parser import FlintParseError, parse_document
 from .contracts import infer_contract_family
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -442,13 +442,13 @@ def render_portability_report(tasks_path: Path, run_paths: list[Path], out_path:
             parse_ok = None
             if row.get("structured_expected") is True:
                 repaired = (
-                    repair_direct_sigil_text(content, str(task.get("category") or ""))
+                    repair_direct_flint_text(content, str(task.get("category") or ""))
                     if row.get("transport") == "sigil"
                     else normalize_document_text(content)
                 )
                 try:
                     parse_document(repaired)
-                except SIGILParseError:
+                except FlintParseError:
                     parse_ok = 0.0
                 else:
                     parse_ok = 1.0

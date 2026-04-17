@@ -4,8 +4,8 @@ import json
 import unittest
 from pathlib import Path
 
-from sigil.metrics import approx_token_count
-from sigil.task_capsule import build_capsule_task_row, build_task_capsule, load_jsonl
+from flint.metrics import approx_token_count
+from flint.task_capsule import build_capsule_task_row, build_task_capsule, load_jsonl
 
 
 ROOT = Path(__file__).resolve().parents[1]

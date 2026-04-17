@@ -66,7 +66,7 @@ class BuildAdaptiveRunTests(unittest.TestCase):
                                 "variant": "sigil-primary",
                                 "transport": "sigil",
                                 "structured_expected": True,
-                                "content": (ROOT / "examples" / "debugging.sigil").read_text(encoding="utf-8"),
+                                "content": (ROOT / "examples" / "debugging.flint").read_text(encoding="utf-8"),
                                 "usage": {"output_tokens": 48, "input_tokens": 120},
                             }
                         ),
@@ -76,7 +76,7 @@ class BuildAdaptiveRunTests(unittest.TestCase):
                                 "variant": "sigil-primary",
                                 "transport": "sigil",
                                 "structured_expected": True,
-                                "content": "@sigil v0 hybrid\nG: choose(arch)\nA: service_mesh\n\n[AUDIT]\nwrong\n",
+                                "content": "@flint v0 hybrid\nG: choose(arch)\nA: service_mesh\n\n[AUDIT]\nwrong\n",
                                 "usage": {"output_tokens": 18, "input_tokens": 40},
                             }
                         ),
@@ -105,7 +105,7 @@ class BuildAdaptiveRunTests(unittest.TestCase):
                                 "variant": "sigil-fallback",
                                 "transport": "sigil",
                                 "structured_expected": True,
-                                "content": (ROOT / "examples" / "architecture.sigil").read_text(encoding="utf-8"),
+                                "content": (ROOT / "examples" / "architecture.flint").read_text(encoding="utf-8"),
                                 "usage": {"output_tokens": 40, "input_tokens": 110},
                             }
                         ),
@@ -188,7 +188,7 @@ class BuildAdaptiveRunTests(unittest.TestCase):
                         "variant": "sigil-nano",
                         "transport": "sigil",
                         "structured_expected": True,
-                        "content": "@sigil v0 hybrid\nG: fix(cache)\nA: patch\n\n[AUDIT]\nwrong\n",
+                        "content": "@flint v0 hybrid\nG: fix(cache)\nA: patch\n\n[AUDIT]\nwrong\n",
                         "usage": {"output_tokens": 12, "input_tokens": 20},
                     }
                 )
@@ -202,7 +202,7 @@ class BuildAdaptiveRunTests(unittest.TestCase):
                         "variant": "sigil-wire",
                         "transport": "sigil",
                         "structured_expected": True,
-                        "content": (ROOT / "examples" / "debugging.sigil").read_text(encoding="utf-8"),
+                        "content": (ROOT / "examples" / "debugging.flint").read_text(encoding="utf-8"),
                         "usage": {"output_tokens": 48, "input_tokens": 120},
                     }
                 )

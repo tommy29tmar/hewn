@@ -7,8 +7,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from .normalize import normalize_document_text, repair_direct_sigil_text
-from .parser import SIGILParseError, parse_document
+from .normalize import normalize_document_text, repair_direct_flint_text
+from .parser import FlintParseError, parse_document
 from .render import generate_audit
 from .schema_transport import load_schema_definition, render_schema_payload
 
@@ -27,7 +27,7 @@ class Variant:
     category: str | None = None
 
 
-DIRECT_SIGIL_STOP_SEQUENCES = (
+DIRECT_FLINT_STOP_SEQUENCES = (
     "[AUDIT]",
     "Goal:",
     "Constraints:",
@@ -181,15 +181,15 @@ def schema_name_from_transport(transport: str) -> str | None:
     return None
 
 
-def direct_sigil_stop_sequences(transport: str) -> list[str]:
+def direct_flint_stop_sequences(transport: str) -> list[str]:
     if transport != "sigil":
         return []
-    return list(DIRECT_SIGIL_STOP_SEQUENCES)
+    return list(DIRECT_FLINT_STOP_SEQUENCES)
 
 
 def materialize_direct_sigil(output_text: str, category: str | None = None) -> str:
     stripped = strip_wrapping_code_fences(output_text)
-    direct_repaired = repair_direct_sigil_text(stripped, category)
+    direct_repaired = repair_direct_flint_text(stripped, category)
     candidates = [direct_repaired]
     repaired = normalize_document_text(stripped)
     if direct_repaired not in candidates:
@@ -201,13 +201,13 @@ def materialize_direct_sigil(output_text: str, category: str | None = None) -> s
     for candidate in candidates:
         try:
             document = parse_document(candidate)
-        except SIGILParseError:
+        except FlintParseError:
             document = None
         if document is None and "[AUDIT]" not in candidate:
             placeholder = "[local audit placeholder]"
             try:
                 document = parse_document(f"{candidate.rstrip()}\n\n[AUDIT]\n{placeholder}")
-            except SIGILParseError:
+            except FlintParseError:
                 continue
             document.audit = ""
             audit = generate_audit(document).strip()

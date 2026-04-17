@@ -39,7 +39,7 @@ class BuildRoutedRunTests(unittest.TestCase):
                 encoding="utf-8",
             )
             source.write_text(
-                json.dumps({"task_id": "debug-task", "variant": "sigil-debug", "content": "@sigil v0 hybrid\nG: fix(auth)"}) + "\n",
+                json.dumps({"task_id": "debug-task", "variant": "sigil-debug", "content": "@flint v0 hybrid\nG: fix(auth)"}) + "\n",
                 encoding="utf-8",
             )
             baseline.write_text(
@@ -98,9 +98,9 @@ class BuildRoutedRunTests(unittest.TestCase):
                 "".join(
                     json.dumps(row) + "\n"
                     for row in (
-                        {"task_id": "task-a", "variant": "sigil-debug", "content": "@sigil v0 hybrid\nG: a"},
-                        {"task_id": "task-b", "variant": "sigil-debug", "content": "@sigil v0 hybrid\nG: b-default"},
-                        {"task_id": "task-b", "variant": "sigil-alt", "content": "@sigil v0 hybrid\nG: b-alt"},
+                        {"task_id": "task-a", "variant": "sigil-debug", "content": "@flint v0 hybrid\nG: a"},
+                        {"task_id": "task-b", "variant": "sigil-debug", "content": "@flint v0 hybrid\nG: b-default"},
+                        {"task_id": "task-b", "variant": "sigil-alt", "content": "@flint v0 hybrid\nG: b-alt"},
                     )
                 ),
                 encoding="utf-8",
