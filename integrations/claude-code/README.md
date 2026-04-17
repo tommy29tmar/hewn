@@ -13,37 +13,9 @@ Relevant docs:
 - CLI reference: https://docs.anthropic.com/en/docs/claude-code/cli-reference
 - Model configuration: https://support.anthropic.com/en/articles/11940350-claude-code-model-configuration
 
-## Render a calibrated `CLAUDE.md`
+## Install
 
-If you already have a calibrated Flint profile:
-
-```bash
-python3 integrations/claude-code/render_claude_md.py \
-  profiles/gpt54mini_compact_efficiency_router_v1.json \
-  --model claude-sonnet-4-20250514 \
-  --provider anthropic \
-  --out .claude/CLAUDE.md
-```
-
-This does not claim the OpenAI-calibrated profile is optimal for Claude. It gives you a transport policy skeleton to start from. The correct flow is:
-
-1. choose the target Claude model
-2. run a Claude-specific calibration benchmark with `evals/calibrate_anthropic_model.py`
-3. render the resulting profile into `CLAUDE.md`
-
-Example:
-
-```bash
-python3 evals/calibrate_anthropic_model.py \
-  --model claude-sonnet-4-20250514 \
-  --objective efficiency \
-  --overwrite
-python3 integrations/claude-code/render_claude_md.py \
-  profiles/claude_sonnet_4_20250514_micro_efficiency_router.json \
-  --model claude-sonnet-4-20250514 \
-  --provider anthropic \
-  --out .claude/CLAUDE.md
-```
+See the top-level [README](../../README.md) for the one-liner install and the `/flint` + `/output-style flint` workflow.
 
 ## Usage model
 

@@ -1,4 +1,0 @@
-{"task_id":"debug-auth-expiry","variant":"sigil-hybrid","model":"sample","path":"examples/debugging.sigil"}
-{"task_id":"arch-small-team","variant":"sigil-hybrid","model":"sample","path":"examples/architecture.sigil"}
-{"task_id":"memory-policy","variant":"sigil-memory","model":"sample","path":"examples/memory_capsules.sigil"}
-
