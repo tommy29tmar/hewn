@@ -5,6 +5,7 @@ import json
 import sys
 from pathlib import Path
 
+from . import __version__
 from .bench import (
     build_adaptive_run,
     build_compiled_macro_tasks,
@@ -24,6 +25,7 @@ from .routing import load_profile, pick_variant
 
 def _build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="flint", description="Parse and validate Flint documents.")
+    parser.add_argument("--version", action="version", version=f"flint {__version__}")
     subparsers = parser.add_subparsers(dest="command", required=True)
 
     validate_parser = subparsers.add_parser("validate", help="Validate a .flint file.")
