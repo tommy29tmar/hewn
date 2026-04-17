@@ -59,6 +59,19 @@ class ParserTests(unittest.TestCase):
         self.assertEqual(document.clauses[0].tag, "G")
         self.assertIn("gt(abs(now-ts),300)", repaired)
 
+    def test_audit_generation_expands_benchmark_focused_aliases(self) -> None:
+        source = (
+            "@flint v0 hybrid\n"
+            "G: mitigate_path_traversal\n"
+            "P: normalize_path ∧ whitelist_sort_columns ∧ parameterize ∧ reject_unknown\n"
+            "A: default_arch\n"
+        )
+        audit = generate_audit(parse_document(source))
+        self.assertIn("risk", audit)
+        self.assertIn("validate and normalize path", audit)
+        self.assertIn("validate sort columns allowlist", audit)
+        self.assertIn("default modular architecture", audit)
+
 
 if __name__ == "__main__":
     unittest.main()

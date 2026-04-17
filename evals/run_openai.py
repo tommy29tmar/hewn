@@ -259,11 +259,16 @@ def main(argv: list[str] | None = None) -> int:
                 max_retries=args.max_retries,
                 retry_backoff_seconds=args.retry_backoff_seconds,
             )
-            content, structured_data = decode_variant_output(variant, extract_output_text(response))
+            content, structured_data = decode_variant_output(
+                variant,
+                extract_output_text(response),
+                task_category=str(task.get("category") or "") or None,
+            )
             stage_usages.append(extract_usage(response))
             elapsed_ms = round((time.perf_counter() - started_at) * 1000, 2)
             row = {
                 "task_id": task_id,
+                "task_category": str(task.get("category") or "") or None,
                 "variant": variant.name,
                 "model": args.model,
                 "prompt_path": str(variant.prompt_path.relative_to(ROOT)),

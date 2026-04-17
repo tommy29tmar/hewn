@@ -18,3 +18,7 @@ evals/runs/tmp_*.jsonl
 evals/runs/*smoke*.jsonl
 evals/runs/my_run.jsonl
 .codex
+
+# Local-only experiments that must NOT be pushed to the public repo.
+# Preserves flint5-tool research code + any future shelved experiment.
+local/

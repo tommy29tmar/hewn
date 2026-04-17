@@ -5,9 +5,11 @@ import re
 
 AWAIT_CALL_RE = re.compile(r"\bawait\s+([A-Za-z_][A-Za-z0-9_./-]*\((?:[^()]|\".*?\"|'.*?')*\))")
 AWAIT_IDENT_RE = re.compile(r"\bawait\s+([A-Za-z_][A-Za-z0-9_./-]*)\b")
-COMPARATOR_ATOM = r"(?:[A-Za-z_](?:[A-Za-z0-9_./:+-]*[A-Za-z0-9_./:+])?|[0-9]+(?:\.[0-9]+)?)"
+COMPARATOR_ATOM = r"(?:[A-Za-z_](?:[A-Za-z0-9_./:+-]*[A-Za-z0-9_./:+])?|[0-9]+(?:\.[0-9]+)?(?:[A-Za-z][A-Za-z0-9_]*)?)"
 COMPARATOR_CALL = r"[A-Za-z_][A-Za-z0-9_./:+-]*\((?:[^()]|\".*?\"|'.*?')*\)"
-COMPARATOR_TERM = rf"(?:{COMPARATOR_CALL}|{COMPARATOR_ATOM}|\([^()]+\))"
+COMPARATOR_QUOTED = r"\"[^\"\n]*\"|'[^'\n]*'"
+COMPARATOR_TERM = rf"(?:{COMPARATOR_CALL}|{COMPARATOR_QUOTED}|{COMPARATOR_ATOM}|\([^()]+\))"
+BRACKET_LIST_RE = re.compile(r"\b([A-Za-z_][A-Za-z0-9_]*)\[([^\[\]\n]+)\]")
 COMPARATOR_RE = re.compile(
     rf"(?P<left>{COMPARATOR_TERM})\s*(?P<op><=|>=|==|!=|<|>)\s*(?P<right>{COMPARATOR_TERM})"
 )
@@ -22,8 +24,32 @@ UNICODE_REPLACEMENTS = {
     "≤": "<=",
     "≥": ">=",
 }
-HEADER_DRIFT_RE = re.compile(r"^@(?:flint|sigil)(?:[_:\-\s]*)(v0)(?:[_:\-\s]*(draft|audit|hybrid|memory|compile))?$", re.IGNORECASE)
+HEADER_DRIFT_RE = re.compile(
+    r"^@(?:flint|sigil)(?:[_:\-\s]*)(?:v[0-9]+)?(?:[_:\-\s]*(draft|audit|hybrid|memory|compile))?$",
+    re.IGNORECASE,
+)
+# Prose preamble patterns that sometimes appear BEFORE @flint header when the
+# model ignores "no prose" instructions. Stripped during repair.
+PREAMBLE_LINE_RE = re.compile(
+    r"^(?:Answer|Response|Here(?:'s| is)|Sure|Okay|Certainly|SIGIL|Flint)\s*[:,.\-]?\s*.*$",
+    re.IGNORECASE,
+)
 QUOTED_TOKEN_RE = re.compile(r'(["\'])([^"\']+)\1')
+DIRECT_ASSIGNMENT_RE = re.compile(
+    r"\b(?P<name>[A-Za-z_][A-Za-z0-9_./:+-]*)\s*=\s*(?P<value>\"[^\"]+\"|'[^']+'|[A-Za-z0-9_./:+-]+)"
+)
+PREFIX_QUOTED_LITERAL_RE = re.compile(
+    r"\b(?P<prefix>[A-Za-z_][A-Za-z0-9_./:+-]*)_(?P<quote>\"|')(?P<literal>[^\"']+)(?P=quote)(?:_(?P<suffix>[A-Za-z_][A-Za-z0-9_./:+-]*))?"
+)
+PREFIX_DOUBLE_QUOTED_LITERAL_RE = re.compile(
+    r"\b(?P<prefix>[A-Za-z_][A-Za-z0-9_./:+-]*)_(?P<first>\"[^\"]+\"|'[^']+')_(?P<second>\"[^\"]+\"|'[^']+')"
+)
+SUFFIX_QUOTED_LITERAL_RE = re.compile(
+    r"(?P<quote>\"|')(?P<literal>[^\"']+)(?P=quote)_(?P<suffix>[A-Za-z_][A-Za-z0-9_./:+-]*)"
+)
+DOUBLE_QUOTED_SUFFIX_RE = re.compile(
+    r"(?P<first>\"[^\"]+\"|'[^']+')_(?P<second>\"[^\"]+\"|'[^']+')_(?P<suffix>[A-Za-z_][A-Za-z0-9_./:+-]*)"
+)
 DANGLING_BINARY_RE = re.compile(r"(?:\s*(?:∧|∨|⇒|=>|→|->|≈|⊥|&|\|)\s*)+$")
 META_LINE_RE = re.compile(r"^(?:\[[^\]]+\].*|Atoms?:.*|Calls?:.*|Notes?:.*|Literals?:.*)$", re.IGNORECASE)
 CODE_FENCE_RE = re.compile(r"^```[A-Za-z0-9_-]*\s*$")
@@ -62,7 +88,13 @@ ARCHITECTURE_JOINED_DELIVER_RE = re.compile(r"\bdeliver\s*∧\s*([A-Za-z0-9_./+-
 ARCHITECTURE_DURATION_RE = re.compile(r"\b[0-9]+\s+(?:hours?|days?|weeks?|months?)\b")
 ARCHITECTURE_WHY_RE = re.compile(r"\bwhy:\s*(.+)$")
 DEBUG_EDGE_ARROW_RE = re.compile(r"edge\(((?:[^()]|\([^()]*\))+?)\s*(?:=>|->|→|⇒)\s*([A-Za-z0-9_./:+-]+)\)")
-DEBUG_OUTCOME_SUFFIX_RE = re.compile(r"((?:eq\([^()]*\)|[A-Za-z0-9_./:+-]+(?:\([^()]*\))?))_(pass|fail)(?![A-Za-z0-9_])")
+DEBUG_OUTCOME_SUFFIX_RE = re.compile(
+    r"((?:eq\((?:[^()]|\([^()]*\))*\)|[A-Za-z0-9_./:+-]+(?:\((?:[^()]|\([^()]*\))*\))?))_(pass|fail|ok)(?![A-Za-z0-9_])"
+)
+COLON_SLASH_LIST_RE = re.compile(r"\b([A-Za-z_][A-Za-z0-9_]*):((?:\"[^\"\n]*\"|[A-Za-z0-9_.()\-+\"]+)(?:/(?:\"[^\"\n]*\"|[A-Za-z0-9_.()\-+\"]+))+)")
+REFACTOR_ORDER_CHAIN_RE = re.compile(
+    r"(?<![<>=])\b[A-Za-z_][A-Za-z0-9_./:+-]*(?:>[A-Za-z_][A-Za-z0-9_./:+-]*){2,}\b"
+)
 
 
 def _has_balanced_delimiters(expr: str) -> bool:
@@ -111,7 +143,41 @@ def normalize_expression_text(expr: str) -> str:
     expr = _replace_unicode_operators(expr)
     expr = AWAIT_CALL_RE.sub(r"await(\1)", expr)
     expr = AWAIT_IDENT_RE.sub(r"await(\1)", expr)
+    expr = _rewrite_quoted_slash_lists(expr)
+    expr = _rewrite_bracket_lists(expr)
     expr = _rewrite_comparators(expr)
+    return expr
+
+
+_QUOTED_SLASH_RE = re.compile(r'("[^"\n]*"|\'[^\'\n]*\')\s*/\s*("[^"\n]*"|\'[^\'\n]*\')')
+
+
+def _rewrite_quoted_slash_lists(expr: str) -> str:
+    """Rewrite `"a"/"b"` → `"a","b"` (Opus list-as-slash drift inside calls)."""
+    prev = None
+    while prev != expr:
+        prev = expr
+        expr = _QUOTED_SLASH_RE.sub(lambda m: f"{m.group(1)},{m.group(2)}", expr)
+    return expr
+
+
+def _rewrite_bracket_lists(expr: str) -> str:
+    """Rewrite `name[a|b|c]` → `name(a,b,c)` and `name:a/b/c` → `name(a,b,c)`
+    (Opus drift patterns seen in tool mode)."""
+    def bracket_repl(match: "re.Match[str]") -> str:
+        name = match.group(1)
+        inner = match.group(2)
+        parts = [p.strip() for p in inner.split("|") if p.strip()]
+        return f"{name}({','.join(parts)})"
+
+    def colon_slash_repl(match: "re.Match[str]") -> str:
+        name = match.group(1)
+        inner = match.group(2)
+        parts = [p.strip() for p in inner.split("/") if p.strip()]
+        return f"{name}({','.join(parts)})"
+
+    expr = BRACKET_LIST_RE.sub(bracket_repl, expr)
+    expr = COLON_SLASH_LIST_RE.sub(colon_slash_repl, expr)
     return expr
 
 
@@ -239,6 +305,40 @@ def _restore_quoted_literal_spaces(expr: str) -> str:
     return QUOTED_TOKEN_RE.sub(repl, expr)
 
 
+def _rewrite_direct_assignments(expr: str) -> str:
+    return DIRECT_ASSIGNMENT_RE.sub(lambda match: f'{match.group("name")}({match.group("value")})', expr)
+
+
+def _rewrite_quoted_literal_affixes(expr: str) -> str:
+    def replace_prefixed_double(match: re.Match[str]) -> str:
+        return f'{match.group("prefix")}({match.group("first")},{match.group("second")})'
+
+    expr = PREFIX_DOUBLE_QUOTED_LITERAL_RE.sub(replace_prefixed_double, expr)
+
+    def replace_double_suffix(match: re.Match[str]) -> str:
+        return f'{match.group("suffix")}({match.group("first")},{match.group("second")})'
+
+    expr = DOUBLE_QUOTED_SUFFIX_RE.sub(replace_double_suffix, expr)
+
+    def replace_prefixed(match: re.Match[str]) -> str:
+        prefix = match.group("prefix")
+        suffix = match.group("suffix")
+        literal = match.group("literal")
+        quote = match.group("quote")
+        name = f"{prefix}_{suffix}" if suffix else prefix
+        return f"{name}({quote}{literal}{quote})"
+
+    expr = PREFIX_QUOTED_LITERAL_RE.sub(replace_prefixed, expr)
+
+    def replace_suffixed(match: re.Match[str]) -> str:
+        literal = match.group("literal")
+        suffix = match.group("suffix")
+        quote = match.group("quote")
+        return f"{suffix}({quote}{literal}{quote})"
+
+    return SUFFIX_QUOTED_LITERAL_RE.sub(replace_suffixed, expr)
+
+
 def _trim_dangling_binary(expr: str) -> str:
     repaired = DANGLING_BINARY_RE.sub("", expr).strip()
     if repaired in {"!", "?"}:
@@ -338,10 +438,7 @@ def _normalize_refactor_capsule_text(expr: str) -> str:
     expr = expr.replace("::", " ")
     expr = re.sub(r"\)\.", ") ", expr)
     expr = re.sub(r"\(\s*req\s*,\s*res\s*,\s*next\s*\)", " ", expr)
-    expr = re.sub(r"\b([A-Za-z][A-Za-z0-9_]*)\.(?=[A-Za-z])", r"\1 ", expr)
-    # Handles atoms like `db_err_forwards_"next(err)"` → `db_err_forwards("next(err)")`
-    # so the quoted literal survives as a valid call argument instead of breaking parse.
-    expr = REFACTOR_QUOTED_SUFFIX_RE.sub(lambda m: f'{m.group(1)}("{m.group(2)}")', expr)
+    expr = REFACTOR_ORDER_CHAIN_RE.sub(lambda match: match.group(0).replace(">", " → "), expr)
     expr = re.sub(r"\s+", " ", expr).strip()
     return expr
 
@@ -355,6 +452,8 @@ def _normalize_debugging_capsule_text(expr: str) -> str:
 def normalize_direct_expression_text(expr: str) -> str:
     expr = _replace_unicode_operators(normalize_expression_text(expr)).strip()
     expr = expr.replace("`", "")
+    expr = _rewrite_direct_assignments(expr)
+    expr = _rewrite_quoted_literal_affixes(expr)
     expr = _replace_top_level_delimiters(expr)
     expr = _compact_single_call_args(expr)
     expr = _restore_quoted_literal_spaces(expr)
@@ -422,20 +521,22 @@ def normalize_document_text(text: str) -> str:
     return "\n".join(repaired)
 
 
-def normalize_direct_flint_text(text: str) -> str:
+def normalize_direct_flint_text(text: str, category: str | None = None) -> str:
     lines = text.splitlines()
     repaired: list[str] = []
     in_audit = False
+    seen_structural_line = False
     for line in lines:
         stripped = line.strip()
         header_match = HEADER_DRIFT_RE.match(stripped)
         if header_match:
-            version = header_match.group(1).lower()
-            mode = (header_match.group(2) or "").lower()
-            repaired.append(f"@flint {version}{f' {mode}' if mode else ''}")
+            mode = (header_match.group(1) or "").lower()
+            repaired.append(f"@flint v0{f' {mode}' if mode else ''}")
+            seen_structural_line = True
             continue
         if stripped == "[AUDIT]":
             in_audit = True
+            seen_structural_line = True
             repaired.append(line)
             continue
         if CODE_FENCE_RE.match(stripped):
@@ -443,9 +544,30 @@ def normalize_direct_flint_text(text: str) -> str:
         if in_audit:
             repaired.append(line)
             continue
+        if not seen_structural_line:
+            # Strip prose preamble lines ("Answer:", "Here's the flint:", etc.)
+            # that appear before the first real @flint / clause / audit marker.
+            if not stripped:
+                continue
+            if PREAMBLE_LINE_RE.match(stripped):
+                continue
+            if not (len(stripped) >= 3 and stripped[1] == ":" and stripped[0] in "GCHPVRQMA"):
+                # Drop any other pre-structural line (prose preamble).
+                continue
         if len(stripped) >= 3 and stripped[1] == ":" and stripped[0] in "GCHPVRQMA":
+            seen_structural_line = True
             tag = stripped[:2]
-            expr = stripped[2:].lstrip()
+            raw_expr = stripped[2:].lstrip()
+            clause_tag = stripped[0]
+            if category == "architecture":
+                raw_expr = _normalize_architecture_capsule_text(raw_expr)
+            if category == "debugging":
+                raw_expr = _normalize_debugging_capsule_text(raw_expr)
+            if category == "refactoring":
+                raw_expr = _normalize_refactor_capsule_text(raw_expr)
+                if clause_tag == "G":
+                    raw_expr = raw_expr.replace("->", " ").replace("→", " ")
+            expr = raw_expr
             repaired.append(f"{tag} {normalize_direct_expression_text(expr)}")
             continue
         repaired.append(_replace_unicode_operators(line))
@@ -453,7 +575,7 @@ def normalize_direct_flint_text(text: str) -> str:
 
 
 def repair_direct_flint_text(text: str, category: str | None = None) -> str:
-    repaired = normalize_direct_flint_text(text)
+    repaired = normalize_direct_flint_text(text, category)
     lines = repaired.splitlines()
     non_empty = [line.strip() for line in lines if line.strip()]
     output: list[str] = []
@@ -461,7 +583,7 @@ def repair_direct_flint_text(text: str, category: str | None = None) -> str:
     in_audit = False
     header_line = next(
         (
-            f"@flint {match.group(1).lower()}{f' {match.group(2).lower()}' if match.group(2) else ''}"
+            f"@flint v0{f' {match.group(1).lower()}' if match.group(1) else ''}"
             for line in lines
             if (match := HEADER_DRIFT_RE.match(line.strip()))
         ),

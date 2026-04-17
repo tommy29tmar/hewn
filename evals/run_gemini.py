@@ -276,7 +276,11 @@ def main(argv: list[str] | None = None) -> int:
                 retry_backoff_seconds=args.retry_backoff_seconds,
             )
             output_text = extract_output_text(response)
-            content, structured_data = decode_variant_output(variant, output_text)
+            content, structured_data = decode_variant_output(
+                variant,
+                output_text,
+                task_category=str(task.get("category") or "") or None,
+            )
             elapsed_ms = round((time.perf_counter() - started_at) * 1000, 2)
             finish_reason = None
             candidates = response.get("candidates") or []
@@ -284,6 +288,7 @@ def main(argv: list[str] | None = None) -> int:
                 finish_reason = candidates[0].get("finishReason")
             row = {
                 "task_id": task_id,
+                "task_category": str(task.get("category") or "") or None,
                 "variant": variant.name,
                 "model": args.model,
                 "provider": "gemini",

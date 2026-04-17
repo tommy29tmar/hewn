@@ -29,6 +29,7 @@ A: <action atoms with ∧>
 Rules:
 - 5–6 short lines, nothing else.
 - Use short `snake_case` atoms.
+- Prefer call form `ddl("12 weeks")` over suffix `ddl_"12 weeks"`.
 - Echo literal anchors from the user's question verbatim when present
   (numbers, identifiers, code tokens — keep them as-is).
 - Connect conjunctions with `∧` only. No commas. No bullets.

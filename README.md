@@ -2,7 +2,7 @@
 
 **Caveman prompts. Flint delivers.**
 
-Claude answers in 6 lines instead of 872. -54% tokens. -73% latency. Same concepts, preserved.
+Claude answers in 6 lines instead of 872. -48% tokens. -66% latency. **More** concepts preserved than verbose Claude.
 
 ![demo](assets/launch/demo.png)
 
@@ -43,20 +43,20 @@ Benchmark on Claude Opus 4.7, 8 technical tasks (debug, code review, architectur
 
 | approach                    | tokens | latency | concepts covered |
 |-----------------------------|-------:|--------:|-----------------:|
-| Claude default (verbose)    |    905 |   12.4s |              80% |
-| Caveman ("primitive English")|    441 |    4.9s |              72% |
-| "Be concise, return JSON"   |    439 |    4.9s |              76% |
-| **Flint**                   | **415** | **3.3s** |          **78%** |
+| Claude default (verbose)    |    911 |   12.5s |              81% |
+| Caveman ("primitive English")|    446 |    4.9s |              72% |
+| "Be concise, return JSON"   |    443 |    5.0s |              77% |
+| **Flint**                   | **471** | **4.2s** |          **94%** |
 
-Flint wins on every column. The only approach that matches verbose Claude on concept coverage — at less than half the cost.
+Flint wins on coverage and latency, and still cuts tokens nearly in half. It is the **only** approach that beats verbose Claude on concept coverage — at less than half the cost.
 
 ## Flint vs Caveman
 
-You've probably seen "Caveman prompting" — tell Claude to drop articles and filler, save ~50% tokens. It works, but Claude also drops concepts. On this bench, Caveman loses 8 points of concept coverage. You pay for the savings in answer quality.
+You've probably seen "Caveman prompting" — tell Claude to drop articles and filler, save ~50% tokens. It works, but Claude also drops concepts. On this bench, Caveman loses 9 points of concept coverage vs verbose, and 22 points vs Flint. You pay for the savings in answer quality.
 
-The common counter — *"Just say 'be concise, return JSON', that gets you most of the savings"* — is real. We benched it too. It does save tokens. It also loses 4 points of concept coverage and stays 33% slower than Flint.
+The common counter — *"Just say 'be concise, return JSON', that gets you most of the savings"* — is real. We benched it too. It does save tokens. It also loses 4 points vs verbose (and 17 points vs Flint) on coverage, and stays slower than Flint.
 
-Flint compresses the **structure**, not the content. That's why the concepts survive. Caveman gives you grunts. Flint gives you the answer.
+Flint compresses the **structure**, not the content. That's why the concepts survive — actually, they grow. Caveman gives you grunts. Flint gives you the answer.
 
 ## When things drift
 
@@ -65,6 +65,19 @@ Claude sometimes drifts off format. Flint ships with a parser, a repair layer, a
 ```bash
 flint audit --explain response.flint --anchor 300 --anchor 401
 ```
+
+## More CLI tools
+
+```bash
+# Look up which variant a calibration profile recommends for a task or category
+flint routing recommend --profile profiles/<profile>.json --category debugging
+
+# Per-file CLAUDE.md audit — structurally-safe compression preview (read-only)
+flint claude-code inventory path/to/CLAUDE.md
+flint claude-code diff path/to/CLAUDE.md
+```
+
+See [integrations/claude-code/README.md](integrations/claude-code/README.md) for the full list of preserved segment types and caching behavior.
 
 ## Reproduce the numbers
 

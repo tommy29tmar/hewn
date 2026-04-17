@@ -35,6 +35,16 @@ DIRECT_FLINT_STOP_SEQUENCES = (
     "Plan:",
 )
 
+def cell_run_files(runs_dir: Path, cell: str, *, prefix: str = "opus47") -> list[Path]:
+    """Resolve the run files for a given bench cell: base + sorted _r* files."""
+    base = runs_dir / f"{prefix}_{cell}.jsonl"
+    reruns = sorted(runs_dir.glob(f"{prefix}_{cell}_r*.jsonl"))
+    out: list[Path] = []
+    if base.exists():
+        out.append(base)
+    out.extend(reruns)
+    return out
+
 
 def parse_env_line(line: str) -> tuple[str, str] | None:
     stripped = line.strip()
@@ -182,6 +192,9 @@ def schema_name_from_transport(transport: str) -> str | None:
 
 
 def direct_flint_stop_sequences(transport: str) -> list[str]:
+    # Stop sequences apply to free-text 'sigil' responses only; 'flint5-tool'
+    # uses forced tool_choice so no stop sequences are needed (and Anthropic
+    # forbids stop_sequences with tool_choice in some combinations).
     if transport != "sigil":
         return []
     return list(DIRECT_FLINT_STOP_SEQUENCES)
@@ -225,11 +238,15 @@ def materialize_direct_sigil(output_text: str, category: str | None = None) -> s
     return stripped
 
 
-def decode_variant_output(variant: Variant, output_text: str | dict[str, Any]) -> tuple[str, dict[str, Any] | None]:
+def decode_variant_output(
+    variant: Variant,
+    output_text: str | dict[str, Any],
+    task_category: str | None = None,
+) -> tuple[str, dict[str, Any] | None]:
     if isinstance(output_text, dict):
         output_text = str(output_text.get("output_text") or "")
     if variant.transport == "sigil":
-        return materialize_direct_sigil(output_text, category=variant.category), None
+        return materialize_direct_sigil(output_text, category=task_category or variant.category), None
     schema_name = schema_name_from_transport(variant.transport)
     if schema_name is None:
         return output_text, None

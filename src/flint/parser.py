@@ -164,6 +164,16 @@ def _parse_expr(source: str) -> Expr:
     return expression
 
 
+def parse_clause_expression(source: str) -> Expr:
+    """Parse a single clause-value fragment and return its AST root.
+
+    Public wrapper around the internal expression parser. Used by validators
+    that need to inspect the AST of a single atom or call without going
+    through the full document parser.
+    """
+    return _parse_expr(source)
+
+
 def _split_bindings(block: str) -> Iterable[str]:
     parts: list[str] = []
     current: list[str] = []

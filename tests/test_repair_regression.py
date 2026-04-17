@@ -68,6 +68,179 @@ class RepairRegressionTests(unittest.TestCase):
         self.assertIn("valid_passes", repaired)
         self.assertNotIn("edge(valid,pass)es", repaired)
 
+    def test_debug_suffix_literal_rewrites_into_call(self) -> None:
+        """Forms like `"24h"_grace` should repair into valid calls so debug
+        rows materialize instead of staying raw."""
+        raw = (
+            "@flint v0 hybrid\n"
+            "G: min_fix\n"
+            'C: overdue_middleware ∧ rule_402 ∧ "24h"_grace ∧ boundary_loop\n'
+            'P: grace_exact ∧ no_loop ∧ "402"_on_overdue\n'
+            "V: reg_test ∧ boundary_pass ∧ grace_honored\n"
+            'A: patch_middleware ∧ add_grace24h ∧ emit_"402" ∧ add_reg_test\n'
+        )
+        repaired = self._assert_parses_after_repair(raw, "debugging")
+        self.assertIn('grace("24h")', repaired)
+        self.assertIn('on_overdue("402")', repaired)
+        self.assertIn('emit("402")', repaired)
+
+    def test_numeric_letter_suffix_in_comparator(self) -> None:
+        """`skew<=30s` must repair into `le(skew,30s)` with `s` included, not
+        dangling. Earlier regex only accepted `[0-9]+` on the numeric side."""
+        raw = (
+            "@flint v0 hybrid\n"
+            "G: fix_skew_boundary\n"
+            'C: min_diff ∧ keep("401") ∧ skew<=30s\n'
+            "P: normalize_ms ∧ expMs+30s<nowMs\n"
+            "V: boundary_pass ∧ reg_test\n"
+            "A: widen_window ∧ add_reg_test\n"
+        )
+        repaired = self._assert_parses_after_repair(raw, "debugging")
+        self.assertIn("le(skew,30s)", repaired)
+        self.assertIn("lt(expMs+30s,nowMs)", repaired)
+
+    def test_comparator_with_quoted_right_hand(self) -> None:
+        """`ddl<="9 weeks"` must match the comparator rewrite and not leave a
+        dangling quoted token that the parser misreads."""
+        raw = (
+            "@flint v0 hybrid\n"
+            "G: default_arch\n"
+            'C: team(6) ∧ ddl("9 weeks") ∧ store("PostgreSQL")\n'
+            "P: pt_mlops ∧ worker_sidecar\n"
+            'V: team<=6 ∧ ddl<="9 weeks" ∧ pg_only\n'
+            "A: monolith_api ∧ pg_queue\n"
+        )
+        repaired = self._assert_parses_after_repair(raw, "architecture")
+        self.assertIn('le(ddl,"9 weeks")', repaired)
+        self.assertIn("le(team,6)", repaired)
+
+    def test_bracket_list_syntax_rewrites_to_call(self) -> None:
+        """`anchors[async|await|"next(err)"]` should repair into
+        `anchors(async,await,"next(err)")`."""
+        raw = (
+            "@flint v0 hybrid\n"
+            "G: reconcile_batch_refactor\n"
+            'C: target(reconcileBatch) ∧ anchors[async|await|"next(err)"] ∧ minimal_change\n'
+            "P: load_batch ∧ db.fetchRows\n"
+            "V: preserve_order ∧ no_double_next\n"
+            "A: async_await ∧ try_catch\n"
+        )
+        repaired = self._assert_parses_after_repair(raw, "refactoring")
+        self.assertIn('anchors(async,await,"next(err)")', repaired)
+
+    def test_colon_slash_list_syntax_rewrites_to_call(self) -> None:
+        """`anchors:async/await/"next(err)"` should repair into
+        `anchors(async,await,"next(err)")` like bracket form does."""
+        raw = (
+            "@flint v0 hybrid\n"
+            "G: refactor_reconcileBatch\n"
+            'C: anchors:async/await/"next(err)" ∧ minimal_change\n'
+            "P: load_batch ∧ apply_rules\n"
+            "V: order_preserved\n"
+            "A: async_await ∧ wrap_try\n"
+        )
+        repaired = self._assert_parses_after_repair(raw, "refactoring")
+        self.assertIn('anchors(async,await,"next(err)")', repaired)
+
+    def test_quoted_slash_inside_call_repairs(self) -> None:
+        """`style("async"/"await")` — slash between quoted args must become
+        comma so the call parses."""
+        raw = (
+            "@flint v0 hybrid\n"
+            "G: loadGatewayUser_refactor\n"
+            'C: target(loadGatewayUser) ∧ style("async"/"await") ∧ minimal_change\n'
+            "P: session_check ∧ db.findUser\n"
+            "V: preserve_order\n"
+            "A: try_catch_next\n"
+        )
+        repaired = self._assert_parses_after_repair(raw, "refactoring")
+        self.assertIn('style("async","await")', repaired)
+
+    def test_debug_outcome_suffix_ok_recognized(self) -> None:
+        """`_ok` should be absorbed alongside existing `_pass`/`_fail`."""
+        raw = (
+            "@flint v0 hybrid\n"
+            "G: refresh_fix\n"
+            "C: normalize_ms ∧ min_diff\n"
+            "P: widen_skew ∧ single_site\n"
+            "V: refresh_no_loop_ok ∧ reg_test\n"
+            "A: patch_middleware\n"
+        )
+        repaired = self._assert_parses_after_repair(raw, "debugging")
+        self.assertIn("edge(refresh_no_loop,ok)", repaired)
+
+    def test_prose_preamble_before_header_stripped(self) -> None:
+        """Occasionally models ignore 'no prose' and emit a preamble line
+        before the @flint header. Repair must strip it and parse clean."""
+        raw = (
+            "Here's the Flint:\n"
+            "@flint v0 hybrid\n"
+            "G: allow_skew\n"
+            "C: webhook_verify\n"
+            "P: widen_window\n"
+            "V: no_regression\n"
+            "A: reg_test\n"
+        )
+        repaired = self._assert_parses_after_repair(raw, "debugging")
+        self.assertNotIn("Here's", repaired)
+
+    def test_version_drift_v1_normalized_to_v0(self) -> None:
+        """If the model writes `@flint v1 hybrid`, repair canonicalizes to v0."""
+        raw = (
+            "@flint v1 hybrid\n"
+            "G: allow_skew\n"
+            "C: webhook_verify\n"
+            "P: widen_window\n"
+            "V: no_regression\n"
+            "A: reg_test\n"
+        )
+        repaired = self._assert_parses_after_repair(raw, "debugging")
+        self.assertIn("@flint v0 hybrid", repaired)
+        self.assertNotIn("@flint v1", repaired)
+
+    def test_bare_flint_header_without_version_accepted(self) -> None:
+        """`@flint hybrid` (missing version) canonicalizes to `@flint v0 hybrid`."""
+        raw = (
+            "@flint hybrid\n"
+            "G: fix_x\n"
+            "C: c1\n"
+            "P: p1\n"
+            "V: v1\n"
+            "A: a1\n"
+        )
+        repaired = self._assert_parses_after_repair(raw, None)
+        self.assertIn("@flint v0 hybrid", repaired)
+
+    def test_debug_outcome_suffix_nested_parens(self) -> None:
+        """`boundary(eq(exp,now))_pass` — the outcome regex must accept one
+        level of nested parens on the left term."""
+        raw = (
+            "@flint v0 hybrid\n"
+            "G: fix_expiry_boundary\n"
+            "C: exp_compare ∧ reject_loop\n"
+            "P: normalize_ms ∧ single_site\n"
+            "V: boundary(eq(exp,now))_pass ∧ no_loop\n"
+            "A: patch_cmp_site\n"
+        )
+        repaired = self._assert_parses_after_repair(raw, "debugging")
+        self.assertIn("edge(boundary(eq(exp,now)),pass)", repaired)
+
+    def test_refactor_order_chain_and_literal_suffixes_preserved(self) -> None:
+        """Refactor chains use `>` as ordering, not numeric comparison, and
+        quoted-literal affixes may carry extra suffixes."""
+        raw = (
+            "@flint v0 hybrid\n"
+            "G: refactor_loadGatewayUser\n"
+            'C: "async" ∧ "await" ∧ callback_style ∧ has_"next(err)"\n'
+            'P: session_check>db.findUser>flags.load>audit.log>next ∧ preserve_"next(err)"_on_db_err ∧ minimal_change\n'
+            'V: order_preserved ∧ db_err→"next(err)" ∧ uses_"async"_"await"\n'
+            'A: convert_to_async ∧ await_each_step ∧ try_catch_db→"next(err)" ∧ call_next_last\n'
+        )
+        repaired = self._assert_parses_after_repair(raw, "refactoring")
+        self.assertIn("session_check → db.findUser → flags.load → audit.log → next", repaired)
+        self.assertIn('preserve_on_db_err("next(err)")', repaired)
+        self.assertIn('uses("async","await")', repaired)
+
 
 class HybridWithoutAuditTests(unittest.TestCase):
     def test_hybrid_without_audit_parses(self) -> None:

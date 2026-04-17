@@ -8,24 +8,24 @@ Means + stdev are printed when n >= 2.
 """
 from __future__ import annotations
 
-import glob
 import json
 import sys
 from pathlib import Path
 from statistics import mean, stdev
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "src"))
+
+from flint.eval_common import cell_run_files  # noqa: E402
+
 OUT = ROOT / "evals" / "runs" / "caveman"
 TASKS = ROOT / "evals" / "tasks_top_tier_holdout.jsonl"
 
-# Map display label -> cell file prefix. SIGIL uses the wedge runs as the
-# canonical multi-sample evidence; the single-run `opus47_sigil.jsonl` file
-# is not included because it was overwritten by an exploratory A/B variant.
 CELLS = [
-    ("default (verbose)",      "opus47_verbose"),
-    ("Caveman (primitive)",    "opus47_primitive"),
-    ("concise + JSON control", "opus47_concise_json"),
-    ("SIGIL",                  "opus47_sigil"),
+    ("default (verbose)",      "verbose"),
+    ("Caveman (primitive)",    "primitive"),
+    ("concise + JSON control", "concise_json"),
+    ("SIGIL",                  "sigil"),
 ]
 
 
@@ -47,13 +47,12 @@ def score_run(path: Path, tasks: dict) -> dict:
 
 
 def cell_paths(prefix: str) -> list[Path]:
-    base = OUT / f"{prefix}.jsonl"
-    rerun = sorted(Path(p) for p in glob.glob(str(OUT / f"{prefix}_r*.jsonl")))
-    out: list[Path] = []
-    if base.exists():
-        out.append(base)
-    out.extend(rerun)
-    return out
+    """Wrapper around shared cell_run_files for the caveman runs directory."""
+    if prefix.startswith("opus47_"):
+        cell = prefix[len("opus47_"):]
+    else:
+        cell = prefix
+    return cell_run_files(OUT, cell)
 
 
 def fmt(mean_: float, sd: float, unit: str = "") -> str:

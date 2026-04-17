@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
 from pathlib import Path
 
 from .bench import (
@@ -17,6 +18,8 @@ from .metrics import document_metrics
 from .normalize import normalize_document_text, repair_direct_flint_text
 from .parser import FlintParseError, document_to_data, parse_document
 from .render import generate_audit
+from .claude_code import cached_compile, compile_claude_md
+from .routing import load_profile, pick_variant
 
 
 def _build_parser() -> argparse.ArgumentParser:
@@ -118,6 +121,38 @@ def _build_parser() -> argparse.ArgumentParser:
     bench_portability_parser.add_argument("runs", type=Path, nargs="+")
     bench_portability_parser.add_argument("--out", type=Path, default=None)
 
+    claude_code_parser = subparsers.add_parser(
+        "claude-code",
+        help="Per-file CLAUDE.md audit tools (compile / diff / inventory).",
+    )
+    claude_code_sub = claude_code_parser.add_subparsers(dest="claude_code_command", required=True)
+
+    cc_compile = claude_code_sub.add_parser("compile", help="Print the structurally-safe compressed form of the file.")
+    cc_compile.add_argument("path", type=Path)
+    cc_compile.add_argument("--no-cache", action="store_true")
+
+    cc_diff = claude_code_sub.add_parser("diff", help="Unified diff of original vs compressed with segment annotations.")
+    cc_diff.add_argument("path", type=Path)
+    cc_diff.add_argument("--no-cache", action="store_true")
+
+    cc_inventory = claude_code_sub.add_parser(
+        "inventory",
+        help="For each given file, print original vs compressed token counts.",
+    )
+    cc_inventory.add_argument("paths", type=Path, nargs="+")
+    cc_inventory.add_argument("--no-cache", action="store_true")
+
+    routing_parser = subparsers.add_parser("routing", help="Inspect existing routing profiles.")
+    routing_subparsers = routing_parser.add_subparsers(dest="routing_command", required=True)
+
+    routing_recommend = routing_subparsers.add_parser(
+        "recommend",
+        help="Print the variant recommended by a profile for a task or category.",
+    )
+    routing_recommend.add_argument("--profile", type=Path, required=True, help="Path to the profile JSON.")
+    routing_recommend.add_argument("--task-id", default=None, help="Look up task-specific override first.")
+    routing_recommend.add_argument("--category", default=None, help="Fall back to category mapping.")
+
     return parser
 
 
@@ -188,6 +223,24 @@ def main(argv: list[str] | None = None) -> int:
         parser.exit(status=2, message="sigil: unknown bench command\n")
         return 2
 
+    if args.command == "claude-code":
+        return _run_claude_code(args, parser)
+
+    if args.command == "routing":
+        if args.routing_command == "recommend":
+            try:
+                profile = load_profile(args.profile)
+            except (ValueError, OSError) as exc:
+                parser.exit(status=1, message=f"flint: {exc}\n")
+            pick = pick_variant(profile, task_id=args.task_id, category=args.category)
+            if pick is None:
+                print("(none)")
+                return 1
+            print(pick)
+            return 0
+        parser.exit(status=2, message="flint: unknown routing command\n")
+        return 2
+
     if args.command == "audit" and getattr(args, "explain", False):
         return _run_audit_explain(args.path, getattr(args, "anchors", None) or [], getattr(args, "category", "") or "")
 
@@ -222,6 +275,57 @@ def main(argv: list[str] | None = None) -> int:
         return 0
 
     parser.exit(status=2, message="sigil: unknown command\n")
+    return 2
+
+
+def _run_claude_code(args, parser) -> int:
+    import difflib
+
+    def _compile(path: Path):
+        if getattr(args, "no_cache", False):
+            return compile_claude_md(path)
+        return cached_compile(path)
+
+    if args.claude_code_command == "compile":
+        if not args.path.exists():
+            parser.exit(status=1, message=f"flint: file not found: {args.path}\n")
+        ctx = _compile(args.path)
+        sys.stdout.write(ctx.compressed_text)
+        if not ctx.compressed_text.endswith("\n"):
+            sys.stdout.write("\n")
+        return 0
+    if args.claude_code_command == "diff":
+        if not args.path.exists():
+            parser.exit(status=1, message=f"flint: file not found: {args.path}\n")
+        ctx = _compile(args.path)
+        diff = difflib.unified_diff(
+            ctx.original_text.splitlines(keepends=True),
+            ctx.compressed_text.splitlines(keepends=True),
+            fromfile=f"{args.path} (original, ~{ctx.original_tokens} tok)",
+            tofile=f"{args.path} (compressed, ~{ctx.compressed_tokens} tok)",
+        )
+        sys.stdout.write("".join(diff))
+        preserved = sum(1 for s in ctx.segments if s.preserved_verbatim)
+        compressed_count = sum(1 for s in ctx.segments if not s.preserved_verbatim)
+        print(f"\n# summary: {preserved} segment(s) verbatim, {compressed_count} compressed")
+        return 0
+    if args.claude_code_command == "inventory":
+        total_orig = 0
+        total_comp = 0
+        print(f"{'file':<60} {'orig_tok':>9} {'comp_tok':>9} {'delta':>7}")
+        for path in args.paths:
+            if not path.exists():
+                print(f"{str(path):<60} MISSING")
+                continue
+            ctx = _compile(path)
+            delta = ctx.compressed_tokens - ctx.original_tokens
+            total_orig += ctx.original_tokens
+            total_comp += ctx.compressed_tokens
+            print(f"{str(path):<60} {ctx.original_tokens:>9} {ctx.compressed_tokens:>9} {delta:>+7}")
+        if len(args.paths) > 1:
+            print(f"{'TOTAL':<60} {total_orig:>9} {total_comp:>9} {total_comp - total_orig:>+7}")
+        return 0
+    parser.exit(status=2, message="flint: unknown claude-code command\n")
     return 2
 
 

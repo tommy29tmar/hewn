@@ -116,6 +116,23 @@ class RunOpenAITests(unittest.TestCase):
         self.assertIn("G: async", content)
         self.assertIn("C: await", content)
 
+    def test_decode_variant_output_uses_task_category_when_variant_is_generic(self) -> None:
+        variant = RUN_OPENAI.parse_variant("current@sigil=integrations/claude-code/flint_system_prompt.txt")
+        response = {
+            "output_text": (
+                "@flint v0 hybrid\n"
+                "G: modular_monolith\n"
+                'C: team=9 ∧ ddl="12 weeks" ∧ store="PostgreSQL" ∧ ops=platform_plus_sec ∧ traffic=steady\n'
+                "P: modular_boundaries ∧ shared_pg\n"
+                "V: compliance_ready\n"
+                "A: defer_microservices\n"
+            )
+        }
+        content, _ = RUN_OPENAI.decode_variant_output(variant, response, task_category="architecture")
+        self.assertIn('team(9)', content)
+        self.assertIn('ddl("12 weeks")', content)
+        self.assertIn("[AUDIT]", content)
+
     def test_decode_variant_output_renders_schema_payload(self) -> None:
         variant = RUN_OPENAI.parse_variant("sigil-hybrid@schema-hybrid=prompts/hybrid_schema.txt")
         response = {
@@ -380,7 +397,7 @@ class RunOpenAITests(unittest.TestCase):
         content, _ = RUN_OPENAI.decode_variant_output(variant, response)
         self.assertIn('anchor("5") ∧ anchor("8 weeks") ∧ anchor("BigQuery")', content)
         self.assertIn('store("BigQuery")', content)
-        self.assertIn("deliver(default_arch)", content)
+        self.assertIn("deliver(default_arch_short_why)", content)
         self.assertIn("P: mod_monolith", content)
         parse_document(content)
 
@@ -429,7 +446,7 @@ class RunOpenAITests(unittest.TestCase):
         }
         content, _ = RUN_OPENAI.decode_variant_output(variant, response)
         self.assertIn("[AUDIT]", content)
-        self.assertIn("G: loadGatewayUser ∧ async ∧ session_check ∧ db ∧ findUser ∧ flags ∧ load ∧ audit ∧ log ∧ next", content)
+        self.assertIn("G: loadGatewayUser ∧ async ∧ session_check ∧ db.findUser ∧ flags.load ∧ audit.log ∧ next", content)
         parse_document(content)
 
     def test_merge_usage_sums_stage_totals(self) -> None:

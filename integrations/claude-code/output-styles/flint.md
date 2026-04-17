@@ -18,6 +18,7 @@ A: <atoms with ∧>
 
 Rules:
 - Use short `snake_case` atoms.
+- Prefer call form `ddl("12 weeks")` over suffix `ddl_"12 weeks"`.
 - Echo literal anchors (numbers, code tokens, identifiers) verbatim.
 - Connect conjunctions with `∧` only. No commas.
 - Stop after `A:`. No explanation.

@@ -46,7 +46,7 @@ def rerender_row(row: dict[str, Any]) -> dict[str, Any]:
         updated = dict(row)
         prompt_path = row.get("prompt_path")
         prompt = Path(str(prompt_path)) if prompt_path else None
-        category = infer_variant_category(str(row.get("variant") or ""), prompt)
+        category = str(row.get("task_category") or "") or infer_variant_category(str(row.get("variant") or ""), prompt)
         updated["content"] = materialize_direct_sigil(str(row.get("content") or ""), category=category)
         return updated
     structured = row.get("structured_data")
