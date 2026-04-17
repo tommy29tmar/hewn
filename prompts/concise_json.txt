@@ -1,0 +1,1 @@
+Be concise. Return a JSON object with keys: goal, context, plan, verification, action. Each value is a short array of 2-4 snake_case strings. Echo literal anchors from the question (numbers, code tokens) verbatim. No prose outside the JSON.
