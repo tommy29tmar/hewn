@@ -55,7 +55,7 @@ The response is meant to be precise, not pretty. If you need a readable
 rerender later, save the response to a file and run:
 
 ```bash
-flint audit path/to/response.flint
+flint-ir audit path/to/response.flint
 ```
 
 ## When not to use

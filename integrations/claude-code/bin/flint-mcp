@@ -1,18 +1,15 @@
 #!/usr/bin/env bash
-# cccflint-mcp-pro — cccflint-mcp + drift-fix hook (v0.6 pro lane).
+# flint-mcp — Claude Code wrapper: flint + MCP server for schema-validated IR.
 #
-# Combines:
+# Opt-in advanced lane. Combines:
 #   - Flint thinking-mode system prompt (via --append-system-prompt)
 #   - MCP server exposing submit_flint_ir (via --mcp-config)
 #   - Per-turn drift-fix hook (via --settings file with UserPromptSubmit hook)
 #
-# The hook classifies each turn's prompt as IR-shape or prose-shape and
-# injects a fresh directive via additionalContext. This pins attention to
-# the Flint rules every turn, preventing the T2-T4 drift observed with
-# plain cccflint (where system-prompt attention wanes against chat history).
-#
-# Resolution order matches cccflint-mcp plus:
-#   Drift-fix settings: $FLINT_DRIFT_FIX_SETTINGS_FILE, $HOME/.claude/flint-drift-fix-settings.json, repo fallback
+# Use this when downstream consumers need JSON-schema-validated IR (audit
+# engine, lint pipeline, search indexing). On interactive long sessions
+# the MCP tool round-trip adds token overhead vs the `flint` wrapper —
+# prefer `flint` unless you need validated IR via `submit_flint_ir`.
 
 set -euo pipefail
 
@@ -26,7 +23,7 @@ resolve_file() {
       return
     fi
   done
-  echo "cccflint-mcp-pro: $name not found" >&2
+  echo "flint-mcp: $name not found" >&2
   for candidate in "$@"; do
     echo "  searched: $candidate" >&2
   done

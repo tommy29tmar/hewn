@@ -97,7 +97,7 @@ data the stems are yours to choose.
 If you need hard anchor checking, use:
 
 ```bash
-flint audit --explain response.flint --anchor "X-Forwarded-For" --anchor 401
+flint-ir audit --explain response.flint --anchor "X-Forwarded-For" --anchor 401
 ```
 
 The verifier will fail loudly if either anchor is missing.
@@ -203,9 +203,9 @@ discipline in `flint-thinking` still applies to prose output (tighter than
 default Claude Code), but the IR half is gone. This is not a bug; it is
 what the Claude Code architecture allows from context-layer instructions.
 
-### Claude Code via `cccflint` wrapper (`--append-system-prompt`)
+### Claude Code via `flint` wrapper (`--append-system-prompt`)
 
-`cccflint` passes the thinking-mode prompt via `claude
+`flint` passes the thinking-mode prompt via `claude
 --append-system-prompt`, the only Claude Code flag that reaches
 system-prompt level. Measured classification accuracy: 100% on a 6-task
 mix (3 IR-shape + 3 prose-shape), across 3 runs. Mean output tokens -22%
@@ -216,7 +216,7 @@ vs plain claude. IR trigger recovers to the level the API bench predicts.
 - Building a product that calls Claude via API → strict Flint
   (`flint_system_prompt.txt`) as the system prompt. Parseable IR, full
   contract.
-- Using Claude Code interactively on a Max plan → `cccflint` for
+- Using Claude Code interactively on a Max plan → `flint` for
   always-on dual-mode (IR when warranted, Caveman prose otherwise). No
   interference with default `claude`.
 - Occasional on-demand IR in normal Claude Code → `/flint <question>`
@@ -242,13 +242,13 @@ Remaining ~11% failures cluster on two patterns the model still slips into:
 
 If you need 100% parseability for downstream tooling, use strict Flint
 via the Anthropic API directly with `flint_system_prompt.txt` as the
-system prompt. For interactive Claude Code use `cccflint`; the 11%
+system prompt. For interactive Claude Code use `flint`; the 11%
 non-parseable outputs remain fully human-readable and semantically correct.
 
 ## Multi-turn session drift
 
 On multi-turn sessions inside Claude Code (where the client resumes a
-session across several turns via `--resume`), `cccflint` reliably emits
+session across several turns via `--resume`), `flint` reliably emits
 Flint IR on **turn 1** and drifts to prose on subsequent turns.
 
 Measured on 2 scenarios × 4 turns × 3 runs (24 samples), IR emission by
@@ -270,23 +270,23 @@ attention-weight against accumulated conversation context.
 This is a Claude Code harness characteristic, not a Flint-specific
 bug. The same pattern affects plain `claude` (which never emits IR at
 all), `plain + MCP` (tool available, never called), and
-`cccflint + MCP` (tool called at T1, not at T2-T4).
+`flint + MCP` (tool called at T1, not at T2-T4).
 
 Workarounds:
 
-- Open a fresh `cccflint` session per task: `cccflint -p "your task"`
+- Open a fresh `flint` session per task: `flint -p "your task"`
   in non-interactive mode, or restart the interactive session for
   each distinct request.
 - Use the `/flint` one-shot slash skill inside any session for a
   single IR answer on demand.
-- For multi-turn sessions where cccflint is useful: the *prose*
+- For multi-turn sessions where flint is useful: the *prose*
   follow-ups are still Caveman-shape (no markdown headers, no filler),
   so total token usage drops -20% vs plain claude even with drift.
-  Measured on 24 turns: cccflint 27404 tok vs plain 34248 tok.
+  Measured on 24 turns: flint 27404 tok vs plain 34248 tok.
 
 ## Bench methodology: agent-mode contamination
 
-If you reproduce the multi-turn bench and see cccflint performing
+If you reproduce the multi-turn bench and see flint performing
 **worse** than plain claude on `output_tokens`, you are hitting a
 known pitfall: agent-mode contamination.
 
@@ -295,13 +295,13 @@ most setups (including the shipped `defaultMode: auto`), Bash, Read,
 Write, Edit, Grep, Glob, Task, and MCP tools can execute without a
 prompt. If a scenario prompt contains agentic verbs ("write the test",
 "propose the fix", "apply the change"), the model — especially under
-cccflint's "CRISP + VERIFIABLE ENDPOINT" instruction — will go into
+flint's "CRISP + VERIFIABLE ENDPOINT" instruction — will go into
 agent mode: it reads real files, writes real files, runs real shell
 commands. Each tool call inflates `output_tokens` with tool_use args +
 tool_result content.
 
-A pre-v0.5.1 run of the 4-cell bench had cccflint at 14692 total tokens
-vs plain 14316. Inspection showed that on deep-debug T2, cccflint
+A pre-v0.5.1 run of the 4-cell bench had flint at 14692 total tokens
+vs plain 14316. Inspection showed that on deep-debug T2, flint
 emitted 17 tool calls (11 × Bash, Read, Write, 3 × Edit, Grep) —
 actually creating `auth/token_service.py` and `tests/test_token_refresh_race.py`
 in the benchmark working dir. Plain claude on the same turn used only
@@ -315,7 +315,7 @@ Fix:
   instruct "do not create or modify files".
 - **Bench script** injects `[BENCH MODE] Do not use any tools` at the
   end of every user prompt. The bench script in this repo does this
-  automatically for all cells except `cccflint + MCP` (which allows
+  automatically for all cells except `flint + MCP` (which allows
   `submit_flint_ir` only).
 - **Scorer** (`claude_code_max_4cell_table.py`) tracks `agent_n` —
   turns where a non-Flint tool was called — and reports `clean_tok` in

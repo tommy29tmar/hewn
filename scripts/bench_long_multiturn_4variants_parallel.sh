@@ -100,7 +100,7 @@ export CORPUS OUT_DIR
 SCENARIOS=$(python3 -c "import json; [print(json.loads(l)['scenario_id']) for l in open('$CORPUS') if l.strip()]")
 
 # Clear old partials + target files
-for name in plain cccaveman cccflint_pro cccflint_mcp_pro; do
+for name in plain cccaveman flint flint_mcp; do
   for i in $(seq 1 "$RUNS"); do
     rm -f "$OUT_DIR/${name}_r${i}.jsonl"
     for scen in $SCENARIOS; do
@@ -117,8 +117,8 @@ for i in $(seq 1 "$RUNS"); do
   for scen in $SCENARIOS; do
     JOBS+="plain|claude|$i|$scen"$'\n'
     JOBS+="cccaveman|cccaveman|$i|$scen"$'\n'
-    JOBS+="cccflint_pro|cccflint-pro|$i|$scen"$'\n'
-    JOBS+="cccflint_mcp_pro|cccflint-mcp-pro|$i|$scen"$'\n'
+    JOBS+="flint|flint|$i|$scen"$'\n'
+    JOBS+="flint_mcp|flint-mcp|$i|$scen"$'\n'
   done
 done
 
@@ -132,7 +132,7 @@ echo "$JOBS" | grep -v '^$' | xargs -I{} -P "$MAX_CONCURRENCY" bash -c '
 
 # Merge partials into ${name}_r${idx}.jsonl (preserve order: scenario list order)
 echo "[parallel] merging partials" >&2
-for name in plain cccaveman cccflint_pro cccflint_mcp_pro; do
+for name in plain cccaveman flint flint_mcp; do
   for i in $(seq 1 "$RUNS"); do
     target="$OUT_DIR/${name}_r${i}.jsonl"
     : > "$target"

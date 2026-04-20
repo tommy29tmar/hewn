@@ -33,15 +33,15 @@ Flint ships a read-only CLI for auditing individual markdown instruction files. 
 
 ```bash
 # Token accounting for one or more files
-flint claude-code inventory path/to/CLAUDE.md
+flint-ir claude-code inventory path/to/CLAUDE.md
 
 # Print a structurally-safe compressed copy to stdout (preserves fenced code,
 # command lines, paths, inline-code paragraphs, headings; collapses only
 # runs of whitespace inside plain prose bullets)
-flint claude-code compile path/to/CLAUDE.md
+flint-ir claude-code compile path/to/CLAUDE.md
 
 # Unified diff of original vs compressed, plus per-segment summary
-flint claude-code diff path/to/CLAUDE.md
+flint-ir claude-code diff path/to/CLAUDE.md
 ```
 
 What the compiler refuses to touch:

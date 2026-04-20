@@ -6,10 +6,12 @@
 # What this does:
 #   1. Installs four Claude Code skills: /flint, /flint-on, /flint-off, /flint-audit.
 #   2. Installs the Flint output-styles: `flint` (strict) and `flint-thinking` (dual-mode).
-#   3. Installs `cccflint`: wrapper that invokes `claude` with Flint thinking-mode at
-#      system-prompt level via --append-system-prompt. This is the always-on path for
-#      Claude Code Max users — does NOT interfere with the default `claude` binary.
-#   4. Installs the flint-ir Python package (provides the `flint` CLI for parse/rerender).
+#   3. Installs the `flint` CLI wrapper (recommended default): invokes `claude` with
+#      Flint thinking-mode at system-prompt level + per-turn drift-fix hook. Does NOT
+#      interfere with the default `claude` binary.
+#   4. Optionally installs `flint-mcp`: same as `flint` plus an MCP server exposing
+#      `submit_flint_ir` for schema-validated IR (downstream pipeline use-case).
+#   5. Installs the flint-ir Python package (provides the `flint-ir` CLI for parse/rerender).
 #
 # Refuses to run if ~/.claude is not present (i.e. Claude Code not installed).
 
@@ -60,19 +62,25 @@ fetch "output-styles/flint.md" "$CLAUDE_DIR/output-styles/flint.md" || \
 fetch "output-styles/flint-thinking.md" "$CLAUDE_DIR/output-styles/flint-thinking.md" || \
   echo "   (flint-thinking output-style install failed — not fatal)"
 
-echo "==> Installing cccflint wrappers + thinking-mode prompts"
+echo "==> Installing flint CLI wrappers + thinking-mode prompts + drift-fix hook"
 BIN_DIR="${HOME}/.local/bin"
 mkdir -p "$BIN_DIR"
-fetch "bin/cccflint" "$BIN_DIR/cccflint" || echo "   (cccflint install failed — not fatal)"
-chmod +x "$BIN_DIR/cccflint" 2>/dev/null || true
-fetch "bin/cccflint-mcp" "$BIN_DIR/cccflint-mcp" || echo "   (cccflint-mcp install failed — not fatal)"
-chmod +x "$BIN_DIR/cccflint-mcp" 2>/dev/null || true
+mkdir -p "$CLAUDE_DIR/hooks"
+fetch "bin/flint" "$BIN_DIR/flint" || echo "   (flint install failed — not fatal)"
+chmod +x "$BIN_DIR/flint" 2>/dev/null || true
+fetch "bin/flint-mcp" "$BIN_DIR/flint-mcp" || echo "   (flint-mcp install failed — not fatal)"
+chmod +x "$BIN_DIR/flint-mcp" 2>/dev/null || true
 fetch "flint_thinking_system_prompt.txt" "$CLAUDE_DIR/flint_thinking_system_prompt.txt" || \
-  echo "   (thinking-mode prompt install failed — cccflint will not work until installed)"
+  echo "   (thinking-mode prompt install failed — flint will not work until installed)"
 fetch "flint_thinking_mcp_system_prompt.txt" "$CLAUDE_DIR/flint_thinking_mcp_system_prompt.txt" || \
-  echo "   (thinking-mode-MCP prompt install failed — cccflint-mcp will not work until installed)"
+  echo "   (thinking-mode-MCP prompt install failed — flint-mcp will not work until installed)"
 fetch "mcp-config.json" "$CLAUDE_DIR/flint-mcp-config.json" || \
-  echo "   (mcp-config install failed — cccflint-mcp requires it)"
+  echo "   (mcp-config install failed — flint-mcp requires it)"
+fetch "hooks/flint_drift_fixer.sh" "$CLAUDE_DIR/hooks/flint_drift_fixer.sh" || \
+  echo "   (drift-fix hook install failed — flint will fall back to system-prompt-only mode)"
+chmod +x "$CLAUDE_DIR/hooks/flint_drift_fixer.sh" 2>/dev/null || true
+fetch "flint-drift-fix-settings.json" "$CLAUDE_DIR/flint-drift-fix-settings.json" || \
+  echo "   (drift-fix settings install failed — flint will not register the hook)"
 
 if ! echo ":$PATH:" | grep -q ":$BIN_DIR:"; then
   echo ""
@@ -105,15 +113,16 @@ echo "  flint           strict IR always (best for API, parser-strict tooling)"
 echo "  flint-thinking  dual-mode: Caveman prose + IR by task shape (Claude Code soft layer)"
 echo ""
 echo "Always-on for Claude Code Max users (recommended):"
-echo "  cccflint                    starts Claude Code with Flint thinking-mode injected at"
-echo "                              system-prompt level (does not affect the default 'claude')"
-echo "  cccflint -p \"your prompt\"   non-interactive mode"
+echo "  flint                       starts Claude Code with Flint thinking-mode (Caveman prose +"
+echo "                              IR on IR-shape tasks) + per-turn drift-fix hook. Does NOT"
+echo "                              affect the default 'claude' command."
+echo "  flint -p \"your prompt\"     non-interactive mode"
 echo ""
-echo "Optional — MCP enforcement for 100% parseable IR (opt-in, +20% tokens):"
-echo "  cccflint-mcp                 cccflint + Flint MCP server (submit_flint_ir tool)"
-echo "  cccflint-mcp -p \"prompt\"     non-interactive mode"
+echo "Optional — schema-validated IR via MCP (opt-in, downstream-pipeline use-case):"
+echo "  flint-mcp                   flint + Flint MCP server (submit_flint_ir tool)"
+echo "  flint-mcp -p \"prompt\"      non-interactive mode"
 echo ""
 echo "Requires Python 'mcp' package:  pip install --user mcp"
 echo ""
-echo "The default 'claude' command remains untouched — both cccflint and cccflint-mcp"
-echo "are separate binaries. Opt into the level of enforcement you need."
+echo "The default 'claude' command remains untouched — both flint and flint-mcp are"
+echo "separate binaries. Opt into the level of enforcement you need."

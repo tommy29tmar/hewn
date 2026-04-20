@@ -3,8 +3,8 @@
 # Compares compression + quality + latency across:
 #   - plain claude (baseline)
 #   - cccaveman (descriptive compression baseline)
-#   - cccflint-pro (thinking-mode + drift-fix hook, free-text IR)
-#   - cccflint-mcp-pro (thinking-mode + drift-fix hook + MCP tool enforcement)
+#   - flint (thinking-mode + drift-fix hook, free-text IR)
+#   - flint-mcp (thinking-mode + drift-fix hook + MCP tool enforcement)
 
 set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -93,8 +93,8 @@ PY
 for i in $(seq 1 "$RUNS"); do
   run_variant "plain"             "claude"           "$i"
   run_variant "cccaveman"         "cccaveman"        "$i"
-  run_variant "cccflint_pro"      "cccflint-pro"     "$i"
-  run_variant "cccflint_mcp_pro"  "cccflint-mcp-pro" "$i"
+  run_variant "flint"      "flint"     "$i"
+  run_variant "flint_mcp"  "flint-mcp" "$i"
 done
 
 echo ""

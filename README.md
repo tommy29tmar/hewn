@@ -4,7 +4,7 @@
 
 On realistic coding workloads — codebases, CLAUDE.md loaded, RAG context — Claude writes answers **4× shorter, 3× faster, covering 9 more concept points** than verbose Claude. And it beats "Caveman prompting" on every column too. Measured on 40 samples (10 long-context tasks × 4 runs) on Opus 4.7 with prompt cache active.
 
-Claude Code Max users: `cccflint` injects Flint thinking-mode at system-prompt level, giving 100% task classification (IR for technical, prose for human) with -22% tokens on mixed workloads. See [Claude Code Max](#claude-code-max-always-on-with-cccflint) below.
+Claude Code Max users: `flint` injects Flint thinking-mode at system-prompt level, giving 100% task classification (IR for technical, prose for human) with -22% tokens on mixed workloads. See [Claude Code Max](#claude-code-max-always-on-with-flint) below.
 
 ![Flint](assets/launch/hero.jpg)
 
@@ -24,18 +24,18 @@ The installer puts four artifacts in place:
    /flint-audit <file|paste>   decode a Flint document back to prose
    ```
 2. **Output-styles** (per-session, set via `/config`): `flint` (strict IR always) and `flint-thinking` (dual-mode, opt-in via menu).
-3. **`cccflint` binary** (Claude Code Max always-on path): see next section.
+3. **`flint` binary** (Claude Code Max always-on path): see next section.
 4. **`flint` Python CLI**: for parsing, validation, audit rendering outside Claude Code.
 
 The default `claude` command is never touched — every Flint path is opt-in.
 
-## Claude Code Max (always-on with cccflint)
+## Claude Code Max (always-on with flint)
 
-`cccflint` is a small wrapper that runs `claude --append-system-prompt "$FLINT_THINKING_PROMPT"`. The `--append-system-prompt` flag is the only Claude Code mechanism that reaches system-prompt level — output-styles, hooks, skills, and CLAUDE.md load as context and cannot fully override Claude Code's built-in system prompt. That's why always-on via output-style alone doesn't trigger the IR compression reliably.
+`flint` is a small wrapper that runs `claude --append-system-prompt "$FLINT_THINKING_PROMPT"`. The `--append-system-prompt` flag is the only Claude Code mechanism that reaches system-prompt level — output-styles, hooks, skills, and CLAUDE.md load as context and cannot fully override Claude Code's built-in system prompt. That's why always-on via output-style alone doesn't trigger the IR compression reliably.
 
 ```bash
-cccflint                           # interactive session, Flint thinking-mode active
-cccflint -p "your prompt here"     # non-interactive
+flint                           # interactive session, Flint thinking-mode active
+flint -p "your prompt here"     # non-interactive
 ```
 
 Measured on 6 mixed prompts (3 IR-shape: debug, code review, refactor · 3 prose-shape: explanation, brainstorm, RFC), 3 runs per cell, on Claude Opus 4.7 via Claude Max:
@@ -43,39 +43,39 @@ Measured on 6 mixed prompts (3 IR-shape: debug, code review, refactor · 3 prose
 | variant          | classification | class_ir | class_prose | mean out tokens | parser-pass (IR) |
 |------------------|---------------:|---------:|------------:|----------------:|-----------------:|
 | plain `claude`   |            50% |       0% |        100% |             537 |               0% |
-| **cccflint**     |       **100%** | **100%** |    **100%** |         **409** |          **89%** |
+| **flint**     |       **100%** | **100%** |    **100%** |         **409** |          **89%** |
 
-`cccflint` emits Flint IR for every IR-shape task (0% → 100%), keeps every prose task in Caveman-style prose, cuts mean output tokens by 24%, and the IR it produces passes the strict Flint parser 89% of the time on IR-shape tasks (8 of 9 samples across 3 runs × 3 IR-shape tasks) — above the ~80% parser-pass rate of strict Flint on its own 10-task corpus. Zero marginal cost on the Claude Max plan — no Anthropic API calls.
+`flint` emits Flint IR for every IR-shape task (0% → 100%), keeps every prose task in Caveman-style prose, cuts mean output tokens by 24%, and the IR it produces passes the strict Flint parser 89% of the time on IR-shape tasks (8 of 9 samples across 3 runs × 3 IR-shape tasks) — above the ~80% parser-pass rate of strict Flint on its own 10-task corpus. Zero marginal cost on the Claude Max plan — no Anthropic API calls.
 
-### Optional: MCP tool enforcement with `cccflint-mcp`
+### Optional: MCP tool enforcement with `flint-mcp`
 
-For downstream tooling that needs API-validated parseable IR, `cccflint-mcp` wraps `claude --mcp-config <flint-server>` and instructs the model to call `submit_flint_ir` (a Flint MCP tool with a regex-enforced JSON Schema) instead of emitting free-text IR. The Anthropic API rejects malformed atoms before they reach the tool — when the tool fires, the emitted IR is parseable by construction.
+For downstream tooling that needs API-validated parseable IR, `flint-mcp` wraps `claude --mcp-config <flint-server>` and instructs the model to call `submit_flint_ir` (a Flint MCP tool with a regex-enforced JSON Schema) instead of emitting free-text IR. The Anthropic API rejects malformed atoms before they reach the tool — when the tool fires, the emitted IR is parseable by construction.
 
-Trade-off: MCP adds ~20% output token overhead (tool round-trip), so `cccflint` remains the default choice for interactive use. Use `cccflint-mcp` when: you pipe Flint output into `flint audit --explain`, CI linters, or analytics that must not fail on malformed grammar.
+Trade-off: MCP adds ~20% output token overhead (tool round-trip), so `flint` remains the default choice for interactive use. Use `flint-mcp` when: you pipe Flint output into `flint audit --explain`, CI linters, or analytics that must not fail on malformed grammar.
 
 Multi-turn 4-cell bench (2 scenarios × 4 turns, 3 runs = 24 samples per cell, agent-mode contamination excluded — see failure modes for methodology):
 
 | variant              | class_acc | ir_hit | tool_hit | total_tok | mean_lat |
 |----------------------|----------:|-------:|---------:|----------:|---------:|
 | plain `claude`       |       25% |     0% |       0% |     34248 |    29.4s |
-| **cccflint**         |   **54%** | **29%** |      0% | **27404** | **24.3s** |
+| **flint**         |   **54%** | **29%** |      0% | **27404** | **24.3s** |
 | plain + MCP          |       25% |     0% |       0% |     43384 |    34.7s |
-| cccflint + MCP       |       46% |    21% |  **21%** |     41304 |    31.6s |
+| flint + MCP       |       46% |    21% |  **21%** |     41304 |    31.6s |
 
-On multi-turn, `cccflint` saves **-20% output tokens and -17% latency** vs plain claude (per-scenario: deep-debug -12.6%, mixed-security -32.7%). Classification accuracy is 2.2× plain claude (54% vs 25%). The multi-turn drift (IR emits at turn 1, drifts to prose on turns 2-4) affects all variants — if per-turn IR is required, open a fresh `cccflint` session per task or use the one-shot `/flint` skill.
+On multi-turn, `flint` saves **-20% output tokens and -17% latency** vs plain claude (per-scenario: deep-debug -12.6%, mixed-security -32.7%). Classification accuracy is 2.2× plain claude (54% vs 25%). The multi-turn drift (IR emits at turn 1, drifts to prose on turns 2-4) affects all variants — if per-turn IR is required, open a fresh `flint` session per task or use the one-shot `/flint` skill.
 
-`plain + MCP` is the worst outcome: the Flint MCP tool is available but never called without a system-prompt push, so it only adds the MCP tool-catalog tax to every turn. `cccflint + MCP` sits at +51% tokens vs `cccflint` due to tool round-trip overhead; use it when parser-validated IR is required by downstream tooling, otherwise stick with plain `cccflint`.
+`plain + MCP` is the worst outcome: the Flint MCP tool is available but never called without a system-prompt push, so it only adds the MCP tool-catalog tax to every turn. `flint + MCP` sits at +51% tokens vs `flint` due to tool round-trip overhead; use it when parser-validated IR is required by downstream tooling, otherwise stick with plain `flint`.
 
 ### Compression scales with context length
 
 The short-prompt corpus above measures the classification floor. A second corpus (`evals/claude_code_max_long_prompts.jsonl`) exercises realistic working-session prompts: 5 tasks of 300–700 input tokens (400-line auth module debug, 200-line security diff review, multi-file refactor plan, full-system architecture walkthrough, open-ended tradeoff discussion). 3 runs:
 
-| corpus              | plain `claude` mean out | cccflint mean out |   savings |
+| corpus              | plain `claude` mean out | flint mean out |   savings |
 |---------------------|------------------------:|------------------:|----------:|
 | short (≤100 tok in) |                 537 tok |           409 tok |      -24% |
 | **long (300-700 tok in)** |         **2799 tok** |      **1313 tok** |  **-53%** |
 
-The longer the prompt, the bigger the win. On individual IR-shape tasks the gap widens: `long-debug-auth-module` is 1886 tokens of markdown under plain `claude` versus 402 tokens of structured Flint IR under `cccflint` — **-79% on the same task, same diagnosis, same fix**. Latency drops from 47s to 30s mean (-36%).
+The longer the prompt, the bigger the win. On individual IR-shape tasks the gap widens: `long-debug-auth-module` is 1886 tokens of markdown under plain `claude` versus 402 tokens of structured Flint IR under `flint` — **-79% on the same task, same diagnosis, same fix**. Latency drops from 47s to 30s mean (-36%).
 
 Parser-pass on IR outputs: **100% (9/9)** on long IR-shape tasks. Grammar compliance does not degrade with prompt length.
 
@@ -139,15 +139,15 @@ Flint replaces the "no articles" discipline with a **structural** one: five slot
 Claude sometimes drifts off format. Flint ships with a parser, a repair layer, and `flint audit --explain` that shows you exactly what came in, what was repaired, which anchors matched, and a prose rerender — so you can trust the output even on the worst cases.
 
 ```bash
-flint audit --explain response.flint --anchor 300 --anchor 401
+flint-ir audit --explain response.flint --anchor 300 --anchor 401
 ```
 
 ## More CLI tools
 
 ```bash
 # Per-file CLAUDE.md audit — structurally-safe compression preview (read-only)
-flint claude-code inventory path/to/CLAUDE.md
-flint claude-code diff path/to/CLAUDE.md
+flint-ir claude-code inventory path/to/CLAUDE.md
+flint-ir claude-code diff path/to/CLAUDE.md
 ```
 
 See [integrations/claude-code/README.md](integrations/claude-code/README.md) for the full list of preserved segment types and caching behavior.

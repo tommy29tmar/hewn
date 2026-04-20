@@ -12,10 +12,10 @@ thinking-mode (for Claude Code Max users):
 |---|---|---|---|
 | Strict Flint system prompt | `integrations/claude-code/flint_system_prompt.txt` | 8 lines, ~90 tokens | force every response into G/C/P/V/A IR |
 | Thinking-mode system prompt | `integrations/claude-code/flint_thinking_system_prompt.txt` | 32 lines, ~270 tokens | dual-mode: Caveman prose by default, IR when task shape is IR (debug/review/refactor with verifiable endpoint) |
-| `cccflint` wrapper | `integrations/claude-code/bin/cccflint` | small bash wrapper | runs `claude --append-system-prompt <thinking_prompt>` so the instruction reaches system-prompt level inside Claude Code |
+| `flint` wrapper | `integrations/claude-code/bin/flint` | small bash wrapper | runs `claude --append-system-prompt <thinking_prompt>` so the instruction reaches system-prompt level inside Claude Code |
 
 The strict prompt is the API-facing artifact (output-style `flint`). The
-thinking-mode prompt is the Claude Code always-on artifact (`cccflint` or
+thinking-mode prompt is the Claude Code always-on artifact (`flint` or
 output-style `flint-thinking`).
 
 Everything else in this repo — the parser, the verifier, the
@@ -34,10 +34,10 @@ return the useful answer") wins any conflict. Output-style instructions
 asking for strict IR lose silently — in our measurements, 0% IR trigger on
 IR-shape tasks when the strict prompt is loaded via output-style alone.
 
-The thinking-mode prompt + `cccflint` wrapper solve this. `cccflint` passes
+The thinking-mode prompt + `flint` wrapper solve this. `flint` passes
 the prompt via `claude --append-system-prompt`, the only Claude Code
 mechanism that reaches system level. Measured classification accuracy
-jumps from 50% (plain claude) to 100% (cccflint) on a 6-task × 3-run mix
+jumps from 50% (plain claude) to 100% (flint) on a 6-task × 3-run mix
 of IR and prose tasks; mean output tokens drop 22% across the mix.
 
 Hooks, skills, and CLAUDE.md also load as context. They cannot replicate
@@ -151,8 +151,8 @@ The normalizer is **deterministic** and local — no LLM roundtrip. If you
 want to see exactly what it did to a response, run:
 
 ```bash
-flint repair response.flint        # prints normalized version to stdout
-flint audit --explain response.flint   # shows before/after + verdict
+flint-ir repair response.flint        # prints normalized version to stdout
+flint-ir audit --explain response.flint   # shows before/after + verdict
 ```
 
 ### parser.py
@@ -187,14 +187,14 @@ to read the answer without learning the IR.
 ## CLI
 
 ```bash
-flint validate <file.flint>             # parse + verify, exit non-zero on fail
-flint parse <file.flint>                # dump parse tree
-flint audit <file.flint>                # render the prose view
-flint audit --explain <file.flint>      # verbose: show normalize, parse, anchors
+flint-ir validate <file.flint>             # parse + verify, exit non-zero on fail
+flint-ir parse <file.flint>                # dump parse tree
+flint-ir audit <file.flint>                # render the prose view
+flint-ir audit --explain <file.flint>      # verbose: show normalize, parse, anchors
 flint stats <file.flint>                # tokens, slots, atoms counts
-flint repair <file.flint>               # normalize-only, print to stdout
-flint claude-code inventory <md>        # token accounting for CLAUDE.md files
-flint claude-code diff <md>             # safe-compress preview, read-only
+flint-ir repair <file.flint>               # normalize-only, print to stdout
+flint-ir claude-code inventory <md>        # token accounting for CLAUDE.md files
+flint-ir claude-code diff <md>             # safe-compress preview, read-only
 flint routing [profile]                 # inspect variant routing profiles
 ```
 

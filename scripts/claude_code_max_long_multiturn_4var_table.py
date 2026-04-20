@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Aggregate long multi-turn 4-variant bench (plain, cccaveman, cccflint-pro, cccflint-mcp-pro)."""
+"""Aggregate long multi-turn 4-variant bench (plain, cccaveman, flint, flint-mcp)."""
 from __future__ import annotations
 
 import json
@@ -27,8 +27,8 @@ REQUIRED_TAGS = {"G", "C", "P", "V", "A"}
 CELLS = [
     ("plain claude",     "plain"),
     ("cccaveman",        "cccaveman"),
-    ("cccflint-pro",     "cccflint_pro"),
-    ("cccflint-mcp-pro", "cccflint_mcp_pro"),
+    ("flint",     "flint"),
+    ("flint-mcp", "flint_mcp"),
 ]
 
 

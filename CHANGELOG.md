@@ -1,5 +1,40 @@
 # Changelog
 
+## 0.7.0 — 2026-04-20
+
+### Consolidation — rename + remove basic lanes
+
+No functional changes. Consolidates the Claude Code wrapper binaries
+down to two lanes:
+
+- `cccflint-pro` → **`flint`** — the recommended default (Flint
+  thinking-mode + drift-fix hook, free-text IR).
+- `cccflint-mcp-pro` → **`flint-mcp`** — opt-in advanced lane for
+  downstream pipelines that consume schema-validated IR.
+
+### Removed
+- `cccflint` (basic, system-prompt only, no drift fix) — strictly worse
+  than `flint` on multi-turn (v0.5.1 bench showed IR only at T1, prose
+  at T2+). Users should switch to `flint`.
+- `cccflint-mcp` (basic with MCP) — same reason.
+
+### Renamed (Python CLI)
+- `flint` (parser/audit CLI from `flint-ir` package) → `flint-ir` —
+  resolves the name collision with the new `flint` shell wrapper. Docs
+  updated. Run `pipx reinstall flint-ir` to pick up the new name.
+
+### Migration
+- `cccflint-pro` / `cccflint-mcp-pro` binaries: remove and re-run the
+  installer to pick up `flint` and `flint-mcp`.
+- `flint audit`, `flint parse`, `flint validate`, `flint repair`,
+  `flint claude-code ...` → `flint-ir audit`, `flint-ir parse`, etc.
+- Installer now installs the drift-fix hook and settings automatically.
+
+The `flint` wrapper is functionally identical to v0.6.0 `cccflint-pro`;
+v0.6.0 bench numbers still apply:
+-29% tokens vs Caveman, +37pt classification accuracy, -17% latency on
+32-turn long multi-turn.
+
 ## 0.6.0 — 2026-04-20
 
 ### Added — cccflint-pro (drift-fix hook, free-text IR)

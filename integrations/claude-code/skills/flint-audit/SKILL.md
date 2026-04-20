@@ -20,14 +20,14 @@ The user wants a Flint IR document rendered as plain prose.
 1. If the argument is a file path and exists, run (via the Bash tool):
 
    ```bash
-   flint audit --explain "<path>"
+   flint-ir audit --explain "<path>"
    ```
 
 2. If the argument is inline text, write it to `/tmp/flint-audit-inline.flint`
    first (using the Write tool), then run:
 
    ```bash
-   flint audit --explain /tmp/flint-audit-inline.flint
+   flint-ir audit --explain /tmp/flint-audit-inline.flint
    ```
 
 3. Present the `flint audit --explain` output to the user, followed by a

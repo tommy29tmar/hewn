@@ -1,13 +1,15 @@
 #!/usr/bin/env bash
-# cccflint-pro — cccflint + drift-fix hook (v0.6 pro lane, no MCP).
+# flint — Claude Code wrapper: thinking-mode prompt + per-turn drift-fix hook.
 #
-# Lighter than cccflint-mcp-pro:
-#   - Flint thinking-mode system prompt (via --append-system-prompt)
-#   - Per-turn drift-fix hook (via --settings file)
-#   - NO MCP server, so IR is emitted as FREE TEXT (no tool round-trip cost)
+# Default Flint lane. Combines:
+#   - Flint thinking-mode system prompt (via --append-system-prompt) —
+#     Caveman-shape prose for user-facing output, IR for IR-shape tasks.
+#   - Per-turn drift-fix hook (via --settings file with UserPromptSubmit
+#     hook) that re-injects the task-shape classification on every turn,
+#     preventing T2+ drift seen with system-prompt-only wrappers.
 #
-# Best for users who want high classification accuracy AND token savings,
-# but don't need schema-validated IR for downstream pipelines.
+# IR emitted as free text (no MCP round-trip). For schema-validated IR
+# (downstream pipeline use-case), see the `flint-mcp` wrapper.
 
 set -euo pipefail
 
@@ -21,7 +23,7 @@ resolve_file() {
       return
     fi
   done
-  echo "cccflint-pro: $name not found" >&2
+  echo "flint: $name not found" >&2
   for candidate in "$@"; do
     echo "  searched: $candidate" >&2
   done
