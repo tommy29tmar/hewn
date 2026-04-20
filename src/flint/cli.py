@@ -15,8 +15,8 @@ from .routing import load_profile, pick_variant
 
 
 def _build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(prog="flint", description="Parse and validate Flint documents.")
-    parser.add_argument("--version", action="version", version=f"flint {__version__}")
+    parser = argparse.ArgumentParser(prog="flint-ir", description="Parse and validate Flint documents.")
+    parser.add_argument("--version", action="version", version=f"flint-ir {__version__}")
     subparsers = parser.add_subparsers(dest="command", required=True)
 
     validate_parser = subparsers.add_parser("validate", help="Validate a .flint file.")
@@ -105,14 +105,14 @@ def main(argv: list[str] | None = None) -> int:
             try:
                 profile = load_profile(args.profile)
             except (ValueError, OSError) as exc:
-                parser.exit(status=1, message=f"flint: {exc}\n")
+                parser.exit(status=1, message=f"flint-ir: {exc}\n")
             pick = pick_variant(profile, task_id=args.task_id, category=args.category)
             if pick is None:
                 print("(none)")
                 return 1
             print(pick)
             return 0
-        parser.exit(status=2, message="flint: unknown routing command\n")
+        parser.exit(status=2, message="flint-ir: unknown routing command\n")
         return 2
 
     if args.command == "audit" and getattr(args, "explain", False):
@@ -121,7 +121,7 @@ def main(argv: list[str] | None = None) -> int:
     try:
         document = parse_document(args.path)
     except FlintParseError as exc:
-        parser.exit(status=1, message=f"flint: {exc}\n")
+        parser.exit(status=1, message=f"flint-ir: {exc}\n")
 
     if args.command == "validate":
         mode = document.header.mode if document.header else "unspecified"
@@ -148,7 +148,7 @@ def main(argv: list[str] | None = None) -> int:
             print(json.dumps(stats, ensure_ascii=False))
         return 0
 
-    parser.exit(status=2, message="flint: unknown command\n")
+    parser.exit(status=2, message="flint-ir: unknown command\n")
     return 2
 
 
@@ -162,7 +162,7 @@ def _run_claude_code(args, parser) -> int:
 
     if args.claude_code_command == "compile":
         if not args.path.exists():
-            parser.exit(status=1, message=f"flint: file not found: {args.path}\n")
+            parser.exit(status=1, message=f"flint-ir: file not found: {args.path}\n")
         ctx = _compile(args.path)
         sys.stdout.write(ctx.compressed_text)
         if not ctx.compressed_text.endswith("\n"):
@@ -170,7 +170,7 @@ def _run_claude_code(args, parser) -> int:
         return 0
     if args.claude_code_command == "diff":
         if not args.path.exists():
-            parser.exit(status=1, message=f"flint: file not found: {args.path}\n")
+            parser.exit(status=1, message=f"flint-ir: file not found: {args.path}\n")
         ctx = _compile(args.path)
         diff = difflib.unified_diff(
             ctx.original_text.splitlines(keepends=True),
@@ -199,7 +199,7 @@ def _run_claude_code(args, parser) -> int:
         if len(args.paths) > 1:
             print(f"{'TOTAL':<60} {total_orig:>9} {total_comp:>9} {total_comp - total_orig:>+7}")
         return 0
-    parser.exit(status=2, message="flint: unknown claude-code command\n")
+    parser.exit(status=2, message="flint-ir: unknown claude-code command\n")
     return 2
 
 

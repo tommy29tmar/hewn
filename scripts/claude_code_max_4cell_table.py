@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-"""Aggregate 4-cell multi-turn bench: plain vs cccflint vs +MCP combinations.
+"""Aggregate 4-cell multi-turn bench: plain vs flint vs +MCP combinations.
 
 Cells:
   plain         — baseline Anthropic default
-  cccflint      — Flint thinking-mode system prompt, no MCP
+  flint         — Flint thinking-mode prompt + drift-fix hook, no MCP
   plain_mcp     — MCP tool available, no system-prompt push
-  cccflint_mcp  — system prompt + MCP (schema-enforced IR)
+  flint_mcp     — system prompt + MCP + drift-fix hook (schema-enforced IR)
 
 Reports per variant:
   - classification accuracy (task-shape match)
@@ -41,11 +41,15 @@ REQUIRED_TAGS = {"G", "C", "P", "V", "A"}
 
 CELLS = [
     ("plain claude",     "plain"),
-    ("cccflint",         "cccflint"),
+    ("flint",            "flint"),
     ("plain + MCP",      "plain_mcp"),
-    ("cccflint + MCP",   "cccflint_mcp"),
-    ("cccflint-mcp-pro", "cccflint_mcp_pro"),
+    ("flint + MCP",      "flint_mcp"),
 ]
+
+PREFIX_FALLBACKS = {
+    "flint": ("cccflint_pro", "cccflint"),
+    "flint_mcp": ("cccflint_mcp_pro", "cccflint_mcp"),
+}
 
 
 def nfc(s): return unicodedata.normalize("NFC", s or "")
@@ -105,11 +109,15 @@ def load_corpus():
 
 
 def load_cell(prefix):
-    paths = sorted(OUT.glob(f"{prefix}_r*.jsonl"))
-    runs = []
-    for p in paths:
-        runs.append([json.loads(l) for l in p.read_text().splitlines() if l.strip()])
-    return runs
+    candidates = (prefix,) + PREFIX_FALLBACKS.get(prefix, ())
+    for candidate in candidates:
+        paths = sorted(OUT.glob(f"{candidate}_r*.jsonl"))
+        if paths:
+            runs = []
+            for p in paths:
+                runs.append([json.loads(l) for l in p.read_text().splitlines() if l.strip()])
+            return runs
+    return []
 
 
 def score_rows(rows, scenarios):

@@ -3,15 +3,15 @@
 Exposes a single schema-validated tool (`submit_flint_ir`) that forces
 the caller (Claude) to emit a well-formed Flint IR document.
 
-Unlike the prompt-level `cccflint` wrapper, the tool's JSON Schema is
+Unlike the prompt-level `flint` wrapper, the tool's JSON Schema is
 enforced at the Anthropic API level: if the model's arguments don't match
 the schema, the API rejects the call and forces a retry. This closes the
-residual 11% parser-pass gap in cccflint.
+residual free-text parser-pass gap in plain `flint`.
 
 Exposed tools:
   - submit_flint_ir:  emit a validated Flint IR document
   - validate_flint:   parse + validate a raw Flint text string
-  - audit_explain:    run `flint audit --explain` on a raw Flint document
+  - audit_explain:    run `flint-ir audit --explain` on a raw Flint document
 
 Protocol: stdio transport (default for local MCP servers). Launch as:
     python -m flint.mcp_server

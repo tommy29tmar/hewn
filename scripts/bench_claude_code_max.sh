@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Claude Code Max bench: plain `claude -p` vs `cccflint -p` on 6 fixed prompts.
+# Claude Code Max bench: plain `claude -p` vs `flint -p` on 6 fixed prompts.
 # Uses the user's Claude Max plan (not Anthropic API), so cost is $0 marginal.
 #
 # Usage:
@@ -17,9 +17,9 @@ cd "$ROOT"
 CORPUS="${CORPUS:-evals/claude_code_max_prompts.jsonl}"
 OUT_DIR="${OUT_DIR:-evals/runs/claude_code_max}"
 RUNS="${RUNS:-1}"
-CCCFLINT="${CCCFLINT:-$ROOT/integrations/claude-code/bin/cccflint}"
+FLINT_BIN="${FLINT_BIN:-${CCCFLINT:-$ROOT/integrations/claude-code/bin/flint}}"
 
-# Ensure cccflint can find the prompt file even if not installed globally
+# Ensure flint can find the prompt file even if not installed globally
 export FLINT_THINKING_PROMPT_FILE="$ROOT/integrations/claude-code/flint_thinking_system_prompt.txt"
 
 mkdir -p "$OUT_DIR"
@@ -81,7 +81,7 @@ PY
 
 for i in $(seq 1 "$RUNS"); do
   run_variant "plain"  "claude"       "$i"
-  run_variant "flint"  "$CCCFLINT"    "$i"
+  run_variant "flint"  "$FLINT_BIN"   "$i"
 done
 
 echo ""

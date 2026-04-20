@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Aggregate claude-code-max bench: plain claude vs cccflint shim.
+"""Aggregate claude-code-max bench: plain claude vs flint wrapper.
 
 Reads evals/runs/claude_code_max/{plain,flint}_r*.jsonl. Reports per-variant:
   - ir_hit_rate: fraction of responses starting with '@flint v\\d+' (NFC)
@@ -141,7 +141,7 @@ def fmt(mv, unit=""):
 
 def main():
     tasks = load_tasks()
-    variants = [("plain claude", "plain"), ("cccflint", "flint")]
+    variants = [("plain claude", "plain"), ("flint", "flint")]
     header = (f"{'variant':<16} {'n':>2} {'ir_hit':>8} {'strict_ir':>10} "
               f"{'out_tok':>8} {'latency':>9} {'must_inc':>9} "
               f"{'class':>8} {'class_ir':>10} {'class_prose':>12}")

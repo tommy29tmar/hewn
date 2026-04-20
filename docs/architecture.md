@@ -19,7 +19,7 @@ thinking-mode prompt is the Claude Code always-on artifact (`flint` or
 output-style `flint-thinking`).
 
 Everything else in this repo — the parser, the verifier, the
-`flint audit --explain` CLI, the tests, the benches — exists to validate,
+`flint-ir audit --explain` CLI, the tests, the benches — exists to validate,
 measure, and repair what comes back.
 
 ### Why two payloads, not one
@@ -56,7 +56,7 @@ The installer also drops four Claude Code skills under `~/.claude/skills/`:
 
 The first three are prompt-level — they instruct the model to emit (or
 stop emitting) Flint for the specified scope. The fourth invokes the
-`flint audit --explain` CLI under the hood, so it works on any saved
+`flint-ir audit --explain` CLI under the hood, so it works on any saved
 Flint document.
 
 Cross-session persistence (every new Claude Code session starts in Flint)
@@ -191,11 +191,11 @@ flint-ir validate <file.flint>             # parse + verify, exit non-zero on fa
 flint-ir parse <file.flint>                # dump parse tree
 flint-ir audit <file.flint>                # render the prose view
 flint-ir audit --explain <file.flint>      # verbose: show normalize, parse, anchors
-flint stats <file.flint>                # tokens, slots, atoms counts
+flint-ir stats <file.flint>             # tokens, slots, atoms counts
 flint-ir repair <file.flint>               # normalize-only, print to stdout
 flint-ir claude-code inventory <md>        # token accounting for CLAUDE.md files
 flint-ir claude-code diff <md>             # safe-compress preview, read-only
-flint routing [profile]                 # inspect variant routing profiles
+flint-ir routing recommend --profile <json>  # inspect variant routing profiles
 ```
 
 All commands are stdlib only, no network calls, no LLM roundtrips. The

@@ -186,6 +186,12 @@ def test_infra_error_n_counts_expected_failure_modes(tmp_path: Path) -> None:
 
     assert summary["n"] == 5
     assert summary["infra_error_n"] == 4
+    assert summary["class_total"] == 1
+    assert summary["class_hits"] == 1
+    assert summary["class_acc"] == pytest.approx(100.0)
+    assert summary["must_total"] == 0
+    assert summary["total_out"] == 10
+    assert summary["mean_lat"] == pytest.approx(1.0)
 
 
 def test_class_acc_is_unchanged_from_current_behavior(tmp_path: Path) -> None:

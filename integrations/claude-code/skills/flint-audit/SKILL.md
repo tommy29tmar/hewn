@@ -1,6 +1,6 @@
 ---
 name: flint-audit
-description: Decode a Flint IR document into readable prose. Accepts a file path, a URL, or an inline Flint document pasted as the argument. Uses the local `flint audit --explain` CLI.
+description: Decode a Flint IR document into readable prose. Accepts a file path, a URL, or an inline Flint document pasted as the argument. Uses the local `flint-ir audit --explain` CLI.
 allowed-tools: ["Bash", "Read", "Write"]
 ---
 
@@ -30,17 +30,17 @@ The user wants a Flint IR document rendered as plain prose.
    flint-ir audit --explain /tmp/flint-audit-inline.flint
    ```
 
-3. Present the `flint audit --explain` output to the user, followed by a
+3. Present the `flint-ir audit --explain` output to the user, followed by a
    short prose gloss (2–4 sentences) summarizing what the document is
    trying to say. This turn is **not** in Flint format — the user asked for
    prose.
 
-4. If `flint audit --explain` reports a parse error or a schema error,
+4. If `flint-ir audit --explain` reports a parse error or a schema error,
    surface the error message and point at
    `docs/failure_modes.md#drift-patterns` for the taxonomy of why it might
    have failed.
 
-5. If the CLI is not installed (`flint` command not found), tell the user
+5. If the CLI is not installed (`flint-ir` command not found), tell the user
    to install it with `pipx install git+https://github.com/tommy29tmar/flint.git`
    or `pip install --user git+https://github.com/tommy29tmar/flint.git`.
    The CLI is also included in the one-line install script.

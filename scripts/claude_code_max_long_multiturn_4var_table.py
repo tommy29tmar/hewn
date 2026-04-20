@@ -34,8 +34,8 @@ CELLS = [
 ]
 
 PREFIX_FALLBACKS = {
-    "flint": ("cccflint_pro",),
-    "flint_mcp": ("cccflint_mcp_pro",),
+    "flint": ("cccflint_pro", "cccflint"),
+    "flint_mcp": ("cccflint_mcp_pro", "cccflint_mcp"),
 }
 
 RAW_COUNT_KEYS = (
@@ -199,9 +199,10 @@ def score_rows(rows: list[dict[str, object]], scenarios: dict[str, dict[str, dic
     counts = new_counts()
     for row in rows:
         counts["n"] += 1
-        if is_infra_error(row):
+        infra_error = is_infra_error(row)
+        if infra_error:
             counts["infra_error_n"] += 1
-        if "error" in row:
+        if infra_error or "error" in row:
             continue
 
         raw = nfc(row.get("content"))

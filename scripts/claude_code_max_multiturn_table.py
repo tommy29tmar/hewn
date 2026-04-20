@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Aggregate multi-turn bench: per-turn and per-scenario metrics for plain vs cccflint.
+"""Aggregate multi-turn bench: per-turn and per-scenario metrics for plain vs flint.
 
 Reads evals/runs/claude_code_max_multiturn/{plain,flint}_r*.jsonl.
 Reports for each variant:
@@ -120,7 +120,7 @@ def variant_summary(rows, scenarios):
 
 def main():
     scenarios = load_corpus()
-    variants = [("plain claude", "plain"), ("cccflint", "flint")]
+    variants = [("plain claude", "plain"), ("flint", "flint")]
     summaries = {}
     for label, prefix in variants:
         runs = load_run(prefix)
@@ -132,25 +132,25 @@ def main():
         summaries[label] = variant_summary(all_rows, scenarios)
 
     print("Per-scenario cumulative output tokens (mean across runs):")
-    print(f"{'scenario':<28} {'plain':>10} {'cccflint':>10} {'savings':>10}")
+    print(f"{'scenario':<28} {'plain':>10} {'flint':>10} {'savings':>10}")
     scen_ids = sorted({s for sm in summaries.values() for s in sm["scen_totals"]})
     n_runs = {lb: len(load_run(pr)) for lb, pr in variants}
     for sid in scen_ids:
         plain_total = summaries.get("plain claude", {}).get("scen_totals", {}).get(sid, 0)
-        flint_total = summaries.get("cccflint", {}).get("scen_totals", {}).get(sid, 0)
+        flint_total = summaries.get("flint", {}).get("scen_totals", {}).get(sid, 0)
         plain_mean = plain_total / max(1, n_runs["plain claude"])
-        flint_mean = flint_total / max(1, n_runs["cccflint"])
+        flint_mean = flint_total / max(1, n_runs["flint"])
         saving = (plain_mean - flint_mean) / plain_mean * 100 if plain_mean else 0
         print(f"{sid:<28} {plain_mean:>10.0f} {flint_mean:>10.0f} {saving:>9.0f}%")
 
     print()
-    print("Per-turn detail (plain vs cccflint):")
-    print(f"{'scenario':<25} {'turn':<6} {'exp':<6} {'plain':<14} {'cccflint':<14} {'plain_tok':>9} {'flint_tok':>9}")
+    print("Per-turn detail (plain vs flint):")
+    print(f"{'scenario':<25} {'turn':<6} {'exp':<6} {'plain':<14} {'flint':<14} {'plain_tok':>9} {'flint_tok':>9}")
     for sid in scen_ids:
         for tid in scenarios[sid]:
             expected = scenarios[sid][tid]["expected_shape"]
             plain_rows = summaries.get("plain claude", {}).get("per_turn", {}).get((sid, tid), [])
-            flint_rows = summaries.get("cccflint", {}).get("per_turn", {}).get((sid, tid), [])
+            flint_rows = summaries.get("flint", {}).get("per_turn", {}).get((sid, tid), [])
             plain_det = [r["detected"] for r in plain_rows]
             flint_det = [r["detected"] for r in flint_rows]
             plain_tok = mean([r["out"] for r in plain_rows]) if plain_rows else 0

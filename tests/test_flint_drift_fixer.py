@@ -66,6 +66,7 @@ PROSE_CODE_PROMPTS = [
     "Implement the saga coordinator; show the full class",
     "Write the patch that switches HS256 to RS256",
     "Apply the fix and show the updated module",
+    "Draft an RFC and include sample code for the migration",
 ]
 
 PROSE_POLISHED_PROMPTS = [

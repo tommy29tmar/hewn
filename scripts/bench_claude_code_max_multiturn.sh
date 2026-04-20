@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Multi-turn bench: plain `claude` vs `cccflint` across session-persistent
+# Multi-turn bench: plain `claude` vs `flint` across session-persistent
 # conversations. Each scenario runs 4 turns via --resume <session_id> to
 # preserve context. Measures per-turn classification, parser-pass, tokens,
 # and cumulative compression across the full session.
@@ -14,7 +14,7 @@ cd "$ROOT"
 CORPUS="${CORPUS:-evals/claude_code_max_multiturn.jsonl}"
 OUT_DIR="${OUT_DIR:-evals/runs/claude_code_max_multiturn}"
 RUNS="${RUNS:-1}"
-CCCFLINT="${CCCFLINT:-$ROOT/integrations/claude-code/bin/cccflint}"
+FLINT_BIN="${FLINT_BIN:-${CCCFLINT:-$ROOT/integrations/claude-code/bin/flint}}"
 
 export FLINT_THINKING_PROMPT_FILE="$ROOT/integrations/claude-code/flint_thinking_system_prompt.txt"
 
@@ -81,7 +81,7 @@ PY
 
 for i in $(seq 1 "$RUNS"); do
   run_variant "plain" "claude"    "$i"
-  run_variant "flint" "$CCCFLINT" "$i"
+  run_variant "flint" "$FLINT_BIN" "$i"
 done
 
 echo ""

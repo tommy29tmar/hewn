@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 # 4-cell multi-turn bench:
 #   1. plain `claude`                           (baseline Anthropic default)
-#   2. `cccflint`                               (Flint system prompt, no MCP)
+#   2. `flint`                                  (Flint system prompt + drift-fix hook, no MCP)
 #   3. plain `claude --mcp-config <flint>`      (MCP tool available, no system prompt push)
-#   4. `cccflint-mcp`                           (Flint system prompt + MCP)
+#   4. `flint-mcp`                              (Flint system prompt + MCP + drift-fix hook)
 #
 # Uses the multi-turn scenarios via --resume for session continuity.
 # Measures per-turn IR emission, tool calls, classification, tokens, latency.
@@ -17,8 +17,8 @@ cd "$ROOT"
 CORPUS="${CORPUS:-evals/claude_code_max_multiturn.jsonl}"
 OUT_DIR="${OUT_DIR:-evals/runs/claude_code_max_4cell}"
 RUNS="${RUNS:-1}"
-CCCFLINT="${CCCFLINT:-$ROOT/integrations/claude-code/bin/cccflint}"
-CCCFLINT_MCP="${CCCFLINT_MCP:-$ROOT/integrations/claude-code/bin/cccflint-mcp}"
+FLINT_BIN="${FLINT_BIN:-${CCCFLINT:-$ROOT/integrations/claude-code/bin/flint}}"
+FLINT_MCP_BIN="${FLINT_MCP_BIN:-${CCCFLINT_MCP:-$ROOT/integrations/claude-code/bin/flint-mcp}}"
 MCP_CONFIG="${MCP_CONFIG:-$ROOT/integrations/claude-code/mcp-config.json}"
 
 export FLINT_THINKING_PROMPT_FILE="$ROOT/integrations/claude-code/flint_thinking_system_prompt.txt"
@@ -47,7 +47,7 @@ with open(out_path, "w") as out_f:
         for turn in scen["turns"]:
             tid = turn["id"]
             prompt = turn["prompt"]
-            # Cell-specific tool discipline. Plain and cccflint cells must not
+            # Cell-specific tool discipline. Plain and flint cells must not
             # use any tools (otherwise agent behavior inflates out_tok with tool
             # round-trips). MCP cells may call the Flint MCP tool but nothing
             # else. The CLI --disallowedTools flag is bypassable via MCP tools,
@@ -131,10 +131,10 @@ PY
 }
 
 for i in $(seq 1 "$RUNS"); do
-  run_cell "plain"         "claude"             "$i" ""
-  run_cell "cccflint"      "$CCCFLINT"          "$i" ""
-  run_cell "plain_mcp"     "claude"             "$i" "--mcp-config $MCP_CONFIG"
-  run_cell "cccflint_mcp"  "$CCCFLINT_MCP"      "$i" ""
+  run_cell "plain"      "claude"         "$i" ""
+  run_cell "flint"      "$FLINT_BIN"     "$i" ""
+  run_cell "plain_mcp"  "claude"         "$i" "--mcp-config $MCP_CONFIG"
+  run_cell "flint_mcp"  "$FLINT_MCP_BIN" "$i" ""
 done
 
 echo ""

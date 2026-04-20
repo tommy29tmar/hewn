@@ -25,7 +25,7 @@ The installer puts four artifacts in place:
    ```
 2. **Output-styles** (per-session, set via `/config`): `flint` (strict IR always) and `flint-thinking` (dual-mode, opt-in via menu).
 3. **`flint` binary** (Claude Code Max always-on path): see next section.
-4. **`flint` Python CLI**: for parsing, validation, audit rendering outside Claude Code.
+4. **`flint-ir` Python CLI**: for parsing, validation, audit rendering outside Claude Code.
 
 The default `claude` command is never touched — every Flint path is opt-in.
 
@@ -51,9 +51,9 @@ Measured on 6 mixed prompts (3 IR-shape: debug, code review, refactor · 3 prose
 
 For downstream tooling that needs API-validated parseable IR, `flint-mcp` wraps `claude --mcp-config <flint-server>` and instructs the model to call `submit_flint_ir` (a Flint MCP tool with a regex-enforced JSON Schema) instead of emitting free-text IR. The Anthropic API rejects malformed atoms before they reach the tool — when the tool fires, the emitted IR is parseable by construction.
 
-Trade-off: MCP adds ~20% output token overhead (tool round-trip), so `flint` remains the default choice for interactive use. Use `flint-mcp` when: you pipe Flint output into `flint audit --explain`, CI linters, or analytics that must not fail on malformed grammar.
+Trade-off: MCP adds output token overhead (tool round-trip), so `flint` remains the default choice for interactive use. Use `flint-mcp` when: you pipe Flint output into `flint-ir audit --explain`, CI linters, or analytics that must not fail on malformed grammar.
 
-Multi-turn 4-cell bench (2 scenarios × 4 turns, 3 runs = 24 samples per cell, agent-mode contamination excluded — see failure modes for methodology):
+Historical multi-turn 4-cell bench (2 scenarios × 4 turns, 3 runs = 24 samples per cell, agent-mode contamination excluded — see failure modes for methodology):
 
 | variant              | class_acc | ir_hit | tool_hit | total_tok | mean_lat |
 |----------------------|----------:|-------:|---------:|----------:|---------:|
@@ -62,7 +62,7 @@ Multi-turn 4-cell bench (2 scenarios × 4 turns, 3 runs = 24 samples per cell, a
 | plain + MCP          |       25% |     0% |       0% |     43384 |    34.7s |
 | flint + MCP       |       46% |    21% |  **21%** |     41304 |    31.6s |
 
-On multi-turn, `flint` saves **-20% output tokens and -17% latency** vs plain claude (per-scenario: deep-debug -12.6%, mixed-security -32.7%). Classification accuracy is 2.2× plain claude (54% vs 25%). The multi-turn drift (IR emits at turn 1, drifts to prose on turns 2-4) affects all variants — if per-turn IR is required, open a fresh `flint` session per task or use the one-shot `/flint` skill.
+On multi-turn, `flint` saves **-20% output tokens and -17% latency** vs plain claude (per-scenario: deep-debug -12.6%, mixed-security -32.7%). Classification accuracy is 2.2× plain claude (54% vs 25%). These numbers predate the v0.8.0 routing upgrade; current `flint` adds a per-turn hook plus separate `prose_code` / `prose_polished` routes, so see the changelog for the updated long multi-turn benchmark.
 
 `plain + MCP` is the worst outcome: the Flint MCP tool is available but never called without a system-prompt push, so it only adds the MCP tool-catalog tax to every turn. `flint + MCP` sits at +51% tokens vs `flint` due to tool round-trip overhead; use it when parser-validated IR is required by downstream tooling, otherwise stick with plain `flint`.
 
@@ -136,7 +136,7 @@ Flint replaces the "no articles" discipline with a **structural** one: five slot
 
 ## When things drift
 
-Claude sometimes drifts off format. Flint ships with a parser, a repair layer, and `flint audit --explain` that shows you exactly what came in, what was repaired, which anchors matched, and a prose rerender — so you can trust the output even on the worst cases.
+Claude sometimes drifts off format. Flint ships with a parser, a repair layer, and `flint-ir audit --explain` that shows you exactly what came in, what was repaired, which anchors matched, and a prose rerender — so you can trust the output even on the worst cases.
 
 ```bash
 flint-ir audit --explain response.flint --anchor 300 --anchor 401

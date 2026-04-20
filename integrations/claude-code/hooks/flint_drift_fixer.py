@@ -69,6 +69,8 @@ CODE_ARTIFACT_RULES: list[str] = [
     r"\bwrite\s+(?:the\s+)?(?:code|tests?|snippet|function|method|patch|fix|script|implementation|regression\s+tests?|pytest|unit\s+tests?)",
     r"\bimplement\s+(?:the|a|an)\b",
     r"\bapply\s+the\s+(?:fix|change|patch|update)",
+    r"\b(?:include|with)\s+(?:sample|example|inline|exact)\s+(?:code|config|snippet)\b",
+    r"\bsample\s+(?:code|config|snippet)\b",
     r"\bupdated\s+(?:\w+\.\w+|jwt_\w+|auth\w*|handler|service|module|file)",
     r"\bpropose\s+the\s+fix.*(?:show|code|snippet|file)",
 ]

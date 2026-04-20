@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# Run ONLY the cccflint-mcp-pro cell of the 4cell bench for RUNS=3.
-# Other 4 cells already have stable data from v0.5.1.
+# Legacy helper: rerun only the `flint-mcp` cell of the 4-cell bench.
+# Other cells may already have stable data from earlier runs.
 
 set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -9,15 +9,15 @@ cd "$ROOT"
 CORPUS="${CORPUS:-evals/claude_code_max_multiturn.jsonl}"
 OUT_DIR="${OUT_DIR:-evals/runs/claude_code_max_4cell}"
 RUNS="${RUNS:-3}"
-CCCFLINT_MCP_PRO="${CCCFLINT_MCP_PRO:-$HOME/.local/bin/cccflint-mcp-pro}"
+FLINT_MCP_BIN="${FLINT_MCP_BIN:-${CCCFLINT_MCP_PRO:-$ROOT/integrations/claude-code/bin/flint-mcp}}"
 
 mkdir -p "$OUT_DIR"
 
 for i in $(seq 1 "$RUNS"); do
-  out_file="$OUT_DIR/cccflint_mcp_pro_r${i}.jsonl"
+  out_file="$OUT_DIR/flint_mcp_r${i}.jsonl"
   rm -f "$out_file"
-  echo "[cccflint-mcp-pro r$i] starting" >&2
-  python3 - "$CCCFLINT_MCP_PRO" "$out_file" "$CORPUS" <<'PY'
+  echo "[flint-mcp r$i] starting" >&2
+  python3 - "$FLINT_MCP_BIN" "$out_file" "$CORPUS" <<'PY'
 import json, subprocess, sys, time
 cmd = sys.argv[1]
 out_path = sys.argv[2]
@@ -61,7 +61,7 @@ with open(out_path, "w") as f:
                 sid = session_id
             row = {
                 "scenario_id": scen["scenario_id"], "turn_id": tid,
-                "variant": "cccflint-mcp-pro", "session_id": sid,
+                "variant": "flint-mcp", "session_id": sid,
                 "content": final_msg or "",
                 "tool_uses": tool_uses, "usage": usage,
                 "elapsed_ms": elapsed_ms, "exit_code": result.returncode,
@@ -73,9 +73,9 @@ with open(out_path, "w") as f:
             out_tok = usage.get("output_tokens", 0)
             print(f"  {scen['scenario_id']}/{tid}: exit={result.returncode} out={out_tok} flint={flint} agent={agent}", file=sys.stderr)
 PY
-  echo "[cccflint-mcp-pro r$i] done" >&2
+  echo "[flint-mcp r$i] done" >&2
 done
 
 echo ""
-echo "Aggregate (5-cell table):"
+echo "Aggregate (4-cell table):"
 python3 scripts/claude_code_max_4cell_table.py

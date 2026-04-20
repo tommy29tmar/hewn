@@ -40,7 +40,7 @@ g: fix_auth
 c : trust_boundary  ∧   "X-Forwarded-For"
 ```
 
-`flint repair` fixes this silently. No action needed, but `flint audit
+`flint-ir repair` fixes this silently. No action needed, but `flint-ir audit
 --explain` will show the normalization.
 
 ### 2. Unicode operator drift (repairable)
@@ -139,7 +139,7 @@ column in `stress_table.py` doesn't model correctly.
 system prompt; the *exact* numbers won't transfer. Treat claims outside
 Opus 4.7 + Anthropic as untested until you run the bench yourself.
 
-## What `flint audit --explain` tells you
+## What `flint-ir audit --explain` tells you
 
 Pipe any suspicious response through it. You get:
 
