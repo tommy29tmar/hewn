@@ -37,6 +37,7 @@ for i in $(seq 1 "$RUNS"); do
   run_cell "verbose"  "plain" "prompts/verbose_baseline.txt"                            "$i" 1024 &
   run_cell "caveman"  "plain" "prompts/primitive_english.txt"                           "$i"  512 &
   run_cell "flintnew" "sigil" "integrations/claude-code/flint_system_prompt.txt"        "$i"  512 &
+  run_cell "flintthinking" "plain" "integrations/claude-code/flint_thinking_system_prompt.txt" "$i"  512 &
 done
 wait
 echo "all stress cells done (${RUNS} run(s) per cell)"

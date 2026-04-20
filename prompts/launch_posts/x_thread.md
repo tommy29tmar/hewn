@@ -75,9 +75,10 @@ on tweet 4. Post between 9-11 AM ET or 7-9 PM ET.
 >
 > In Claude Code:
 >    /flint <question>                      one-shot
->    /config → Output style → flint        every response
+>    /config → Output style → flint         every response (strict)
+>    cccflint                               always-on for Claude Code Max
 >
-> Off: same menu, pick default.
+> Off: same menu, pick default. `cccflint` never shadows the default `claude`.
 
 ---
 
@@ -121,3 +122,33 @@ on tweet 4. Post between 9-11 AM ET or 7-9 PM ET.
 3. **Day 5** — day-1 data thread: installs, top issues, favorite failure mode.
 4. **Day 7** — if someone uses Flint in a real product, retweet with 1-line
    commentary.
+
+## v0.4.0 follow-up (Claude Code Max always-on)
+
+**Post 1 — the discovery**
+
+> Turns out Claude Code's output-style loads as *context*, not system
+> prompt. Your "always-on Flint" via /config → Output style works — for
+> prose compression. The IR half silently loses to Claude Code's built-in
+> "be helpful" system prompt.
+>
+> Fix: `cccflint`. System-level injection via `--append-system-prompt`.
+> The only path that actually works.
+
+**Post 2 — the numbers**
+
+> 6 mixed prompts (debug/review/refactor · explain/brainstorm/RFC), 3 runs.
+> Claude Max, zero API cost.
+>
+> plain `claude`:  50% task-shape accuracy, 537 out tok mean
+> `cccflint`:     100% task-shape accuracy, 421 out tok mean (-22%)
+>
+> Always-on for Claude Code users is now real. `cccflint` ships in v0.4.0.
+
+**Post 3 — non-invasive opt-in**
+
+> `cccflint` is a separate binary, ~40 lines of bash. The default `claude`
+> command is never touched. You opt in by typing `cccflint` instead.
+>
+> Anthropic's product works as designed; Flint layers on top without
+> shadowing it. That's how extensions should behave.

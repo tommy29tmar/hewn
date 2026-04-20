@@ -4,6 +4,8 @@
 
 On realistic coding workloads — codebases, CLAUDE.md loaded, RAG context — Claude writes answers **4× shorter, 3× faster, covering 9 more concept points** than verbose Claude. And it beats "Caveman prompting" on every column too. Measured on 40 samples (10 long-context tasks × 4 runs) on Opus 4.7 with prompt cache active.
 
+Claude Code Max users: `cccflint` injects Flint thinking-mode at system-prompt level, giving 100% task classification (IR for technical, prose for human) with -22% tokens on mixed workloads. See [Claude Code Max](#claude-code-max-always-on-with-cccflint) below.
+
 ![Flint](assets/launch/hero.jpg)
 
 ## Install
@@ -12,16 +14,44 @@ On realistic coding workloads — codebases, CLAUDE.md loaded, RAG context — C
 curl -fsSL https://raw.githubusercontent.com/tommy29tmar/flint/main/integrations/claude-code/install.sh | bash
 ```
 
-Then in Claude Code:
+The installer puts four artifacts in place:
 
-```
-/flint <your technical question>     # one-shot: answer this one in Flint
-/flint-on                              # from now on, every response in Flint
-/flint-off                             # back to normal prose
-/flint-audit <file|paste>             # decode a Flint document back to prose
+1. **Slash skills** (per-turn, opt-in):
+   ```
+   /flint <question>          one-shot: answer in strict Flint IR
+   /flint-on                   turn on strict Flint for this conversation
+   /flint-off                  back to normal prose
+   /flint-audit <file|paste>   decode a Flint document back to prose
+   ```
+2. **Output-styles** (per-session, set via `/config`): `flint` (strict IR always) and `flint-thinking` (dual-mode, opt-in via menu).
+3. **`cccflint` binary** (Claude Code Max always-on path): see next section.
+4. **`flint` Python CLI**: for parsing, validation, audit rendering outside Claude Code.
+
+The default `claude` command is never touched — every Flint path is opt-in.
+
+## Claude Code Max (always-on with cccflint)
+
+`cccflint` is a small wrapper that runs `claude --append-system-prompt "$FLINT_THINKING_PROMPT"`. The `--append-system-prompt` flag is the only Claude Code mechanism that reaches system-prompt level — output-styles, hooks, skills, and CLAUDE.md load as context and cannot fully override Claude Code's built-in system prompt. That's why always-on via output-style alone doesn't trigger the IR compression reliably.
+
+```bash
+cccflint                           # interactive session, Flint thinking-mode active
+cccflint -p "your prompt here"     # non-interactive
 ```
 
-For **cross-session** persistence (every new Claude Code session boots into Flint), run `/config` and pick **Output style → flint**, or add `"outputStyle": "flint"` to `~/.claude/settings.json`. Turn it off by selecting `default` from the same menu, or remove the field. `/flint-on`/`off` only affects the current conversation.
+Measured on 6 mixed prompts (3 IR-shape: debug, code review, refactor · 3 prose-shape: explanation, brainstorm, RFC), 3 runs per cell, on Claude Opus 4.7 via Claude Max:
+
+| variant          | classification | class_ir | class_prose | mean out tokens | parser-pass (IR) |
+|------------------|---------------:|---------:|------------:|----------------:|-----------------:|
+| plain `claude`   |            50% |       0% |        100% |             537 |               0% |
+| **cccflint**     |       **100%** | **100%** |    **100%** |         **409** |          **89%** |
+
+`cccflint` emits Flint IR for every IR-shape task (0% → 100%), keeps every prose task in Caveman-style prose, cuts mean output tokens by 24%, and the IR it produces passes the strict Flint parser 89% of the time on IR-shape tasks (8 of 9 samples across 3 runs × 3 IR-shape tasks) — above the ~80% parser-pass rate of strict Flint on its own 10-task corpus. Zero marginal cost on the Claude Max plan — no Anthropic API calls.
+
+Reproduce:
+```bash
+RUNS=3 ./scripts/bench_claude_code_max.sh
+python3 scripts/claude_code_max_table.py
+```
 
 ## Why it works
 

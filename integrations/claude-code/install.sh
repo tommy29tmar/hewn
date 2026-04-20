@@ -5,8 +5,11 @@
 #
 # What this does:
 #   1. Installs four Claude Code skills: /flint, /flint-on, /flint-off, /flint-audit.
-#   2. Installs the Flint output-style (for /config → Output style → flint).
-#   3. Installs the flint-ir Python package (provides the `flint` CLI for local parse/rerender).
+#   2. Installs the Flint output-styles: `flint` (strict) and `flint-thinking` (dual-mode).
+#   3. Installs `cccflint`: wrapper that invokes `claude` with Flint thinking-mode at
+#      system-prompt level via --append-system-prompt. This is the always-on path for
+#      Claude Code Max users — does NOT interfere with the default `claude` binary.
+#   4. Installs the flint-ir Python package (provides the `flint` CLI for parse/rerender).
 #
 # Refuses to run if ~/.claude is not present (i.e. Claude Code not installed).
 
@@ -50,10 +53,28 @@ for skill in "${SKILLS[@]}"; do
   fetch "skills/$skill/SKILL.md" "$CLAUDE_DIR/skills/$skill/SKILL.md"
 done
 
-echo "==> Installing Flint output-style"
+echo "==> Installing Flint output-styles"
 mkdir -p "$CLAUDE_DIR/output-styles"
 fetch "output-styles/flint.md" "$CLAUDE_DIR/output-styles/flint.md" || \
-  echo "   (output-style install failed — skills alone are sufficient)"
+  echo "   (flint output-style install failed — skills alone are sufficient)"
+fetch "output-styles/flint-thinking.md" "$CLAUDE_DIR/output-styles/flint-thinking.md" || \
+  echo "   (flint-thinking output-style install failed — not fatal)"
+
+echo "==> Installing cccflint wrapper + thinking-mode prompt"
+BIN_DIR="${HOME}/.local/bin"
+mkdir -p "$BIN_DIR"
+fetch "bin/cccflint" "$BIN_DIR/cccflint" || echo "   (cccflint install failed — not fatal)"
+chmod +x "$BIN_DIR/cccflint" 2>/dev/null || true
+fetch "flint_thinking_system_prompt.txt" "$CLAUDE_DIR/flint_thinking_system_prompt.txt" || \
+  echo "   (thinking-mode prompt install failed — cccflint will not work until installed)"
+
+if ! echo ":$PATH:" | grep -q ":$BIN_DIR:"; then
+  echo ""
+  echo "   ⚠  $BIN_DIR is not in your \$PATH."
+  echo "      Add this line to your ~/.bashrc or ~/.zshrc:"
+  echo "        export PATH=\"\$HOME/.local/bin:\$PATH\""
+  echo ""
+fi
 
 echo "==> Installing flint-ir Python package (optional)"
 if command -v pipx >/dev/null 2>&1; then
@@ -67,12 +88,19 @@ fi
 echo ""
 echo "✓ Flint installed."
 echo ""
-echo "Slash commands:"
-echo "  /flint <question>          one-shot: answer this question in Flint"
-echo "  /flint-on                   turn on Flint mode for this conversation"
+echo "Slash commands (opt-in, per turn):"
+echo "  /flint <question>          one-shot: answer in strict Flint IR"
+echo "  /flint-on                   turn on strict Flint for this conversation"
 echo "  /flint-off                  turn off Flint mode"
 echo "  /flint-audit <file|text>   decode a Flint document into readable prose"
 echo ""
-echo "For cross-session persistence (every new Claude Code session in Flint):"
-echo "  /config → Output style → flint"
-echo "  or add \"outputStyle\": \"flint\" to ~/.claude/settings.json."
+echo "Output-styles (opt-in, per session, set via /config):"
+echo "  flint           strict IR always (best for API, parser-strict tooling)"
+echo "  flint-thinking  dual-mode: Caveman prose + IR by task shape (Claude Code soft layer)"
+echo ""
+echo "Always-on for Claude Code Max users (recommended):"
+echo "  cccflint                   starts Claude Code with Flint thinking-mode injected at"
+echo "                             system-prompt level (does not affect the default 'claude')"
+echo "  cccflint -p \"your prompt\"  non-interactive mode"
+echo ""
+echo "The default 'claude' command remains untouched — cccflint is a separate binary."

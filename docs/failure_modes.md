@@ -182,6 +182,69 @@ three ways to flip back depending on how permanent you want it:
 The skill is designed to be toggled. Don't try to force every turn through
 it.
 
+## Deployment-specific: Claude Code vs bare API
+
+Flint's own behavior differs by deployment path. This is a first-class
+failure mode worth understanding before you pick one.
+
+### Bare Anthropic API (`system: flint_system_prompt.txt`)
+
+This is the mode the stress bench measures. 98%+ IR trigger on IR-shape
+tasks, 80% parseable by the shipped grammar, 186 output tokens mean on the
+10-task corpus. The numbers on the README front page come from here.
+
+### Claude Code via output-style only (`/config → flint` or `flint-thinking`)
+
+Output-styles load as **context**, not system prompt. Claude Code's built-in
+system prompt ("be helpful, return the useful answer") wins conflicts
+silently. Measured on a 6-task mix, pure output-style delivers 0% IR
+trigger on IR-shape tasks — you lose the compression entirely. The Caveman
+discipline in `flint-thinking` still applies to prose output (tighter than
+default Claude Code), but the IR half is gone. This is not a bug; it is
+what the Claude Code architecture allows from context-layer instructions.
+
+### Claude Code via `cccflint` wrapper (`--append-system-prompt`)
+
+`cccflint` passes the thinking-mode prompt via `claude
+--append-system-prompt`, the only Claude Code flag that reaches
+system-prompt level. Measured classification accuracy: 100% on a 6-task
+mix (3 IR-shape + 3 prose-shape), across 3 runs. Mean output tokens -22%
+vs plain claude. IR trigger recovers to the level the API bench predicts.
+
+**Recommendation by use case:**
+
+- Building a product that calls Claude via API → strict Flint
+  (`flint_system_prompt.txt`) as the system prompt. Parseable IR, full
+  contract.
+- Using Claude Code interactively on a Max plan → `cccflint` for
+  always-on dual-mode (IR when warranted, Caveman prose otherwise). No
+  interference with default `claude`.
+- Occasional on-demand IR in normal Claude Code → `/flint <question>`
+  slash command. One-shot.
+
+### Parser-pass on Claude Code IR
+
+Early versions of the thinking-mode prompt produced IR that was
+human-readable but only ~17% parseable by the strict Flint grammar — the
+model under `--append-system-prompt` was still using suffix forms like
+`change_"x%2==0"` and nested calls like `cmp(expMs+skew_ms,"<",nowMs)` out
+of coding-assistant habit.
+
+The shipped v0.4.0 prompt includes an explicit ATOM FORMAT section with
+concrete anti-examples of the drift patterns. Measured on the 6-prompt
+claude-code-max corpus, 3 runs: 89% of IR-shape outputs (8 of 9) now parse
+cleanly under the strict grammar. This is at or above strict Flint's own
+baseline (~80% on the 10-task stress corpus).
+
+Remaining ~11% failures cluster on two patterns the model still slips into:
+- `identifier_"quoted"` (suffix form) — parser wants `identifier("quoted")`
+- `→` inside call args — parser wants plain `∧` joins between atoms
+
+If you need 100% parseability for downstream tooling, use strict Flint
+via the Anthropic API directly with `flint_system_prompt.txt` as the
+system prompt. For interactive Claude Code use `cccflint`; the 11%
+non-parseable outputs remain fully human-readable and semantically correct.
+
 ## Reporting a new failure mode
 
 If you find a case where Flint produces a wrong or misleading answer — not

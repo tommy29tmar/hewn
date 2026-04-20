@@ -3,19 +3,45 @@
 What Flint actually is, as a system, from the IR on the wire down to the CLI
 on your machine.
 
-## The artifact that ships
+## The artifacts that ship
 
-Exactly **one file** is what the installer puts on Claude Opus 4.7 when you
-activate the Flint output style (via `/config` → Output style → flint, or
-`"outputStyle": "flint"` in settings):
+Flint deploys two complementary payloads — strict (for API use) and
+thinking-mode (for Claude Code Max users):
 
-```
-integrations/claude-code/flint_system_prompt.txt   (8 lines, ~90 tokens)
-```
+| artifact | path | size | contract |
+|---|---|---|---|
+| Strict Flint system prompt | `integrations/claude-code/flint_system_prompt.txt` | 8 lines, ~90 tokens | force every response into G/C/P/V/A IR |
+| Thinking-mode system prompt | `integrations/claude-code/flint_thinking_system_prompt.txt` | 32 lines, ~270 tokens | dual-mode: Caveman prose by default, IR when task shape is IR (debug/review/refactor with verifiable endpoint) |
+| `cccflint` wrapper | `integrations/claude-code/bin/cccflint` | small bash wrapper | runs `claude --append-system-prompt <thinking_prompt>` so the instruction reaches system-prompt level inside Claude Code |
 
-That's it. Everything else in this repo — the parser, the verifier, the
-`flint audit --explain` CLI, the tests, the bench — exists to validate,
+The strict prompt is the API-facing artifact (output-style `flint`). The
+thinking-mode prompt is the Claude Code always-on artifact (`cccflint` or
+output-style `flint-thinking`).
+
+Everything else in this repo — the parser, the verifier, the
+`flint audit --explain` CLI, the tests, the benches — exists to validate,
 measure, and repair what comes back.
+
+### Why two payloads, not one
+
+On the Anthropic API directly, the strict prompt IS the system prompt —
+contract respected, 98%+ IR trigger on IR-shape tasks, 80% parseable.
+Benchmark-ready, deterministic.
+
+In Claude Code, `/config → Output style → flint` loads the prompt as
+**context**, not system. Claude Code's built-in system prompt ("be helpful,
+return the useful answer") wins any conflict. Output-style instructions
+asking for strict IR lose silently — in our measurements, 0% IR trigger on
+IR-shape tasks when the strict prompt is loaded via output-style alone.
+
+The thinking-mode prompt + `cccflint` wrapper solve this. `cccflint` passes
+the prompt via `claude --append-system-prompt`, the only Claude Code
+mechanism that reaches system level. Measured classification accuracy
+jumps from 50% (plain claude) to 100% (cccflint) on a 6-task × 3-run mix
+of IR and prose tasks; mean output tokens drop 22% across the mix.
+
+Hooks, skills, and CLAUDE.md also load as context. They cannot replicate
+system-level behavior. The wrapper is the only path.
 
 ## The four slash commands
 
