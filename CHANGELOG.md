@@ -1,5 +1,66 @@
 # Changelog
 
+## 0.5.1 — 2026-04-20
+
+### Fixed — multi-turn bench metric correction
+
+The v0.5.0 multi-turn 4-cell table reported cccflint essentially tied
+with plain claude (14692 vs 14316 tokens, +2.6%) on 2 scenarios × 4
+turns. That number was wrong. Root cause: in RUNS=1, the bench's claude
+subprocesses inherited user-settings permissions (auto-approve Bash /
+Read / Write / Edit / Task / MCP tools) and the scenario prompts
+contained agentic verbs ("write the repro test", "propose fix code").
+The model under cccflint's "CRISP TECHNICAL GOAL + VERIFIABLE ENDPOINT"
+instruction went into agent mode — on deep-debug T2, cccflint emitted
+17 tool calls (11 × Bash, Read, Write, 3 × Edit, Grep), inflating
+`output_tokens` with tool_use args + tool_result content. Plain claude
+in the same scenario only used 2 tools.
+
+The metric was measuring "how hard did the variant work to verify the
+answer" not "how compact is the final response". Agent mode on
+cccflint: 7323 tok on one turn alone.
+
+### Fix
+
+- Scenario prompts neutralized: changed agentic verbs ("write", "ship",
+  "apply", "run") to descriptive verbs ("describe", "show inline",
+  "as a snippet in your response").
+- Bench script injects a `[BENCH MODE] Do not use any tools` directive
+  at the end of every user prompt (cccflint+MCP cell allows
+  `submit_flint_ir` only).
+- Aggregator tracks `agent_n` (turns with non-flint tool calls) and
+  `clean_tok` (tokens from agent-free turns only). Contaminated turns
+  are flagged. On the fixed bench, all 4 cells showed `agent_n = 0/24`.
+
+### Corrected numbers (RUNS=3, 24 samples per cell, agent-free)
+
+| variant          | class_acc | ir_hit | tool_hit | parse_% | total_tok | mean_lat |
+|------------------|----------:|-------:|---------:|--------:|----------:|---------:|
+| plain claude     |       25% |     0% |       0% |      0% |     34248 |    29.4s |
+| **cccflint**     |   **54%** |**29%** |       0% |     21% | **27404** | **24.3s** |
+| plain + MCP      |       25% |     0% |       0% |      0% |     43384 |    34.7s |
+| cccflint + MCP   |       46% |    21% |  **21%** |     21% |     41304 |    31.6s |
+
+**Headlines:**
+- `cccflint` vs plain: **-20% token, -17% latency** on multi-turn
+  (consistent with v0.4.0 -24% short, v0.4.1 -53% long benches).
+- Per-scenario: deep-debug -12.6%, mixed-security **-32.7%**.
+- Classification accuracy: 54% vs 25% (2.2× plain claude).
+- **MCP cells are heavier**: `plain + MCP` is the worst (43384 tok) —
+  the tool is available but never called without a system-prompt push,
+  so it only adds the MCP tool-catalog tax to input.
+- `cccflint + MCP` sits at 41304 tok (+51% vs cccflint) — tool
+  round-trip overhead. Use only when parser-validated IR is required
+  by downstream tooling.
+
+### Guidance (revised)
+
+- **Default**: `cccflint`. -20% tokens, -17% latency, 100% non-invasive.
+- **Strict-parse downstream pipeline**: `cccflint-mcp`. Trade +51%
+  tokens for API-schema-validated IR.
+- **Never**: `plain + MCP` (worst outcome — MCP catalog tax without
+  benefit).
+
 ## 0.5.0 — 2026-04-20
 
 ### Added — MCP server + `cccflint-mcp` wrapper

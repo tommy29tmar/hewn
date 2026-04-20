@@ -245,6 +245,88 @@ via the Anthropic API directly with `flint_system_prompt.txt` as the
 system prompt. For interactive Claude Code use `cccflint`; the 11%
 non-parseable outputs remain fully human-readable and semantically correct.
 
+## Multi-turn session drift
+
+On multi-turn sessions inside Claude Code (where the client resumes a
+session across several turns via `--resume`), `cccflint` reliably emits
+Flint IR on **turn 1** and drifts to prose on subsequent turns.
+
+Measured on 2 scenarios × 4 turns × 3 runs (24 samples), IR emission by
+turn:
+
+```
+deep-debug-auth:  T1=IR 3/3  T2=prose 3/3  T3=prose 3/3  T4=IR 1/3
+mixed-security:   T1=IR 3/3  T2=prose*3/3  T3=prose 3/3  T4=prose*3/3
+                                 (*=prose-expected)
+```
+
+Turn 1 has the highest user-prompt salience for the system prompt's
+Zone 3 rule ("IR when task has crisp goal and verifiable endpoint").
+By turn 2, the prior assistant response (IR from T1) plus new user
+message are interpreted by the model as "continuing an IR session" →
+prose follow-up in chat register. The system prompt persists but loses
+attention-weight against accumulated conversation context.
+
+This is a Claude Code harness characteristic, not a Flint-specific
+bug. The same pattern affects plain `claude` (which never emits IR at
+all), `plain + MCP` (tool available, never called), and
+`cccflint + MCP` (tool called at T1, not at T2-T4).
+
+Workarounds:
+
+- Open a fresh `cccflint` session per task: `cccflint -p "your task"`
+  in non-interactive mode, or restart the interactive session for
+  each distinct request.
+- Use the `/flint` one-shot slash skill inside any session for a
+  single IR answer on demand.
+- For multi-turn sessions where cccflint is useful: the *prose*
+  follow-ups are still Caveman-shape (no markdown headers, no filler),
+  so total token usage drops -20% vs plain claude even with drift.
+  Measured on 24 turns: cccflint 27404 tok vs plain 34248 tok.
+
+## Bench methodology: agent-mode contamination
+
+If you reproduce the multi-turn bench and see cccflint performing
+**worse** than plain claude on `output_tokens`, you are hitting a
+known pitfall: agent-mode contamination.
+
+`claude -p` inherits permissions from user settings. By default on
+most setups (including the shipped `defaultMode: auto`), Bash, Read,
+Write, Edit, Grep, Glob, Task, and MCP tools can execute without a
+prompt. If a scenario prompt contains agentic verbs ("write the test",
+"propose the fix", "apply the change"), the model — especially under
+cccflint's "CRISP + VERIFIABLE ENDPOINT" instruction — will go into
+agent mode: it reads real files, writes real files, runs real shell
+commands. Each tool call inflates `output_tokens` with tool_use args +
+tool_result content.
+
+A pre-v0.5.1 run of the 4-cell bench had cccflint at 14692 total tokens
+vs plain 14316. Inspection showed that on deep-debug T2, cccflint
+emitted 17 tool calls (11 × Bash, Read, Write, 3 × Edit, Grep) —
+actually creating `auth/token_service.py` and `tests/test_token_refresh_race.py`
+in the benchmark working dir. Plain claude on the same turn used only
+2 tools. The reported tokens measured "how hard did the variant work",
+not "how compact is the response".
+
+Fix:
+
+- **Scenario prompts** should use descriptive verbs only ("describe",
+  "show inline", "as a snippet in your response") and explicitly
+  instruct "do not create or modify files".
+- **Bench script** injects `[BENCH MODE] Do not use any tools` at the
+  end of every user prompt. The bench script in this repo does this
+  automatically for all cells except `cccflint + MCP` (which allows
+  `submit_flint_ir` only).
+- **Scorer** (`claude_code_max_4cell_table.py`) tracks `agent_n` —
+  turns where a non-Flint tool was called — and reports `clean_tok` in
+  addition to raw `total_tok`. On the v0.5.1 bench all cells showed
+  `agent_n = 0/24`.
+
+The CLI `--disallowedTools` flag is easily bypassable (the model
+falls back to MCP tools like `mcp__plugin_serena_serena__execute_shell_command`
+which are not in the filter). The in-prompt directive is empirically
+reliable across cells and models.
+
 ## Reporting a new failure mode
 
 If you find a case where Flint produces a wrong or misleading answer — not

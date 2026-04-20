@@ -47,6 +47,20 @@ with open(out_path, "w") as out_f:
         for turn in scen["turns"]:
             tid = turn["id"]
             prompt = turn["prompt"]
+            # Cell-specific tool discipline. Plain and cccflint cells must not
+            # use any tools (otherwise agent behavior inflates out_tok with tool
+            # round-trips). MCP cells may call the Flint MCP tool but nothing
+            # else. The CLI --disallowedTools flag is bypassable via MCP tools,
+            # so we ALSO instruct the model in-prompt. This is the reliable way.
+            if "mcp" in out_path.lower():
+                discipline = ("\n\n[BENCH MODE] Do not use any tools except "
+                              "`mcp__flint__submit_flint_ir` if IR-shape. No Bash, Read, "
+                              "Write, Edit, Grep, Glob, Task, ToolSearch, or other MCP tools. "
+                              "Answer with text only (or the flint tool).")
+            else:
+                discipline = ("\n\n[BENCH MODE] Do not use any tools (no Bash, Read, Write, "
+                              "Edit, Grep, Glob, Task, ToolSearch, MCP tools). Answer with text only.")
+            prompt = prompt + discipline
             args = cmd.split() + ["-p", "--output-format", "stream-json",
                                    "--include-partial-messages", "--verbose"] + extra_args
             if sid:

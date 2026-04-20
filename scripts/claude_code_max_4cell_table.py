@@ -77,6 +77,22 @@ def has_flint_tool_call(row):
     return False
 
 
+def has_non_flint_tool_call(row):
+    """Agent-mode contamination: Bash, Read, Write, Edit, Grep, Glob, Task, other MCP tools."""
+    for tu in row.get("tool_uses") or []:
+        name = (tu.get("name") or "")
+        lower = name.lower()
+        if not name:
+            continue
+        # Allowed: Flint IR tool, ToolSearch (meta, finds tools without executing)
+        if "submit_flint_ir" in lower:
+            continue
+        if name == "ToolSearch":
+            continue
+        return True
+    return False
+
+
 def load_corpus():
     scenarios = {}
     for line in TASKS.read_text().splitlines():
@@ -97,9 +113,12 @@ def load_cell(prefix):
 
 def score_rows(rows, scenarios):
     ir_hits = tool_hits = parse_hits = class_hits = class_total = 0
+    agent_contaminated = 0
     total_out = 0
+    clean_out = 0  # tokens from turns with no non-flint tool use
     latencies = []
     scen_totals = {}
+    clean_scen_totals = {}
     per_turn = {}
     for r in rows:
         if "error" in r:
@@ -117,6 +136,7 @@ def score_rows(rows, scenarios):
 
         free_ir = is_ir(raw)
         tool_ir = has_flint_tool_call(r)
+        agent_tool = has_non_flint_tool_call(r)
         detected = "ir" if (free_ir or tool_ir) else "prose"
         class_total += 1
         if detected == expected:
@@ -127,9 +147,15 @@ def score_rows(rows, scenarios):
             tool_hits += 1
         if strict_pass(raw):
             parse_hits += 1
+        if agent_tool:
+            agent_contaminated += 1
+        else:
+            clean_out += out_tok
+            clean_scen_totals.setdefault(scen, 0)
+            clean_scen_totals[scen] += out_tok
         per_turn.setdefault((scen, tid), []).append({
             "out": out_tok, "detected": detected, "free_ir": free_ir, "tool_ir": tool_ir,
-            "parse": strict_pass(raw),
+            "agent": agent_tool, "parse": strict_pass(raw),
         })
     return {
         "n": class_total,
@@ -138,8 +164,11 @@ def score_rows(rows, scenarios):
         "tool_hit": tool_hits / class_total * 100 if class_total else 0,
         "parse": parse_hits / class_total * 100 if class_total else 0,
         "total_out": total_out,
+        "clean_out": clean_out,  # tokens from agent-free turns only
+        "agent_contaminated": agent_contaminated,
         "mean_lat": mean(latencies) if latencies else 0,
         "scen_totals": scen_totals,
+        "clean_scen_totals": clean_scen_totals,
         "per_turn": per_turn,
     }
 
@@ -171,7 +200,7 @@ def main():
     # Overall summary
     print()
     print(f"{'variant':<18} {'n':>3} {'class_acc':>10} {'ir_hit':>9} {'tool_hit':>10} "
-          f"{'parse_%':>9} {'total_tok':>11} {'mean_lat':>9}")
+          f"{'parse_%':>9} {'total_tok':>11} {'clean_tok':>11} {'agent_n':>8} {'mean_lat':>9}")
     for label, _ in CELLS:
         sm = summaries.get(label)
         if not sm:
@@ -179,7 +208,11 @@ def main():
             continue
         print(f"{label:<18} {sm['n']:>3} "
               f"{sm['class_acc']:>9.0f}% {sm['ir_hit']:>8.0f}% {sm['tool_hit']:>9.0f}% "
-              f"{sm['parse']:>8.0f}% {sm['total_out']:>11} {sm['mean_lat']:>8.1f}s")
+              f"{sm['parse']:>8.0f}% {sm['total_out']:>11} {sm['clean_out']:>11} "
+              f"{sm['agent_contaminated']:>7}/{sm['n']} {sm['mean_lat']:>8.1f}s")
+    print()
+    print("total_tok = all turns incl. agent-contaminated. clean_tok = turns with no non-flint tools.")
+    print("agent_n = count of turns that called Bash/Read/Write/Edit/Grep/Glob/Task/other-MCP (invalid for compression metric).")
 
     # Per-turn detail: did IR emit happen (free or tool)?
     print()

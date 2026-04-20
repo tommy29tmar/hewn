@@ -53,16 +53,18 @@ For downstream tooling that needs API-validated parseable IR, `cccflint-mcp` wra
 
 Trade-off: MCP adds ~20% output token overhead (tool round-trip), so `cccflint` remains the default choice for interactive use. Use `cccflint-mcp` when: you pipe Flint output into `flint audit --explain`, CI linters, or analytics that must not fail on malformed grammar.
 
-Multi-turn 4-cell bench (2 scenarios × 4 turns, deep-debug + mixed-security):
+Multi-turn 4-cell bench (2 scenarios × 4 turns, 3 runs = 24 samples per cell, agent-mode contamination excluded — see failure modes for methodology):
 
 | variant              | class_acc | ir_hit | tool_hit | total_tok | mean_lat |
 |----------------------|----------:|-------:|---------:|----------:|---------:|
-| plain `claude`       |       25% |     0% |       0% |     14316 |    35.9s |
-| **cccflint**         |   **50%** | **25%** |      0% |     14692 |    37.5s |
-| plain + MCP          |       25% |     0% |       0% |     16390 |    44.4s |
-| **cccflint + MCP**   |   **50%** |    12% | **25%**  |     17867 |    44.9s |
+| plain `claude`       |       25% |     0% |       0% |     34248 |    29.4s |
+| **cccflint**         |   **54%** | **29%** |      0% | **27404** | **24.3s** |
+| plain + MCP          |       25% |     0% |       0% |     43384 |    34.7s |
+| cccflint + MCP       |       46% |    21% |  **21%** |     41304 |    31.6s |
 
-The multi-turn drift (IR emits at turn 1, drifts to prose on turns 2-4) is a Claude Code session dynamics phenomenon that affects all variants. For per-turn IR enforcement on every task, open a fresh `cccflint` session per task or use the one-shot `/flint` skill.
+On multi-turn, `cccflint` saves **-20% output tokens and -17% latency** vs plain claude (per-scenario: deep-debug -12.6%, mixed-security -32.7%). Classification accuracy is 2.2× plain claude (54% vs 25%). The multi-turn drift (IR emits at turn 1, drifts to prose on turns 2-4) affects all variants — if per-turn IR is required, open a fresh `cccflint` session per task or use the one-shot `/flint` skill.
+
+`plain + MCP` is the worst outcome: the Flint MCP tool is available but never called without a system-prompt push, so it only adds the MCP tool-catalog tax to every turn. `cccflint + MCP` sits at +51% tokens vs `cccflint` due to tool round-trip overhead; use it when parser-validated IR is required by downstream tooling, otherwise stick with plain `cccflint`.
 
 ### Compression scales with context length
 
