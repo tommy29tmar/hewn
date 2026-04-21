@@ -50,7 +50,6 @@ IR_PROMPTS = [
     "Propose the minimal fix that prevents recurrence",
     # Security-specific
     "What specific attack vectors does this JWT implementation expose?",
-    "Find every security issue in this code, rank by severity",
     # With embedded code block
     "```python\ndef verify(tok): jwt.decode(tok, SECRET)\n```\nWhat's wrong here?",
     # Italian
@@ -59,9 +58,6 @@ IR_PROMPTS = [
     # Exploratory-technical (vibe-coding shapes that v0.8.2 missed)
     "Studia questa directory. Dimmi come potrei migliorare la flint CLI.",
     "Fammi un audit veloce del repo: cosa è solido, cosa è fragile, cosa toglierei.",
-    "Quali sono i 3 bug più probabili che un utente incontrerà nel primo mese?",
-    "Audit this codebase and rank top issues",
-    "What 3 bugs would a user most likely hit?",
     "Cosa è fragile in questo progetto?",
 ]
 
@@ -107,6 +103,18 @@ PROSE_CAVEMAN_PROMPTS = [
     "Answer in prose, no Flint IR, no markdown headers",
 ]
 
+PROSE_FINDINGS_PROMPTS = [
+    # Ranked/enumerated independent findings: technical, but not IR-shaped.
+    "Find every security issue in this code, rank by severity",
+    "Quali sono i 3 bug più probabili che un utente incontrerà nel primo mese?",
+    "Audit this codebase and rank top issues",
+    "What 3 bugs would a user most likely hit?",
+    "Rank the top 5 launch blockers before we ship",
+    "List the main failure modes with evidence and fix direction",
+    "Flag the security issues in this PR, ranked by severity",
+    "Classifica i rischi principali per probabilità e impatto",
+]
+
 
 @pytest.mark.parametrize("prompt", IR_PROMPTS)
 def test_ir_prompts_classified_as_ir(prompt: str) -> None:
@@ -131,6 +139,11 @@ def test_prose_polished_code_prompts_classified_as_prose_polished_code(prompt: s
 @pytest.mark.parametrize("prompt", PROSE_CAVEMAN_PROMPTS)
 def test_prose_caveman_prompts_classified_as_prose_caveman(prompt: str) -> None:
     assert hook.classify(prompt) == "prose_caveman", f"expected 'prose_caveman' for: {prompt!r}"
+
+
+@pytest.mark.parametrize("prompt", PROSE_FINDINGS_PROMPTS)
+def test_prose_findings_prompts_classified_as_prose_findings(prompt: str) -> None:
+    assert hook.classify(prompt) == "prose_findings", f"expected 'prose_findings' for: {prompt!r}"
 
 
 def test_empty_prompt_is_prose_caveman() -> None:
@@ -158,6 +171,13 @@ def test_build_output_for_prose_caveman() -> None:
     ctx = hook.build_output("prose_caveman")["hookSpecificOutput"]["additionalContext"]
     assert "prose-caveman" in ctx
     assert "Caveman-compressed" in ctx
+    assert "Do NOT emit Flint IR" in ctx
+
+
+def test_build_output_for_prose_findings() -> None:
+    ctx = hook.build_output("prose_findings")["hookSpecificOutput"]["additionalContext"]
+    assert "prose-findings" in ctx
+    assert "numbered findings list" in ctx
     assert "Do NOT emit Flint IR" in ctx
 
 

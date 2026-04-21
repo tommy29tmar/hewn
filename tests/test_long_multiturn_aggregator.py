@@ -377,3 +377,30 @@ def test_prose_code_not_confused_with_ir(tmp_path: Path) -> None:
     summary = report["headline"]["plain claude"]
     # detected ir, expected prose_code -> miss
     assert summary["class_acc"] == pytest.approx(0.0)
+
+
+def test_prose_findings_expected_accepts_prose_family(tmp_path: Path) -> None:
+    """Findings route is a prose sub-shape, not an IR parse target."""
+    corpus = make_corpus(
+        {
+            "findings": [make_turn("t1", "prose_findings")],
+        }
+    )
+    task_path = tmp_path / "corpus.jsonl"
+    write_jsonl(task_path, corpus)
+
+    out_dir = tmp_path / "runs"
+    out_dir.mkdir()
+
+    content = (
+        "1. Hook path fragile - integrations/claude-code/flint-drift-fix-settings.json:9. "
+        "Trigger: installed hook path stale. Fix: write absolute path at install.\n"
+        "2. MCP import missing - integrations/claude-code/mcp-config.json:4. "
+        "Trigger: optional mcp extra not installed. Fix: install extra or doctor check.\n"
+    )
+    write_jsonl(out_dir / "plain_r1.jsonl", [make_row("findings", "t1", content=content)])
+
+    report = AGG.build_report(task_path=task_path, out_dir=out_dir, cells=[("plain claude", "plain")])
+    summary = report["headline"]["plain claude"]
+    assert summary["class_acc"] == pytest.approx(100.0)
+    assert summary["ir_turn_count"] == 0

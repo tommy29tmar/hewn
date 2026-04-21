@@ -13,6 +13,7 @@ Pure Python, no external deps. Runs in <10ms.
 Score-based classifier:
 - Positive signals pull toward IR (structural, analytical, debugging).
 - Negative signals pull toward prose (writing, explanation, leadership).
+- Findings signals pull toward compact diagnostic lists instead of IR.
 - Threshold >= 2 -> IR, otherwise prose.
 
 See tests/test_flint_drift_fixer.py for the classification corpus.
@@ -47,11 +48,6 @@ IR_RULES: list[tuple[str, int]] = [
     (r"\bwalk[- ]through\b.*(?:trace|log|stack|error)|\bwhat\s+the\s+trace\b", 3),
     # Exploratory-technical: "audit this repo", "study the codebase", "inspect the project"
     (r"\b(?:audit|analy[sz]e|analy[sz]ing|study|studia|studiare|inspect|examine|assess|evaluate)\s+(?:this\s+|questa\s+|la\s+|il\s+)?(?:repo|repository|dir(?:ectory)?|code[- ]?base|codice|project|progetto|module|impl\w*)\b", 3),
-    # Bug-prediction / gap-analysis shape: "which N bugs", "top 3 risks", "3 bug più probabili"
-    (r"\b(?:which|what|quali|quanti)\s+(?:are\s+|sono\s+)?(?:the\s+|i\s+|le\s+)?(?:\d+|few|top|pochi|principali)\s+(?:bugs?|issues?|risks?|rischi|problemi|gaps?|errori)\b", 3),
-    (r"\b(?:top|first)\s+(?:\d+)\s+(?:bugs?|issues?|risks?|problemi|rischi|errori|gaps?)\b", 3),
-    (r"\b(?:what|which)\s+(?:bugs?|issues?|problems?|failures?|risks?)\s+(?:would|will|could|might|may)\s+(?:a\s+)?(?:users?|devs?|developers?|people)?\s*(?:encounter|hit|experience|face|meet)\b", 3),
-    (r"\b(?:cosa|che)\s+(?:bug|problemi|errori|rischi)\s+(?:incontr|trov|vedr|avr)\w*", 3),
     # "what's missing / what's fragile / what would you cut": repo-assessment shape
     (r"\bwhat(?:'s|\s+is)\s+(?:missing|fragile|solid|broken|wrong|risky)\b", 2),
     (r"\bcosa\s+(?:manca|è\s+fragile|toglierei|togliere|tagliare|è\s+solido|è\s+rotto)", 2),
@@ -66,6 +62,21 @@ PROSE_RULES: list[tuple[str, int]] = [
     (r"\brfc\b.*(?:draft|write|compose)|\bdesign[- ]doc\b|\bone[- ]pager\b.*(?:leader|exec)", 3),
     (r"\breadable\b|\bprofessional\s+tone\b|\breassuring\b|\btone:\s*(?:blameless|professional|reflective|narrative)", 2),
     (r"\bno\s+ir\b|\bno\s+flint\b", 5),
+]
+
+# Signals that the user wants a ranked/enumerated set of independent
+# diagnostic findings. This shape is technical and evidence-driven, but not
+# IR-shaped: each item needs its own title/evidence/impact/fix tuple.
+FINDINGS_RULES: list[str] = [
+    r"\b(?:top|first|main|biggest|highest[- ]impact|most\s+likely)\s+(?:\d+|few|several|many)?\s*(?:bugs?|issues?|risks?|problems?|findings?|gaps?|vulnerabilit(?:y|ies)|failures?|failure\s+modes?|blockers?|footguns?)\b",
+    r"\b(?:which|what)\s+(?:are\s+|is\s+)?(?:the\s+)?(?:\d+|few|top|main|biggest|most\s+likely)\s+(?:bugs?|issues?|risks?|problems?|findings?|gaps?|vulnerabilit(?:y|ies)|failures?|failure\s+modes?|blockers?|footguns?)\b",
+    r"\b(?:which|what)\s+(?:bugs?|issues?|problems?|failures?|risks?|footguns?)\s+(?:would|will|could|might|may)\s+(?:a\s+)?(?:users?|devs?|developers?|people)?\s*(?:encounter|hit|experience|face|meet)\b",
+    r"\b(?:find|identify|list|flag)\s+(?:every|all|top|\d+|the\s+main|the\s+most\s+likely)?\s*(?:the\s+)?(?:security\s+)?(?:issues?|vulnerabilit(?:y|ies)|risks?|bugs?|findings?|failure\s+modes?|blockers?|footguns?)\b.*\b(?:rank|severity|probability|likelihood|impact|evidence|file:line)\b",
+    r"\b(?:rank|prioriti[sz]e)\b.*\b(?:bugs?|issues?|risks?|vulnerabilit(?:y|ies)|findings?|blockers?|footguns?)\b.*\b(?:severity|risk|impact|probability|likelihood)\b",
+    r"\b(?:launch|ship|release)\s+blockers?\b|\bfootguns?\b|\bfailure\s+modes?\b",
+    r"\b(?:quali|che|cosa)\s+(?:sono\s+)?(?:i\s+|le\s+)?(?:\d+|pochi|top|principali|probabili|pi[uù]\s+probabili)\s+(?:bug|problemi|errori|rischi|vulnerabilit[aà]|blocchi|bloccanti)\b",
+    r"\b(?:cosa|che)\s+(?:bug|problemi|errori|rischi)\s+(?:incontr|trov|vedr|avr)\w*",
+    r"\b(?:classifica|ordina|prioritizza)\b.*\b(?:bug|problemi|rischi|vulnerabilit[aà]|bloccanti)\b.*\b(?:gravit[aà]|probabilit[aà]|impatto)\b",
 ]
 
 # Signals that the user wants an executable code artifact in the answer
@@ -109,7 +120,7 @@ def _matches_any(text: str, patterns: list[str]) -> bool:
 
 
 def classify(prompt: str) -> str:
-    """Return one of 'ir' | 'prose_code' | 'prose_polished_code' | 'prose_polished' | 'prose_caveman'.
+    """Return one of 'ir' | 'prose_code' | 'prose_findings' | 'prose_polished_code' | 'prose_polished' | 'prose_caveman'.
 
     Decision order (first match wins):
       1. Polished audience AND code artifact requested -> 'prose_polished_code'.
@@ -117,9 +128,10 @@ def classify(prompt: str) -> str:
          Professional prose register + fenced code block.
       2. Strongly polished audience (no code) -> 'prose_polished'.
       3. Code artifact requested (no polished audience) -> 'prose_code'.
-      4. Technical score >= IR_THRESHOLD -> 'ir'.
-      5. Any polished-audience hint -> 'prose_polished'.
-      6. Default -> 'prose_caveman' (terse, compressed prose).
+      4. Ranked/listed independent findings -> 'prose_findings'.
+      5. Technical score >= IR_THRESHOLD -> 'ir'.
+      6. Any polished-audience hint -> 'prose_polished'.
+      7. Default -> 'prose_caveman' (terse, compressed prose).
     """
     text = prompt or ""
     ir_score = 0
@@ -133,6 +145,7 @@ def classify(prompt: str) -> str:
 
     wants_code = _matches_any(text, CODE_ARTIFACT_RULES)
     polished_audience = _matches_any(text, POLISHED_AUDIENCE_RULES)
+    wants_findings = _matches_any(text, FINDINGS_RULES)
 
     if polished_audience and prose_score >= 4 and wants_code:
         return "prose_polished_code"
@@ -140,6 +153,8 @@ def classify(prompt: str) -> str:
         return "prose_polished"
     if wants_code:
         return "prose_code"
+    if wants_findings:
+        return "prose_findings"
     if ir_score - prose_score >= IR_THRESHOLD:
         return "ir"
     if polished_audience:
@@ -170,10 +185,27 @@ PROSE_CAVEMAN_DIRECTIVE = (
     "writing, brainstorming, quick explanation, or internal retrospective. "
     "Respond in Caveman-compressed prose. Drop articles (the/a/an/is/are). "
     "No markdown headers (# or ##). No bold. No filler intros or summaries. "
-    "One idea per line. Do NOT emit Flint IR or call submit_flint_ir. "
-    "When the question requires facts about actual code/files/repo state "
-    "(e.g. \"does X exist?\", \"should I add Y?\"), USE tools (Read, Grep, "
-    "Glob) — do not speculate when evidence is one tool call away."
+    "One idea per line. No ranked lists of alternatives unless the prompt "
+    "explicitly asks to rank. Keep answer short: match the prompt's weight. "
+    "Do NOT emit Flint IR or call submit_flint_ir. "
+    "Use tools ONLY when the question asks about concrete repo STATE "
+    "(\"does function X exist?\", \"what does file Y contain?\", \"is Z "
+    "configured?\"). Do NOT use tools for opinion, naming, branding, "
+    "launch-copy, marketing, or chat questions — those do not require "
+    "reading the codebase."
+)
+
+PROSE_FINDINGS_DIRECTIVE = (
+    "[TURN CLASSIFICATION: prose-findings] This turn asks for a ranked "
+    "or enumerated set of independent diagnostic findings (bugs, risks, "
+    "issues, vulnerabilities, blockers, footguns, failure modes). Do NOT "
+    "emit Flint IR or call submit_flint_ir. Use tools when facts about "
+    "actual code/files/repo state are needed. Respond with a compact "
+    "numbered findings list only: no intro, no closing summary, no "
+    "markdown headers, no bold. Preserve requested count/order. Each "
+    "item should include title, file:line or evidence, trigger/impact, "
+    "and fix direction in 1-3 terse lines. Use Caveman compression but "
+    "keep technical literals exact."
 )
 
 PROSE_POLISHED_DIRECTIVE = (
@@ -201,6 +233,7 @@ DIRECTIVES: dict[str, str] = {
     "ir": IR_DIRECTIVE,
     "prose_code": PROSE_CODE_DIRECTIVE,
     "prose_caveman": PROSE_CAVEMAN_DIRECTIVE,
+    "prose_findings": PROSE_FINDINGS_DIRECTIVE,
     "prose_polished": PROSE_POLISHED_DIRECTIVE,
     "prose_polished_code": PROSE_POLISHED_CODE_DIRECTIVE,
 }

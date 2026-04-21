@@ -1,5 +1,73 @@
 # Changelog
 
+## 0.8.4 — 2026-04-21
+
+### Classifier — `prose_findings` route for ranked diagnostic lists
+
+Adds a fifth Claude Code route for ranked/enumerated independent
+findings: bugs, risks, issues, vulnerabilities, blockers, footguns, and
+failure modes. These prompts are technical and evidence-driven, but they
+are not G/C/P/V/A-shaped: each item naturally carries its own
+title/evidence/impact/fix tuple — forcing them into IR atoms inflated
+tokens (p7 bug-prediction was 6658 tok IR vs ~2500 tok as numbered list).
+
+This keeps architecture/audit/fix planning in IR, while routing prompts
+like "top 3 bugs", "rank security issues by severity", and "launch
+blockers" to compact numbered Caveman prose. The vibe p7 expected shape
+and long security-review eval labels were updated accordingly.
+
+### Bench fairness — Agent block + subagent detector
+
+Vibe-bench previously let `cccaveman` delegate work to Agent/Task
+subagents on expensive prompts (p7). A subagent can issue dozens of
+internal tool calls and emit large chunks of content that never show in
+the parent's usage/tool_uses — falsifying the tok/lat/tool comparison.
+
+Fixes:
+- `scripts/bench_vibe_3way.sh`: injects `[BENCH MODE] Do not use Agent
+  or Task subagent tools. Do all work inline.` into every prompt.
+- `scripts/vibe_3way_table.py`: new `has_subagent` detector and
+  `subagent_n` column; refuses to count Agent-contaminated rows as
+  clean. On the fresh run, all variants showed 0/8 — the block works.
+
+### prose_caveman tool-use hint refined
+
+Previous hint ("use tools when facts about real code needed") was too
+broad: flint was reading files for opinion/naming/marketing prompts
+where no evidence was required. New hint scopes to concrete repo STATE
+questions only ("does function X exist", "what does file Y contain",
+"is Z configured"). Opinion/chat/naming prompts no longer trigger reads.
+
+On the bench this drops p4/p5/p6 tool calls from 2-6 to 0-1 with no
+quality loss on the reviewed answers.
+
+### Shape detector — structural findings check
+
+`vibe_3way_table.py` now detects `prose_findings` structurally
+(≥2 numbered items + file/line reference + fix marker), not just
+"is it prose". Variants that write generic prose no longer get credit
+for a findings-shaped prompt — the reporter is strict on the route.
+
+### Results — fresh bench with fairness fixes (8 vibe prompts, 3 variants)
+
+| variant       | tok     | lat    | tools | shape_hit | subagent |
+|---------------|---------|--------|-------|-----------|----------|
+| plain claude  | 33123   | 660s   |   82  |     62%   |     0/8  |
+| cccaveman     | 28661   | 557s   |   77  |     75%   |     0/8  |
+| **flint**     | **23734** | **490s** | **56** | **100%**  |     0/8  |
+
+vs plain: flint -28% tok, -26% lat, -32% tools.
+vs cccaveman: **flint -17% tok, -12% lat, -27% tools**, 7/8 per-prompt wins.
+
+The previous bench that showed flint > cccaveman on tokens (v0.8.3) was
+contaminated: cccaveman was delegating to subagents, and flint was doing
+unnecessary repo reads on opinion prompts. With both vectors closed, the
+architectural prediction holds — routing IR for technical shapes and
+Caveman prose for everything else beats pure prompt-only compression on
+every axis that matters.
+
+62 classifier tests passing.
+
 ## 0.8.3 — 2026-04-21
 
 ### Classifier — exploratory-technical shapes + tool-use hint on prose_caveman

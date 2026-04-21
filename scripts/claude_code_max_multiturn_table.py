@@ -38,6 +38,13 @@ def nfc(s): return unicodedata.normalize("NFC", s or "")
 def is_ir(raw): return bool(IR_PREFIX.match(nfc(raw)))
 
 
+def shape_matches(detected: str, expected: object) -> bool:
+    expected_shape = nfc(str(expected) if expected is not None else "")
+    if detected == expected_shape:
+        return True
+    return detected == "prose" and expected_shape.startswith("prose")
+
+
 def strict_pass(raw):
     if not HAS_PARSER:
         return False
@@ -90,7 +97,7 @@ def variant_summary(rows, scenarios):
         latencies.append((r.get("elapsed_ms") or 0) / 1000)
         expected = scenarios[scen][turn]["expected_shape"]
         detected = "ir" if is_ir(raw) else "prose"
-        ok = detected == expected
+        ok = shape_matches(detected, expected)
         class_total += 1
         if ok:
             class_hits += 1

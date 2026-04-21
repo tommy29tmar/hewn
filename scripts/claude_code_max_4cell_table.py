@@ -58,6 +58,13 @@ def nfc(s): return unicodedata.normalize("NFC", s or "")
 def is_ir(raw): return bool(IR_PREFIX.match(nfc(raw)))
 
 
+def shape_matches(detected: str, expected: object) -> bool:
+    expected_shape = nfc(str(expected) if expected is not None else "")
+    if detected == expected_shape:
+        return True
+    return detected == "prose" and expected_shape.startswith("prose")
+
+
 def strict_pass(raw):
     if not HAS_PARSER:
         return False
@@ -148,7 +155,7 @@ def score_rows(rows, scenarios):
         agent_tool = has_non_flint_tool_call(r)
         detected = "ir" if (free_ir or tool_ir) else "prose"
         class_total += 1
-        if detected == expected:
+        if shape_matches(detected, expected):
             class_hits += 1
         if free_ir:
             ir_hits += 1

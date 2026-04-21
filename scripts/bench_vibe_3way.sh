@@ -18,8 +18,12 @@ run_one() {
   python3 - "$cmd" "$out_file" "$prompt_id" "$prompt" "$variant" <<'PY'
 import json, subprocess, sys, time
 cmd, out_path, prompt_id, prompt, variant = sys.argv[1:6]
+# BENCH MODE: no subagents. Agent/Task delegate tool work that doesn't
+# show in parent tool_uses/usage — inflates quality asymmetrically.
+bench_suffix = "\n\n[BENCH MODE] Do not use Agent or Task subagent tools. Do all work inline with Read/Grep/Glob/Bash. No delegation."
+prompt_with_suffix = prompt + bench_suffix
 args = cmd.split() + ["-p", "--output-format", "stream-json",
-                       "--include-partial-messages", "--verbose", "--", prompt]
+                       "--include-partial-messages", "--verbose", "--", prompt_with_suffix]
 t0 = time.time()
 result = subprocess.run(args, capture_output=True, text=True, timeout=600)
 elapsed_ms = (time.time() - t0) * 1000

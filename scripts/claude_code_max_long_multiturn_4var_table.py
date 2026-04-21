@@ -68,6 +68,13 @@ def has_fenced_code(raw: object) -> bool:
     return bool(FENCED_CODE_BLOCK.search(nfc(raw)))
 
 
+def shape_matches(detected: str, expected: object) -> bool:
+    expected_shape = nfc(expected)
+    if detected == expected_shape:
+        return True
+    return detected == "prose" and expected_shape.startswith("prose")
+
+
 def strict_pass(raw: object) -> bool:
     if not HAS_PARSER:
         return False
@@ -226,7 +233,7 @@ def score_rows(rows: list[dict[str, object]], scenarios: dict[str, dict[str, dic
             detected = "prose"
 
         counts["class_total"] += 1
-        if detected == expected:
+        if shape_matches(detected, expected):
             counts["class_hits"] += 1
         if free_ir:
             counts["ir_hits"] += 1
