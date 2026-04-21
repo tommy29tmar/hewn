@@ -1,0 +1,54 @@
+name: Failure mode
+description: Report a case where Hewn produced misleading content, bad routing, or unusable output.
+title: "[failure-mode] "
+labels: ["failure-mode"]
+body:
+  - type: textarea
+    id: prompt
+    attributes:
+      label: Prompt
+      description: Paste the exact prompt or enough of it to reproduce the behavior.
+    validations:
+      required: true
+  - type: input
+    id: model
+    attributes:
+      label: Provider and model
+      placeholder: anthropic / claude-opus-4-7
+    validations:
+      required: true
+  - type: input
+    id: date
+    attributes:
+      label: Date
+      description: Use an absolute date so model/provider changes are traceable.
+      placeholder: 2026-04-21
+    validations:
+      required: true
+  - type: textarea
+    id: response
+    attributes:
+      label: Raw response
+      description: Include the raw model output, not only a summary.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected vs actual
+      description: Explain what should have happened and what went wrong.
+    validations:
+      required: true
+  - type: dropdown
+    id: category
+    attributes:
+      label: Failure category
+      options:
+        - Semantic error
+        - Missing constraint
+        - Bad routing
+        - Parser drift
+        - Too terse to use
+        - Other
+    validations:
+      required: true

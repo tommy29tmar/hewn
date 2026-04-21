@@ -1,11 +1,11 @@
 cff-version: 1.2.0
-title: Flint
-message: If you use Flint in research, benchmarks, or derivative tooling, please cite it.
+title: Hewn
+message: If you use Hewn in research, please cite it.
 type: software
 authors:
   - family-names: Rinversi
     given-names: Tommaso Maria
-repository-code: https://github.com/tommy29tmar/flint
-url: https://github.com/tommy29tmar/flint
+repository-code: https://github.com/tommy29tmar/hewn
+url: https://github.com/tommy29tmar/hewn
 license: MIT
-version: 0.2.0
+version: 0.9.0

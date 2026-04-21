@@ -1,17 +1,66 @@
 #!/usr/bin/env bash
-# hewn — public alias for the default Flint wrapper.
+# hewn — Claude Code wrapper: Hewn thinking-mode prompt + drift-fix hook.
 #
-# Brand-facing command name. Internally this still delegates to the
-# compatibility wrapper / protocol stack built around `flint`.
-
+# Combines:
+#   - Hewn thinking-mode system prompt (via --append-system-prompt) —
+#     terse prose for user-facing output, IR for IR-shape tasks.
+#   - Per-turn drift-fix hook (via --settings with UserPromptSubmit hook)
+#     that re-injects task-shape classification on every turn.
 set -euo pipefail
 
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-target="$script_dir/flint"
 
-if [ ! -x "$target" ]; then
-  echo "hewn: compatibility wrapper not found: $target" >&2
-  exit 1
-fi
+resolve_file() {
+  local name="$1"; shift
+  for candidate in "$@"; do
+    if [ -n "$candidate" ] && [ -f "$candidate" ]; then
+      echo "$candidate"
+      return
+    fi
+  done
+  echo "hewn: $name not found" >&2
+  for candidate in "$@"; do
+    echo "  searched: $candidate" >&2
+  done
+  return 1
+}
 
-exec "$target" "$@"
+# Resolution order: env override → checkout-adjacent → installed (~/.claude).
+# Checkout-adjacent wins so dev-mode tests committed assets; installed users
+# (~/.local/bin/hewn) fall through cleanly because the checkout path doesn't exist.
+prompt_file="$(resolve_file "thinking-mode prompt" \
+  "${HEWN_THINKING_PROMPT_FILE:-}" \
+  "$script_dir/../hewn_thinking_system_prompt.txt" \
+  "$HOME/.claude/hewn_thinking_system_prompt.txt")" || exit 1
+
+hook_file="$(resolve_file "drift-fix hook" \
+  "${HEWN_DRIFT_FIXER:-}" \
+  "$script_dir/../hooks/hewn_drift_fixer.py" \
+  "$HOME/.claude/hooks/hewn_drift_fixer.py")" || exit 1
+
+# Shell-quote the hook path, then JSON-encode the resulting command string
+# so Claude Code's hook dispatcher can execute it safely even with spaces.
+hook_command="$(
+  python3 - "$hook_file" <<'PY'
+import json, shlex, sys
+print(json.dumps(shlex.quote(sys.argv[1])))
+PY
+)"
+
+settings_file="$(mktemp "${TMPDIR:-/tmp}/hewn-settings.XXXXXX")"
+trap 'rm -f "$settings_file"' EXIT
+
+cat >"$settings_file" <<EOF
+{"hooks":{"UserPromptSubmit":[{"matcher":"","hooks":[{"type":"command","command":$hook_command}]}]}}
+EOF
+
+prompt_body="$(cat "$prompt_file")"
+
+set +e
+claude \
+  --append-system-prompt "$prompt_body" \
+  --settings "$settings_file" \
+  "$@"
+status=$?
+set -e
+exit "$status"

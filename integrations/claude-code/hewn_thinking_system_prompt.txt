@@ -23,9 +23,9 @@ Complete sentences, articles preserved, professional register.
 No filler / hedging / chatter. Match requested tone (blameless, reassuring, reflective).
 No markdown headers or bullets unless explicitly requested.
 IR AS USER OUTPUT
-When task has CRISP TECHNICAL GOAL and VERIFIABLE ENDPOINT, emit Flint IR as user-visible answer.
+When task has CRISP TECHNICAL GOAL and VERIFIABLE ENDPOINT, emit Hewn IR as user-visible answer.
 Exactly 6 lines, no prose, no fences, no audit, no blank lines:
-@flint v0 hybrid
+@hewn v0 hybrid
 G: <1 atom>
 C: <atoms joined by ∧>
 P: <atoms joined by ∧>

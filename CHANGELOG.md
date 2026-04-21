@@ -1,5 +1,53 @@
 # Changelog
 
+## 0.9.0 — 2026-04-21
+
+### Hard rename Flint → Hewn; wrapper-only repo
+
+Brand rename from Flint to Hewn was merely cosmetic at v0.8.3 (alias layer
+alongside primary Flint names). v0.9.0 completes it as a hard cutover and
+strips the project down to its single useful primitive: a Claude Code CLI
+wrapper.
+
+Removed:
+- MCP server and `{flint,hewn}-mcp` wrappers
+- Claude Code skills (`/flint`, `/flint-on`, `/flint-off`, `/flint-audit`)
+- Output styles (`flint`, `flint-thinking`, `hewn`, `hewn-thinking`)
+- Python package `src/flint/` (parser, validator, audit engine, rendering,
+  routing, MCP transport)
+- `flint-ir` / `hewn-ir` Python CLI and its pyproject packaging
+- Benchmark harness: `evals/`, `scripts/`, launch copy, baseline prompts
+- Grammar files, `*.flint` examples, JSON schemas
+- `docs/` dir (architecture, methodology, failure modes, plans)
+- `cccaveman` benchmark-only wrapper
+- Legacy `bin/flint` and `bin/flint-mcp`
+
+Renamed / scrubbed:
+- `bin/hewn` rewritten to work standalone (no longer delegates to `bin/flint`);
+  generates the drift-fix `--settings` JSON inline via a portable `mktemp`
+  with a shell-quoted hook-command path
+- `flint_thinking_system_prompt.txt` → `hewn_thinking_system_prompt.txt`
+  (content scrubbed: `Flint` → `Hewn`, `@flint v0 hybrid` → `@hewn v0 hybrid`)
+- `hooks/flint_drift_fixer.py` → `hooks/hewn_drift_fixer.py`
+  (docstring + routing-directive strings scrubbed of MCP / `submit_flint_ir` refs)
+- `tests/test_flint_drift_fixer.py` → `tests/test_hewn_drift_fixer.py`,
+  ported from pytest to `unittest.TestCase` + `subTest` + `unittest.mock.patch`
+  (no external deps)
+- `install.sh` rewritten: installs only the wrapper + prompt + hook, plus a
+  one-liner to clean up legacy Flint files
+- CI workflow (`.github/workflows/ci.yml`): `python -m unittest tests.test_hewn_drift_fixer`,
+  no package install step
+- README (top-level + integrations) rewritten around the wrapper story
+- IR protocol header `@flint v0 hybrid` → `@hewn v0 hybrid` (no parsers remain)
+
+The drift-fix classifier still recognizes `\bno\s+flint\b` alongside
+`\bno\s+hewn\b` and `\bno\s+ir\b` as a "please don't emit IR" signal, so
+users with muscle memory for the old brand continue to work.
+
+Migration: existing Flint installs carry orphan files under `~/.claude/`;
+the installer prints a one-liner to remove them. Git history preserves all
+deleted code for reproducibility.
+
 ## 0.8.4 — 2026-04-21
 
 ### Classifier — `prose_findings` route for ranked diagnostic lists

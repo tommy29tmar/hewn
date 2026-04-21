@@ -1,15 +1,11 @@
 # Support
 
-Use the right channel for the right kind of request.
-
 ## Discussions
 
 Use GitHub Discussions for:
 
-- questions about using Flint
-- open-ended research ideas
-- provider strategy conversations
-- benchmark interpretation
+- usage questions
+- open-ended ideas for the classifier or the system prompt
 
 ## Issues
 
@@ -17,10 +13,10 @@ Use GitHub Issues for:
 
 - reproducible bugs
 - concrete feature requests
-- experiment reports with actionable follow-up
+- prompts that got routed to the wrong shape (include the raw prompt and
+  the raw response)
 
 ## Scope
 
-Flint is still a research-heavy project. Support is best-effort, and the most
-useful requests are the ones that include concrete commands, models, corpora,
-and artifact links.
+Hewn is a small wrapper. Support is best-effort. The most useful reports
+are ones that include the exact prompt, the model, and the observed output.

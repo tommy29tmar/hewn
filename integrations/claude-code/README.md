@@ -1,61 +1,45 @@
-# Claude Code Integration
+# Hewn — Claude Code integration
 
-Hewn is the new public brand for Flint. The wire format and internal module
-names still use `flint` for compatibility, so you'll see both names during the
-transition.
+Hewn is a Claude Code CLI wrapper. It runs `claude` with:
 
-Hewn can be used from Claude Code in two practical ways:
-
-1. `CLAUDE.md` for interactive terminal sessions
-2. `--append-system-prompt` for `claude -p` print-mode wrappers
-
-Anthropic's official docs say Claude Code can be customized with project `CLAUDE.md` files or `--append-system-prompt`, and that model choice can be changed with `/model`, `--model`, or environment variables.
-
-Relevant docs:
-
-- Settings: https://docs.anthropic.com/en/docs/claude-code/settings
-- CLI reference: https://docs.anthropic.com/en/docs/claude-code/cli-reference
-- Model configuration: https://support.anthropic.com/en/articles/11940350-claude-code-model-configuration
+- A thinking-mode **system prompt** appended via `--append-system-prompt`,
+  which routes each turn to one of five shapes (IR, prose+code,
+  prose-findings, prose-polished, prose-caveman) based on task structure.
+- A per-turn **drift-fix hook** registered via `--settings`, which
+  classifies every user prompt and re-injects the routing directive as
+  `additionalContext`. This prevents the T2+ drift observed when relying
+  on the system prompt alone.
 
 ## Install
 
-See the top-level [README](../../README.md) for the one-liner install, the new `hewn` / `hewn-mcp` wrappers, the `hewn-ir` / `flint-ir` CLI aliases, and the current slash-command workflow (`/flint`, `/flint-on`, `/flint-off`, `/flint-audit`).
-
-## Usage model
-
-The generated `CLAUDE.md` keeps normal human-language answers as the default and reserves raw Hewn/Flint IR for:
-
-- explicit Hewn / Flint requests
-- compact capsule generation
-- benchmark or tool-driven symbolic transport
-
-That matches Claude Code better than forcing every terminal reply into raw symbolic form.
-
-## Per-file `CLAUDE.md` audit
-
-Hewn ships a read-only CLI for auditing individual markdown instruction files. It is **per-file**: you point it at a specific `CLAUDE.md` (or any markdown). It does **not** walk your filesystem, does **not** enumerate or mirror Claude Code's memory-resolution rules, and never modifies the original file.
-
 ```bash
-# Token accounting for one or more files
-hewn-ir claude-code inventory path/to/CLAUDE.md
-
-# Print a structurally-safe compressed copy to stdout (preserves fenced code,
-# command lines, paths, inline-code paragraphs, headings; collapses only
-# runs of whitespace inside plain prose bullets)
-hewn-ir claude-code compile path/to/CLAUDE.md
-
-# Unified diff of original vs compressed, plus per-segment summary
-hewn-ir claude-code diff path/to/CLAUDE.md
+curl -fsSL https://raw.githubusercontent.com/tommy29tmar/hewn/main/integrations/claude-code/install.sh | bash
 ```
 
-What the compiler refuses to touch:
+(During the GitHub repo rename from `flint` → `hewn`, the old URL still
+works via redirect.)
 
-- fenced code blocks (` ``` ` / `~~~`)
-- markdown headings
-- lines that look like shell commands (`$`, `>`, `#!`) or filesystem paths
-- list items containing backticks (inline code)
-- any paragraph that is not an explicit list item
+## Usage
 
-What it *does* touch: plain list-item prose, and only to collapse runs of whitespace. Words, punctuation, and operators are never rewritten. If collapsing would change any non-whitespace character, the original text is returned unchanged.
+```bash
+hewn                     # interactive session with Hewn thinking-mode
+hewn -p "your prompt"    # non-interactive
+```
 
-Cache lives under `~/.cache/flint/claude-code/` keyed on sha1 of the original file; override with `FLINT_CACHE_DIR` or pass `--no-cache`.
+Any flag accepted by `claude` is forwarded: `hewn --model claude-opus-4-7 -p "…"`.
+
+The default `claude` command is untouched.
+
+## Files installed
+
+- `~/.local/bin/hewn` — the wrapper
+- `~/.claude/hewn_thinking_system_prompt.txt` — the system prompt
+- `~/.claude/hooks/hewn_drift_fixer.py` — the UserPromptSubmit hook
+
+## Uninstall
+
+```bash
+rm -f ~/.local/bin/hewn \
+      ~/.claude/hewn_thinking_system_prompt.txt \
+      ~/.claude/hooks/hewn_drift_fixer.py
+```

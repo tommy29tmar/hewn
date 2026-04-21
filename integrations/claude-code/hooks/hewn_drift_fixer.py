@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Flint drift-fix hook — UserPromptSubmit classifier.
+"""Hewn drift-fix hook — UserPromptSubmit classifier.
 
 Reads a Claude Code UserPromptSubmit event from stdin, classifies the
 turn as IR-shape or prose-shape using a score-based rule set, and emits
-a hookSpecificOutput JSON that reasserts the Flint routing directive
+a hookSpecificOutput JSON that reasserts the Hewn routing directive
 as additionalContext. This pins the model's attention to the task
 shape on every turn, preventing the T2+ drift observed when relying
 on the system prompt alone.
@@ -16,7 +16,7 @@ Score-based classifier:
 - Findings signals pull toward compact diagnostic lists instead of IR.
 - Threshold >= 2 -> IR, otherwise prose.
 
-See tests/test_flint_drift_fixer.py for the classification corpus.
+See tests/test_hewn_drift_fixer.py for the classification corpus.
 """
 from __future__ import annotations
 
@@ -61,7 +61,7 @@ PROSE_RULES: list[tuple[str, int]] = [
     (r"\bpost[- ]?mortem\b.*(?:write|draft|compose|customer|blameless)|\bretrospective\b.*(?:write|narrative|reflective)", 4),
     (r"\brfc\b.*(?:draft|write|compose)|\bdesign[- ]doc\b|\bone[- ]pager\b.*(?:leader|exec)", 3),
     (r"\breadable\b|\bprofessional\s+tone\b|\breassuring\b|\btone:\s*(?:blameless|professional|reflective|narrative)", 2),
-    (r"\bno\s+ir\b|\bno\s+flint\b", 5),
+    (r"\bno\s+ir\b|\bno\s+hewn\b|\bno\s+flint\b", 5),
 ]
 
 # Signals that the user wants a ranked/enumerated set of independent
@@ -164,18 +164,17 @@ def classify(prompt: str) -> str:
 
 IR_DIRECTIVE = (
     "[TURN CLASSIFICATION: IR-shape] This turn has a crisp technical goal "
-    "and verifiable endpoint. Respond in Flint IR: emit '@flint v0 hybrid' "
-    "+ G/C/P/V/A clauses (or call the submit_flint_ir MCP tool if "
-    "available). Do NOT respond in prose for this turn. Keep atoms in "
-    "lowercase_snake_case or call form f(\"x\") or quoted literals. "
-    "No code blocks inside atoms."
+    "and verifiable endpoint. Respond in Hewn IR: emit '@hewn v0 hybrid' "
+    "+ G/C/P/V/A clauses as free text. Do NOT respond in prose for this "
+    "turn. Keep atoms in lowercase_snake_case or call form f(\"x\") or "
+    "quoted literals. No code blocks inside atoms."
 )
 
 PROSE_CODE_DIRECTIVE = (
     "[TURN CLASSIFICATION: prose+code] This turn asks for an executable "
     "artifact (fix, test, updated file, snippet). Respond with a brief "
     "Caveman-compressed prose analysis (2-4 lines) followed by one or "
-    "more fenced code blocks (```lang ... ```). Do NOT emit Flint IR "
+    "more fenced code blocks (```lang ... ```). Do NOT emit Hewn IR "
     "atoms — code must render verbatim. Keep the analysis terse: drop "
     "articles, no filler. Code block first when the user asked to 'show' it."
 )
@@ -187,7 +186,7 @@ PROSE_CAVEMAN_DIRECTIVE = (
     "No markdown headers (# or ##). No bold. No filler intros or summaries. "
     "One idea per line. No ranked lists of alternatives unless the prompt "
     "explicitly asks to rank. Keep answer short: match the prompt's weight. "
-    "Do NOT emit Flint IR or call submit_flint_ir. "
+    "Do NOT emit Hewn IR. "
     "Use tools ONLY when the question asks about concrete repo STATE "
     "(\"does function X exist?\", \"what does file Y contain?\", \"is Z "
     "configured?\"). Do NOT use tools for opinion, naming, branding, "
@@ -199,7 +198,7 @@ PROSE_FINDINGS_DIRECTIVE = (
     "[TURN CLASSIFICATION: prose-findings] This turn asks for a ranked "
     "or enumerated set of independent diagnostic findings (bugs, risks, "
     "issues, vulnerabilities, blockers, footguns, failure modes). Do NOT "
-    "emit Flint IR or call submit_flint_ir. Use tools when facts about "
+    "emit Hewn IR. Use tools when facts about "
     "actual code/files/repo state are needed. Respond with a compact "
     "numbered findings list only: no intro, no closing summary, no "
     "markdown headers, no bold. Preserve requested count/order. Each "
@@ -214,8 +213,7 @@ PROSE_POLISHED_DIRECTIVE = (
     "Respond in professional, readable prose. Complete sentences with "
     "articles preserved. No Caveman compression. No filler, no hedging, "
     "no chatter, no bullet points unless requested. Match the tone asked "
-    "(blameless, reassuring, reflective). Do NOT emit Flint IR or call "
-    "submit_flint_ir."
+    "(blameless, reassuring, reflective). Do NOT emit Hewn IR."
 )
 
 PROSE_POLISHED_CODE_DIRECTIVE = (
@@ -225,8 +223,7 @@ PROSE_POLISHED_CODE_DIRECTIVE = (
     "professional readable prose (complete sentences, articles preserved, "
     "no Caveman compression, no filler) followed by one or more fenced "
     "code blocks (```lang ... ```). Match the tone asked (blameless, "
-    "reassuring). Do NOT emit Flint IR atoms — code must render verbatim. "
-    "Do NOT call submit_flint_ir."
+    "reassuring). Do NOT emit Hewn IR atoms — code must render verbatim."
 )
 
 DIRECTIVES: dict[str, str] = {

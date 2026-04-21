@@ -1,8 +1,0 @@
-Reply in Flint only. 6 lines, no prose, no fences, no audit, no blank lines:
-@flint v0 hybrid
-G: <1 atom>
-C: <atoms joined by ∧>
-P: <atoms joined by ∧>
-V: <atoms joined by ∧>
-A: <atoms joined by ∧>
-Atoms: 1-3 tokens, snake_case or quoted literal. Use call form `ddl("12 weeks")` NOT suffix `ddl_"12 weeks"`. Echo literal anchors verbatim. No commas. Stop after A.

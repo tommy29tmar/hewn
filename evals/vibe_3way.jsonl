@@ -1,8 +1,0 @@
-{"id":"p1_cli_audit","expected_shape":"ir","prompt":"Studia questa directory. Dimmi come potrei migliorare la flint CLI — cosa manca, cosa ha troppo?"}
-{"id":"p2_launch_audit","expected_shape":"ir","prompt":"Fammi un audit veloce del repo: cosa è solido, cosa è fragile, cosa toglierei se dovessi lanciare domani?"}
-{"id":"p3_new_user","expected_shape":"prose_caveman","prompt":"Se fossi uno user che installa questa skill per la prima volta, cosa ti confonderebbe nei primi 5 minuti?"}
-{"id":"p4_mcp_decision","expected_shape":"prose_caveman","prompt":"Sto pensando di aggiungere un secondo MCP tool che validi Flint IR offline (senza chiamare l'API). Serve davvero o è over-engineering? Dimmi come la pensi."}
-{"id":"p5_name_vibe","expected_shape":"prose_caveman","prompt":"Il nome \"flint\" è forte per questa cosa o debole? Se dovessi rifarlo da zero, come lo chiameresti e perché?"}
-{"id":"p6_readme_vibe","expected_shape":"prose_caveman","prompt":"Leggi il README. È ingaggiante per un dev che vede sta roba per la prima volta o sembra un research paper? Sii onesto."}
-{"id":"p7_bug_prediction","expected_shape":"prose_findings","prompt":"Guarda il codice. Quali sono i 3 bug più probabili che un utente incontrerà nel primo mese di uso di `flint`?"}
-{"id":"p8_launch_hook","expected_shape":"prose_caveman","prompt":"Devo scrivere un tweet/post di lancio. Su cosa punteresti come hook: la compressione token, la classificazione automatica, o il non-interferire con claude?"}

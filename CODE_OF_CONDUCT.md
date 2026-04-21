@@ -2,7 +2,7 @@
 
 ## Our standard
 
-Flint is a technical research project. Productive discussion requires directness,
+Hewn is a technical project. Productive discussion requires directness,
 evidence, and respect.
 
 Participants are expected to:
