@@ -5,8 +5,8 @@
 Hewn is a small `bash` wrapper around `claude` that does two things:
 
 1. Appends a thinking-mode **system prompt** that routes each user turn to one
-   of five answer shapes (IR, prose+code, prose-findings, prose-polished,
-   prose-caveman) based on task structure.
+   of six answer shapes (IR, prose+code, prose-findings, prose-polished,
+   prose-polished+code, prose-caveman) based on task structure.
 2. Registers a per-turn **drift-fix hook** that classifies every prompt and
    re-injects the routing directive as `additionalContext`, preventing the
    T2+ drift observed when the system prompt alone does the routing.
@@ -44,7 +44,7 @@ Any flag accepted by `claude` is forwarded.
 At runtime the wrapper generates a short temp `--settings` JSON that points
 Claude Code's hook dispatcher at the classifier.
 
-## The five routes
+## The six routes
 
 | Shape | When | Output |
 |---|---|---|
@@ -52,6 +52,7 @@ Claude Code's hook dispatcher at the classifier.
 | **prose+code** | technical goal + asks for code, test, patch, snippet | terse analysis + fenced code |
 | **prose-findings** | ranked/listed independent findings (bugs, risks, vulns) | numbered list with evidence per item |
 | **prose-polished** | leadership / customer / stakeholder audience, no code | professional readable prose |
+| **prose-polished+code** | polished audience + inline code, config, snippet, or patch | professional prose + fenced code |
 | **prose-caveman** | chat, brainstorm, tutorial, quick explanation | terse compressed prose |
 
 The classifier is a score-based regex match over the user prompt. See

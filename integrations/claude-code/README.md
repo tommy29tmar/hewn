@@ -3,8 +3,9 @@
 Hewn is a Claude Code CLI wrapper. It runs `claude` with:
 
 - A thinking-mode **system prompt** appended via `--append-system-prompt`,
-  which routes each turn to one of five shapes (IR, prose+code,
-  prose-findings, prose-polished, prose-caveman) based on task structure.
+  which routes each turn to one of six shapes (IR, prose+code,
+  prose-findings, prose-polished, prose-polished+code, prose-caveman)
+  based on task structure.
 - A per-turn **drift-fix hook** registered via `--settings`, which
   classifies every user prompt and re-injects the routing directive as
   `additionalContext`. This prevents the T2+ drift observed when relying
