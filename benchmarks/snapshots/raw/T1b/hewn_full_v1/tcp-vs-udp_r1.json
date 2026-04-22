@@ -1,0 +1,105 @@
+{
+  "track": "T1b",
+  "arm": "hewn_full",
+  "prompt_id": "tcp-vs-udp",
+  "run_index": 1,
+  "arm_order_index": 4,
+  "arm_order_full": [
+    "terse",
+    "baseline",
+    "caveman_full",
+    "hewn_prompt_only",
+    "hewn_full",
+    "caveman_full_plus_ultra_directive"
+  ],
+  "digest_hex": "3477bad1c43abfa53a4c2ef843bb8bd5e1878b32d0cfef82b891d77115a5b941",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-21T23:42:21.253087+00:00",
+  "output_tokens_tiktoken": 96,
+  "output_tokens_anthropic": 171,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 13201,
+  "cache_read_input_tokens": 16805,
+  "total_input_tokens": 30012,
+  "cache_state": "warm",
+  "wallclock_ms": 9986.62298702402,
+  "duration_ms": 4283,
+  "duration_api_ms": 4947,
+  "wrapper_overhead_ms": 5039.62298702402,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "d5856dea-6bb5-4868-84dd-90cb92fb59f2",
+  "total_cost_usd": 0.09562574999999998,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "TCP: connection-oriented, handshake first, reliable, ordered, retransmits lost packets, flow + congestion control. Slower, more overhead.\n\nUDP: connectionless, fire-and-forget, no retransmit, no ordering, no congestion control. Faster, lighter, can drop packets.\n\nUse TCP when correctness matters (HTTP, SSH, file transfer).\nUse UDP when speed matters more than losing some data (DNS, video calls, games, QUIC builds own reliability on top).",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 4283,
+    "duration_api_ms": 4947,
+    "num_turns": 1,
+    "result": "TCP: connection-oriented, handshake first, reliable, ordered, retransmits lost packets, flow + congestion control. Slower, more overhead.\n\nUDP: connectionless, fire-and-forget, no retransmit, no ordering, no congestion control. Faster, lighter, can drop packets.\n\nUse TCP when correctness matters (HTTP, SSH, file transfer).\nUse UDP when speed matters more than losing some data (DNS, video calls, games, QUIC builds own reliability on top).",
+    "stop_reason": "end_turn",
+    "session_id": "d5856dea-6bb5-4868-84dd-90cb92fb59f2",
+    "total_cost_usd": 0.09562574999999998,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 13201,
+      "cache_read_input_tokens": 16805,
+      "output_tokens": 171,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 13201,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 171,
+          "cache_read_input_tokens": 16805,
+          "cache_creation_input_tokens": 13201,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 13201
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 347,
+        "outputTokens": 13,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.000412,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 171,
+        "cacheReadInputTokens": 16805,
+        "cacheCreationInputTokens": 13201,
+        "webSearchRequests": 0,
+        "costUSD": 0.09521374999999999,
+        "contextWindow": 200000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "e07c2983-c63e-412a-8b72-701c232b0365"
+  }
+}

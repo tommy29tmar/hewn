@@ -1,0 +1,96 @@
+{
+  "track": "T4",
+  "arm": "hewn_prompt_only",
+  "sequence_id": "design-feature",
+  "run_index": 1,
+  "turn": 4,
+  "arm_order_index": 1,
+  "arm_order_full": [
+    "hewn_full",
+    "hewn_prompt_only",
+    "terse",
+    "baseline",
+    "caveman_full"
+  ],
+  "digest_hex": "30a2f9a62df0d790c0598917c3ab42509bbadd672a0a484741ea201d2da3b44f",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T01:06:42.514713+00:00",
+  "session_id_used_for_resume": "c02819a2-ad2a-4986-87e1-163d9a52cd4b",
+  "output_tokens_tiktoken": 795,
+  "output_tokens_anthropic": 2000,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 2133,
+  "cache_read_input_tokens": 35627,
+  "total_input_tokens": 37766,
+  "cache_state": "warm",
+  "wallclock_ms": 38478.94163697492,
+  "duration_ms": 35676,
+  "duration_api_ms": 35646,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "c02819a2-ad2a-4986-87e1-163d9a52cd4b",
+  "total_cost_usd": 0.08117475,
+  "model_used": "claude-opus-4-7",
+  "result": "Both, but they're doing different jobs — don't conflate them.\n\n**Consumption path: correctness gate.** This is non-negotiable. Every debit checks expiry as part of the same atomic operation as the balance check, in the same transaction:\n\n```sql\nSELECT balance, expires_at FROM gift_cards\nWHERE code = $1 FOR UPDATE;\n-- application: if now() >= expires_at, reject with EXPIRED\n\n-- or folded into the conditional update:\nUPDATE gift_cards\nSET balance = balance - $2\nWHERE code = $1 AND balance >= $2 AND expires_at > now();\n```\n\nNever trust \"the batch job ran this morning\" as your guarantee. Clocks drift, jobs fail, a card issued yesterday can expire mid-checkout if you wait long enough. The checkout path is the only place where \"is this card spendable *right now*\" actually matters, and it's the only check that can't be wrong.\n\n**Batch job: state transitions and side effects.** The batch isn't there to *prevent* spending — the consumption check already does that. It's there to make things happen on a schedule that no user action will trigger:\n\n- **Reminder emails** (\"your card expires in 30/7/1 days\"). Many jurisdictions require pre-expiry notice; your legal team will have opinions.\n- **State flip** from `active` → `expired` so support tooling, balance-check endpoints, and reports show the right status without every reader recomputing `now() vs expires_at`.\n- **Accounting move**: shift the outstanding balance from \"gift card liability\" to whatever bucket your finance team uses (breakage revenue, escheatment payable, forfeiture reserve). This *has* to happen on a date even if no one tries to spend the card.\n- **Escheatment reporting** in the US states that require it — you need a dated list of dormant balances, not a derivation.\n\n**How to keep them consistent**\n\nStore `expires_at` as a timestamp, not a boolean `is_expired`. The timestamp is the truth; `status` is a cache the batch maintains. Consumption checks `expires_at` directly so it can't lag behind the batch. The batch updates `status` and triggers side effects.\n\n```\ngift_cards:\n  expires_at timestamptz NOT NULL   -- truth\n  status     text         NOT NULL  -- 'active' | 'expired' | 'voided', maintained by batch\n```\n\nConsumption: `WHERE expires_at > now() AND status = 'active'`. Belt and suspenders — `status` catches manual voids, `expires_at` catches the race where the batch hasn't run yet.\n\n**Three gotchas worth pre-empting**\n\n1. **Time zone and definition of \"12 months.\"** Is it `issued_at + 12 months` computed in UTC, in the user's zone, or in the merchant's zone? Does Feb 29 issuance mean Feb 28 next year? Pick a rule and write it down — this will come up in a support ticket.\n\n2. **Regulatory reality check.** In the US, the CARD Act prohibits expiry earlier than 5 years from issue for most gift cards sold to consumers; many states go further. In the EU it varies but 12 months is aggressive and sometimes unenforceable. A \"12 month expiry\" feature might need to be \"12 month inactivity resets\" or \"12 month promotional balance, underlying principal doesn't expire\" depending on jurisdiction. Worth confirming before you build the check, not after.\n\n3. **Grace period / reactivation.** Decide now whether support can revive an expired card, and if so, does that mean bumping `expires_at`, flipping `status` back to `active`, or issuing a new card with the residual balance. All three are valid; shipping without a choice means support will invent one and you'll inherit it.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 35676,
+    "duration_api_ms": 35646,
+    "num_turns": 1,
+    "result": "Both, but they're doing different jobs — don't conflate them.\n\n**Consumption path: correctness gate.** This is non-negotiable. Every debit checks expiry as part of the same atomic operation as the balance check, in the same transaction:\n\n```sql\nSELECT balance, expires_at FROM gift_cards\nWHERE code = $1 FOR UPDATE;\n-- application: if now() >= expires_at, reject with EXPIRED\n\n-- or folded into the conditional update:\nUPDATE gift_cards\nSET balance = balance - $2\nWHERE code = $1 AND balance >= $2 AND expires_at > now();\n```\n\nNever trust \"the batch job ran this morning\" as your guarantee. Clocks drift, jobs fail, a card issued yesterday can expire mid-checkout if you wait long enough. The checkout path is the only place where \"is this card spendable *right now*\" actually matters, and it's the only check that can't be wrong.\n\n**Batch job: state transitions and side effects.** The batch isn't there to *prevent* spending — the consumption check already does that. It's there to make things happen on a schedule that no user action will trigger:\n\n- **Reminder emails** (\"your card expires in 30/7/1 days\"). Many jurisdictions require pre-expiry notice; your legal team will have opinions.\n- **State flip** from `active` → `expired` so support tooling, balance-check endpoints, and reports show the right status without every reader recomputing `now() vs expires_at`.\n- **Accounting move**: shift the outstanding balance from \"gift card liability\" to whatever bucket your finance team uses (breakage revenue, escheatment payable, forfeiture reserve). This *has* to happen on a date even if no one tries to spend the card.\n- **Escheatment reporting** in the US states that require it — you need a dated list of dormant balances, not a derivation.\n\n**How to keep them consistent**\n\nStore `expires_at` as a timestamp, not a boolean `is_expired`. The timestamp is the truth; `status` is a cache the batch maintains. Consumption checks `expires_at` directly so it can't lag behind the batch. The batch updates `status` and triggers side effects.\n\n```\ngift_cards:\n  expires_at timestamptz NOT NULL   -- truth\n  status     text         NOT NULL  -- 'active' | 'expired' | 'voided', maintained by batch\n```\n\nConsumption: `WHERE expires_at > now() AND status = 'active'`. Belt and suspenders — `status` catches manual voids, `expires_at` catches the race where the batch hasn't run yet.\n\n**Three gotchas worth pre-empting**\n\n1. **Time zone and definition of \"12 months.\"** Is it `issued_at + 12 months` computed in UTC, in the user's zone, or in the merchant's zone? Does Feb 29 issuance mean Feb 28 next year? Pick a rule and write it down — this will come up in a support ticket.\n\n2. **Regulatory reality check.** In the US, the CARD Act prohibits expiry earlier than 5 years from issue for most gift cards sold to consumers; many states go further. In the EU it varies but 12 months is aggressive and sometimes unenforceable. A \"12 month expiry\" feature might need to be \"12 month inactivity resets\" or \"12 month promotional balance, underlying principal doesn't expire\" depending on jurisdiction. Worth confirming before you build the check, not after.\n\n3. **Grace period / reactivation.** Decide now whether support can revive an expired card, and if so, does that mean bumping `expires_at`, flipping `status` back to `active`, or issuing a new card with the residual balance. All three are valid; shipping without a choice means support will invent one and you'll inherit it.",
+    "stop_reason": "end_turn",
+    "session_id": "c02819a2-ad2a-4986-87e1-163d9a52cd4b",
+    "total_cost_usd": 0.08117475,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 2133,
+      "cache_read_input_tokens": 35627,
+      "output_tokens": 2000,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 2133,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 2000,
+          "cache_read_input_tokens": 35627,
+          "cache_creation_input_tokens": 2133,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 2133
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 2000,
+        "cacheReadInputTokens": 35627,
+        "cacheCreationInputTokens": 2133,
+        "webSearchRequests": 0,
+        "costUSD": 0.08117475,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "a44c94ac-7971-45f6-91b2-35d7224e58ae"
+  }
+}

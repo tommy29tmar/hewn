@@ -1,0 +1,105 @@
+{
+  "track": "T3",
+  "arm": "hewn_full",
+  "prompt_id": "body-size-rollout-plan",
+  "run_index": 2,
+  "arm_order_index": 3,
+  "arm_order_full": [
+    "hewn_prompt_only",
+    "baseline",
+    "caveman_full",
+    "hewn_full",
+    "terse",
+    "caveman_full_plus_ultra_directive"
+  ],
+  "digest_hex": "1bd4b0373727fd4210ef8de0e1bbabf2ae481acfbad8df43e44c0380c5d0b4d2",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T00:43:50.297448+00:00",
+  "output_tokens_tiktoken": 1096,
+  "output_tokens_anthropic": 1787,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 24640,
+  "cache_read_input_tokens": 16805,
+  "total_input_tokens": 41451,
+  "cache_state": "warm",
+  "wallclock_ms": 37860.24329101201,
+  "duration_ms": 34632,
+  "duration_api_ms": 35754,
+  "wrapper_overhead_ms": 2106.2432910120115,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "a26c5608-c223-4d8c-a200-165454be9d3e",
+  "total_cost_usd": 0.2128405,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "1. Trusts client-supplied X-User-Id header (handler line 2)\nTrigger: reads req.headers['x-user-id'] at edge; any caller can forge identity and move another user's funds. Violates Section 2 rule 1 and Section 5 (internal identity headers are stripped on ingress; trusted identity comes from JWT only).\nFix: remove header read; use req.user.sub set by auth_jwt middleware. Confirm header_sanitize runs before this route and the route is mounted AFTER auth_jwt in src/edge/pipeline.ts.\n\n2. No authentication or authorization enforced on a money-movement route\nTrigger: handler bypasses the documented pipeline; no check that req.user exists, that user belongs to :org_id, or that roles permit transfer. Section 3 pipeline + Section 5 require auth_jwt populated req.user before route_dispatcher.\nFix: register under the authenticated router; assert req.user.org === req.params.org_id (or membership lookup) and required role in req.user.roles before calling tx-svc.\n\n3. Org-id taken from URL param without cross-check against token claim\nTrigger: req.params.org_id is attacker-controlled; mismatch with validated X-Internal-Org-Id enables cross-org fund movement.\nFix: reject with 403 when req.params.org_id !== req.user.org (or not in membership set). Add test for cross-org attempt.\n\n4. No input validation on body (from, to, amount)\nTrigger: amount could be negative, non-numeric, NaN, Infinity, or huge; from/to could be arbitrary strings or account IDs outside the org. No body_size_guard assumption substitutes for schema validation.\nFix: validate with the project schema validator (zod/ajv per repo convention) — amount positive integer minor-units, from/to account IDs owned by org_id, currency if required. Return RFC 7807 400 on failure.\n\n5. Not idempotent — no Idempotency-Key handling\nTrigger: retries (client, LB, Envoy) will double-spend. Money movement endpoints must be idempotent.\nFix: require Idempotency-Key header, dedupe via tx-svc or a short Redis SETNX with TTL; return the prior response on replay.\n\n6. Direct app.post instead of going through the edge pipeline/router\nTrigger: Section 3 registers middleware on the edge router in src/edge/pipeline.ts; using top-level app.post may skip rate_limit, body_size_guard, auth_jwt, response_filter, audit_log depending on mount order.\nFix: mount on the edge router so all middleware runs; verify order in pipeline.ts.\n\n7. No rate limiting tuned for a sensitive write route\nTrigger: default POST limit (30/min/IP, Section 4) is too loose for fund transfer; also per-IP keying alone is inadequate for authenticated writes.\nFix: add route-prefix entry in config/rate_limits.json with a tighter limit; key on user+org in addition to IP. Include region prefix (Section 4 / 2025-12 SEV2).\n\n8. No error handling — unhandled promise rejection crashes/500s with leaked internals\nTrigger: await txSvc.transfer(...) has no try/catch and no next(err); rejection bypasses src/edge/errorHandler.ts, risks stacktrace/internal leak in response (Section 2 rule 6, Section 11).\nFix: wrap with try/catch and call next(err), or use an asyncHandler wrapper; ensure errorHandler returns RFC 7807 problem+json with request_id only.\n\n9. Response not RFC 7807 / missing request_id on error paths; success shape undocumented\nTrigger: {ok:true} doesn't carry request_id (Section 2 rule 6 applies to 4xx/5xx but audit/trace correlation expected); error paths will fall through to default Express handler.\nFix: return structured success with request_id/txId; ensure all error paths route through central handler.\n\n10. No audit log entry for a security-relevant money movement\nTrigger: Section 3 step 9 and Section 9 require audit log (365-day retention) for security-relevant actions; this handler writes no explicit audit event beyond the default line.\nFix: emit explicit audit_log event with user id, org id, from, to, amount, request_id, jti — via logger, with pii_redact applied.\n\n11. Potential PII/secret logging risk if body logged anywhere\nTrigger: if any middleware or debug log captures req.body, account identifiers and amounts land in Loki; Section 11 forbids full-body logging.\nFix: confirm no body logging on this route; add explicit redaction list if needed.\n\n12. Missing tests — integration test against real Redis/Postgres, not mocks\nTrigger: Section 6 + Section 11 require integration tests hitting real services; a money route with no tests will not pass review.\nFix: add Jest integration tests covering happy path, cross-org denial, forged X-User-Id rejection, invalid amount, idempotency replay, rate-limit trip.\n\n13. CODEOWNERS/security review gate\nTrigger: Section 6 requires human approval on auth/rate-limit/header changes; a new money route touches trust boundary semantics and warrants security review even if it doesn't edit the listed files.\nFix: request security review; document threat model for the route in the PR.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 34632,
+    "duration_api_ms": 35754,
+    "num_turns": 1,
+    "result": "1. Trusts client-supplied X-User-Id header (handler line 2)\nTrigger: reads req.headers['x-user-id'] at edge; any caller can forge identity and move another user's funds. Violates Section 2 rule 1 and Section 5 (internal identity headers are stripped on ingress; trusted identity comes from JWT only).\nFix: remove header read; use req.user.sub set by auth_jwt middleware. Confirm header_sanitize runs before this route and the route is mounted AFTER auth_jwt in src/edge/pipeline.ts.\n\n2. No authentication or authorization enforced on a money-movement route\nTrigger: handler bypasses the documented pipeline; no check that req.user exists, that user belongs to :org_id, or that roles permit transfer. Section 3 pipeline + Section 5 require auth_jwt populated req.user before route_dispatcher.\nFix: register under the authenticated router; assert req.user.org === req.params.org_id (or membership lookup) and required role in req.user.roles before calling tx-svc.\n\n3. Org-id taken from URL param without cross-check against token claim\nTrigger: req.params.org_id is attacker-controlled; mismatch with validated X-Internal-Org-Id enables cross-org fund movement.\nFix: reject with 403 when req.params.org_id !== req.user.org (or not in membership set). Add test for cross-org attempt.\n\n4. No input validation on body (from, to, amount)\nTrigger: amount could be negative, non-numeric, NaN, Infinity, or huge; from/to could be arbitrary strings or account IDs outside the org. No body_size_guard assumption substitutes for schema validation.\nFix: validate with the project schema validator (zod/ajv per repo convention) — amount positive integer minor-units, from/to account IDs owned by org_id, currency if required. Return RFC 7807 400 on failure.\n\n5. Not idempotent — no Idempotency-Key handling\nTrigger: retries (client, LB, Envoy) will double-spend. Money movement endpoints must be idempotent.\nFix: require Idempotency-Key header, dedupe via tx-svc or a short Redis SETNX with TTL; return the prior response on replay.\n\n6. Direct app.post instead of going through the edge pipeline/router\nTrigger: Section 3 registers middleware on the edge router in src/edge/pipeline.ts; using top-level app.post may skip rate_limit, body_size_guard, auth_jwt, response_filter, audit_log depending on mount order.\nFix: mount on the edge router so all middleware runs; verify order in pipeline.ts.\n\n7. No rate limiting tuned for a sensitive write route\nTrigger: default POST limit (30/min/IP, Section 4) is too loose for fund transfer; also per-IP keying alone is inadequate for authenticated writes.\nFix: add route-prefix entry in config/rate_limits.json with a tighter limit; key on user+org in addition to IP. Include region prefix (Section 4 / 2025-12 SEV2).\n\n8. No error handling — unhandled promise rejection crashes/500s with leaked internals\nTrigger: await txSvc.transfer(...) has no try/catch and no next(err); rejection bypasses src/edge/errorHandler.ts, risks stacktrace/internal leak in response (Section 2 rule 6, Section 11).\nFix: wrap with try/catch and call next(err), or use an asyncHandler wrapper; ensure errorHandler returns RFC 7807 problem+json with request_id only.\n\n9. Response not RFC 7807 / missing request_id on error paths; success shape undocumented\nTrigger: {ok:true} doesn't carry request_id (Section 2 rule 6 applies to 4xx/5xx but audit/trace correlation expected); error paths will fall through to default Express handler.\nFix: return structured success with request_id/txId; ensure all error paths route through central handler.\n\n10. No audit log entry for a security-relevant money movement\nTrigger: Section 3 step 9 and Section 9 require audit log (365-day retention) for security-relevant actions; this handler writes no explicit audit event beyond the default line.\nFix: emit explicit audit_log event with user id, org id, from, to, amount, request_id, jti — via logger, with pii_redact applied.\n\n11. Potential PII/secret logging risk if body logged anywhere\nTrigger: if any middleware or debug log captures req.body, account identifiers and amounts land in Loki; Section 11 forbids full-body logging.\nFix: confirm no body logging on this route; add explicit redaction list if needed.\n\n12. Missing tests — integration test against real Redis/Postgres, not mocks\nTrigger: Section 6 + Section 11 require integration tests hitting real services; a money route with no tests will not pass review.\nFix: add Jest integration tests covering happy path, cross-org denial, forged X-User-Id rejection, invalid amount, idempotency replay, rate-limit trip.\n\n13. CODEOWNERS/security review gate\nTrigger: Section 6 requires human approval on auth/rate-limit/header changes; a new money route touches trust boundary semantics and warrants security review even if it doesn't edit the listed files.\nFix: request security review; document threat model for the route in the PR.",
+    "stop_reason": "end_turn",
+    "session_id": "a26c5608-c223-4d8c-a200-165454be9d3e",
+    "total_cost_usd": 0.2128405,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 24640,
+      "cache_read_input_tokens": 16805,
+      "output_tokens": 1787,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 24640,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 1787,
+          "cache_read_input_tokens": 16805,
+          "cache_creation_input_tokens": 24640,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 24640
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 5668,
+        "outputTokens": 13,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.005733,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 1787,
+        "cacheReadInputTokens": 16805,
+        "cacheCreationInputTokens": 24640,
+        "webSearchRequests": 0,
+        "costUSD": 0.2071075,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "27821ee9-765a-4ead-9087-012f44f9ffc6"
+  }
+}

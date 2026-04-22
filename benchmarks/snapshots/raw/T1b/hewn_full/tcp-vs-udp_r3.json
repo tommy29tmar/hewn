@@ -14,61 +14,61 @@
   ],
   "digest_hex": "8a5fe974231ca88c5efc1ce50a9c75f85d32ed1d99c9592b5ec854d1814a7202",
   "seed": "hewn-bench-v1",
-  "timestamp": "2026-04-22T00:06:11.412931+00:00",
-  "output_tokens_tiktoken": 178,
-  "output_tokens_anthropic": 318,
+  "timestamp": "2026-04-22T08:07:29.238987+00:00",
+  "output_tokens_tiktoken": 34,
+  "output_tokens_anthropic": 66,
   "input_tokens_anthropic": 6,
-  "cache_creation_input_tokens": 17292,
+  "cache_creation_input_tokens": 18756,
   "cache_read_input_tokens": 16805,
-  "total_input_tokens": 34103,
+  "total_input_tokens": 35567,
   "cache_state": "warm",
-  "wallclock_ms": 11785.855241992977,
-  "duration_ms": 7830,
-  "duration_api_ms": 9247,
-  "wrapper_overhead_ms": 2538.8552419929765,
+  "wallclock_ms": 9579.341829987243,
+  "duration_ms": 3728,
+  "duration_api_ms": 4434,
+  "wrapper_overhead_ms": 5145.341829987243,
   "stop_reason": "end_turn",
   "num_turns": 1,
-  "session_id": "89e7f5c2-ce48-4d8a-8289-0f4bf48a740a",
-  "total_cost_usd": 0.1248695,
+  "session_id": "0157a68c-f61e-45d5-acef-a545306ff3f5",
+  "total_cost_usd": 0.12771949999999999,
   "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
-  "result": "TCP connection-oriented, UDP fire-and-forget.\n\nTCP does handshake (SYN/SYN-ACK/ACK), guarantees delivery, orders packets, retransmits losses, flow control, congestion control. Stream abstraction.\n\nUDP just sends datagrams. No handshake, no ack, no ordering, no retransmit. Packet may arrive, may not, may arrive twice, may arrive out of order. You handle it.\n\nTCP for correctness: HTTP, SSH, file transfer, DB protocols.\nUDP for speed/latency tolerance of loss: DNS, video/voice, games, QUIC base, mDNS.\n\nTCP header ~20 bytes, UDP header 8 bytes. TCP has more state per connection on both ends; UDP stateless at transport layer.\n\nQUIC worth noting — runs over UDP but rebuilds TCP-like reliability in userspace with better multiplexing and 0-RTT.",
+  "result": "@hewn v0 hybrid\nG: tcp_vs_udp\nC: transport_layer\nP: reliable_vs_fast\nV: ordered_delivery\nA: pick_per_use",
   "assertion_pass": true,
   "raw_payload": {
     "type": "result",
     "subtype": "success",
     "is_error": false,
     "api_error_status": null,
-    "duration_ms": 7830,
-    "duration_api_ms": 9247,
+    "duration_ms": 3728,
+    "duration_api_ms": 4434,
     "num_turns": 1,
-    "result": "TCP connection-oriented, UDP fire-and-forget.\n\nTCP does handshake (SYN/SYN-ACK/ACK), guarantees delivery, orders packets, retransmits losses, flow control, congestion control. Stream abstraction.\n\nUDP just sends datagrams. No handshake, no ack, no ordering, no retransmit. Packet may arrive, may not, may arrive twice, may arrive out of order. You handle it.\n\nTCP for correctness: HTTP, SSH, file transfer, DB protocols.\nUDP for speed/latency tolerance of loss: DNS, video/voice, games, QUIC base, mDNS.\n\nTCP header ~20 bytes, UDP header 8 bytes. TCP has more state per connection on both ends; UDP stateless at transport layer.\n\nQUIC worth noting — runs over UDP but rebuilds TCP-like reliability in userspace with better multiplexing and 0-RTT.",
+    "result": "@hewn v0 hybrid\nG: tcp_vs_udp\nC: transport_layer\nP: reliable_vs_fast\nV: ordered_delivery\nA: pick_per_use",
     "stop_reason": "end_turn",
-    "session_id": "89e7f5c2-ce48-4d8a-8289-0f4bf48a740a",
-    "total_cost_usd": 0.1248695,
+    "session_id": "0157a68c-f61e-45d5-acef-a545306ff3f5",
+    "total_cost_usd": 0.12771949999999999,
     "usage": {
       "input_tokens": 6,
-      "cache_creation_input_tokens": 17292,
+      "cache_creation_input_tokens": 18756,
       "cache_read_input_tokens": 16805,
-      "output_tokens": 318,
+      "output_tokens": 66,
       "server_tool_use": {
         "web_search_requests": 0,
         "web_fetch_requests": 0
       },
       "service_tier": "standard",
       "cache_creation": {
-        "ephemeral_1h_input_tokens": 17292,
+        "ephemeral_1h_input_tokens": 18756,
         "ephemeral_5m_input_tokens": 0
       },
       "inference_geo": "",
       "iterations": [
         {
           "input_tokens": 6,
-          "output_tokens": 318,
+          "output_tokens": 66,
           "cache_read_input_tokens": 16805,
-          "cache_creation_input_tokens": 17292,
+          "cache_creation_input_tokens": 18756,
           "cache_creation": {
             "ephemeral_5m_input_tokens": 0,
-            "ephemeral_1h_input_tokens": 17292
+            "ephemeral_1h_input_tokens": 18756
           },
           "type": "message"
         }
@@ -88,11 +88,11 @@
       },
       "claude-opus-4-7": {
         "inputTokens": 6,
-        "outputTokens": 318,
+        "outputTokens": 66,
         "cacheReadInputTokens": 16805,
-        "cacheCreationInputTokens": 17292,
+        "cacheCreationInputTokens": 18756,
         "webSearchRequests": 0,
-        "costUSD": 0.1244575,
+        "costUSD": 0.1273075,
         "contextWindow": 1000000,
         "maxOutputTokens": 64000
       }
@@ -100,6 +100,6 @@
     "permission_denials": [],
     "terminal_reason": "completed",
     "fast_mode_state": "off",
-    "uuid": "c24829a6-f2f7-444f-8c8c-2c70a8fb0794"
+    "uuid": "0c633891-947e-4802-a011-b665d14c4d54"
   }
 }

@@ -14,62 +14,62 @@
   ],
   "digest_hex": "c436155c1e87e76d88e6f2c66d47c90c16ae78237b0a8de1b93824cf92fb5c9b",
   "seed": "hewn-bench-v1",
-  "timestamp": "2026-04-22T01:00:31.364196+00:00",
-  "session_id_used_for_resume": "0e7e4bdc-736c-4be7-9b1e-03208a6201c8",
-  "output_tokens_tiktoken": 505,
-  "output_tokens_anthropic": 1784,
+  "timestamp": "2026-04-22T08:30:02.026473+00:00",
+  "session_id_used_for_resume": "8acb082e-5568-4113-ae2d-3cb9f4fcb062",
+  "output_tokens_tiktoken": 248,
+  "output_tokens_anthropic": 701,
   "input_tokens_anthropic": 6,
-  "cache_creation_input_tokens": 1603,
-  "cache_read_input_tokens": 34993,
-  "total_input_tokens": 36602,
+  "cache_creation_input_tokens": 564,
+  "cache_read_input_tokens": 34856,
+  "total_input_tokens": 35426,
   "cache_state": "warm",
-  "wallclock_ms": 31040.405161998933,
-  "duration_ms": 27317,
-  "duration_api_ms": 27296,
+  "wallclock_ms": 20872.163291991455,
+  "duration_ms": 14804,
+  "duration_api_ms": 14770,
   "wrapper_overhead_ms": null,
   "stop_reason": "end_turn",
   "num_turns": 1,
-  "session_id": "0e7e4bdc-736c-4be7-9b1e-03208a6201c8",
-  "total_cost_usd": 0.07214525,
+  "session_id": "8acb082e-5568-4113-ae2d-3cb9f4fcb062",
+  "total_cost_usd": 0.038508,
   "model_used": "claude-opus-4-7",
-  "result": "**Primary recommendation: batch query.** One `SELECT ... WHERE sku IN (:skus)` replaces all N lookups. Common case goes from \"3 parallel round trips + 3 connection acquires\" to \"1 round trip, 1 connection\" — *faster* than the refactor, not slower. Worst case goes from \"47 connections demanded\" to \"1 connection.\" Pool safety becomes trivial. If the inventory source is your own DB, this is the answer.\n\n```js\nconst rows = await db.query('SELECT * FROM inventory WHERE sku = ANY($1)', [skus]);\nconst bySku = new Map(rows.map(r => [r.sku, r]));\nconst results = skus.map(sku => bySku.get(sku));\n```\n\n(Rebuild a `skus.map` result at the end if call sites depend on order, or if you need to detect missing SKUs as an error case.)\n\n**Fallback: bounded concurrency, cap = 5.** Use this only if the lookup can't be batched (separate service per SKU, per-sku authorization, etc.). Common case of 3 SKUs is unaffected — all 3 fire in parallel, identical to the refactor. A 47-SKU cart runs ~10 sequential waves of 5, slower than broken `Promise.all` but bounded.\n\n```js\nimport pLimit from 'p-limit';\nconst limit = pLimit(5);\nconst results = await Promise.all(skus.map(sku => limit(() => lookupSku(sku))));\n```\n\nCap math: pool=20, leave ~10 for other queries in the app, allow 2 concurrent order checks → 5 per request. Adjust if your concurrency profile differs.\n\n**Skip these:**\n\n- *Conditional strategy* (\"if `skus.length < 10`, `Promise.all`, else chunked\") — adds a branch that's hard to reason about under load and only saves a few ms on the worst case.\n- *Raising the pool size* — treats the symptom. You still have no bound on per-request parallelism.\n- *Keeping the sequential loop* — 3 serial round trips in the common case is a real latency regression for no safety benefit once you have a proper fix.\n\nIf you go with the batch query, keep a regression test that asserts the inventory check issues one query, not N — mock the DB client and assert call count. That's the shape contract for \"don't accidentally refactor back to fan-out.\"",
+  "result": "Per-request concurrency cap of ~5 with `p-limit`:\n\n```js\nimport pLimit from 'p-limit';\nconst limit = pLimit(5);\nconst results = await Promise.all(skus.map(sku => limit(() => lookup(sku))));\n```\n\n- 3-SKU order: all 3 run in parallel, identical to unbounded — common case unaffected.\n- 47-SKU order: runs in a sliding window of 5, bounded pool pressure.\n- Pool math: 4 concurrent orders × 5 in-flight = 20, right at the edge. Drop to 4 if you want headroom for other handlers sharing the pool.\n\nPrefer `p-limit` over chunked `Promise.all` — chunking waits for the slowest query in each chunk before starting the next, so a single slow SKU lookup stalls the window. `p-limit` dispatches the next task the moment any slot frees.\n\nOne more check: confirm `lookup` isn't already batchable at the query layer. A single `SELECT ... WHERE sku IN (...)` beats any concurrency strategy — one connection, one round trip. If the SKU lookups hit the same table, that's the real fix and the concurrency cap becomes moot.",
   "assertion_pass": true,
   "raw_payload": {
     "type": "result",
     "subtype": "success",
     "is_error": false,
     "api_error_status": null,
-    "duration_ms": 27317,
-    "duration_api_ms": 27296,
+    "duration_ms": 14804,
+    "duration_api_ms": 14770,
     "num_turns": 1,
-    "result": "**Primary recommendation: batch query.** One `SELECT ... WHERE sku IN (:skus)` replaces all N lookups. Common case goes from \"3 parallel round trips + 3 connection acquires\" to \"1 round trip, 1 connection\" — *faster* than the refactor, not slower. Worst case goes from \"47 connections demanded\" to \"1 connection.\" Pool safety becomes trivial. If the inventory source is your own DB, this is the answer.\n\n```js\nconst rows = await db.query('SELECT * FROM inventory WHERE sku = ANY($1)', [skus]);\nconst bySku = new Map(rows.map(r => [r.sku, r]));\nconst results = skus.map(sku => bySku.get(sku));\n```\n\n(Rebuild a `skus.map` result at the end if call sites depend on order, or if you need to detect missing SKUs as an error case.)\n\n**Fallback: bounded concurrency, cap = 5.** Use this only if the lookup can't be batched (separate service per SKU, per-sku authorization, etc.). Common case of 3 SKUs is unaffected — all 3 fire in parallel, identical to the refactor. A 47-SKU cart runs ~10 sequential waves of 5, slower than broken `Promise.all` but bounded.\n\n```js\nimport pLimit from 'p-limit';\nconst limit = pLimit(5);\nconst results = await Promise.all(skus.map(sku => limit(() => lookupSku(sku))));\n```\n\nCap math: pool=20, leave ~10 for other queries in the app, allow 2 concurrent order checks → 5 per request. Adjust if your concurrency profile differs.\n\n**Skip these:**\n\n- *Conditional strategy* (\"if `skus.length < 10`, `Promise.all`, else chunked\") — adds a branch that's hard to reason about under load and only saves a few ms on the worst case.\n- *Raising the pool size* — treats the symptom. You still have no bound on per-request parallelism.\n- *Keeping the sequential loop* — 3 serial round trips in the common case is a real latency regression for no safety benefit once you have a proper fix.\n\nIf you go with the batch query, keep a regression test that asserts the inventory check issues one query, not N — mock the DB client and assert call count. That's the shape contract for \"don't accidentally refactor back to fan-out.\"",
+    "result": "Per-request concurrency cap of ~5 with `p-limit`:\n\n```js\nimport pLimit from 'p-limit';\nconst limit = pLimit(5);\nconst results = await Promise.all(skus.map(sku => limit(() => lookup(sku))));\n```\n\n- 3-SKU order: all 3 run in parallel, identical to unbounded — common case unaffected.\n- 47-SKU order: runs in a sliding window of 5, bounded pool pressure.\n- Pool math: 4 concurrent orders × 5 in-flight = 20, right at the edge. Drop to 4 if you want headroom for other handlers sharing the pool.\n\nPrefer `p-limit` over chunked `Promise.all` — chunking waits for the slowest query in each chunk before starting the next, so a single slow SKU lookup stalls the window. `p-limit` dispatches the next task the moment any slot frees.\n\nOne more check: confirm `lookup` isn't already batchable at the query layer. A single `SELECT ... WHERE sku IN (...)` beats any concurrency strategy — one connection, one round trip. If the SKU lookups hit the same table, that's the real fix and the concurrency cap becomes moot.",
     "stop_reason": "end_turn",
-    "session_id": "0e7e4bdc-736c-4be7-9b1e-03208a6201c8",
-    "total_cost_usd": 0.07214525,
+    "session_id": "8acb082e-5568-4113-ae2d-3cb9f4fcb062",
+    "total_cost_usd": 0.038508,
     "usage": {
       "input_tokens": 6,
-      "cache_creation_input_tokens": 1603,
-      "cache_read_input_tokens": 34993,
-      "output_tokens": 1784,
+      "cache_creation_input_tokens": 564,
+      "cache_read_input_tokens": 34856,
+      "output_tokens": 701,
       "server_tool_use": {
         "web_search_requests": 0,
         "web_fetch_requests": 0
       },
       "service_tier": "standard",
       "cache_creation": {
-        "ephemeral_1h_input_tokens": 1603,
+        "ephemeral_1h_input_tokens": 564,
         "ephemeral_5m_input_tokens": 0
       },
       "inference_geo": "",
       "iterations": [
         {
           "input_tokens": 6,
-          "output_tokens": 1784,
-          "cache_read_input_tokens": 34993,
-          "cache_creation_input_tokens": 1603,
+          "output_tokens": 701,
+          "cache_read_input_tokens": 34856,
+          "cache_creation_input_tokens": 564,
           "cache_creation": {
             "ephemeral_5m_input_tokens": 0,
-            "ephemeral_1h_input_tokens": 1603
+            "ephemeral_1h_input_tokens": 564
           },
           "type": "message"
         }
@@ -79,11 +79,11 @@
     "modelUsage": {
       "claude-opus-4-7": {
         "inputTokens": 6,
-        "outputTokens": 1784,
-        "cacheReadInputTokens": 34993,
-        "cacheCreationInputTokens": 1603,
+        "outputTokens": 701,
+        "cacheReadInputTokens": 34856,
+        "cacheCreationInputTokens": 564,
         "webSearchRequests": 0,
-        "costUSD": 0.07214525,
+        "costUSD": 0.038508,
         "contextWindow": 1000000,
         "maxOutputTokens": 64000
       }
@@ -91,6 +91,6 @@
     "permission_denials": [],
     "terminal_reason": "completed",
     "fast_mode_state": "off",
-    "uuid": "847c1b70-0f56-4530-b30c-0d801d472c7c"
+    "uuid": "f392c5fb-97ba-417f-a4d7-122d26e502f4"
   }
 }

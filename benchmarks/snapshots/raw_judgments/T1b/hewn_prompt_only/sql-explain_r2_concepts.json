@@ -11,5 +11,5 @@
       "raw": "{\"shows_query_execution_plan\": true, \"indicates_index_usage_or_scan_type\": true, \"estimated_row_counts_or_costs\": true, \"helps_diagnose_slow_queries\": true}"
     }
   ],
-  "ts": "2026-04-22T01:18:13.741879+00:00"
+  "ts": "2026-04-22T08:50:58.110052+00:00"
 }

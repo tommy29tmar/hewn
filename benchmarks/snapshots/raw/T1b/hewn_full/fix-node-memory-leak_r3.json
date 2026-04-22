@@ -14,61 +14,61 @@
   ],
   "digest_hex": "4fad0128f3b71ccca34936e81d2277af496e07dac1dbb2166396e12e2256680f",
   "seed": "hewn-bench-v1",
-  "timestamp": "2026-04-22T00:07:15.325469+00:00",
-  "output_tokens_tiktoken": 221,
-  "output_tokens_anthropic": 409,
+  "timestamp": "2026-04-22T08:07:38.818956+00:00",
+  "output_tokens_tiktoken": 34,
+  "output_tokens_anthropic": 59,
   "input_tokens_anthropic": 6,
-  "cache_creation_input_tokens": 17245,
+  "cache_creation_input_tokens": 18763,
   "cache_read_input_tokens": 16805,
-  "total_input_tokens": 34056,
+  "total_input_tokens": 35574,
   "cache_state": "warm",
-  "wallclock_ms": 13015.455293993,
-  "duration_ms": 8894,
-  "duration_api_ms": 9709,
-  "wrapper_overhead_ms": 3306.455293993,
+  "wallclock_ms": 9148.830758000258,
+  "duration_ms": 3160,
+  "duration_api_ms": 5523,
+  "wrapper_overhead_ms": 3625.8307580002584,
   "stop_reason": "end_turn",
   "num_turns": 1,
-  "session_id": "fbcc81c1-8540-4e41-9d68-de3f53158346",
-  "total_cost_usd": 0.12687374999999998,
+  "session_id": "91124b3a-9a81-4cc1-aa8a-f68669a88330",
+  "total_cost_usd": 0.12761124999999998,
   "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
-  "result": "@hewn v0 hybrid\nG: diagnose_and_fix_node_memory_leak\nC: long_running_process ∧ heap_grows_over_time ∧ node_runtime\nP: run_with(\"--inspect\") ∧ capture_heap_snapshots_at_intervals ∧ diff_snapshots_in_chrome_devtools ∧ identify_retained_objects ∧ trace_retainer_chain_to_root ∧ common_culprits(\"closures,timers,event_listeners,global_caches,unbounded_maps\") ∧ fix_retention(\"remove_listeners,clear_timers,bound_caches_with_lru,weakref_or_weakmap\") ∧ verify_with_autocannon_or_loadtest ∧ monitor_rss_and_heap_used\nV: heap_used_stabilizes_under_load ∧ rss_flat_after_warmup ∧ snapshot_diff_shows_no_unbounded_growth\nA: use(\"clinic.js_doctor\") ∧ use(\"heapdump\") ∧ use(\"--max-old-space-size_only_as_bandaid\") ∧ set(\"NODE_OPTIONS=--expose-gc\") ∧ avoid_global_mutable_state",
+  "result": "@hewn v0 hybrid\nG: node_leak\nC: retained_refs\nP: heap_snapshot_diff\nV: flat_rss\nA: drop_refs",
   "assertion_pass": true,
   "raw_payload": {
     "type": "result",
     "subtype": "success",
     "is_error": false,
     "api_error_status": null,
-    "duration_ms": 8894,
-    "duration_api_ms": 9709,
+    "duration_ms": 3160,
+    "duration_api_ms": 5523,
     "num_turns": 1,
-    "result": "@hewn v0 hybrid\nG: diagnose_and_fix_node_memory_leak\nC: long_running_process ∧ heap_grows_over_time ∧ node_runtime\nP: run_with(\"--inspect\") ∧ capture_heap_snapshots_at_intervals ∧ diff_snapshots_in_chrome_devtools ∧ identify_retained_objects ∧ trace_retainer_chain_to_root ∧ common_culprits(\"closures,timers,event_listeners,global_caches,unbounded_maps\") ∧ fix_retention(\"remove_listeners,clear_timers,bound_caches_with_lru,weakref_or_weakmap\") ∧ verify_with_autocannon_or_loadtest ∧ monitor_rss_and_heap_used\nV: heap_used_stabilizes_under_load ∧ rss_flat_after_warmup ∧ snapshot_diff_shows_no_unbounded_growth\nA: use(\"clinic.js_doctor\") ∧ use(\"heapdump\") ∧ use(\"--max-old-space-size_only_as_bandaid\") ∧ set(\"NODE_OPTIONS=--expose-gc\") ∧ avoid_global_mutable_state",
+    "result": "@hewn v0 hybrid\nG: node_leak\nC: retained_refs\nP: heap_snapshot_diff\nV: flat_rss\nA: drop_refs",
     "stop_reason": "end_turn",
-    "session_id": "fbcc81c1-8540-4e41-9d68-de3f53158346",
-    "total_cost_usd": 0.12687374999999998,
+    "session_id": "91124b3a-9a81-4cc1-aa8a-f68669a88330",
+    "total_cost_usd": 0.12761124999999998,
     "usage": {
       "input_tokens": 6,
-      "cache_creation_input_tokens": 17245,
+      "cache_creation_input_tokens": 18763,
       "cache_read_input_tokens": 16805,
-      "output_tokens": 409,
+      "output_tokens": 59,
       "server_tool_use": {
         "web_search_requests": 0,
         "web_fetch_requests": 0
       },
       "service_tier": "standard",
       "cache_creation": {
-        "ephemeral_1h_input_tokens": 17245,
+        "ephemeral_1h_input_tokens": 18763,
         "ephemeral_5m_input_tokens": 0
       },
       "inference_geo": "",
       "iterations": [
         {
           "input_tokens": 6,
-          "output_tokens": 409,
+          "output_tokens": 59,
           "cache_read_input_tokens": 16805,
-          "cache_creation_input_tokens": 17245,
+          "cache_creation_input_tokens": 18763,
           "cache_creation": {
             "ephemeral_5m_input_tokens": 0,
-            "ephemeral_1h_input_tokens": 17245
+            "ephemeral_1h_input_tokens": 18763
           },
           "type": "message"
         }
@@ -88,11 +88,11 @@
       },
       "claude-opus-4-7": {
         "inputTokens": 6,
-        "outputTokens": 409,
+        "outputTokens": 59,
         "cacheReadInputTokens": 16805,
-        "cacheCreationInputTokens": 17245,
+        "cacheCreationInputTokens": 18763,
         "webSearchRequests": 0,
-        "costUSD": 0.12643875,
+        "costUSD": 0.12717625,
         "contextWindow": 1000000,
         "maxOutputTokens": 64000
       }
@@ -100,6 +100,6 @@
     "permission_denials": [],
     "terminal_reason": "completed",
     "fast_mode_state": "off",
-    "uuid": "d011e638-b7d5-4c69-a94b-6b2d57705348"
+    "uuid": "53f94cbd-a507-4f2b-a032-3f2d51bbf679"
   }
 }

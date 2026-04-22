@@ -14,61 +14,61 @@
   ],
   "digest_hex": "5b724573e058540f92f1cf0a27ec02ab3ed51a957569e6eb2a6e04a27a1062f9",
   "seed": "hewn-bench-v1",
-  "timestamp": "2026-04-22T00:16:28.491973+00:00",
-  "output_tokens_tiktoken": 122,
-  "output_tokens_anthropic": 232,
+  "timestamp": "2026-04-22T08:11:45.430958+00:00",
+  "output_tokens_tiktoken": 44,
+  "output_tokens_anthropic": 65,
   "input_tokens_anthropic": 6,
-  "cache_creation_input_tokens": 17317,
+  "cache_creation_input_tokens": 18216,
   "cache_read_input_tokens": 16805,
-  "total_input_tokens": 34128,
+  "total_input_tokens": 35027,
   "cache_state": "warm",
-  "wallclock_ms": 9381.553924002219,
-  "duration_ms": 5720,
-  "duration_api_ms": 6428,
-  "wrapper_overhead_ms": 2953.553924002219,
+  "wallclock_ms": 10254.350436996901,
+  "duration_ms": 3879,
+  "duration_api_ms": 4891,
+  "wrapper_overhead_ms": 5363.350436996901,
   "stop_reason": "end_turn",
   "num_turns": 1,
-  "session_id": "e5d7a1b3-efd8-4986-a0c3-1651bc1b5dcd",
-  "total_cost_usd": 0.12289275,
+  "session_id": "f0bcacce-c660-41dc-891d-2920dea0aa3a",
+  "total_cost_usd": 0.1243415,
   "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
-  "result": "means you called `.map` on something that was `undefined`.\n\ncommon causes:\n- api response not yet loaded — component rendered before data arrived\n- wrong property name — `data.items` when actual shape is `data.results`\n- array you expected got returned as `undefined` (empty filter, failed fetch, missing default)\n\nquick fixes:\n- default to empty array: `(items ?? []).map(...)`\n- guard render: `items && items.map(...)`\n- log `items` right before `.map` to see what it actually is\n\npaste stack trace + offending line if you want exact fix.",
+  "result": "`.map` called on undefined. Data not loaded yet or wrong shape.\n\nShare the stack trace line and the value right before `.map` — `console.log` it or check the component/function name in the error.",
   "assertion_pass": true,
   "raw_payload": {
     "type": "result",
     "subtype": "success",
     "is_error": false,
     "api_error_status": null,
-    "duration_ms": 5720,
-    "duration_api_ms": 6428,
+    "duration_ms": 3879,
+    "duration_api_ms": 4891,
     "num_turns": 1,
-    "result": "means you called `.map` on something that was `undefined`.\n\ncommon causes:\n- api response not yet loaded — component rendered before data arrived\n- wrong property name — `data.items` when actual shape is `data.results`\n- array you expected got returned as `undefined` (empty filter, failed fetch, missing default)\n\nquick fixes:\n- default to empty array: `(items ?? []).map(...)`\n- guard render: `items && items.map(...)`\n- log `items` right before `.map` to see what it actually is\n\npaste stack trace + offending line if you want exact fix.",
+    "result": "`.map` called on undefined. Data not loaded yet or wrong shape.\n\nShare the stack trace line and the value right before `.map` — `console.log` it or check the component/function name in the error.",
     "stop_reason": "end_turn",
-    "session_id": "e5d7a1b3-efd8-4986-a0c3-1651bc1b5dcd",
-    "total_cost_usd": 0.12289275,
+    "session_id": "f0bcacce-c660-41dc-891d-2920dea0aa3a",
+    "total_cost_usd": 0.1243415,
     "usage": {
       "input_tokens": 6,
-      "cache_creation_input_tokens": 17317,
+      "cache_creation_input_tokens": 18216,
       "cache_read_input_tokens": 16805,
-      "output_tokens": 232,
+      "output_tokens": 65,
       "server_tool_use": {
         "web_search_requests": 0,
         "web_fetch_requests": 0
       },
       "service_tier": "standard",
       "cache_creation": {
-        "ephemeral_1h_input_tokens": 17317,
+        "ephemeral_1h_input_tokens": 18216,
         "ephemeral_5m_input_tokens": 0
       },
       "inference_geo": "",
       "iterations": [
         {
           "input_tokens": 6,
-          "output_tokens": 232,
+          "output_tokens": 65,
           "cache_read_input_tokens": 16805,
-          "cache_creation_input_tokens": 17317,
+          "cache_creation_input_tokens": 18216,
           "cache_creation": {
             "ephemeral_5m_input_tokens": 0,
-            "ephemeral_1h_input_tokens": 17317
+            "ephemeral_1h_input_tokens": 18216
           },
           "type": "message"
         }
@@ -78,21 +78,21 @@
     "modelUsage": {
       "claude-haiku-4-5-20251001": {
         "inputTokens": 364,
-        "outputTokens": 13,
+        "outputTokens": 14,
         "cacheReadInputTokens": 0,
         "cacheCreationInputTokens": 0,
         "webSearchRequests": 0,
-        "costUSD": 0.000429,
+        "costUSD": 0.00043400000000000003,
         "contextWindow": 200000,
         "maxOutputTokens": 32000
       },
       "claude-opus-4-7": {
         "inputTokens": 6,
-        "outputTokens": 232,
+        "outputTokens": 65,
         "cacheReadInputTokens": 16805,
-        "cacheCreationInputTokens": 17317,
+        "cacheCreationInputTokens": 18216,
         "webSearchRequests": 0,
-        "costUSD": 0.12246375,
+        "costUSD": 0.12390749999999999,
         "contextWindow": 1000000,
         "maxOutputTokens": 64000
       }
@@ -100,6 +100,6 @@
     "permission_denials": [],
     "terminal_reason": "completed",
     "fast_mode_state": "off",
-    "uuid": "f141bb4d-20c5-46e2-80fd-ebc163dc798e"
+    "uuid": "ba917524-8cfd-47af-a62b-9c234cff0e01"
   }
 }

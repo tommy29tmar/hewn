@@ -24,6 +24,15 @@ IR_RULES: list[tuple[str, int]] = [
     (r"\bconsistency\b.*(?:window|bound|model|guarantee|violat)|eventual.*consist", 2),
     (r"```|\bdef\s+\w+\s*\(|\bclass\s+\w+\b|diff --git|^[+-][^-+]", 2),
     (r"\bwhat\s+(?:is\s+)?(?:wrong|the\s+bug|the\s+issue|the\s+problem|the\s+attack)\b", 3),
+    # Technical Q&A can safely use compact IR. Explanations aimed at juniors,
+    # tutorials, or non-technical readers stay prose via PROSE_RULES below.
+    (r"\bexplain\b.*\b(?:database|db|connection\s+pool(?:ing)?|pooling|sql|cors|tcp|udp|hash\s+table|debounc\w*|git|rebase|merge|queue|topic|messaging|react|component|browser|node\.?js|memory\s+leak)\b", 2),
+    (r"\bhow\s+(?:does|do|is|are|should)\b.*\b(?:database|db|connection\s+pool(?:ing)?|pooling|sql|cors|tcp|udp|hash\s+table|collisions?|debounc\w*|git|rebase|merge|queue|topic|messaging|react|component|browser|node\.?js|memory\s+leak)\b", 2),
+    (r"\bwhy\s+(?:does|do|is|are|am|are|did)\b.*\b(?:re-?render|render|cors|error|sql|tcp|udp|hash\s+table|debounc\w*|git|rebase|merge|queue|topic|messaging|react|component|browser|node\.?js|memory\s+leak)\b", 2),
+    (r"\bwhat(?:'s|\s+is)\s+(?:the\s+)?(?:difference|diff|point)\b.*\b(?:tcp|udp|sql|cors|hash\s+table|debounc\w*|git|rebase|merge|queue|topic|messaging|react|component|browser|node\.?js|database|db)\b", 2),
+    (r"\bwhat\s+does\b.*\b(?:sql|explain|command|cors|tcp|udp|git|rebase|merge|queue|topic|hash\s+table|debounc\w*|database|db)\b", 2),
+    (r"\b(?:differ|differs|vs\.?|versus)\b.*\b(?:tcp|udp|git|rebase|merge|queue|topic|messaging|sql|database|db)\b", 2),
+    (r"\bwhen\s+should\s+i\s+use\b.*\b(?:queue|topic|messaging|tcp|udp|git|rebase|merge|sql|database|db)\b", 2),
     (r"\brepro(?:duce|duction)?\b.*(?:test|case|script)|\bregression\s+tests?\b", 2),
     # Bare "propose/hypothesis" gets low weight (1) — needs to stack with
     # another IR signal to cross threshold. The specific weight-3 propose

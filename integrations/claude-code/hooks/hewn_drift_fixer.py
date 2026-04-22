@@ -163,12 +163,28 @@ def classify(prompt: str, locales: tuple[str, ...] | None = None) -> str:
 IR_DIRECTIVE = (
     "[TURN CLASSIFICATION: IR-shape] This turn has a crisp technical goal "
     "and verifiable endpoint. Respond in Hewn IR: emit '@hewn v0 hybrid' "
-    "+ G/C/P/V/A clauses as free text. Do NOT respond in prose for this "
-    "turn. Keep atoms in lowercase_snake_case or call form f(\"x\") or "
-    "quoted literals. NEVER use suffix form like evaluates_to_\"6\" or "
-    "fix_expected_to_\"7\" (underscore immediately before a quote) — use "
-    "call form evaluates_to(\"6\") or rename the concept "
-    "(evaluates_to_six). No code blocks inside atoms."
+    "+ G/C/P/V/A clauses as free text. Exactly 6 lines, no prose, no fences, "
+    "no audit, no blank lines. Never emit H:, R:, Q:, @cb, or [AUDIT]. "
+    "Never join atoms with commas; use ∧ only when multiple atoms are needed. "
+    "Stop after A:. Do NOT respond in prose for this turn. "
+    "Atoms must be lowercase_snake_case identifiers, call form f(\"x\"), or "
+    "quoted literals. Unquoted atoms may contain only a-z, 0-9, underscore. "
+    "Never use = + - < > == != && || [] {} . comma or spaces inside an "
+    "unquoted atom. Literal user values always go in quotes. NEVER use suffix "
+    "form like evaluates_to_\"6\" or fix_expected_to_\"7\" (underscore "
+    "immediately before a quote) — use call form evaluates_to(\"6\") or rename "
+    "the concept (evaluates_to_six). No nested parens, multi-arg calls, or "
+    "code blocks inside atoms. For brief technical "
+    "Q&A prompts (explain/how/why/difference/when should I use), emit "
+    "micro-IR: exactly 1 short atom per G/C/P/V/A clause; no ∧ joins in "
+    "micro-IR; if comparison needs two sides, encode contrast inside one "
+    "atom; atoms 1-2 semantic words in snake_case; use shortest clear atom; "
+    "prefer standard abbreviations (db, req, res, cfg, fn); do not prefix G "
+    "with explain_; no examples, caveats, implementation lists, or extra "
+    "facts unless user asks. Example shape: @hewn v0 hybrid / G: db_pool / "
+    "C: open_conn_cost / P: checkout_return / V: lower_latency / "
+    "A: tune_size. Debounce shape: G: debounce / C: keyspam / "
+    "P: wait_idle / V: fewer_req / A: set_ms."
 )
 
 PROSE_CODE_DIRECTIVE = (
@@ -181,18 +197,10 @@ PROSE_CODE_DIRECTIVE = (
 )
 
 PROSE_CAVEMAN_DIRECTIVE = (
-    "[TURN CLASSIFICATION: prose-caveman] This turn asks for casual "
-    "writing, brainstorming, quick explanation, or internal retrospective. "
-    "Respond in Caveman-compressed prose. Drop articles (the/a/an/is/are). "
-    "No markdown headers (# or ##). No bold. No filler intros or summaries. "
-    "One idea per line. No ranked lists of alternatives unless the prompt "
-    "explicitly asks to rank. Keep answer short: match the prompt's weight. "
-    "Do NOT emit Hewn IR. "
-    "Use tools ONLY when the question asks about concrete repo STATE "
-    "(\"does function X exist?\", \"what does file Y contain?\", \"is Z "
-    "configured?\"). Do NOT use tools for opinion, naming, branding, "
-    "launch-copy, marketing, or chat questions — those do not require "
-    "reading the codebase."
+    "MICRO_PROSE_MODE. Answer plain prose only. 1-3 short natural-language "
+    "lines. No labels, headers, bullets, tables, or checklists unless user "
+    "asks. If context missing, ask only needed input. Preserve exact errors. "
+    "Ignore current repo/cwd/language unless user explicitly says it is target."
 )
 
 PROSE_FINDINGS_DIRECTIVE = (

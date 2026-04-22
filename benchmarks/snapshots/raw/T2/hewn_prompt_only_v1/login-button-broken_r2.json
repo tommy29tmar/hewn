@@ -1,0 +1,105 @@
+{
+  "track": "T2",
+  "arm": "hewn_prompt_only",
+  "prompt_id": "login-button-broken",
+  "run_index": 2,
+  "arm_order_index": 2,
+  "arm_order_full": [
+    "caveman_full_plus_ultra_directive",
+    "baseline",
+    "hewn_prompt_only",
+    "terse",
+    "hewn_full",
+    "caveman_full"
+  ],
+  "digest_hex": "e1fff6cb5ce95b9c68e1704c12e3bb9788cf296894302e3a503c3240dcf37267",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T00:20:02.203852+00:00",
+  "output_tokens_tiktoken": 45,
+  "output_tokens_anthropic": 185,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 32614,
+  "total_input_tokens": 32620,
+  "cache_state": "warm",
+  "wallclock_ms": 8711.142236978048,
+  "duration_ms": 3854,
+  "duration_api_ms": 5575,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "9a1558fa-6cc6-4cbf-b2c0-7f52d87055f2",
+  "total_cost_usd": 0.021376,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "There's no login button here — this repo (SIGIL/ = Hewn) is a Claude Code CLI wrapper, no web UI, no auth. Are you in the wrong directory? What project are the complaints actually about?",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 3854,
+    "duration_api_ms": 5575,
+    "num_turns": 1,
+    "result": "There's no login button here — this repo (SIGIL/ = Hewn) is a Claude Code CLI wrapper, no web UI, no auth. Are you in the wrong directory? What project are the complaints actually about?",
+    "stop_reason": "end_turn",
+    "session_id": "9a1558fa-6cc6-4cbf-b2c0-7f52d87055f2",
+    "total_cost_usd": 0.021376,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 32614,
+      "output_tokens": 185,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 0,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 185,
+          "cache_read_input_tokens": 32614,
+          "cache_creation_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 349,
+        "outputTokens": 13,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.00041400000000000003,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 185,
+        "cacheReadInputTokens": 32614,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.020961999999999998,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "869cc94d-2a70-472a-8883-eb9d8277ff11"
+  }
+}

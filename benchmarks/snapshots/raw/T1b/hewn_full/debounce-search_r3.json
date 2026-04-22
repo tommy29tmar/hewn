@@ -14,61 +14,61 @@
   ],
   "digest_hex": "b0eeadf6370d53c38ab46c1c682c894eb1c04899ce7fb9c5cde713f602ef439d",
   "seed": "hewn-bench-v1",
-  "timestamp": "2026-04-22T00:11:50.272574+00:00",
-  "output_tokens_tiktoken": 76,
-  "output_tokens_anthropic": 114,
+  "timestamp": "2026-04-22T08:09:39.148522+00:00",
+  "output_tokens_tiktoken": 30,
+  "output_tokens_anthropic": 51,
   "input_tokens_anthropic": 6,
-  "cache_creation_input_tokens": 17294,
+  "cache_creation_input_tokens": 18758,
   "cache_read_input_tokens": 16805,
-  "total_input_tokens": 34105,
+  "total_input_tokens": 35569,
   "cache_state": "warm",
-  "wallclock_ms": 7300.973017001525,
-  "duration_ms": 4208,
-  "duration_api_ms": 5053,
-  "wrapper_overhead_ms": 2247.9730170015246,
+  "wallclock_ms": 9941.877306991955,
+  "duration_ms": 3931,
+  "duration_api_ms": 4964,
+  "wrapper_overhead_ms": 4977.877306991955,
   "stop_reason": "end_turn",
   "num_turns": 1,
-  "session_id": "61ae4105-571f-4e7b-aea1-a27d57036586",
-  "total_cost_usd": 0.119798,
+  "session_id": "d9f4408e-78c6-424a-9c5c-fcdfa78568e3",
+  "total_cost_usd": 0.12737300000000001,
   "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
-  "result": "debouncer waits til user stops typing before firing search\nwithout it every keystroke triggers request — \"h\",\"he\",\"hel\",\"hell\",\"hello\" = 5 queries\nwith 300ms debounce only last query fires after typing stops\nsaves network, backend load, wasted renders\nalso prevents race conditions where slow early request resolves after fast late one and overwrites results",
+  "result": "@hewn v0 hybrid\nG: debounce\nC: keyspam\nP: wait_idle\nV: fewer_req\nA: set_ms",
   "assertion_pass": true,
   "raw_payload": {
     "type": "result",
     "subtype": "success",
     "is_error": false,
     "api_error_status": null,
-    "duration_ms": 4208,
-    "duration_api_ms": 5053,
+    "duration_ms": 3931,
+    "duration_api_ms": 4964,
     "num_turns": 1,
-    "result": "debouncer waits til user stops typing before firing search\nwithout it every keystroke triggers request — \"h\",\"he\",\"hel\",\"hell\",\"hello\" = 5 queries\nwith 300ms debounce only last query fires after typing stops\nsaves network, backend load, wasted renders\nalso prevents race conditions where slow early request resolves after fast late one and overwrites results",
+    "result": "@hewn v0 hybrid\nG: debounce\nC: keyspam\nP: wait_idle\nV: fewer_req\nA: set_ms",
     "stop_reason": "end_turn",
-    "session_id": "61ae4105-571f-4e7b-aea1-a27d57036586",
-    "total_cost_usd": 0.119798,
+    "session_id": "d9f4408e-78c6-424a-9c5c-fcdfa78568e3",
+    "total_cost_usd": 0.12737300000000001,
     "usage": {
       "input_tokens": 6,
-      "cache_creation_input_tokens": 17294,
+      "cache_creation_input_tokens": 18758,
       "cache_read_input_tokens": 16805,
-      "output_tokens": 114,
+      "output_tokens": 51,
       "server_tool_use": {
         "web_search_requests": 0,
         "web_fetch_requests": 0
       },
       "service_tier": "standard",
       "cache_creation": {
-        "ephemeral_1h_input_tokens": 17294,
+        "ephemeral_1h_input_tokens": 18758,
         "ephemeral_5m_input_tokens": 0
       },
       "inference_geo": "",
       "iterations": [
         {
           "input_tokens": 6,
-          "output_tokens": 114,
+          "output_tokens": 51,
           "cache_read_input_tokens": 16805,
-          "cache_creation_input_tokens": 17294,
+          "cache_creation_input_tokens": 18758,
           "cache_creation": {
             "ephemeral_5m_input_tokens": 0,
-            "ephemeral_1h_input_tokens": 17294
+            "ephemeral_1h_input_tokens": 18758
           },
           "type": "message"
         }
@@ -88,11 +88,11 @@
       },
       "claude-opus-4-7": {
         "inputTokens": 6,
-        "outputTokens": 114,
+        "outputTokens": 51,
         "cacheReadInputTokens": 16805,
-        "cacheCreationInputTokens": 17294,
+        "cacheCreationInputTokens": 18758,
         "webSearchRequests": 0,
-        "costUSD": 0.11937,
+        "costUSD": 0.126945,
         "contextWindow": 1000000,
         "maxOutputTokens": 64000
       }
@@ -100,6 +100,6 @@
     "permission_denials": [],
     "terminal_reason": "completed",
     "fast_mode_state": "off",
-    "uuid": "1c49e2ce-543a-43f8-90d6-4900452198ad"
+    "uuid": "a8609840-157f-492f-a2f2-6d5bb72fc51d"
   }
 }

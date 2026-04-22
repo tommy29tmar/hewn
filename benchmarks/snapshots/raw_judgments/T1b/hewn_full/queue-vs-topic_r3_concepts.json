@@ -1,16 +1,16 @@
 {
   "final": {
-    "queue_is_one_to_one_or_competing_consumers": true,
-    "topic_is_one_to_many_publish_subscribe": true,
-    "queue_message_consumed_once": true,
-    "topic_message_delivered_to_each_subscriber": true,
-    "use_case_examples_for_each": true
+    "queue_is_one_to_one_or_competing_consumers": false,
+    "topic_is_one_to_many_publish_subscribe": false,
+    "queue_message_consumed_once": false,
+    "topic_message_delivered_to_each_subscriber": false,
+    "use_case_examples_for_each": false
   },
   "history": [
     {
       "attempt": 0,
-      "raw": "{\"queue_is_one_to_one_or_competing_consumers\": true, \"topic_is_one_to_many_publish_subscribe\": true, \"queue_message_consumed_once\": true, \"topic_message_delivered_to_each_subscriber\": true, \"use_case_examples_for_each\": true}"
+      "raw": "{\"queue_is_one_to_one_or_competing_consumers\":false,\"topic_is_one_to_many_publish_subscribe\":false,\"queue_message_consumed_once\":false,\"topic_message_delivered_to_each_subscriber\":false,\"use_case_examples_for_each\":false}"
     }
   ],
-  "ts": "2026-04-22T01:13:00.331746+00:00"
+  "ts": "2026-04-22T08:45:20.929962+00:00"
 }

@@ -1,0 +1,106 @@
+{
+  "track": "T4",
+  "arm": "hewn_prompt_only",
+  "sequence_id": "design-feature",
+  "run_index": 1,
+  "turn": 1,
+  "arm_order_index": 1,
+  "arm_order_full": [
+    "hewn_full",
+    "hewn_prompt_only",
+    "terse",
+    "baseline",
+    "caveman_full"
+  ],
+  "digest_hex": "30a2f9a62df0d790c0598917c3ab42509bbadd672a0a484741ea201d2da3b44f",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T01:04:51.515942+00:00",
+  "session_id_used_for_resume": null,
+  "output_tokens_tiktoken": 632,
+  "output_tokens_anthropic": 1287,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 15875,
+  "cache_read_input_tokens": 16796,
+  "total_input_tokens": 32677,
+  "cache_state": "warm",
+  "wallclock_ms": 31110.515555017628,
+  "duration_ms": 28121,
+  "duration_api_ms": 29860,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "c02819a2-ad2a-4986-87e1-163d9a52cd4b",
+  "total_cost_usd": 0.14027775,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "The big decisions, roughly in order of blast radius:\n\n**Money model**\n- Are gift cards stored value (a balance you draw down) or a discount/promo (fixed amount off once)? Different accounting, tax, and refund semantics.\n- Currency: single-currency only, or do you convert at redemption? FX drift is a rathole.\n- Can balances go partially used across multiple orders? (Almost always yes — but that forces persistent balance state per code.)\n\n**Code model**\n- One code = one card (unique, single owner) vs. reusable promo-style codes. Mixing them in one table is the usual mistake.\n- Code format, entropy, and collision strategy. Human-typeable (short, ambiguous chars stripped) vs. opaque tokens.\n- Activation: live at issue, or require a separate activation step (retail cards need this)?\n\n**Checkout flow & ordering**\n- Apply before or after tax? Before or after other discounts? This is a policy choice with legal implications in some jurisdictions — pin it down early.\n- Multiple codes per order: allowed? Cap? Order of application?\n- What happens if the card covers 100% of the total — do you still require a payment method for $0 auth, or skip the PSP entirely?\n\n**Consistency & race conditions**\n- Two concurrent checkouts drawing from the same balance: pessimistic lock, optimistic with version, or reserve-then-commit? This is the #1 source of \"we gave away free money\" bugs.\n- Authorize vs. capture: when do you actually decrement the balance — at order placement, at payment capture, or at fulfillment? Must match your PSP's auth/capture timing or refunds get weird.\n\n**Refunds & reversals**\n- Refund to original tender (card portion → card, gift portion → gift balance) or refund everything to gift balance? Pick one and be consistent.\n- What if the original gift card is expired / deactivated at refund time?\n- Chargebacks on the card portion while the gift portion was already spent — how do you claw back?\n\n**Lifecycle & compliance**\n- Expiration policy. In many US states and the EU this is heavily regulated (CARD Act in the US; varies by country in EU). Don't invent a policy without checking legal.\n- Unclaimed balances / escheatment (dormant funds revert to the state in parts of the US).\n- Fraud: velocity limits, balance-check endpoint rate limiting (enumeration attack vector), IP/device checks at redemption.\n\n**Operational**\n- Balance check UX (do users see remaining balance pre-checkout?).\n- Admin tools: issue, void, adjust, re-send. These always get built late and painfully — scope them in.\n- Audit log: every balance change needs an immutable ledger entry, not just a mutable `balance` column. This is the single most important structural choice on the data side.\n\nThe two I'd nail down *first*, because they constrain everything else: **ledger vs. mutable balance** (go ledger), and **discount-ordering policy** (tax/discount interaction). Want to go deeper on any of these?",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 28121,
+    "duration_api_ms": 29860,
+    "num_turns": 1,
+    "result": "The big decisions, roughly in order of blast radius:\n\n**Money model**\n- Are gift cards stored value (a balance you draw down) or a discount/promo (fixed amount off once)? Different accounting, tax, and refund semantics.\n- Currency: single-currency only, or do you convert at redemption? FX drift is a rathole.\n- Can balances go partially used across multiple orders? (Almost always yes — but that forces persistent balance state per code.)\n\n**Code model**\n- One code = one card (unique, single owner) vs. reusable promo-style codes. Mixing them in one table is the usual mistake.\n- Code format, entropy, and collision strategy. Human-typeable (short, ambiguous chars stripped) vs. opaque tokens.\n- Activation: live at issue, or require a separate activation step (retail cards need this)?\n\n**Checkout flow & ordering**\n- Apply before or after tax? Before or after other discounts? This is a policy choice with legal implications in some jurisdictions — pin it down early.\n- Multiple codes per order: allowed? Cap? Order of application?\n- What happens if the card covers 100% of the total — do you still require a payment method for $0 auth, or skip the PSP entirely?\n\n**Consistency & race conditions**\n- Two concurrent checkouts drawing from the same balance: pessimistic lock, optimistic with version, or reserve-then-commit? This is the #1 source of \"we gave away free money\" bugs.\n- Authorize vs. capture: when do you actually decrement the balance — at order placement, at payment capture, or at fulfillment? Must match your PSP's auth/capture timing or refunds get weird.\n\n**Refunds & reversals**\n- Refund to original tender (card portion → card, gift portion → gift balance) or refund everything to gift balance? Pick one and be consistent.\n- What if the original gift card is expired / deactivated at refund time?\n- Chargebacks on the card portion while the gift portion was already spent — how do you claw back?\n\n**Lifecycle & compliance**\n- Expiration policy. In many US states and the EU this is heavily regulated (CARD Act in the US; varies by country in EU). Don't invent a policy without checking legal.\n- Unclaimed balances / escheatment (dormant funds revert to the state in parts of the US).\n- Fraud: velocity limits, balance-check endpoint rate limiting (enumeration attack vector), IP/device checks at redemption.\n\n**Operational**\n- Balance check UX (do users see remaining balance pre-checkout?).\n- Admin tools: issue, void, adjust, re-send. These always get built late and painfully — scope them in.\n- Audit log: every balance change needs an immutable ledger entry, not just a mutable `balance` column. This is the single most important structural choice on the data side.\n\nThe two I'd nail down *first*, because they constrain everything else: **ledger vs. mutable balance** (go ledger), and **discount-ordering policy** (tax/discount interaction). Want to go deeper on any of these?",
+    "stop_reason": "end_turn",
+    "session_id": "c02819a2-ad2a-4986-87e1-163d9a52cd4b",
+    "total_cost_usd": 0.14027775,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 15875,
+      "cache_read_input_tokens": 16796,
+      "output_tokens": 1287,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 15875,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 1287,
+          "cache_read_input_tokens": 16796,
+          "cache_creation_input_tokens": 15875,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 15875
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 391,
+        "outputTokens": 13,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.000456,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 1287,
+        "cacheReadInputTokens": 16796,
+        "cacheCreationInputTokens": 15875,
+        "webSearchRequests": 0,
+        "costUSD": 0.13982175,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "adbcd2da-10a1-4819-98d8-3ae67c49a4ed"
+  }
+}

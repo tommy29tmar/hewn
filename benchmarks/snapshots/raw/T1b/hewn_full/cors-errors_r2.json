@@ -14,61 +14,61 @@
   ],
   "digest_hex": "258887ceb8366586f3dea59b17c1ef6a12bb3fbc92c09a2a53837c2cc3a1ccbf",
   "seed": "hewn-bench-v1",
-  "timestamp": "2026-04-21T23:59:33.414434+00:00",
-  "output_tokens_tiktoken": 163,
-  "output_tokens_anthropic": 290,
+  "timestamp": "2026-04-22T08:05:04.347862+00:00",
+  "output_tokens_tiktoken": 35,
+  "output_tokens_anthropic": 57,
   "input_tokens_anthropic": 6,
-  "cache_creation_input_tokens": 0,
-  "cache_read_input_tokens": 30009,
-  "total_input_tokens": 30015,
+  "cache_creation_input_tokens": 18759,
+  "cache_read_input_tokens": 16805,
+  "total_input_tokens": 35570,
   "cache_state": "warm",
-  "wallclock_ms": 11956.573470990406,
-  "duration_ms": 6499,
-  "duration_api_ms": 7595,
-  "wrapper_overhead_ms": 4361.573470990406,
+  "wallclock_ms": 9495.644854992861,
+  "duration_ms": 3096,
+  "duration_api_ms": 4130,
+  "wrapper_overhead_ms": 5365.644854992861,
   "stop_reason": "end_turn",
   "num_turns": 1,
-  "session_id": "fde4d5c9-7bf9-47ac-9dcf-147bf13c2b77",
-  "total_cost_usd": 0.0227045,
+  "session_id": "92f75952-239d-40d6-b579-0b608b39b942",
+  "total_cost_usd": 0.12752625,
   "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
-  "result": "CORS errors mean browser blocked cross-origin request.\n\nCommon causes:\n- frontend at one origin (localhost:3000) calling API at another (localhost:8000) without server sending Access-Control-Allow-Origin\n- preflight OPTIONS request failing — server not handling OPTIONS or missing Access-Control-Allow-Methods/Headers\n- credentials mode mismatch — sending cookies but server returns Access-Control-Allow-Origin: * instead of exact origin\n- custom header (Authorization, X-Foo) triggering preflight that server not configured for\n\nFix on server side, not client. Add CORS middleware with explicit allowed origin, methods, headers. If using cookies, set Allow-Credentials: true and origin to exact match (not wildcard).\n\nPaste the actual error text + your stack (frontend framework, backend) if you want specific fix.",
+  "result": "@hewn v0 hybrid\nG: cors_error\nC: origin_mismatch\nP: preflight_check\nV: allow_origin\nA: set_cors_header",
   "assertion_pass": true,
   "raw_payload": {
     "type": "result",
     "subtype": "success",
     "is_error": false,
     "api_error_status": null,
-    "duration_ms": 6499,
-    "duration_api_ms": 7595,
+    "duration_ms": 3096,
+    "duration_api_ms": 4130,
     "num_turns": 1,
-    "result": "CORS errors mean browser blocked cross-origin request.\n\nCommon causes:\n- frontend at one origin (localhost:3000) calling API at another (localhost:8000) without server sending Access-Control-Allow-Origin\n- preflight OPTIONS request failing — server not handling OPTIONS or missing Access-Control-Allow-Methods/Headers\n- credentials mode mismatch — sending cookies but server returns Access-Control-Allow-Origin: * instead of exact origin\n- custom header (Authorization, X-Foo) triggering preflight that server not configured for\n\nFix on server side, not client. Add CORS middleware with explicit allowed origin, methods, headers. If using cookies, set Allow-Credentials: true and origin to exact match (not wildcard).\n\nPaste the actual error text + your stack (frontend framework, backend) if you want specific fix.",
+    "result": "@hewn v0 hybrid\nG: cors_error\nC: origin_mismatch\nP: preflight_check\nV: allow_origin\nA: set_cors_header",
     "stop_reason": "end_turn",
-    "session_id": "fde4d5c9-7bf9-47ac-9dcf-147bf13c2b77",
-    "total_cost_usd": 0.0227045,
+    "session_id": "92f75952-239d-40d6-b579-0b608b39b942",
+    "total_cost_usd": 0.12752625,
     "usage": {
       "input_tokens": 6,
-      "cache_creation_input_tokens": 0,
-      "cache_read_input_tokens": 30009,
-      "output_tokens": 290,
+      "cache_creation_input_tokens": 18759,
+      "cache_read_input_tokens": 16805,
+      "output_tokens": 57,
       "server_tool_use": {
         "web_search_requests": 0,
         "web_fetch_requests": 0
       },
       "service_tier": "standard",
       "cache_creation": {
-        "ephemeral_1h_input_tokens": 0,
+        "ephemeral_1h_input_tokens": 18759,
         "ephemeral_5m_input_tokens": 0
       },
       "inference_geo": "",
       "iterations": [
         {
           "input_tokens": 6,
-          "output_tokens": 290,
-          "cache_read_input_tokens": 30009,
-          "cache_creation_input_tokens": 0,
+          "output_tokens": 57,
+          "cache_read_input_tokens": 16805,
+          "cache_creation_input_tokens": 18759,
           "cache_creation": {
             "ephemeral_5m_input_tokens": 0,
-            "ephemeral_1h_input_tokens": 0
+            "ephemeral_1h_input_tokens": 18759
           },
           "type": "message"
         }
@@ -78,28 +78,28 @@
     "modelUsage": {
       "claude-haiku-4-5-20251001": {
         "inputTokens": 350,
-        "outputTokens": 14,
+        "outputTokens": 15,
         "cacheReadInputTokens": 0,
         "cacheCreationInputTokens": 0,
         "webSearchRequests": 0,
-        "costUSD": 0.00042,
+        "costUSD": 0.00042500000000000003,
         "contextWindow": 200000,
         "maxOutputTokens": 32000
       },
       "claude-opus-4-7": {
         "inputTokens": 6,
-        "outputTokens": 290,
-        "cacheReadInputTokens": 30009,
-        "cacheCreationInputTokens": 0,
+        "outputTokens": 57,
+        "cacheReadInputTokens": 16805,
+        "cacheCreationInputTokens": 18759,
         "webSearchRequests": 0,
-        "costUSD": 0.0222845,
-        "contextWindow": 200000,
+        "costUSD": 0.12710125,
+        "contextWindow": 1000000,
         "maxOutputTokens": 64000
       }
     },
     "permission_denials": [],
     "terminal_reason": "completed",
     "fast_mode_state": "off",
-    "uuid": "b5032eb3-560a-44ff-a309-0321873d536c"
+    "uuid": "6227a5bb-1d25-4225-b82a-adc39bab91ae"
   }
 }

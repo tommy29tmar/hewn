@@ -14,61 +14,61 @@
   ],
   "digest_hex": "e9b043a6109acd8755235ab57ea2087212a5d2fe093212bffca1c20b840c04e8",
   "seed": "hewn-bench-v1",
-  "timestamp": "2026-04-21T23:45:00.338971+00:00",
-  "output_tokens_tiktoken": 236,
-  "output_tokens_anthropic": 391,
+  "timestamp": "2026-04-22T07:59:50.274016+00:00",
+  "output_tokens_tiktoken": 258,
+  "output_tokens_anthropic": 436,
   "input_tokens_anthropic": 6,
-  "cache_creation_input_tokens": 11731,
+  "cache_creation_input_tokens": 17026,
   "cache_read_input_tokens": 16796,
-  "total_input_tokens": 28533,
+  "total_input_tokens": 33828,
   "cache_state": "warm",
-  "wallclock_ms": 14607.915200991556,
-  "duration_ms": 9413,
-  "duration_api_ms": 10409,
+  "wallclock_ms": 16733.831924997503,
+  "duration_ms": 10807,
+  "duration_api_ms": 11781,
   "wrapper_overhead_ms": null,
   "stop_reason": "end_turn",
   "num_turns": 1,
-  "session_id": "251af5a8-e23b-4815-ba7f-349e6c514281",
-  "total_cost_usd": 0.09193475,
+  "session_id": "994753b4-53d4-4263-8ce9-f32462531f93",
+  "total_cost_usd": 0.12615349999999997,
   "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
-  "result": "`EXPLAIN` shows the query plan the database will use to execute a SQL statement — without actually running it (in most engines).\n\nKey things it reveals:\n\n- **Access method**: sequential scan vs. index scan vs. index-only scan\n- **Join strategy**: nested loop, hash join, merge join\n- **Join order**: which table is driven first\n- **Estimated row counts** and **cost** at each step\n- **Sort / aggregate / filter** operations and where they happen\n\nVariants:\n- `EXPLAIN ANALYZE` (Postgres/SQLite) — actually executes the query and shows real timings and row counts alongside estimates. Big divergence between estimated and actual rows usually means stale statistics.\n- `EXPLAIN FORMAT=JSON` (MySQL) / `EXPLAIN (FORMAT JSON)` (Postgres) — machine-readable output.\n- `EXPLAIN (BUFFERS)` (Postgres) — adds cache hit/miss info.\n\nTypical uses: spotting missing indexes (seq scan on a big table), catching accidental cartesian joins, and diagnosing why a query got slow after a schema or data change.",
+  "result": "SQL `EXPLAIN` shows the query planner's execution plan for a statement — how the database intends to run it, without actually running it (use `EXPLAIN ANALYZE` to execute and get real timings).\n\nKey things it reveals:\n- **Access method**: sequential scan, index scan, index-only scan, bitmap scan\n- **Join strategy**: nested loop, hash join, merge join\n- **Order of operations**: which tables are read first, where filters/sorts happen\n- **Cost estimates**: planner's guess at startup cost, total cost, rows, width\n- **With `ANALYZE`**: actual rows vs. estimated rows (big divergence = stale stats or bad selectivity estimates), actual time per node, loops, buffers (with `BUFFERS`)\n\nCommon uses: spotting a `Seq Scan` where you expected an index, catching row estimate errors that lead to bad join orders, and finding expensive sorts or hash spills to disk.\n\nSyntax varies slightly: PostgreSQL has `EXPLAIN (ANALYZE, BUFFERS, FORMAT JSON)`, MySQL has `EXPLAIN FORMAT=TREE` and `EXPLAIN ANALYZE`, SQLite has `EXPLAIN QUERY PLAN`.",
   "assertion_pass": true,
   "raw_payload": {
     "type": "result",
     "subtype": "success",
     "is_error": false,
     "api_error_status": null,
-    "duration_ms": 9413,
-    "duration_api_ms": 10409,
+    "duration_ms": 10807,
+    "duration_api_ms": 11781,
     "num_turns": 1,
-    "result": "`EXPLAIN` shows the query plan the database will use to execute a SQL statement — without actually running it (in most engines).\n\nKey things it reveals:\n\n- **Access method**: sequential scan vs. index scan vs. index-only scan\n- **Join strategy**: nested loop, hash join, merge join\n- **Join order**: which table is driven first\n- **Estimated row counts** and **cost** at each step\n- **Sort / aggregate / filter** operations and where they happen\n\nVariants:\n- `EXPLAIN ANALYZE` (Postgres/SQLite) — actually executes the query and shows real timings and row counts alongside estimates. Big divergence between estimated and actual rows usually means stale statistics.\n- `EXPLAIN FORMAT=JSON` (MySQL) / `EXPLAIN (FORMAT JSON)` (Postgres) — machine-readable output.\n- `EXPLAIN (BUFFERS)` (Postgres) — adds cache hit/miss info.\n\nTypical uses: spotting missing indexes (seq scan on a big table), catching accidental cartesian joins, and diagnosing why a query got slow after a schema or data change.",
+    "result": "SQL `EXPLAIN` shows the query planner's execution plan for a statement — how the database intends to run it, without actually running it (use `EXPLAIN ANALYZE` to execute and get real timings).\n\nKey things it reveals:\n- **Access method**: sequential scan, index scan, index-only scan, bitmap scan\n- **Join strategy**: nested loop, hash join, merge join\n- **Order of operations**: which tables are read first, where filters/sorts happen\n- **Cost estimates**: planner's guess at startup cost, total cost, rows, width\n- **With `ANALYZE`**: actual rows vs. estimated rows (big divergence = stale stats or bad selectivity estimates), actual time per node, loops, buffers (with `BUFFERS`)\n\nCommon uses: spotting a `Seq Scan` where you expected an index, catching row estimate errors that lead to bad join orders, and finding expensive sorts or hash spills to disk.\n\nSyntax varies slightly: PostgreSQL has `EXPLAIN (ANALYZE, BUFFERS, FORMAT JSON)`, MySQL has `EXPLAIN FORMAT=TREE` and `EXPLAIN ANALYZE`, SQLite has `EXPLAIN QUERY PLAN`.",
     "stop_reason": "end_turn",
-    "session_id": "251af5a8-e23b-4815-ba7f-349e6c514281",
-    "total_cost_usd": 0.09193475,
+    "session_id": "994753b4-53d4-4263-8ce9-f32462531f93",
+    "total_cost_usd": 0.12615349999999997,
     "usage": {
       "input_tokens": 6,
-      "cache_creation_input_tokens": 11731,
+      "cache_creation_input_tokens": 17026,
       "cache_read_input_tokens": 16796,
-      "output_tokens": 391,
+      "output_tokens": 436,
       "server_tool_use": {
         "web_search_requests": 0,
         "web_fetch_requests": 0
       },
       "service_tier": "standard",
       "cache_creation": {
-        "ephemeral_1h_input_tokens": 11731,
+        "ephemeral_1h_input_tokens": 17026,
         "ephemeral_5m_input_tokens": 0
       },
       "inference_geo": "",
       "iterations": [
         {
           "input_tokens": 6,
-          "output_tokens": 391,
+          "output_tokens": 436,
           "cache_read_input_tokens": 16796,
-          "cache_creation_input_tokens": 11731,
+          "cache_creation_input_tokens": 17026,
           "cache_creation": {
             "ephemeral_5m_input_tokens": 0,
-            "ephemeral_1h_input_tokens": 11731
+            "ephemeral_1h_input_tokens": 17026
           },
           "type": "message"
         }
@@ -88,18 +88,18 @@
       },
       "claude-opus-4-7": {
         "inputTokens": 6,
-        "outputTokens": 391,
+        "outputTokens": 436,
         "cacheReadInputTokens": 16796,
-        "cacheCreationInputTokens": 11731,
+        "cacheCreationInputTokens": 17026,
         "webSearchRequests": 0,
-        "costUSD": 0.09152175,
-        "contextWindow": 200000,
+        "costUSD": 0.12574049999999998,
+        "contextWindow": 1000000,
         "maxOutputTokens": 64000
       }
     },
     "permission_denials": [],
     "terminal_reason": "completed",
     "fast_mode_state": "off",
-    "uuid": "dcdc9ca5-65c8-46a8-84a5-5f0d45d9e320"
+    "uuid": "982c5b37-7fef-4b69-840a-e807b16b40f3"
   }
 }

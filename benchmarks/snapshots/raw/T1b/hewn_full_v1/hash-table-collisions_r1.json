@@ -1,0 +1,105 @@
+{
+  "track": "T1b",
+  "arm": "hewn_full",
+  "prompt_id": "hash-table-collisions",
+  "run_index": 1,
+  "arm_order_index": 2,
+  "arm_order_full": [
+    "caveman_full",
+    "hewn_prompt_only",
+    "hewn_full",
+    "caveman_full_plus_ultra_directive",
+    "baseline",
+    "terse"
+  ],
+  "digest_hex": "2a54ba54e1f7192ed7b81622a0de8bb31264ddae15be620c57cd7c027de6901e",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-21T23:46:00.858901+00:00",
+  "output_tokens_tiktoken": 204,
+  "output_tokens_anthropic": 341,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 13199,
+  "cache_read_input_tokens": 16805,
+  "total_input_tokens": 30010,
+  "cache_state": "warm",
+  "wallclock_ms": 13913.274263002677,
+  "duration_ms": 8924,
+  "duration_api_ms": 10057,
+  "wrapper_overhead_ms": 3856.274263002677,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "9a8aa023-8d04-4bf2-ac36-99efc9967900",
+  "total_cost_usd": 0.09986325,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "Two main strategies.\n\nChaining: each bucket holds linked list (or tree). Collisions append to list. Simple, degrades to O(n) if many collide, but tolerates high load factor.\n\nOpen addressing: on collision, probe for another slot in same array. Variants:\n- linear probing: check next slot, then next. Cache-friendly but clusters.\n- quadratic probing: step by 1,4,9... reduces clustering.\n- double hashing: second hash decides step size. Best spread, worst cache.\n\nOpen addressing needs resize before table fills (~0.7 load factor). Deletion needs tombstones so probes don't stop early.\n\nReal implementations mix tricks. Java HashMap: chaining, but converts bucket to red-black tree past 8 entries. Python dict, Go map, Rust HashMap: open addressing with their own probe schemes. Robin Hood hashing evens out probe distances by swapping entries during insert.\n\nGood hash function matters more than collision strategy — if hash distributes poorly, neither saves you.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 8924,
+    "duration_api_ms": 10057,
+    "num_turns": 1,
+    "result": "Two main strategies.\n\nChaining: each bucket holds linked list (or tree). Collisions append to list. Simple, degrades to O(n) if many collide, but tolerates high load factor.\n\nOpen addressing: on collision, probe for another slot in same array. Variants:\n- linear probing: check next slot, then next. Cache-friendly but clusters.\n- quadratic probing: step by 1,4,9... reduces clustering.\n- double hashing: second hash decides step size. Best spread, worst cache.\n\nOpen addressing needs resize before table fills (~0.7 load factor). Deletion needs tombstones so probes don't stop early.\n\nReal implementations mix tricks. Java HashMap: chaining, but converts bucket to red-black tree past 8 entries. Python dict, Go map, Rust HashMap: open addressing with their own probe schemes. Robin Hood hashing evens out probe distances by swapping entries during insert.\n\nGood hash function matters more than collision strategy — if hash distributes poorly, neither saves you.",
+    "stop_reason": "end_turn",
+    "session_id": "9a8aa023-8d04-4bf2-ac36-99efc9967900",
+    "total_cost_usd": 0.09986325,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 13199,
+      "cache_read_input_tokens": 16805,
+      "output_tokens": 341,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 13199,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 341,
+          "cache_read_input_tokens": 16805,
+          "cache_creation_input_tokens": 13199,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 13199
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 347,
+        "outputTokens": 13,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.000412,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 341,
+        "cacheReadInputTokens": 16805,
+        "cacheCreationInputTokens": 13199,
+        "webSearchRequests": 0,
+        "costUSD": 0.09945125,
+        "contextWindow": 200000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "af2e5fef-c1a2-4fe4-b3c5-3fb8e713a77a"
+  }
+}

@@ -14,61 +14,61 @@
   ],
   "digest_hex": "e9b043a6109acd8755235ab57ea2087212a5d2fe093212bffca1c20b840c04e8",
   "seed": "hewn-bench-v1",
-  "timestamp": "2026-04-21T23:44:33.665656+00:00",
-  "output_tokens_tiktoken": 161,
-  "output_tokens_anthropic": 255,
+  "timestamp": "2026-04-22T07:59:41.042156+00:00",
+  "output_tokens_tiktoken": 36,
+  "output_tokens_anthropic": 59,
   "input_tokens_anthropic": 6,
-  "cache_creation_input_tokens": 13205,
+  "cache_creation_input_tokens": 18760,
   "cache_read_input_tokens": 16805,
-  "total_input_tokens": 30016,
+  "total_input_tokens": 35571,
   "cache_state": "warm",
-  "wallclock_ms": 12386.089926993009,
-  "duration_ms": 7034,
-  "duration_api_ms": 7661,
-  "wrapper_overhead_ms": 4725.089926993009,
+  "wallclock_ms": 9231.251521996455,
+  "duration_ms": 3200,
+  "duration_api_ms": 4286,
+  "wrapper_overhead_ms": 4945.251521996455,
   "stop_reason": "end_turn",
   "num_turns": 1,
-  "session_id": "8cdf5f5f-c1a7-47e3-9fd6-26f1bdc4954c",
-  "total_cost_usd": 0.09775175,
+  "session_id": "273af12f-7426-41de-b19e-9fbaa68c160c",
+  "total_cost_usd": 0.12757549999999998,
   "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
-  "result": "EXPLAIN shows query plan — how DB will execute SQL without running it.\n\nTells you:\n- access method per table (seq scan, index scan, index-only scan)\n- join order and join algorithm (nested loop, hash, merge)\n- estimated row counts and cost per step\n- filter and sort operations, whether sort spills to disk\n- index usage — or lack of it\n\nEXPLAIN ANALYZE actually runs query, adds real timings and actual row counts next to estimates. Gap between estimated and actual rows = stale stats or bad selectivity guess.\n\nUse it to spot: seq scans on big tables, nested loops over huge row counts, sorts without supporting index, estimates off by 10x+.\n\nPostgres and MySQL differ in output format but concept is same.",
+  "result": "@hewn v0 hybrid\nG: sql_explain\nC: query_plan\nP: planner_shows_steps\nV: spot_slow_ops\nA: read_plan",
   "assertion_pass": true,
   "raw_payload": {
     "type": "result",
     "subtype": "success",
     "is_error": false,
     "api_error_status": null,
-    "duration_ms": 7034,
-    "duration_api_ms": 7661,
+    "duration_ms": 3200,
+    "duration_api_ms": 4286,
     "num_turns": 1,
-    "result": "EXPLAIN shows query plan — how DB will execute SQL without running it.\n\nTells you:\n- access method per table (seq scan, index scan, index-only scan)\n- join order and join algorithm (nested loop, hash, merge)\n- estimated row counts and cost per step\n- filter and sort operations, whether sort spills to disk\n- index usage — or lack of it\n\nEXPLAIN ANALYZE actually runs query, adds real timings and actual row counts next to estimates. Gap between estimated and actual rows = stale stats or bad selectivity guess.\n\nUse it to spot: seq scans on big tables, nested loops over huge row counts, sorts without supporting index, estimates off by 10x+.\n\nPostgres and MySQL differ in output format but concept is same.",
+    "result": "@hewn v0 hybrid\nG: sql_explain\nC: query_plan\nP: planner_shows_steps\nV: spot_slow_ops\nA: read_plan",
     "stop_reason": "end_turn",
-    "session_id": "8cdf5f5f-c1a7-47e3-9fd6-26f1bdc4954c",
-    "total_cost_usd": 0.09775175,
+    "session_id": "273af12f-7426-41de-b19e-9fbaa68c160c",
+    "total_cost_usd": 0.12757549999999998,
     "usage": {
       "input_tokens": 6,
-      "cache_creation_input_tokens": 13205,
+      "cache_creation_input_tokens": 18760,
       "cache_read_input_tokens": 16805,
-      "output_tokens": 255,
+      "output_tokens": 59,
       "server_tool_use": {
         "web_search_requests": 0,
         "web_fetch_requests": 0
       },
       "service_tier": "standard",
       "cache_creation": {
-        "ephemeral_1h_input_tokens": 13205,
+        "ephemeral_1h_input_tokens": 18760,
         "ephemeral_5m_input_tokens": 0
       },
       "inference_geo": "",
       "iterations": [
         {
           "input_tokens": 6,
-          "output_tokens": 255,
+          "output_tokens": 59,
           "cache_read_input_tokens": 16805,
-          "cache_creation_input_tokens": 13205,
+          "cache_creation_input_tokens": 18760,
           "cache_creation": {
             "ephemeral_5m_input_tokens": 0,
-            "ephemeral_1h_input_tokens": 13205
+            "ephemeral_1h_input_tokens": 18760
           },
           "type": "message"
         }
@@ -78,28 +78,28 @@
     "modelUsage": {
       "claude-haiku-4-5-20251001": {
         "inputTokens": 348,
-        "outputTokens": 13,
+        "outputTokens": 14,
         "cacheReadInputTokens": 0,
         "cacheCreationInputTokens": 0,
         "webSearchRequests": 0,
-        "costUSD": 0.000413,
+        "costUSD": 0.00041799999999999997,
         "contextWindow": 200000,
         "maxOutputTokens": 32000
       },
       "claude-opus-4-7": {
         "inputTokens": 6,
-        "outputTokens": 255,
+        "outputTokens": 59,
         "cacheReadInputTokens": 16805,
-        "cacheCreationInputTokens": 13205,
+        "cacheCreationInputTokens": 18760,
         "webSearchRequests": 0,
-        "costUSD": 0.09733875,
-        "contextWindow": 200000,
+        "costUSD": 0.12715749999999998,
+        "contextWindow": 1000000,
         "maxOutputTokens": 64000
       }
     },
     "permission_denials": [],
     "terminal_reason": "completed",
     "fast_mode_state": "off",
-    "uuid": "7b399777-9696-4db6-bd5c-10f34633137b"
+    "uuid": "2380a367-e1c7-4d67-b985-58396da3d028"
   }
 }

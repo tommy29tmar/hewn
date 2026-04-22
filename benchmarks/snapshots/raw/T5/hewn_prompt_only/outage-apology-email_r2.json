@@ -14,61 +14,61 @@
   ],
   "digest_hex": "79c7f153f103ae8cb05b518a7c67b3127fd5c21a2990920ab1827dd6eafbf25d",
   "seed": "hewn-bench-v1",
-  "timestamp": "2026-04-22T00:55:33.920890+00:00",
-  "output_tokens_tiktoken": 329,
-  "output_tokens_anthropic": 489,
+  "timestamp": "2026-04-22T08:27:11.360833+00:00",
+  "output_tokens_tiktoken": 307,
+  "output_tokens_anthropic": 462,
   "input_tokens_anthropic": 6,
-  "cache_creation_input_tokens": 15930,
+  "cache_creation_input_tokens": 17134,
   "cache_read_input_tokens": 16796,
-  "total_input_tokens": 32732,
+  "total_input_tokens": 33936,
   "cache_state": "warm",
-  "wallclock_ms": 13523.016752005788,
-  "duration_ms": 10145,
-  "duration_api_ms": 11155,
+  "wallclock_ms": 17918.16678197938,
+  "duration_ms": 11312,
+  "duration_api_ms": 12497,
   "wrapper_overhead_ms": null,
   "stop_reason": "end_turn",
   "num_turns": 1,
-  "session_id": "99a0dc40-babf-47e8-a055-017375b6873f",
-  "total_cost_usd": 0.1207255,
+  "session_id": "f36da34e-2826-4f2b-a74c-64da129ccdd8",
+  "total_cost_usd": 0.1275855,
   "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
-  "result": "# Introducing Smart Drafts: Never Face a Blank Page Again\n\nWe've all been there. You open a new doc, stare at the blinking cursor, and suddenly remember three errands you've been putting off. The blank page is one of the oldest productivity killers in knowledge work, and it's the reason we built **Smart Drafts**, now rolling out to every workspace this week. Our goal was simple: take the friction out of that first sentence so you can get to the thinking that actually matters.\n\nSmart Drafts turns your document title and recent context into a tailored outline with a single click. When you create a new doc, you'll see a new **Suggest an outline** button in the toolbar — give it a title, hit the button, and you'll get a structured draft that reflects how you and your team already work: pulling from related docs you've touched recently, matching the shape of similar documents in your workspace, and leaving clear placeholders for the details only you can fill in. It's not trying to write the doc for you. It's trying to get you to the middle, faster.\n\nThis is the first step in a broader push to make our editor feel less like a blank canvas and more like a thinking partner. Next up is **custom voice training**, which will let Smart Drafts learn the rhythms of how your team actually writes — so outlines for a product spec feel different from outlines for a customer update. We'll have more to share on that in the coming weeks. In the meantime, give Smart Drafts a try on your next doc, and let us know what you'd like to see it do next. As always, we're building this with you.",
+  "result": "# Introducing Smart Drafts\n\nWe've all been there — cursor blinking on an empty page, the clock ticking, and somehow the hardest part of writing anything is just getting started. After hearing this from so many of you, we're thrilled to introduce **Smart Drafts**, a new way to begin any document with momentum instead of dread. The blank page problem is real, and we wanted to meet it head-on with something that feels less like a template and more like a thoughtful collaborator nudging you forward.\n\nSmart Drafts works with a single click. When you open a new document, give it a title, and tap the ✨ icon — we'll generate a tailored outline based on your title and the context of documents you've been working on recently. Writing a project kickoff after a week of planning notes? You'll get an outline that reflects that. Drafting a retro after a sprint? It'll know. The suggestions are yours to keep, rearrange, or toss entirely — it's a starting point, never a prescription. Everything happens in the draft itself, so your flow stays uninterrupted.\n\nThis is just the beginning. We're already working on **custom voice training**, which will let Smart Drafts learn the way *you* write — your cadence, your phrasing, the little turns of language that make a document feel like yours. We'll have more to share on that in the coming months. In the meantime, give Smart Drafts a spin on your next doc and let us know what you think. As always, thank you for building with us.",
   "assertion_pass": true,
   "raw_payload": {
     "type": "result",
     "subtype": "success",
     "is_error": false,
     "api_error_status": null,
-    "duration_ms": 10145,
-    "duration_api_ms": 11155,
+    "duration_ms": 11312,
+    "duration_api_ms": 12497,
     "num_turns": 1,
-    "result": "# Introducing Smart Drafts: Never Face a Blank Page Again\n\nWe've all been there. You open a new doc, stare at the blinking cursor, and suddenly remember three errands you've been putting off. The blank page is one of the oldest productivity killers in knowledge work, and it's the reason we built **Smart Drafts**, now rolling out to every workspace this week. Our goal was simple: take the friction out of that first sentence so you can get to the thinking that actually matters.\n\nSmart Drafts turns your document title and recent context into a tailored outline with a single click. When you create a new doc, you'll see a new **Suggest an outline** button in the toolbar — give it a title, hit the button, and you'll get a structured draft that reflects how you and your team already work: pulling from related docs you've touched recently, matching the shape of similar documents in your workspace, and leaving clear placeholders for the details only you can fill in. It's not trying to write the doc for you. It's trying to get you to the middle, faster.\n\nThis is the first step in a broader push to make our editor feel less like a blank canvas and more like a thinking partner. Next up is **custom voice training**, which will let Smart Drafts learn the rhythms of how your team actually writes — so outlines for a product spec feel different from outlines for a customer update. We'll have more to share on that in the coming weeks. In the meantime, give Smart Drafts a try on your next doc, and let us know what you'd like to see it do next. As always, we're building this with you.",
+    "result": "# Introducing Smart Drafts\n\nWe've all been there — cursor blinking on an empty page, the clock ticking, and somehow the hardest part of writing anything is just getting started. After hearing this from so many of you, we're thrilled to introduce **Smart Drafts**, a new way to begin any document with momentum instead of dread. The blank page problem is real, and we wanted to meet it head-on with something that feels less like a template and more like a thoughtful collaborator nudging you forward.\n\nSmart Drafts works with a single click. When you open a new document, give it a title, and tap the ✨ icon — we'll generate a tailored outline based on your title and the context of documents you've been working on recently. Writing a project kickoff after a week of planning notes? You'll get an outline that reflects that. Drafting a retro after a sprint? It'll know. The suggestions are yours to keep, rearrange, or toss entirely — it's a starting point, never a prescription. Everything happens in the draft itself, so your flow stays uninterrupted.\n\nThis is just the beginning. We're already working on **custom voice training**, which will let Smart Drafts learn the way *you* write — your cadence, your phrasing, the little turns of language that make a document feel like yours. We'll have more to share on that in the coming months. In the meantime, give Smart Drafts a spin on your next doc and let us know what you think. As always, thank you for building with us.",
     "stop_reason": "end_turn",
-    "session_id": "99a0dc40-babf-47e8-a055-017375b6873f",
-    "total_cost_usd": 0.1207255,
+    "session_id": "f36da34e-2826-4f2b-a74c-64da129ccdd8",
+    "total_cost_usd": 0.1275855,
     "usage": {
       "input_tokens": 6,
-      "cache_creation_input_tokens": 15930,
+      "cache_creation_input_tokens": 17134,
       "cache_read_input_tokens": 16796,
-      "output_tokens": 489,
+      "output_tokens": 462,
       "server_tool_use": {
         "web_search_requests": 0,
         "web_fetch_requests": 0
       },
       "service_tier": "standard",
       "cache_creation": {
-        "ephemeral_1h_input_tokens": 15930,
+        "ephemeral_1h_input_tokens": 17134,
         "ephemeral_5m_input_tokens": 0
       },
       "inference_geo": "",
       "iterations": [
         {
           "input_tokens": 6,
-          "output_tokens": 489,
+          "output_tokens": 462,
           "cache_read_input_tokens": 16796,
-          "cache_creation_input_tokens": 15930,
+          "cache_creation_input_tokens": 17134,
           "cache_creation": {
             "ephemeral_5m_input_tokens": 0,
-            "ephemeral_1h_input_tokens": 15930
+            "ephemeral_1h_input_tokens": 17134
           },
           "type": "message"
         }
@@ -78,21 +78,21 @@
     "modelUsage": {
       "claude-haiku-4-5-20251001": {
         "inputTokens": 435,
-        "outputTokens": 15,
+        "outputTokens": 17,
         "cacheReadInputTokens": 0,
         "cacheCreationInputTokens": 0,
         "webSearchRequests": 0,
-        "costUSD": 0.00051,
+        "costUSD": 0.0005200000000000001,
         "contextWindow": 200000,
         "maxOutputTokens": 32000
       },
       "claude-opus-4-7": {
         "inputTokens": 6,
-        "outputTokens": 489,
+        "outputTokens": 462,
         "cacheReadInputTokens": 16796,
-        "cacheCreationInputTokens": 15930,
+        "cacheCreationInputTokens": 17134,
         "webSearchRequests": 0,
-        "costUSD": 0.1202155,
+        "costUSD": 0.1270655,
         "contextWindow": 1000000,
         "maxOutputTokens": 64000
       }
@@ -100,6 +100,6 @@
     "permission_denials": [],
     "terminal_reason": "completed",
     "fast_mode_state": "off",
-    "uuid": "5ba1f6e3-0cf8-4edc-9bf4-1e6f61174787"
+    "uuid": "71a086f9-3386-4c50-aebf-cba4ea024955"
   }
 }

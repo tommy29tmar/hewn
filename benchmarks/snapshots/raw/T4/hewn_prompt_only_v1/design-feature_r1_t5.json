@@ -1,0 +1,96 @@
+{
+  "track": "T4",
+  "arm": "hewn_prompt_only",
+  "sequence_id": "design-feature",
+  "run_index": 1,
+  "turn": 5,
+  "arm_order_index": 1,
+  "arm_order_full": [
+    "hewn_full",
+    "hewn_prompt_only",
+    "terse",
+    "baseline",
+    "caveman_full"
+  ],
+  "digest_hex": "30a2f9a62df0d790c0598917c3ab42509bbadd672a0a484741ea201d2da3b44f",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T01:07:56.280722+00:00",
+  "session_id_used_for_resume": "c02819a2-ad2a-4986-87e1-163d9a52cd4b",
+  "output_tokens_tiktoken": 1545,
+  "output_tokens_anthropic": 4117,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 2066,
+  "cache_read_input_tokens": 37760,
+  "total_input_tokens": 39832,
+  "cache_state": "warm",
+  "wallclock_ms": 73763.7822900142,
+  "duration_ms": 70967,
+  "duration_api_ms": 70944,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "c02819a2-ad2a-4986-87e1-163d9a52cd4b",
+  "total_cost_usd": 0.1347475,
+  "model_used": "claude-opus-4-7",
+  "result": "Policy first, then code.\n\n## Policy\n\n**Default: proportional to original tender.** If the order was paid $40 gift + $60 card and the user gets a $25 refund, that's $10 back to the gift card and $15 back to the credit card. Reasons:\n\n- It's the only rule that's *symmetric* — a full refund returns exactly what was charged to each tender, no matter how many partial refunds preceded it.\n- Tax was collected proportionally; refunding proportionally keeps your tax ledger clean.\n- Some jurisdictions (notably parts of the EU and several US states) require refunds to return to the original tender; proportional is the strictest interpretation of that.\n- It doesn't require you to know *which line items* the refund is for. \"Original tender by line item\" sounds principled but needs per-item tender allocation that nobody actually tracks.\n\n**Alternatives worth knowing about but not defaulting to:**\n- *Card first*: customer-friendly, your balance sheet hates it, and it breaks the symmetry above.\n- *Gift first*: merchant-friendly, consumer protection agencies hate it, don't.\n- *Manual split by support*: necessary as an override for weird cases (expired card, closed account) — build the knob, hide it behind a permission.\n\n**Prerequisite you need to surface now:** proportional refunds are only possible if you **persisted the original split on the order**. This is a data-model requirement that comes from the refund feature but lands on the checkout code. `orders.gift_card_amount`, `orders.card_amount`, `orders.gift_card_id` (and `refunded_gift_amount`, `refunded_card_amount` running totals). Without those columns, you cannot execute this policy correctly on partial refunds six months later.\n\n## Code path\n\nAssume `refund(order_id, amount, idempotency_key)` on an order with original `gift=G`, `card=C`, `total=T=G+C`, and prior refunds `rg`, `rc`.\n\n```\n1. Idempotency check\n   SELECT * FROM refunds WHERE idempotency_key = $key;\n   if found: return stored result.  (Webhook retries and support double-clicks both hit this.)\n\n2. Validate\n   amount > 0\n   amount <= (T - rg - rc)                   -- not over-refunding\n   order is in a refundable state\n\n3. Compute split\n   refund_gift = round(amount * G / T)\n   refund_card = amount - refund_gift        -- assign remainder to card, not recomputed,\n                                             -- so the two sides always sum to `amount`\n   Cap each side at its remaining refundable:\n     refund_gift = min(refund_gift, G - rg)\n     refund_card = min(refund_card, C - rc)\n   If the cap kicked in, push the residual to the other side (and re-cap — one iteration is enough).\n\n4. Record intent (before any external call)\n   INSERT INTO refunds (id, order_id, amount, refund_gift, refund_card,\n                        status='pending', idempotency_key, ...);\n   INSERT INTO gift_card_audit (code, delta=+refund_gift, reason='refund_pending',\n                                refund_id, ...);\n   (Audit log entry for the intent, separate from the balance mutation.)\n\n5. Execute card side (external, may be async)\n   psp.refund(charge_id, refund_card, idempotency_key=refund.id)\n   - Inline success: mark refund.card_status = succeeded\n   - Async (webhook): leave pending, webhook handler will flip it\n   - Failure: mark refund.card_status = failed, do NOT proceed to gift side yet —\n     either retry or escalate; both sides succeed together or the refund stays pending.\n\n6. Execute gift side (local, synchronous)\n   BEGIN;\n     SELECT balance, status, expires_at FROM gift_cards\n       WHERE id = $gift_card_id FOR UPDATE;\n     -- apply expiry/void policy here (see below)\n     UPDATE gift_cards SET balance = balance + $refund_gift WHERE id = $gift_card_id;\n     INSERT INTO gift_card_audit (code, delta=+refund_gift, reason='refund',\n                                  refund_id, ...);\n     UPDATE orders SET refunded_gift_amount = refunded_gift_amount + $refund_gift\n       WHERE id = $order_id;\n     UPDATE refunds SET gift_status = 'succeeded' WHERE id = $refund.id;\n   COMMIT;\n\n7. Finalize\n   When both sides succeeded: UPDATE refunds SET status = 'succeeded'.\n   The order-level refund totals are now consistent with both ledgers.\n```\n\nTwo structural notes on step 5 → 6:\n\n- **Do the card first, gift second.** If the PSP refund fails, you haven't touched the gift balance, so there's nothing to unwind. If you did gift first and the card refund failed, you'd be unwinding a balance that might have been spent in between (in the worst case, the user checks their balance, sees the refund, and immediately spends it — now you can't roll back).\n- **Don't hold the DB transaction open across the PSP call.** Step 5 is outside any transaction. Step 6 is its own transaction. The `refunds` row is the coordination point between them.\n\n## Edge cases — decide upfront, they all come up\n\n- **Original gift card expired by refund time.** Three policies, pick one: (a) refund entire amount to the card, (b) extend the gift card expiry and refund normally, (c) issue a *new* gift card for `refund_gift` with a fresh expiry. (c) is cleanest for audit; (a) is simplest for support. Write down the choice, don't let it emerge.\n- **Original gift card voided / closed.** Same decision tree, usually collapses to \"refund entire amount to card.\"\n- **Original card no longer valid** (closed account, expired card). PSP refund fails with a specific error. Most PSPs can still push the refund to the original funding instrument even if the card on file is dead, but not always. Fallback: issue a new gift card for the card portion too, and notify support. Do *not* just leave the refund pending forever.\n- **Refund larger than gift portion remaining but smaller than card portion remaining** (because earlier refunds already drained the gift side). The cap-and-push logic in step 3 handles this; make sure you have a test for it.\n- **Rounding.** Always: `refund_gift = round(...)`, then `refund_card = amount - refund_gift`. Never compute both independently — you'll drift by a cent on odd totals and your finance team will find it.\n- **Chargeback on the card portion after the gift portion was already refunded and spent.** This is the scariest one. The bank claws back `C`, you've already given back `refund_gift` that the user has now spent on a different order. You cannot prevent this at the refund layer; it's a fraud/risk policy decision (velocity limits, hold gift refunds for N days on high-risk orders, etc.). Worth flagging to whoever owns fraud now, not after the first incident.\n\nThat's the feature. The hardest parts aren't the happy path — they're persisting the split at checkout (step 0, effectively), idempotency on every mutation, and having written-down policies for the four edge cases above before the first refund goes out the door.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 70967,
+    "duration_api_ms": 70944,
+    "num_turns": 1,
+    "result": "Policy first, then code.\n\n## Policy\n\n**Default: proportional to original tender.** If the order was paid $40 gift + $60 card and the user gets a $25 refund, that's $10 back to the gift card and $15 back to the credit card. Reasons:\n\n- It's the only rule that's *symmetric* — a full refund returns exactly what was charged to each tender, no matter how many partial refunds preceded it.\n- Tax was collected proportionally; refunding proportionally keeps your tax ledger clean.\n- Some jurisdictions (notably parts of the EU and several US states) require refunds to return to the original tender; proportional is the strictest interpretation of that.\n- It doesn't require you to know *which line items* the refund is for. \"Original tender by line item\" sounds principled but needs per-item tender allocation that nobody actually tracks.\n\n**Alternatives worth knowing about but not defaulting to:**\n- *Card first*: customer-friendly, your balance sheet hates it, and it breaks the symmetry above.\n- *Gift first*: merchant-friendly, consumer protection agencies hate it, don't.\n- *Manual split by support*: necessary as an override for weird cases (expired card, closed account) — build the knob, hide it behind a permission.\n\n**Prerequisite you need to surface now:** proportional refunds are only possible if you **persisted the original split on the order**. This is a data-model requirement that comes from the refund feature but lands on the checkout code. `orders.gift_card_amount`, `orders.card_amount`, `orders.gift_card_id` (and `refunded_gift_amount`, `refunded_card_amount` running totals). Without those columns, you cannot execute this policy correctly on partial refunds six months later.\n\n## Code path\n\nAssume `refund(order_id, amount, idempotency_key)` on an order with original `gift=G`, `card=C`, `total=T=G+C`, and prior refunds `rg`, `rc`.\n\n```\n1. Idempotency check\n   SELECT * FROM refunds WHERE idempotency_key = $key;\n   if found: return stored result.  (Webhook retries and support double-clicks both hit this.)\n\n2. Validate\n   amount > 0\n   amount <= (T - rg - rc)                   -- not over-refunding\n   order is in a refundable state\n\n3. Compute split\n   refund_gift = round(amount * G / T)\n   refund_card = amount - refund_gift        -- assign remainder to card, not recomputed,\n                                             -- so the two sides always sum to `amount`\n   Cap each side at its remaining refundable:\n     refund_gift = min(refund_gift, G - rg)\n     refund_card = min(refund_card, C - rc)\n   If the cap kicked in, push the residual to the other side (and re-cap — one iteration is enough).\n\n4. Record intent (before any external call)\n   INSERT INTO refunds (id, order_id, amount, refund_gift, refund_card,\n                        status='pending', idempotency_key, ...);\n   INSERT INTO gift_card_audit (code, delta=+refund_gift, reason='refund_pending',\n                                refund_id, ...);\n   (Audit log entry for the intent, separate from the balance mutation.)\n\n5. Execute card side (external, may be async)\n   psp.refund(charge_id, refund_card, idempotency_key=refund.id)\n   - Inline success: mark refund.card_status = succeeded\n   - Async (webhook): leave pending, webhook handler will flip it\n   - Failure: mark refund.card_status = failed, do NOT proceed to gift side yet —\n     either retry or escalate; both sides succeed together or the refund stays pending.\n\n6. Execute gift side (local, synchronous)\n   BEGIN;\n     SELECT balance, status, expires_at FROM gift_cards\n       WHERE id = $gift_card_id FOR UPDATE;\n     -- apply expiry/void policy here (see below)\n     UPDATE gift_cards SET balance = balance + $refund_gift WHERE id = $gift_card_id;\n     INSERT INTO gift_card_audit (code, delta=+refund_gift, reason='refund',\n                                  refund_id, ...);\n     UPDATE orders SET refunded_gift_amount = refunded_gift_amount + $refund_gift\n       WHERE id = $order_id;\n     UPDATE refunds SET gift_status = 'succeeded' WHERE id = $refund.id;\n   COMMIT;\n\n7. Finalize\n   When both sides succeeded: UPDATE refunds SET status = 'succeeded'.\n   The order-level refund totals are now consistent with both ledgers.\n```\n\nTwo structural notes on step 5 → 6:\n\n- **Do the card first, gift second.** If the PSP refund fails, you haven't touched the gift balance, so there's nothing to unwind. If you did gift first and the card refund failed, you'd be unwinding a balance that might have been spent in between (in the worst case, the user checks their balance, sees the refund, and immediately spends it — now you can't roll back).\n- **Don't hold the DB transaction open across the PSP call.** Step 5 is outside any transaction. Step 6 is its own transaction. The `refunds` row is the coordination point between them.\n\n## Edge cases — decide upfront, they all come up\n\n- **Original gift card expired by refund time.** Three policies, pick one: (a) refund entire amount to the card, (b) extend the gift card expiry and refund normally, (c) issue a *new* gift card for `refund_gift` with a fresh expiry. (c) is cleanest for audit; (a) is simplest for support. Write down the choice, don't let it emerge.\n- **Original gift card voided / closed.** Same decision tree, usually collapses to \"refund entire amount to card.\"\n- **Original card no longer valid** (closed account, expired card). PSP refund fails with a specific error. Most PSPs can still push the refund to the original funding instrument even if the card on file is dead, but not always. Fallback: issue a new gift card for the card portion too, and notify support. Do *not* just leave the refund pending forever.\n- **Refund larger than gift portion remaining but smaller than card portion remaining** (because earlier refunds already drained the gift side). The cap-and-push logic in step 3 handles this; make sure you have a test for it.\n- **Rounding.** Always: `refund_gift = round(...)`, then `refund_card = amount - refund_gift`. Never compute both independently — you'll drift by a cent on odd totals and your finance team will find it.\n- **Chargeback on the card portion after the gift portion was already refunded and spent.** This is the scariest one. The bank claws back `C`, you've already given back `refund_gift` that the user has now spent on a different order. You cannot prevent this at the refund layer; it's a fraud/risk policy decision (velocity limits, hold gift refunds for N days on high-risk orders, etc.). Worth flagging to whoever owns fraud now, not after the first incident.\n\nThat's the feature. The hardest parts aren't the happy path — they're persisting the split at checkout (step 0, effectively), idempotency on every mutation, and having written-down policies for the four edge cases above before the first refund goes out the door.",
+    "stop_reason": "end_turn",
+    "session_id": "c02819a2-ad2a-4986-87e1-163d9a52cd4b",
+    "total_cost_usd": 0.1347475,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 2066,
+      "cache_read_input_tokens": 37760,
+      "output_tokens": 4117,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 2066,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 4117,
+          "cache_read_input_tokens": 37760,
+          "cache_creation_input_tokens": 2066,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 2066
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 4117,
+        "cacheReadInputTokens": 37760,
+        "cacheCreationInputTokens": 2066,
+        "webSearchRequests": 0,
+        "costUSD": 0.1347475,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "037ef7b0-d3d4-441c-a5bd-17b74d39e8c1"
+  }
+}

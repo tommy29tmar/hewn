@@ -1,0 +1,96 @@
+{
+  "track": "T4",
+  "arm": "hewn_prompt_only",
+  "sequence_id": "design-feature",
+  "run_index": 2,
+  "turn": 5,
+  "arm_order_index": 2,
+  "arm_order_full": [
+    "baseline",
+    "caveman_full",
+    "hewn_prompt_only",
+    "terse",
+    "hewn_full"
+  ],
+  "digest_hex": "3191b019d37f08f3d5b68d9000f1aeb1e1a3524225f9daa893803df1e240ffd1",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T01:31:46.149102+00:00",
+  "session_id_used_for_resume": "c14f8450-3d3a-4157-a4e7-41cae41a530a",
+  "output_tokens_tiktoken": 1032,
+  "output_tokens_anthropic": 3377,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 2034,
+  "cache_read_input_tokens": 38408,
+  "total_input_tokens": 40448,
+  "cache_state": "warm",
+  "wallclock_ms": 59563.8042089995,
+  "duration_ms": 56188,
+  "duration_api_ms": 56160,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "c14f8450-3d3a-4157-a4e7-41cae41a530a",
+  "total_cost_usd": 0.1163715,
+  "model_used": "claude-opus-4-7",
+  "result": "**Policy first.**\n\nThree defensible options:\n\n1. **Card-first, up to amount charged.** Refund the credit card up to what it was charged, then overflow to the gift card. User perceives refund as cash back, not store credit — best UX by far. This is what I'd pick as the default.\n2. **Proportional to tender.** Split the refund by the same ratio as the original payment ($100 order = 30% gift card / 70% card → $50 refund = $15/$35). Mathematically clean and sometimes required by tax/accounting jurisdictions that treat gift cards as their own tender type. Worse UX, rounding headaches.\n3. **Gift-card-first.** Reverses the order of use. Worst UX; almost nobody picks this.\n\nRecommended policy: **card-first, capped per tender at its original charge.** Never refund more to any tender than was charged to it; bias the refund to cash. Example: $30 gift card + $70 card. Refund $50 → $50 to card, $0 to gift card. Refund $80 → $70 to card, $10 to gift card. Document it in the T&Cs so support has something to point at.\n\n**Code path.**\n\nAssuming an `order_payments` table records each tender with `amount_charged` and `amount_refunded`:\n\n```\nrefund_order(order_id, refund_amount, refund_id):\n  remaining = refund_amount\n  payments = load payments for order_id, ordered by tender priority (card first)\n\n  allocations = []\n  for p in payments:\n    if remaining == 0: break\n    available = p.amount_charged - p.amount_refunded\n    take = min(remaining, available)\n    if take > 0:\n      allocations.append((p, take))\n      remaining -= take\n\n  if remaining > 0:\n    error \"refund exceeds refundable amount\"\n\n  for (p, amount) in allocations:\n    if p.tender_type == 'card':\n      processor.refund(p.processor_charge_id, amount, idempotency_key=refund_id + ':' + p.id)\n    elif p.tender_type == 'gift_card':\n      # short txn\n      SELECT ... FOR UPDATE on gift_cards where id = p.gift_card_id\n      UPDATE gift_cards SET balance = balance + amount\n      INSERT INTO gift_card_redemptions (gift_card_id, order_id, refund_id, amount, type='refund')\n        -- unique (gift_card_id, refund_id) enforces idempotency\n    UPDATE order_payments SET amount_refunded = amount_refunded + amount WHERE id = p.id\n```\n\nKey properties:\n- **Idempotent by construction.** A unique constraint on `(order_id, refund_id)` in a `refunds` table, plus `(gift_card_id, refund_id)` on the redemption row, plus the processor's own idempotency key — a replayed refund does nothing.\n- **Never over-refunds a tender.** The `amount_charged - amount_refunded` cap is enforced per payment row, so repeated partial refunds just walk down the remaining capacity.\n- **Failure handling.** Process tenders in order and record each allocation as it succeeds. If the card refund call fails halfway, the gift card side hasn't happened yet — retry the whole refund with the same `refund_id` and the idempotency keys make the already-done parts no-ops.\n\n**Edge cases worth deciding now:**\n\n1. **Gift card expired between purchase and refund.** Most platforms extend the expiry when crediting a refund (e.g., +12 months from refund date, or `max(current_expires_at, now() + 12mo)`). Alternative: push the would-be-gift-card refund to the card instead. Pick one; extend-expiry is simpler.\n2. **Card refund fails permanently** (closed account). Processor usually handles this via check or ACH, but your code path needs a terminal state for \"refund stuck\" — don't silently fall back to gift card without a policy decision, and don't loop retries forever.\n3. **Multiple gift cards on one order.** Extend the ordering rule: card first, then gift cards in reverse order of application (LIFO) or by soonest expiry first. LIFO is simpler; soonest-expiry-first is slightly better for users.\n4. **Tax portion.** Refund tax pro-rata to the refunded amount, independent of tender allocation. That's a separate line in the refund total, not a separate policy.\n\nThat's the whole feature end-to-end: mutable balance + redemptions ledger, `SELECT FOR UPDATE` in short txns, idempotency keys on redemption + refund, expires_at checked in the hot path + batch for hygiene/breakage, and card-first capped-per-tender refunds.\n\nWant a schema sketch (`gift_cards`, `gift_card_redemptions`, `order_payments`, `refunds`) to make this concrete before you hand it to someone to build?",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 56188,
+    "duration_api_ms": 56160,
+    "num_turns": 1,
+    "result": "**Policy first.**\n\nThree defensible options:\n\n1. **Card-first, up to amount charged.** Refund the credit card up to what it was charged, then overflow to the gift card. User perceives refund as cash back, not store credit — best UX by far. This is what I'd pick as the default.\n2. **Proportional to tender.** Split the refund by the same ratio as the original payment ($100 order = 30% gift card / 70% card → $50 refund = $15/$35). Mathematically clean and sometimes required by tax/accounting jurisdictions that treat gift cards as their own tender type. Worse UX, rounding headaches.\n3. **Gift-card-first.** Reverses the order of use. Worst UX; almost nobody picks this.\n\nRecommended policy: **card-first, capped per tender at its original charge.** Never refund more to any tender than was charged to it; bias the refund to cash. Example: $30 gift card + $70 card. Refund $50 → $50 to card, $0 to gift card. Refund $80 → $70 to card, $10 to gift card. Document it in the T&Cs so support has something to point at.\n\n**Code path.**\n\nAssuming an `order_payments` table records each tender with `amount_charged` and `amount_refunded`:\n\n```\nrefund_order(order_id, refund_amount, refund_id):\n  remaining = refund_amount\n  payments = load payments for order_id, ordered by tender priority (card first)\n\n  allocations = []\n  for p in payments:\n    if remaining == 0: break\n    available = p.amount_charged - p.amount_refunded\n    take = min(remaining, available)\n    if take > 0:\n      allocations.append((p, take))\n      remaining -= take\n\n  if remaining > 0:\n    error \"refund exceeds refundable amount\"\n\n  for (p, amount) in allocations:\n    if p.tender_type == 'card':\n      processor.refund(p.processor_charge_id, amount, idempotency_key=refund_id + ':' + p.id)\n    elif p.tender_type == 'gift_card':\n      # short txn\n      SELECT ... FOR UPDATE on gift_cards where id = p.gift_card_id\n      UPDATE gift_cards SET balance = balance + amount\n      INSERT INTO gift_card_redemptions (gift_card_id, order_id, refund_id, amount, type='refund')\n        -- unique (gift_card_id, refund_id) enforces idempotency\n    UPDATE order_payments SET amount_refunded = amount_refunded + amount WHERE id = p.id\n```\n\nKey properties:\n- **Idempotent by construction.** A unique constraint on `(order_id, refund_id)` in a `refunds` table, plus `(gift_card_id, refund_id)` on the redemption row, plus the processor's own idempotency key — a replayed refund does nothing.\n- **Never over-refunds a tender.** The `amount_charged - amount_refunded` cap is enforced per payment row, so repeated partial refunds just walk down the remaining capacity.\n- **Failure handling.** Process tenders in order and record each allocation as it succeeds. If the card refund call fails halfway, the gift card side hasn't happened yet — retry the whole refund with the same `refund_id` and the idempotency keys make the already-done parts no-ops.\n\n**Edge cases worth deciding now:**\n\n1. **Gift card expired between purchase and refund.** Most platforms extend the expiry when crediting a refund (e.g., +12 months from refund date, or `max(current_expires_at, now() + 12mo)`). Alternative: push the would-be-gift-card refund to the card instead. Pick one; extend-expiry is simpler.\n2. **Card refund fails permanently** (closed account). Processor usually handles this via check or ACH, but your code path needs a terminal state for \"refund stuck\" — don't silently fall back to gift card without a policy decision, and don't loop retries forever.\n3. **Multiple gift cards on one order.** Extend the ordering rule: card first, then gift cards in reverse order of application (LIFO) or by soonest expiry first. LIFO is simpler; soonest-expiry-first is slightly better for users.\n4. **Tax portion.** Refund tax pro-rata to the refunded amount, independent of tender allocation. That's a separate line in the refund total, not a separate policy.\n\nThat's the whole feature end-to-end: mutable balance + redemptions ledger, `SELECT FOR UPDATE` in short txns, idempotency keys on redemption + refund, expires_at checked in the hot path + batch for hygiene/breakage, and card-first capped-per-tender refunds.\n\nWant a schema sketch (`gift_cards`, `gift_card_redemptions`, `order_payments`, `refunds`) to make this concrete before you hand it to someone to build?",
+    "stop_reason": "end_turn",
+    "session_id": "c14f8450-3d3a-4157-a4e7-41cae41a530a",
+    "total_cost_usd": 0.1163715,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 2034,
+      "cache_read_input_tokens": 38408,
+      "output_tokens": 3377,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 2034,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 3377,
+          "cache_read_input_tokens": 38408,
+          "cache_creation_input_tokens": 2034,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 2034
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 3377,
+        "cacheReadInputTokens": 38408,
+        "cacheCreationInputTokens": 2034,
+        "webSearchRequests": 0,
+        "costUSD": 0.1163715,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "ef242dda-5be8-41b0-b56c-e2c3a70c5dba"
+  }
+}

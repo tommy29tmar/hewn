@@ -1,0 +1,105 @@
+{
+  "track": "T1b",
+  "arm": "hewn_full",
+  "prompt_id": "debounce-search",
+  "run_index": 2,
+  "arm_order_index": 1,
+  "arm_order_full": [
+    "caveman_full",
+    "hewn_full",
+    "terse",
+    "caveman_full_plus_ultra_directive",
+    "hewn_prompt_only",
+    "baseline"
+  ],
+  "digest_hex": "e838a3fd4acfd4bf53980182f48a52cd7f3d453d713bc5be86257f0f482fe618",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T00:00:08.347659+00:00",
+  "output_tokens_tiktoken": 106,
+  "output_tokens_anthropic": 159,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 13203,
+  "cache_read_input_tokens": 16805,
+  "total_input_tokens": 30014,
+  "cache_state": "warm",
+  "wallclock_ms": 10080.641363019822,
+  "duration_ms": 4622,
+  "duration_api_ms": 5425,
+  "wrapper_overhead_ms": 4655.641363019822,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "58289bf0-c0d0-460f-b7d1-35998143d9d9",
+  "total_cost_usd": 0.09535425,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "Stop hammering backend on every keystroke.\n\nUser types \"hello\" → without debounce, 5 requests fire (h, he, hel, hell, hello).\nWith debounce (say 300ms), only final \"hello\" fires after user pauses.\n\nSaves:\n- network requests\n- server load\n- wasted work (intermediate results user never sees)\n- UI jank from re-rendering stale results\n\nAlso avoids race conditions where \"hel\" response arrives after \"hello\" response and overwrites correct results.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 4622,
+    "duration_api_ms": 5425,
+    "num_turns": 1,
+    "result": "Stop hammering backend on every keystroke.\n\nUser types \"hello\" → without debounce, 5 requests fire (h, he, hel, hell, hello).\nWith debounce (say 300ms), only final \"hello\" fires after user pauses.\n\nSaves:\n- network requests\n- server load\n- wasted work (intermediate results user never sees)\n- UI jank from re-rendering stale results\n\nAlso avoids race conditions where \"hel\" response arrives after \"hello\" response and overwrites correct results.",
+    "stop_reason": "end_turn",
+    "session_id": "58289bf0-c0d0-460f-b7d1-35998143d9d9",
+    "total_cost_usd": 0.09535425,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 13203,
+      "cache_read_input_tokens": 16805,
+      "output_tokens": 159,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 13203,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 159,
+          "cache_read_input_tokens": 16805,
+          "cache_creation_input_tokens": 13203,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 13203
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 353,
+        "outputTokens": 15,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.000428,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 159,
+        "cacheReadInputTokens": 16805,
+        "cacheCreationInputTokens": 13203,
+        "webSearchRequests": 0,
+        "costUSD": 0.09492625,
+        "contextWindow": 200000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "ea68bfd2-ce30-4e22-a840-ad3ec08ab7e5"
+  }
+}

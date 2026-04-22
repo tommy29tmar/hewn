@@ -14,62 +14,62 @@
   ],
   "digest_hex": "30a2f9a62df0d790c0598917c3ab42509bbadd672a0a484741ea201d2da3b44f",
   "seed": "hewn-bench-v1",
-  "timestamp": "2026-04-22T01:03:03.382408+00:00",
-  "session_id_used_for_resume": "b3f40e90-02ea-4c6b-a1d6-396c50dde0bb",
-  "output_tokens_tiktoken": 453,
-  "output_tokens_anthropic": 710,
+  "timestamp": "2026-04-22T08:30:26.918810+00:00",
+  "session_id_used_for_resume": "a5b861a6-3ae3-47ab-bc99-1526aaf8a5f4",
+  "output_tokens_tiktoken": 126,
+  "output_tokens_anthropic": 206,
   "input_tokens_anthropic": 6,
-  "cache_creation_input_tokens": 1129,
-  "cache_read_input_tokens": 34154,
-  "total_input_tokens": 35289,
+  "cache_creation_input_tokens": 380,
+  "cache_read_input_tokens": 35053,
+  "total_input_tokens": 35439,
   "cache_state": "warm",
-  "wallclock_ms": 20693.93642002251,
-  "duration_ms": 17553,
-  "duration_api_ms": 17443,
-  "wrapper_overhead_ms": 3250.93642002251,
+  "wallclock_ms": 12300.961474014912,
+  "duration_ms": 5943,
+  "duration_api_ms": 5859,
+  "wrapper_overhead_ms": 6441.961474014912,
   "stop_reason": "end_turn",
   "num_turns": 1,
-  "session_id": "b3f40e90-02ea-4c6b-a1d6-396c50dde0bb",
-  "total_cost_usd": 0.04191325,
+  "session_id": "a5b861a6-3ae3-47ab-bc99-1526aaf8a5f4",
+  "total_cost_usd": 0.0250815,
   "model_used": "claude-opus-4-7",
-  "result": "given you already run mutable wallet rows, default answer: same pattern. consistency beats theoretical purity. but here's honest tradeoff.\n\nmutable balance row\n- pro: trivial reads (SELECT balance), one row lock on redeem, matches existing wallet code so devs don't context-switch\n- pro: cheap storage, fast — no aggregation on hot path\n- pro: refunds/adjustments are just UPDATE\n- con: history lives in separate audit log or nowhere — if log drifts from balance, you can't tell which is right\n- con: bugs corrupt state permanently, no replay to recover\n- con: \"why is balance 4.20?\" needs detective work across logs\n- con: concurrent writes need explicit locking, easy to get wrong\n\nevent-sourced ledger (append-only entries, balance = SUM)\n- pro: balance is derived, so it's never wrong by construction — drift impossible\n- pro: full audit for free, regulators/finance love this (and gift cards are a real liability on books)\n- pro: refunds/reversals are new events, original record untouched\n- pro: append-only writes scale well, no row contention\n- pro: replay rebuilds state after bugs\n- con: reads need SUM or cached projection — extra moving part\n- con: more code, more concepts, diverges from wallet pattern\n- con: \"current balance\" query is O(n) without snapshot/projection\n- con: idempotency + ordering matter more\n\nkey asymmetry money people care about: gift cards are a liability on your balance sheet. finance team will eventually ask \"what was outstanding liability on date X.\" mutable row can't answer that without a parallel ledger. event store can.\n\nhonest recommendation: mutable row + append-only transaction log written in same DB transaction. you get wallet-pattern reads, ledger-grade audit, and a sanity check (sum of log == balance) you can run as a nightly job. it's not pure event sourcing but captures 90% of the value without breaking your existing mental model.\n\ngo pure event-sourced only if: finance is already asking for point-in-time liability reports, or you expect heavy refund/reversal traffic, or wallets themselves are about to be re-architected anyway.",
+  "result": "Stay consistent with wallets — mutable row is simpler, already battle-tested in your stack, and auditors only need one mental model. Event-sourced wins when you need full history, reversibility, or reconciliation against a payment processor, but you can get 90% of that by appending a gift_card_ledger table alongside the mutable balance (hybrid: balance row as cache, ledger as truth).\n\nReal tradeoff: mutable row needs row-level locking or optimistic concurrency to prevent double-spend; event-sourced avoids that but costs you a sum-on-read (or a materialized balance, which is just the mutable row again).",
   "assertion_pass": true,
   "raw_payload": {
     "type": "result",
     "subtype": "success",
     "is_error": false,
     "api_error_status": null,
-    "duration_ms": 17553,
-    "duration_api_ms": 17443,
+    "duration_ms": 5943,
+    "duration_api_ms": 5859,
     "num_turns": 1,
-    "result": "given you already run mutable wallet rows, default answer: same pattern. consistency beats theoretical purity. but here's honest tradeoff.\n\nmutable balance row\n- pro: trivial reads (SELECT balance), one row lock on redeem, matches existing wallet code so devs don't context-switch\n- pro: cheap storage, fast — no aggregation on hot path\n- pro: refunds/adjustments are just UPDATE\n- con: history lives in separate audit log or nowhere — if log drifts from balance, you can't tell which is right\n- con: bugs corrupt state permanently, no replay to recover\n- con: \"why is balance 4.20?\" needs detective work across logs\n- con: concurrent writes need explicit locking, easy to get wrong\n\nevent-sourced ledger (append-only entries, balance = SUM)\n- pro: balance is derived, so it's never wrong by construction — drift impossible\n- pro: full audit for free, regulators/finance love this (and gift cards are a real liability on books)\n- pro: refunds/reversals are new events, original record untouched\n- pro: append-only writes scale well, no row contention\n- pro: replay rebuilds state after bugs\n- con: reads need SUM or cached projection — extra moving part\n- con: more code, more concepts, diverges from wallet pattern\n- con: \"current balance\" query is O(n) without snapshot/projection\n- con: idempotency + ordering matter more\n\nkey asymmetry money people care about: gift cards are a liability on your balance sheet. finance team will eventually ask \"what was outstanding liability on date X.\" mutable row can't answer that without a parallel ledger. event store can.\n\nhonest recommendation: mutable row + append-only transaction log written in same DB transaction. you get wallet-pattern reads, ledger-grade audit, and a sanity check (sum of log == balance) you can run as a nightly job. it's not pure event sourcing but captures 90% of the value without breaking your existing mental model.\n\ngo pure event-sourced only if: finance is already asking for point-in-time liability reports, or you expect heavy refund/reversal traffic, or wallets themselves are about to be re-architected anyway.",
+    "result": "Stay consistent with wallets — mutable row is simpler, already battle-tested in your stack, and auditors only need one mental model. Event-sourced wins when you need full history, reversibility, or reconciliation against a payment processor, but you can get 90% of that by appending a gift_card_ledger table alongside the mutable balance (hybrid: balance row as cache, ledger as truth).\n\nReal tradeoff: mutable row needs row-level locking or optimistic concurrency to prevent double-spend; event-sourced avoids that but costs you a sum-on-read (or a materialized balance, which is just the mutable row again).",
     "stop_reason": "end_turn",
-    "session_id": "b3f40e90-02ea-4c6b-a1d6-396c50dde0bb",
-    "total_cost_usd": 0.04191325,
+    "session_id": "a5b861a6-3ae3-47ab-bc99-1526aaf8a5f4",
+    "total_cost_usd": 0.0250815,
     "usage": {
       "input_tokens": 6,
-      "cache_creation_input_tokens": 1129,
-      "cache_read_input_tokens": 34154,
-      "output_tokens": 710,
+      "cache_creation_input_tokens": 380,
+      "cache_read_input_tokens": 35053,
+      "output_tokens": 206,
       "server_tool_use": {
         "web_search_requests": 0,
         "web_fetch_requests": 0
       },
       "service_tier": "standard",
       "cache_creation": {
-        "ephemeral_1h_input_tokens": 1129,
+        "ephemeral_1h_input_tokens": 380,
         "ephemeral_5m_input_tokens": 0
       },
       "inference_geo": "",
       "iterations": [
         {
           "input_tokens": 6,
-          "output_tokens": 710,
-          "cache_read_input_tokens": 34154,
-          "cache_creation_input_tokens": 1129,
+          "output_tokens": 206,
+          "cache_read_input_tokens": 35053,
+          "cache_creation_input_tokens": 380,
           "cache_creation": {
             "ephemeral_5m_input_tokens": 0,
-            "ephemeral_1h_input_tokens": 1129
+            "ephemeral_1h_input_tokens": 380
           },
           "type": "message"
         }
@@ -79,11 +79,11 @@
     "modelUsage": {
       "claude-opus-4-7": {
         "inputTokens": 6,
-        "outputTokens": 710,
-        "cacheReadInputTokens": 34154,
-        "cacheCreationInputTokens": 1129,
+        "outputTokens": 206,
+        "cacheReadInputTokens": 35053,
+        "cacheCreationInputTokens": 380,
         "webSearchRequests": 0,
-        "costUSD": 0.04191325,
+        "costUSD": 0.0250815,
         "contextWindow": 1000000,
         "maxOutputTokens": 64000
       }
@@ -91,6 +91,6 @@
     "permission_denials": [],
     "terminal_reason": "completed",
     "fast_mode_state": "off",
-    "uuid": "96217924-9dfe-4406-b78d-067167ebb943"
+    "uuid": "1b5a88c1-679d-4e43-95e9-07203391703d"
   }
 }

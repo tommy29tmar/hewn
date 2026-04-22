@@ -14,62 +14,62 @@
   ],
   "digest_hex": "c436155c1e87e76d88e6f2c66d47c90c16ae78237b0a8de1b93824cf92fb5c9b",
   "seed": "hewn-bench-v1",
-  "timestamp": "2026-04-22T00:58:16.178208+00:00",
-  "session_id_used_for_resume": "5d1851be-da18-4cec-aee4-bc97c1f25d2d",
-  "output_tokens_tiktoken": 156,
-  "output_tokens_anthropic": 294,
+  "timestamp": "2026-04-22T08:28:20.223386+00:00",
+  "session_id_used_for_resume": "c579d119-eec3-4ec9-86e2-73fdfa7c99ed",
+  "output_tokens_tiktoken": 34,
+  "output_tokens_anthropic": 59,
   "input_tokens_anthropic": 6,
-  "cache_creation_input_tokens": 501,
-  "cache_read_input_tokens": 34814,
-  "total_input_tokens": 35321,
+  "cache_creation_input_tokens": 831,
+  "cache_read_input_tokens": 36055,
+  "total_input_tokens": 36892,
   "cache_state": "warm",
-  "wallclock_ms": 8948.512550996384,
-  "duration_ms": 5457,
-  "duration_api_ms": 5371,
-  "wrapper_overhead_ms": 3577.5125509963837,
+  "wallclock_ms": 9365.74967901106,
+  "duration_ms": 2778,
+  "duration_api_ms": 2675,
+  "wrapper_overhead_ms": 6690.74967901106,
   "stop_reason": "end_turn",
   "num_turns": 1,
-  "session_id": "5d1851be-da18-4cec-aee4-bc97c1f25d2d",
-  "total_cost_usd": 0.02791825,
+  "session_id": "c579d119-eec3-4ec9-86e2-73fdfa7c99ed",
+  "total_cost_usd": 0.024726249999999998,
   "model_used": "claude-opus-4-7",
-  "result": "@hewn v0 hybrid\nG: prevent_buildcart_shape_regression_via_jest_test\nC: buildcart_must_return_id_items_total ∧ items_must_preserve_input_array ∧ total_must_equal_sum_of_price_times_qty\nP: write_jest_unit_test_for_buildcart ∧ assert_returned_keys_exact_set ∧ assert_items_deep_equal_input ∧ assert_total_computed_correctly ∧ add_empty_items_case ∧ add_single_item_case ∧ add_multi_item_case\nV: test_fails_on_current_buggy_buildcart ∧ test_passes_after_items_restored ∧ ci_runs_test_on_every_pr\nA: add_contract_test_between_buildcart_and_order_service ∧ add_type_or_schema_guard_on_buildcart_return",
+  "result": "@hewn v0 hybrid\nG: regression_test\nC: shape_drift\nP: assert_keys\nV: fail_on_drop\nA: tojson_snapshot",
   "assertion_pass": true,
   "raw_payload": {
     "type": "result",
     "subtype": "success",
     "is_error": false,
     "api_error_status": null,
-    "duration_ms": 5457,
-    "duration_api_ms": 5371,
+    "duration_ms": 2778,
+    "duration_api_ms": 2675,
     "num_turns": 1,
-    "result": "@hewn v0 hybrid\nG: prevent_buildcart_shape_regression_via_jest_test\nC: buildcart_must_return_id_items_total ∧ items_must_preserve_input_array ∧ total_must_equal_sum_of_price_times_qty\nP: write_jest_unit_test_for_buildcart ∧ assert_returned_keys_exact_set ∧ assert_items_deep_equal_input ∧ assert_total_computed_correctly ∧ add_empty_items_case ∧ add_single_item_case ∧ add_multi_item_case\nV: test_fails_on_current_buggy_buildcart ∧ test_passes_after_items_restored ∧ ci_runs_test_on_every_pr\nA: add_contract_test_between_buildcart_and_order_service ∧ add_type_or_schema_guard_on_buildcart_return",
+    "result": "@hewn v0 hybrid\nG: regression_test\nC: shape_drift\nP: assert_keys\nV: fail_on_drop\nA: tojson_snapshot",
     "stop_reason": "end_turn",
-    "session_id": "5d1851be-da18-4cec-aee4-bc97c1f25d2d",
-    "total_cost_usd": 0.02791825,
+    "session_id": "c579d119-eec3-4ec9-86e2-73fdfa7c99ed",
+    "total_cost_usd": 0.024726249999999998,
     "usage": {
       "input_tokens": 6,
-      "cache_creation_input_tokens": 501,
-      "cache_read_input_tokens": 34814,
-      "output_tokens": 294,
+      "cache_creation_input_tokens": 831,
+      "cache_read_input_tokens": 36055,
+      "output_tokens": 59,
       "server_tool_use": {
         "web_search_requests": 0,
         "web_fetch_requests": 0
       },
       "service_tier": "standard",
       "cache_creation": {
-        "ephemeral_1h_input_tokens": 501,
+        "ephemeral_1h_input_tokens": 831,
         "ephemeral_5m_input_tokens": 0
       },
       "inference_geo": "",
       "iterations": [
         {
           "input_tokens": 6,
-          "output_tokens": 294,
-          "cache_read_input_tokens": 34814,
-          "cache_creation_input_tokens": 501,
+          "output_tokens": 59,
+          "cache_read_input_tokens": 36055,
+          "cache_creation_input_tokens": 831,
           "cache_creation": {
             "ephemeral_5m_input_tokens": 0,
-            "ephemeral_1h_input_tokens": 501
+            "ephemeral_1h_input_tokens": 831
           },
           "type": "message"
         }
@@ -79,11 +79,11 @@
     "modelUsage": {
       "claude-opus-4-7": {
         "inputTokens": 6,
-        "outputTokens": 294,
-        "cacheReadInputTokens": 34814,
-        "cacheCreationInputTokens": 501,
+        "outputTokens": 59,
+        "cacheReadInputTokens": 36055,
+        "cacheCreationInputTokens": 831,
         "webSearchRequests": 0,
-        "costUSD": 0.02791825,
+        "costUSD": 0.024726249999999998,
         "contextWindow": 1000000,
         "maxOutputTokens": 64000
       }
@@ -91,6 +91,6 @@
     "permission_denials": [],
     "terminal_reason": "completed",
     "fast_mode_state": "off",
-    "uuid": "e6fc83b5-5fb6-482e-97e0-8cf19574fd0f"
+    "uuid": "741553ae-78b6-40d0-b357-911258b6ffed"
   }
 }

@@ -1,0 +1,105 @@
+{
+  "track": "T2",
+  "arm": "hewn_prompt_only",
+  "prompt_id": "add-search-bar",
+  "run_index": 2,
+  "arm_order_index": 4,
+  "arm_order_full": [
+    "caveman_full",
+    "baseline",
+    "hewn_full",
+    "terse",
+    "hewn_prompt_only",
+    "caveman_full_plus_ultra_directive"
+  ],
+  "digest_hex": "e4d553ad3e355ccffc56234ee1f9b935b3963f152f24e81c5cb452140df74b94",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T00:21:19.492749+00:00",
+  "output_tokens_tiktoken": 49,
+  "output_tokens_anthropic": 176,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 32615,
+  "total_input_tokens": 32621,
+  "cache_state": "warm",
+  "wallclock_ms": 9257.530845003203,
+  "duration_ms": 4207,
+  "duration_api_ms": 4989,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "2446e4e2-c76f-4b54-a622-5295cc0f3130",
+  "total_cost_usd": 0.0211545,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "Which app? This repo (`SIGIL/`) is Hewn — a Claude Code CLI wrapper, no UI to add a search bar to. Do you mean a different project, or are you thinking of search over Hewn's output/history?",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 4207,
+    "duration_api_ms": 4989,
+    "num_turns": 1,
+    "result": "Which app? This repo (`SIGIL/`) is Hewn — a Claude Code CLI wrapper, no UI to add a search bar to. Do you mean a different project, or are you thinking of search over Hewn's output/history?",
+    "stop_reason": "end_turn",
+    "session_id": "2446e4e2-c76f-4b54-a622-5295cc0f3130",
+    "total_cost_usd": 0.0211545,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 32615,
+      "output_tokens": 176,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 0,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 176,
+          "cache_read_input_tokens": 32615,
+          "cache_creation_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 352,
+        "outputTokens": 13,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.000417,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 176,
+        "cacheReadInputTokens": 32615,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.0207375,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "d84d6577-01e1-4687-b6df-fd4bf7915406"
+  }
+}

@@ -8,8 +8,8 @@
   "history": [
     {
       "attempt": 0,
-      "raw": "{\"pool_reuses_open_connections\": true, \"avoids_per_request_connection_handshake_cost\": true, \"max_pool_size_is_bounded\": true, \"idle_or_acquire_timeout_relevant\": true}"
+      "raw": "{\"pool_reuses_open_connections\":true,\"avoids_per_request_connection_handshake_cost\":true,\"max_pool_size_is_bounded\":true,\"idle_or_acquire_timeout_relevant\":true}"
     }
   ],
-  "ts": "2026-04-22T01:15:29.481154+00:00"
+  "ts": "2026-04-22T08:48:08.132032+00:00"
 }

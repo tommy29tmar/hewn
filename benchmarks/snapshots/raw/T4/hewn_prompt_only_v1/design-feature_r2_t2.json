@@ -1,0 +1,96 @@
+{
+  "track": "T4",
+  "arm": "hewn_prompt_only",
+  "sequence_id": "design-feature",
+  "run_index": 2,
+  "turn": 2,
+  "arm_order_index": 2,
+  "arm_order_full": [
+    "baseline",
+    "caveman_full",
+    "hewn_prompt_only",
+    "terse",
+    "hewn_full"
+  ],
+  "digest_hex": "3191b019d37f08f3d5b68d9000f1aeb1e1a3524225f9daa893803df1e240ffd1",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T01:29:30.777634+00:00",
+  "session_id_used_for_resume": "c14f8450-3d3a-4157-a4e7-41cae41a530a",
+  "output_tokens_tiktoken": 438,
+  "output_tokens_anthropic": 1785,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 1677,
+  "cache_read_input_tokens": 32671,
+  "total_input_tokens": 34354,
+  "cache_state": "warm",
+  "wallclock_ms": 33244.63683599606,
+  "duration_ms": 29596,
+  "duration_api_ms": 29566,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "c14f8450-3d3a-4157-a4e7-41cae41a530a",
+  "total_cost_usd": 0.07147175,
+  "model_used": "claude-opus-4-7",
+  "result": "**Event-sourced (append-only ledger):**\n- **Pros:** Audit trail is free — critical because gift cards are a balance-sheet liability with finance/legal reporting needs that internal wallets often don't have. Double-spend prevention becomes a unique-index violation on `(code, idempotency_key)` instead of row locking. Reversals (chargebacks, fraud) are just compensating entries — non-destructive. Answers \"what was the balance on 2026-03-01?\" trivially.\n- **Cons:** Reads require SUM or a cached materialized balance (which reintroduces some mutable-row issues). More storage and index churn. Diverges from your wallet pattern — two mental models for adjacent features, and devs fluent in wallets will write bugs trying to UPDATE the ledger.\n\n**Mutable balance row (matches wallets):**\n- **Pros:** One mental model with wallets — shared code paths, shared intuition, no onboarding cost. Trivial reads. Less storage.\n- **Cons:** You'll need a history table anyway for disputes/refunds/finance — at which point you have two sources of truth that can drift, which is worse than either pure approach. Concurrency needs explicit `SELECT FOR UPDATE` or CAS. Corrections are destructive unless discipline holds.\n\n**The thing that actually tips it for gift cards specifically:** gift cards touch external parties (recipients who aren't the purchaser), attract more fraud/disputes, and are a regulated liability in a way internal wallets usually aren't. Audit trail is load-bearing here in a way it isn't for wallets — so the cost of divergence from the wallet model buys you something real.\n\n**Recommendation:** event-sourced ledger with a cached `current_balance` column on the gift card row for fast reads, reconciled from the ledger. Keeps reads cheap, keeps the audit trail authoritative, and you can document \"ledger is truth, balance is cache\" as the one rule. If finance hasn't asked for an audit trail and you expect low gift card volume for the foreseeable future, mutable + history table is defensible and keeps you consistent with wallets — but you'll likely migrate later.\n\nWhich direction are you leaning? I can sketch the schema for whichever.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 29596,
+    "duration_api_ms": 29566,
+    "num_turns": 1,
+    "result": "**Event-sourced (append-only ledger):**\n- **Pros:** Audit trail is free — critical because gift cards are a balance-sheet liability with finance/legal reporting needs that internal wallets often don't have. Double-spend prevention becomes a unique-index violation on `(code, idempotency_key)` instead of row locking. Reversals (chargebacks, fraud) are just compensating entries — non-destructive. Answers \"what was the balance on 2026-03-01?\" trivially.\n- **Cons:** Reads require SUM or a cached materialized balance (which reintroduces some mutable-row issues). More storage and index churn. Diverges from your wallet pattern — two mental models for adjacent features, and devs fluent in wallets will write bugs trying to UPDATE the ledger.\n\n**Mutable balance row (matches wallets):**\n- **Pros:** One mental model with wallets — shared code paths, shared intuition, no onboarding cost. Trivial reads. Less storage.\n- **Cons:** You'll need a history table anyway for disputes/refunds/finance — at which point you have two sources of truth that can drift, which is worse than either pure approach. Concurrency needs explicit `SELECT FOR UPDATE` or CAS. Corrections are destructive unless discipline holds.\n\n**The thing that actually tips it for gift cards specifically:** gift cards touch external parties (recipients who aren't the purchaser), attract more fraud/disputes, and are a regulated liability in a way internal wallets usually aren't. Audit trail is load-bearing here in a way it isn't for wallets — so the cost of divergence from the wallet model buys you something real.\n\n**Recommendation:** event-sourced ledger with a cached `current_balance` column on the gift card row for fast reads, reconciled from the ledger. Keeps reads cheap, keeps the audit trail authoritative, and you can document \"ledger is truth, balance is cache\" as the one rule. If finance hasn't asked for an audit trail and you expect low gift card volume for the foreseeable future, mutable + history table is defensible and keeps you consistent with wallets — but you'll likely migrate later.\n\nWhich direction are you leaning? I can sketch the schema for whichever.",
+    "stop_reason": "end_turn",
+    "session_id": "c14f8450-3d3a-4157-a4e7-41cae41a530a",
+    "total_cost_usd": 0.07147175,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 1677,
+      "cache_read_input_tokens": 32671,
+      "output_tokens": 1785,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 1677,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 1785,
+          "cache_read_input_tokens": 32671,
+          "cache_creation_input_tokens": 1677,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 1677
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 1785,
+        "cacheReadInputTokens": 32671,
+        "cacheCreationInputTokens": 1677,
+        "webSearchRequests": 0,
+        "costUSD": 0.07147175,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "f4f450d1-8807-41a0-8688-3b4a667add3f"
+  }
+}

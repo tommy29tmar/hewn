@@ -14,61 +14,61 @@
   ],
   "digest_hex": "77ec1f71a402506faa30ccacb9847ce285754a0a0f5675f39158950f756d4fe1",
   "seed": "hewn-bench-v1",
-  "timestamp": "2026-04-22T00:12:18.017026+00:00",
-  "output_tokens_tiktoken": 142,
-  "output_tokens_anthropic": 225,
+  "timestamp": "2026-04-22T08:09:58.425329+00:00",
+  "output_tokens_tiktoken": 128,
+  "output_tokens_anthropic": 209,
   "input_tokens_anthropic": 6,
-  "cache_creation_input_tokens": 15817,
+  "cache_creation_input_tokens": 17021,
   "cache_read_input_tokens": 16796,
-  "total_input_tokens": 32619,
+  "total_input_tokens": 33823,
   "cache_state": "warm",
-  "wallclock_ms": 8581.880448007723,
-  "duration_ms": 5433,
-  "duration_api_ms": 6252,
+  "wallclock_ms": 13042.670226976043,
+  "duration_ms": 6786,
+  "duration_api_ms": 8245,
   "wrapper_overhead_ms": null,
   "stop_reason": "end_turn",
   "num_turns": 1,
-  "session_id": "6d941d24-97d4-43a6-823f-0db0de485db6",
-  "total_cost_usd": 0.11333225000000001,
+  "session_id": "5df4ee8a-ec3b-4b26-8667-74ec68b0954f",
+  "total_cost_usd": 0.12045225000000001,
   "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
-  "result": "**Merge** creates a new commit that joins two branch histories, preserving the original commits and their timestamps. The history shows the branches as parallel lines that converge.\n\n**Rebase** replays your commits on top of another branch, producing new commits with new hashes. The history becomes linear, as if you'd written your changes on top of the latest base from the start.\n\nKey tradeoffs:\n- **Merge**: non-destructive, preserves true history, but can clutter the log with merge commits.\n- **Rebase**: clean linear history, but rewrites commits — never rebase branches others have pulled.\n\nRule of thumb: rebase local/feature branches before sharing; merge when integrating shared branches.",
+  "result": "**Rebase** rewrites history: it takes your commits and replays them on top of the target branch, producing a linear history with new commit SHAs.\n\n**Merge** preserves history: it creates a merge commit that ties the two branch tips together, keeping the original commits and their timestamps intact.\n\nKey tradeoffs:\n- **Rebase** → clean linear log, but rewrites SHAs (never rebase shared/public branches without coordination).\n- **Merge** → safe for shared branches, but log becomes a DAG with merge commits.\n\nRule of thumb: rebase local/private work before sharing; merge when integrating into shared branches.",
   "assertion_pass": true,
   "raw_payload": {
     "type": "result",
     "subtype": "success",
     "is_error": false,
     "api_error_status": null,
-    "duration_ms": 5433,
-    "duration_api_ms": 6252,
+    "duration_ms": 6786,
+    "duration_api_ms": 8245,
     "num_turns": 1,
-    "result": "**Merge** creates a new commit that joins two branch histories, preserving the original commits and their timestamps. The history shows the branches as parallel lines that converge.\n\n**Rebase** replays your commits on top of another branch, producing new commits with new hashes. The history becomes linear, as if you'd written your changes on top of the latest base from the start.\n\nKey tradeoffs:\n- **Merge**: non-destructive, preserves true history, but can clutter the log with merge commits.\n- **Rebase**: clean linear history, but rewrites commits — never rebase branches others have pulled.\n\nRule of thumb: rebase local/feature branches before sharing; merge when integrating shared branches.",
+    "result": "**Rebase** rewrites history: it takes your commits and replays them on top of the target branch, producing a linear history with new commit SHAs.\n\n**Merge** preserves history: it creates a merge commit that ties the two branch tips together, keeping the original commits and their timestamps intact.\n\nKey tradeoffs:\n- **Rebase** → clean linear log, but rewrites SHAs (never rebase shared/public branches without coordination).\n- **Merge** → safe for shared branches, but log becomes a DAG with merge commits.\n\nRule of thumb: rebase local/private work before sharing; merge when integrating into shared branches.",
     "stop_reason": "end_turn",
-    "session_id": "6d941d24-97d4-43a6-823f-0db0de485db6",
-    "total_cost_usd": 0.11333225000000001,
+    "session_id": "5df4ee8a-ec3b-4b26-8667-74ec68b0954f",
+    "total_cost_usd": 0.12045225000000001,
     "usage": {
       "input_tokens": 6,
-      "cache_creation_input_tokens": 15817,
+      "cache_creation_input_tokens": 17021,
       "cache_read_input_tokens": 16796,
-      "output_tokens": 225,
+      "output_tokens": 209,
       "server_tool_use": {
         "web_search_requests": 0,
         "web_fetch_requests": 0
       },
       "service_tier": "standard",
       "cache_creation": {
-        "ephemeral_1h_input_tokens": 15817,
+        "ephemeral_1h_input_tokens": 17021,
         "ephemeral_5m_input_tokens": 0
       },
       "inference_geo": "",
       "iterations": [
         {
           "input_tokens": 6,
-          "output_tokens": 225,
+          "output_tokens": 209,
           "cache_read_input_tokens": 16796,
-          "cache_creation_input_tokens": 15817,
+          "cache_creation_input_tokens": 17021,
           "cache_creation": {
             "ephemeral_5m_input_tokens": 0,
-            "ephemeral_1h_input_tokens": 15817
+            "ephemeral_1h_input_tokens": 17021
           },
           "type": "message"
         }
@@ -78,21 +78,21 @@
     "modelUsage": {
       "claude-haiku-4-5-20251001": {
         "inputTokens": 348,
-        "outputTokens": 15,
+        "outputTokens": 14,
         "cacheReadInputTokens": 0,
         "cacheCreationInputTokens": 0,
         "webSearchRequests": 0,
-        "costUSD": 0.000423,
+        "costUSD": 0.00041799999999999997,
         "contextWindow": 200000,
         "maxOutputTokens": 32000
       },
       "claude-opus-4-7": {
         "inputTokens": 6,
-        "outputTokens": 225,
+        "outputTokens": 209,
         "cacheReadInputTokens": 16796,
-        "cacheCreationInputTokens": 15817,
+        "cacheCreationInputTokens": 17021,
         "webSearchRequests": 0,
-        "costUSD": 0.11290925,
+        "costUSD": 0.12003425000000001,
         "contextWindow": 1000000,
         "maxOutputTokens": 64000
       }
@@ -100,6 +100,6 @@
     "permission_denials": [],
     "terminal_reason": "completed",
     "fast_mode_state": "off",
-    "uuid": "de08f3d9-8f9c-4c2d-8028-a2c2b2c40356"
+    "uuid": "7e9f3b94-2446-4d65-85b5-2f92cd9f267d"
   }
 }

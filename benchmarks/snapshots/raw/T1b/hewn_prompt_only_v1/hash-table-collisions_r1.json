@@ -1,0 +1,105 @@
+{
+  "track": "T1b",
+  "arm": "hewn_prompt_only",
+  "prompt_id": "hash-table-collisions",
+  "run_index": 1,
+  "arm_order_index": 1,
+  "arm_order_full": [
+    "caveman_full",
+    "hewn_prompt_only",
+    "hewn_full",
+    "caveman_full_plus_ultra_directive",
+    "baseline",
+    "terse"
+  ],
+  "digest_hex": "2a54ba54e1f7192ed7b81622a0de8bb31264ddae15be620c57cd7c027de6901e",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-21T23:45:44.255848+00:00",
+  "output_tokens_tiktoken": 270,
+  "output_tokens_anthropic": 434,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 28521,
+  "total_input_tokens": 28527,
+  "cache_state": "warm",
+  "wallclock_ms": 16602.10014198674,
+  "duration_ms": 8549,
+  "duration_api_ms": 9211,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "66ceda62-20d2-465d-bac1-0097a33a5f98",
+  "total_cost_usd": 0.025552500000000002,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "Hash tables handle collisions with two main strategies:\n\n**1. Separate chaining** — each bucket holds a linked list (or dynamic array/tree) of entries. On collision, the new entry is appended to the bucket's list. Lookup scans the list. Java's `HashMap` uses this (and upgrades long chains to red-black trees).\n\n**2. Open addressing** — all entries live in the bucket array itself. On collision, probe for another slot:\n- *Linear probing*: try `h+1, h+2, ...` (cache-friendly but suffers from clustering)\n- *Quadratic probing*: try `h+1, h+4, h+9, ...` (reduces clustering)\n- *Double hashing*: step size comes from a second hash (best distribution)\n\nPython `dict`, Go `map`, and most modern hash tables use open addressing variants.\n\n**Supporting mechanics:**\n- **Load factor** (entries/buckets) is kept below a threshold (e.g., 0.75) via resize-and-rehash to keep expected O(1) operations.\n- **Deletion** under open addressing needs tombstones or backward-shifting, or lookups break.\n- **Adversarial collisions**: randomized seeds (SipHash in Python/Rust) prevent attackers from forcing worst-case O(n) behavior.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 8549,
+    "duration_api_ms": 9211,
+    "num_turns": 1,
+    "result": "Hash tables handle collisions with two main strategies:\n\n**1. Separate chaining** — each bucket holds a linked list (or dynamic array/tree) of entries. On collision, the new entry is appended to the bucket's list. Lookup scans the list. Java's `HashMap` uses this (and upgrades long chains to red-black trees).\n\n**2. Open addressing** — all entries live in the bucket array itself. On collision, probe for another slot:\n- *Linear probing*: try `h+1, h+2, ...` (cache-friendly but suffers from clustering)\n- *Quadratic probing*: try `h+1, h+4, h+9, ...` (reduces clustering)\n- *Double hashing*: step size comes from a second hash (best distribution)\n\nPython `dict`, Go `map`, and most modern hash tables use open addressing variants.\n\n**Supporting mechanics:**\n- **Load factor** (entries/buckets) is kept below a threshold (e.g., 0.75) via resize-and-rehash to keep expected O(1) operations.\n- **Deletion** under open addressing needs tombstones or backward-shifting, or lookups break.\n- **Adversarial collisions**: randomized seeds (SipHash in Python/Rust) prevent attackers from forcing worst-case O(n) behavior.",
+    "stop_reason": "end_turn",
+    "session_id": "66ceda62-20d2-465d-bac1-0097a33a5f98",
+    "total_cost_usd": 0.025552500000000002,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 28521,
+      "output_tokens": 434,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 0,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 434,
+          "cache_read_input_tokens": 28521,
+          "cache_creation_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 347,
+        "outputTokens": 13,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.000412,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 434,
+        "cacheReadInputTokens": 28521,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.025140500000000003,
+        "contextWindow": 200000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "a15ff797-478a-4d8c-ae71-a2e51a2afb15"
+  }
+}

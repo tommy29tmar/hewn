@@ -323,8 +323,8 @@
     "concepts_count_present": 0,
     "concepts_count_total": 6
   },
-  "hewn_full/outage-apology-email_r1": {
-    "arm": "hewn_full",
+  "hewn_full_v1/outage-apology-email_r1": {
+    "arm": "hewn_full_v1",
     "prompt_id": "outage-apology-email",
     "run_index": 1,
     "literals_present": {},
@@ -349,8 +349,8 @@
     "concepts_count_present": 0,
     "concepts_count_total": 6
   },
-  "hewn_full/outage-apology-email_r2": {
-    "arm": "hewn_full",
+  "hewn_full_v1/outage-apology-email_r2": {
+    "arm": "hewn_full_v1",
     "prompt_id": "outage-apology-email",
     "run_index": 2,
     "literals_present": {},
@@ -375,8 +375,8 @@
     "concepts_count_present": 0,
     "concepts_count_total": 6
   },
-  "hewn_full/smart-drafts-release-note_r1": {
-    "arm": "hewn_full",
+  "hewn_full_v1/smart-drafts-release-note_r1": {
+    "arm": "hewn_full_v1",
     "prompt_id": "smart-drafts-release-note",
     "run_index": 1,
     "literals_present": {
@@ -403,8 +403,8 @@
     "concepts_count_present": 0,
     "concepts_count_total": 6
   },
-  "hewn_full/smart-drafts-release-note_r2": {
-    "arm": "hewn_full",
+  "hewn_full_v1/smart-drafts-release-note_r2": {
+    "arm": "hewn_full_v1",
     "prompt_id": "smart-drafts-release-note",
     "run_index": 2,
     "literals_present": {
@@ -431,8 +431,8 @@
     "concepts_count_present": 0,
     "concepts_count_total": 6
   },
-  "hewn_prompt_only/outage-apology-email_r1": {
-    "arm": "hewn_prompt_only",
+  "hewn_prompt_only_v1/outage-apology-email_r1": {
+    "arm": "hewn_prompt_only_v1",
     "prompt_id": "outage-apology-email",
     "run_index": 1,
     "literals_present": {},
@@ -457,8 +457,8 @@
     "concepts_count_present": 0,
     "concepts_count_total": 6
   },
-  "hewn_prompt_only/outage-apology-email_r2": {
-    "arm": "hewn_prompt_only",
+  "hewn_prompt_only_v1/outage-apology-email_r2": {
+    "arm": "hewn_prompt_only_v1",
     "prompt_id": "outage-apology-email",
     "run_index": 2,
     "literals_present": {},
@@ -483,8 +483,8 @@
     "concepts_count_present": 0,
     "concepts_count_total": 6
   },
-  "hewn_prompt_only/smart-drafts-release-note_r1": {
-    "arm": "hewn_prompt_only",
+  "hewn_prompt_only_v1/smart-drafts-release-note_r1": {
+    "arm": "hewn_prompt_only_v1",
     "prompt_id": "smart-drafts-release-note",
     "run_index": 1,
     "literals_present": {
@@ -511,8 +511,8 @@
     "concepts_count_present": 0,
     "concepts_count_total": 6
   },
-  "hewn_prompt_only/smart-drafts-release-note_r2": {
-    "arm": "hewn_prompt_only",
+  "hewn_prompt_only_v1/smart-drafts-release-note_r2": {
+    "arm": "hewn_prompt_only_v1",
     "prompt_id": "smart-drafts-release-note",
     "run_index": 2,
     "literals_present": {
@@ -633,6 +633,222 @@
         "leading_article_count": 0,
         "words": 7,
         "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "warm_professional_tone_present": false,
+      "approximately_three_paragraphs": false,
+      "explains_why_we_built_it_blank_page_problem": false,
+      "explains_how_it_works_one_click_outline_from_title_and_context": false,
+      "mentions_what_is_next_custom_voice_training": false,
+      "addressed_to_existing_users_not_new_audience": false
+    },
+    "concepts_count_present": 0,
+    "concepts_count_total": 6
+  },
+  "hewn_full/outage-apology-email_r1": {
+    "arm": "hewn_full",
+    "prompt_id": "outage-apology-email",
+    "run_index": 1,
+    "literals_present": {},
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 1,
+        "leading_article_count": 0,
+        "words": 268,
+        "filler_per_100w": 0.37,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "serious_accountable_tone_not_defensive": false,
+      "approximately_four_short_paragraphs": false,
+      "acknowledges_failed_transactions_specifically": false,
+      "explains_root_cause_misconfigured_cache_invalidation": false,
+      "describes_fix_and_prevention_canary_and_chaos_testing": false,
+      "offers_goodwill_credit_to_impacted_users": false
+    },
+    "concepts_count_present": 0,
+    "concepts_count_total": 6
+  },
+  "hewn_full/outage-apology-email_r2": {
+    "arm": "hewn_full",
+    "prompt_id": "outage-apology-email",
+    "run_index": 2,
+    "literals_present": {},
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 1,
+        "leading_article_count": 0,
+        "words": 289,
+        "filler_per_100w": 0.35,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "serious_accountable_tone_not_defensive": false,
+      "approximately_four_short_paragraphs": false,
+      "acknowledges_failed_transactions_specifically": false,
+      "explains_root_cause_misconfigured_cache_invalidation": false,
+      "describes_fix_and_prevention_canary_and_chaos_testing": false,
+      "offers_goodwill_credit_to_impacted_users": false
+    },
+    "concepts_count_present": 0,
+    "concepts_count_total": 6
+  },
+  "hewn_full/smart-drafts-release-note_r1": {
+    "arm": "hewn_full",
+    "prompt_id": "smart-drafts-release-note",
+    "run_index": 1,
+    "literals_present": {
+      "Smart Drafts": false
+    },
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 6,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "warm_professional_tone_present": false,
+      "approximately_three_paragraphs": false,
+      "explains_why_we_built_it_blank_page_problem": false,
+      "explains_how_it_works_one_click_outline_from_title_and_context": false,
+      "mentions_what_is_next_custom_voice_training": false,
+      "addressed_to_existing_users_not_new_audience": false
+    },
+    "concepts_count_present": 0,
+    "concepts_count_total": 6
+  },
+  "hewn_full/smart-drafts-release-note_r2": {
+    "arm": "hewn_full",
+    "prompt_id": "smart-drafts-release-note",
+    "run_index": 2,
+    "literals_present": {
+      "Smart Drafts": false
+    },
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 7,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "warm_professional_tone_present": false,
+      "approximately_three_paragraphs": false,
+      "explains_why_we_built_it_blank_page_problem": false,
+      "explains_how_it_works_one_click_outline_from_title_and_context": false,
+      "mentions_what_is_next_custom_voice_training": false,
+      "addressed_to_existing_users_not_new_audience": false
+    },
+    "concepts_count_present": 0,
+    "concepts_count_total": 6
+  },
+  "hewn_prompt_only/outage-apology-email_r1": {
+    "arm": "hewn_prompt_only",
+    "prompt_id": "outage-apology-email",
+    "run_index": 1,
+    "literals_present": {},
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 3,
+        "leading_article_count": 0,
+        "words": 217,
+        "filler_per_100w": 1.38,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "serious_accountable_tone_not_defensive": false,
+      "approximately_four_short_paragraphs": false,
+      "acknowledges_failed_transactions_specifically": false,
+      "explains_root_cause_misconfigured_cache_invalidation": false,
+      "describes_fix_and_prevention_canary_and_chaos_testing": false,
+      "offers_goodwill_credit_to_impacted_users": false
+    },
+    "concepts_count_present": 0,
+    "concepts_count_total": 6
+  },
+  "hewn_prompt_only/outage-apology-email_r2": {
+    "arm": "hewn_prompt_only",
+    "prompt_id": "outage-apology-email",
+    "run_index": 2,
+    "literals_present": {},
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 2,
+        "leading_article_count": 0,
+        "words": 259,
+        "filler_per_100w": 0.77,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "serious_accountable_tone_not_defensive": false,
+      "approximately_four_short_paragraphs": false,
+      "acknowledges_failed_transactions_specifically": false,
+      "explains_root_cause_misconfigured_cache_invalidation": false,
+      "describes_fix_and_prevention_canary_and_chaos_testing": false,
+      "offers_goodwill_credit_to_impacted_users": false
+    },
+    "concepts_count_present": 0,
+    "concepts_count_total": 6
+  },
+  "hewn_prompt_only/smart-drafts-release-note_r1": {
+    "arm": "hewn_prompt_only",
+    "prompt_id": "smart-drafts-release-note",
+    "run_index": 1,
+    "literals_present": {
+      "Smart Drafts": false
+    },
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 1,
+        "leading_article_count": 0,
+        "words": 24,
+        "filler_per_100w": 4.17,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "warm_professional_tone_present": false,
+      "approximately_three_paragraphs": false,
+      "explains_why_we_built_it_blank_page_problem": false,
+      "explains_how_it_works_one_click_outline_from_title_and_context": false,
+      "mentions_what_is_next_custom_voice_training": false,
+      "addressed_to_existing_users_not_new_audience": false
+    },
+    "concepts_count_present": 0,
+    "concepts_count_total": 6
+  },
+  "hewn_prompt_only/smart-drafts-release-note_r2": {
+    "arm": "hewn_prompt_only",
+    "prompt_id": "smart-drafts-release-note",
+    "run_index": 2,
+    "literals_present": {
+      "Smart Drafts": false
+    },
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 1,
+        "leading_article_count": 0,
+        "words": 13,
+        "filler_per_100w": 7.69,
         "leading_article_per_100w": 0.0
       }
     },

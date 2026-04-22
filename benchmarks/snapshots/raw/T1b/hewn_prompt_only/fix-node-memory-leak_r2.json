@@ -14,61 +14,61 @@
   ],
   "digest_hex": "7d425b5467d57aae182ad8e9c94b0501514aa39b8cfa8d933e096ea5f14e6554",
   "seed": "hewn-bench-v1",
-  "timestamp": "2026-04-21T23:55:23.555132+00:00",
-  "output_tokens_tiktoken": 344,
-  "output_tokens_anthropic": 555,
+  "timestamp": "2026-04-22T08:03:37.361095+00:00",
+  "output_tokens_tiktoken": 451,
+  "output_tokens_anthropic": 802,
   "input_tokens_anthropic": 6,
-  "cache_creation_input_tokens": 11734,
+  "cache_creation_input_tokens": 17029,
   "cache_read_input_tokens": 16796,
-  "total_input_tokens": 28536,
+  "total_input_tokens": 33831,
   "cache_state": "warm",
-  "wallclock_ms": 15622.809596010484,
-  "duration_ms": 10578,
-  "duration_api_ms": 11540,
+  "wallclock_ms": 21576.801734016044,
+  "duration_ms": 15809,
+  "duration_api_ms": 16787,
   "wrapper_overhead_ms": null,
   "stop_reason": "end_turn",
   "num_turns": 1,
-  "session_id": "d803f0e2-13b6-47a7-abf0-ddcd764182d0",
-  "total_cost_usd": 0.09607550000000001,
+  "session_id": "a915fffb-401b-432d-ae79-0eb6be568b2c",
+  "total_cost_usd": 0.13534424999999997,
   "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
-  "result": "Common causes and fixes:\n\n**1. Find the leak first**\n- Run with `node --inspect` and take heap snapshots in Chrome DevTools at intervals. Compare — growing retained objects point to the leak.\n- Or use `node --heap-prof` for allocation profiling.\n\n**2. Usual suspects**\n- **Unbounded caches/Maps** — add an LRU (`lru-cache`) with max size or TTL.\n- **Event listeners** not removed — pair every `.on()` with `.off()`/`removeListener()`, especially on long-lived emitters. Watch for `MaxListenersExceededWarning`.\n- **Closures holding large scope** — a callback registered once can pin every variable in its enclosing function. Null out references you don't need.\n- **Timers** — `setInterval` without `clearInterval`, or `setTimeout` chains that never end. Use `.unref()` if the timer shouldn't keep the process alive.\n- **Global state** — arrays/objects on `global` or module-level that only grow.\n- **Promises never resolved** — each one retains its `.then` chain.\n\n**3. Quick diagnostic**\n```js\nsetInterval(() => {\n  const m = process.memoryUsage();\n  console.log(`rss=${m.rss} heap=${m.heapUsed}`);\n}, 10000).unref();\n```\nIf `heapUsed` climbs monotonically under steady load, you have a leak (not just fragmentation).\n\n**4. Last resort**\nBump `--max-old-space-size` only to buy time while you fix the root cause — not as a solution.\n\nWhat's the symptom you're seeing? RSS growth, OOM crash, GC thrash?",
+  "result": "**1. Reproduce and measure first.** Run with `--inspect` and capture heap snapshots at intervals:\n```bash\nnode --inspect --max-old-space-size=4096 app.js\n```\nTake 3 snapshots over time in Chrome DevTools → Memory → Heap snapshot. Compare with \"Comparison\" view. Look for retained objects that grow monotonically.\n\n**2. Common culprits, ranked by frequency:**\n- **Unbounded caches / Maps** — use `lru-cache` or a `WeakMap` if keys are objects.\n- **Event listener leaks** — `emitter.on(...)` without matching `off`. Watch for the `MaxListenersExceededWarning`. Set `events.defaultMaxListeners` low in dev to surface it faster.\n- **Closures holding large scope** — callbacks (timers, promises, http handlers) capturing request/response or buffers they no longer need.\n- **Global / module-scoped arrays** appended to on each request (logs, metrics buffers).\n- **Timers not cleared** — `setInterval` on objects that get replaced; store the handle and `clearInterval`.\n- **Streams not drained / destroyed** — especially on error paths.\n- **`require` cache abuse** — dynamically requiring new modules at runtime.\n\n**3. Narrow with tooling:**\n- `node --heapsnapshot-signal=SIGUSR2` then `kill -USR2 <pid>` to dump in prod.\n- `clinic.js doctor` / `clinic heapprofiler` for a guided view.\n- `process.memoryUsage()` logged periodically — watch `heapUsed` trend, not RSS alone.\n\n**4. Fix pattern.** In the comparison view, sort by \"Retained Size,\" pick the biggest growing constructor, open \"Retainers\" to find the GC root holding it. The root is almost always one of the categories above.\n\n**5. Don't mask it.** Raising `--max-old-space-size` or restarting on a schedule is a mitigation, not a fix — ship it if you're bleeding, but keep the snapshot diff open.\n\nIf you want, paste `process.memoryUsage()` output over time or a heap snapshot diff and I'll point at the likely root.",
   "assertion_pass": true,
   "raw_payload": {
     "type": "result",
     "subtype": "success",
     "is_error": false,
     "api_error_status": null,
-    "duration_ms": 10578,
-    "duration_api_ms": 11540,
+    "duration_ms": 15809,
+    "duration_api_ms": 16787,
     "num_turns": 1,
-    "result": "Common causes and fixes:\n\n**1. Find the leak first**\n- Run with `node --inspect` and take heap snapshots in Chrome DevTools at intervals. Compare — growing retained objects point to the leak.\n- Or use `node --heap-prof` for allocation profiling.\n\n**2. Usual suspects**\n- **Unbounded caches/Maps** — add an LRU (`lru-cache`) with max size or TTL.\n- **Event listeners** not removed — pair every `.on()` with `.off()`/`removeListener()`, especially on long-lived emitters. Watch for `MaxListenersExceededWarning`.\n- **Closures holding large scope** — a callback registered once can pin every variable in its enclosing function. Null out references you don't need.\n- **Timers** — `setInterval` without `clearInterval`, or `setTimeout` chains that never end. Use `.unref()` if the timer shouldn't keep the process alive.\n- **Global state** — arrays/objects on `global` or module-level that only grow.\n- **Promises never resolved** — each one retains its `.then` chain.\n\n**3. Quick diagnostic**\n```js\nsetInterval(() => {\n  const m = process.memoryUsage();\n  console.log(`rss=${m.rss} heap=${m.heapUsed}`);\n}, 10000).unref();\n```\nIf `heapUsed` climbs monotonically under steady load, you have a leak (not just fragmentation).\n\n**4. Last resort**\nBump `--max-old-space-size` only to buy time while you fix the root cause — not as a solution.\n\nWhat's the symptom you're seeing? RSS growth, OOM crash, GC thrash?",
+    "result": "**1. Reproduce and measure first.** Run with `--inspect` and capture heap snapshots at intervals:\n```bash\nnode --inspect --max-old-space-size=4096 app.js\n```\nTake 3 snapshots over time in Chrome DevTools → Memory → Heap snapshot. Compare with \"Comparison\" view. Look for retained objects that grow monotonically.\n\n**2. Common culprits, ranked by frequency:**\n- **Unbounded caches / Maps** — use `lru-cache` or a `WeakMap` if keys are objects.\n- **Event listener leaks** — `emitter.on(...)` without matching `off`. Watch for the `MaxListenersExceededWarning`. Set `events.defaultMaxListeners` low in dev to surface it faster.\n- **Closures holding large scope** — callbacks (timers, promises, http handlers) capturing request/response or buffers they no longer need.\n- **Global / module-scoped arrays** appended to on each request (logs, metrics buffers).\n- **Timers not cleared** — `setInterval` on objects that get replaced; store the handle and `clearInterval`.\n- **Streams not drained / destroyed** — especially on error paths.\n- **`require` cache abuse** — dynamically requiring new modules at runtime.\n\n**3. Narrow with tooling:**\n- `node --heapsnapshot-signal=SIGUSR2` then `kill -USR2 <pid>` to dump in prod.\n- `clinic.js doctor` / `clinic heapprofiler` for a guided view.\n- `process.memoryUsage()` logged periodically — watch `heapUsed` trend, not RSS alone.\n\n**4. Fix pattern.** In the comparison view, sort by \"Retained Size,\" pick the biggest growing constructor, open \"Retainers\" to find the GC root holding it. The root is almost always one of the categories above.\n\n**5. Don't mask it.** Raising `--max-old-space-size` or restarting on a schedule is a mitigation, not a fix — ship it if you're bleeding, but keep the snapshot diff open.\n\nIf you want, paste `process.memoryUsage()` output over time or a heap snapshot diff and I'll point at the likely root.",
     "stop_reason": "end_turn",
-    "session_id": "d803f0e2-13b6-47a7-abf0-ddcd764182d0",
-    "total_cost_usd": 0.09607550000000001,
+    "session_id": "a915fffb-401b-432d-ae79-0eb6be568b2c",
+    "total_cost_usd": 0.13534424999999997,
     "usage": {
       "input_tokens": 6,
-      "cache_creation_input_tokens": 11734,
+      "cache_creation_input_tokens": 17029,
       "cache_read_input_tokens": 16796,
-      "output_tokens": 555,
+      "output_tokens": 802,
       "server_tool_use": {
         "web_search_requests": 0,
         "web_fetch_requests": 0
       },
       "service_tier": "standard",
       "cache_creation": {
-        "ephemeral_1h_input_tokens": 11734,
+        "ephemeral_1h_input_tokens": 17029,
         "ephemeral_5m_input_tokens": 0
       },
       "inference_geo": "",
       "iterations": [
         {
           "input_tokens": 6,
-          "output_tokens": 555,
+          "output_tokens": 802,
           "cache_read_input_tokens": 16796,
-          "cache_creation_input_tokens": 11734,
+          "cache_creation_input_tokens": 17029,
           "cache_creation": {
             "ephemeral_5m_input_tokens": 0,
-            "ephemeral_1h_input_tokens": 11734
+            "ephemeral_1h_input_tokens": 17029
           },
           "type": "message"
         }
@@ -88,18 +88,18 @@
       },
       "claude-opus-4-7": {
         "inputTokens": 6,
-        "outputTokens": 555,
+        "outputTokens": 802,
         "cacheReadInputTokens": 16796,
-        "cacheCreationInputTokens": 11734,
+        "cacheCreationInputTokens": 17029,
         "webSearchRequests": 0,
-        "costUSD": 0.0956405,
-        "contextWindow": 200000,
+        "costUSD": 0.13490924999999998,
+        "contextWindow": 1000000,
         "maxOutputTokens": 64000
       }
     },
     "permission_denials": [],
     "terminal_reason": "completed",
     "fast_mode_state": "off",
-    "uuid": "5ada632a-51e0-4595-bf45-fd70a335fda6"
+    "uuid": "8d13ded2-3e0d-48f7-b047-1d94c6baf22b"
   }
 }

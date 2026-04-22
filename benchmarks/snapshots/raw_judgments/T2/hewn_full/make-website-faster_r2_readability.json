@@ -1,15 +1,15 @@
 {
   "final": {
-    "uses_plain_language": false,
+    "uses_plain_language": true,
     "actionable": true,
-    "starts_helpfully": false,
-    "respects_user_level": false
+    "starts_helpfully": true,
+    "respects_user_level": true
   },
   "history": [
     {
       "attempt": 0,
-      "raw": "{\"uses_plain_language\":false,\"actionable\":true,\"starts_helpfully\":false,\"respects_user_level\":false}"
+      "raw": "{\"uses_plain_language\":true,\"actionable\":true,\"starts_helpfully\":true,\"respects_user_level\":true}"
     }
   ],
-  "ts": "2026-04-22T01:39:44.927942+00:00"
+  "ts": "2026-04-22T08:54:09.061203+00:00"
 }

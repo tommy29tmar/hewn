@@ -14,61 +14,61 @@
   ],
   "digest_hex": "37dcfc04f7f9bb03f94bf4fe2a87d8ed70cc588f0bfaceb0e1c634e40f418a20",
   "seed": "hewn-bench-v1",
-  "timestamp": "2026-04-21T23:49:03.132955+00:00",
-  "output_tokens_tiktoken": 119,
-  "output_tokens_anthropic": 189,
+  "timestamp": "2026-04-22T08:01:13.550331+00:00",
+  "output_tokens_tiktoken": 35,
+  "output_tokens_anthropic": 59,
   "input_tokens_anthropic": 6,
-  "cache_creation_input_tokens": 13203,
+  "cache_creation_input_tokens": 18758,
   "cache_read_input_tokens": 16805,
-  "total_input_tokens": 30014,
+  "total_input_tokens": 35569,
   "cache_state": "warm",
-  "wallclock_ms": 11025.471335015027,
-  "duration_ms": 5526,
-  "duration_api_ms": 6370,
-  "wrapper_overhead_ms": 4655.471335015027,
+  "wallclock_ms": 9759.303644997999,
+  "duration_ms": 3403,
+  "duration_api_ms": 5832,
+  "wrapper_overhead_ms": 3927.303644997999,
   "stop_reason": "end_turn",
   "num_turns": 1,
-  "session_id": "95b238e5-5732-451c-ac70-9025ad4705ca",
-  "total_cost_usd": 0.09610425,
+  "session_id": "557c47f1-0e49-416d-a366-d6baa5fe755d",
+  "total_cost_usd": 0.12757300000000002,
   "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
-  "result": "Stops firing request on every keystroke.\n\nUser types \"react hooks\" — without debounce, 11 requests fire (one per char), most wasted before user finishes typing.\n\nDebounce waits for pause (say 300ms) after last keystroke, then fires once. Saves API calls, reduces server load, avoids race conditions where slow earlier response overwrites fresh later one, keeps UI from flickering through stale results.\n\nThrottle is different — caps rate to 1/interval. Debounce waits for silence. Search inputs want debounce because you care about final query, not intermediate ones.",
+  "result": "@hewn v0 hybrid\nG: debounce_search\nC: keystroke_flood\nP: wait_idle_ms\nV: fewer_req\nA: set_ms",
   "assertion_pass": true,
   "raw_payload": {
     "type": "result",
     "subtype": "success",
     "is_error": false,
     "api_error_status": null,
-    "duration_ms": 5526,
-    "duration_api_ms": 6370,
+    "duration_ms": 3403,
+    "duration_api_ms": 5832,
     "num_turns": 1,
-    "result": "Stops firing request on every keystroke.\n\nUser types \"react hooks\" — without debounce, 11 requests fire (one per char), most wasted before user finishes typing.\n\nDebounce waits for pause (say 300ms) after last keystroke, then fires once. Saves API calls, reduces server load, avoids race conditions where slow earlier response overwrites fresh later one, keeps UI from flickering through stale results.\n\nThrottle is different — caps rate to 1/interval. Debounce waits for silence. Search inputs want debounce because you care about final query, not intermediate ones.",
+    "result": "@hewn v0 hybrid\nG: debounce_search\nC: keystroke_flood\nP: wait_idle_ms\nV: fewer_req\nA: set_ms",
     "stop_reason": "end_turn",
-    "session_id": "95b238e5-5732-451c-ac70-9025ad4705ca",
-    "total_cost_usd": 0.09610425,
+    "session_id": "557c47f1-0e49-416d-a366-d6baa5fe755d",
+    "total_cost_usd": 0.12757300000000002,
     "usage": {
       "input_tokens": 6,
-      "cache_creation_input_tokens": 13203,
+      "cache_creation_input_tokens": 18758,
       "cache_read_input_tokens": 16805,
-      "output_tokens": 189,
+      "output_tokens": 59,
       "server_tool_use": {
         "web_search_requests": 0,
         "web_fetch_requests": 0
       },
       "service_tier": "standard",
       "cache_creation": {
-        "ephemeral_1h_input_tokens": 13203,
+        "ephemeral_1h_input_tokens": 18758,
         "ephemeral_5m_input_tokens": 0
       },
       "inference_geo": "",
       "iterations": [
         {
           "input_tokens": 6,
-          "output_tokens": 189,
+          "output_tokens": 59,
           "cache_read_input_tokens": 16805,
-          "cache_creation_input_tokens": 13203,
+          "cache_creation_input_tokens": 18758,
           "cache_creation": {
             "ephemeral_5m_input_tokens": 0,
-            "ephemeral_1h_input_tokens": 13203
+            "ephemeral_1h_input_tokens": 18758
           },
           "type": "message"
         }
@@ -88,18 +88,18 @@
       },
       "claude-opus-4-7": {
         "inputTokens": 6,
-        "outputTokens": 189,
+        "outputTokens": 59,
         "cacheReadInputTokens": 16805,
-        "cacheCreationInputTokens": 13203,
+        "cacheCreationInputTokens": 18758,
         "webSearchRequests": 0,
-        "costUSD": 0.09567625,
-        "contextWindow": 200000,
+        "costUSD": 0.127145,
+        "contextWindow": 1000000,
         "maxOutputTokens": 64000
       }
     },
     "permission_denials": [],
     "terminal_reason": "completed",
     "fast_mode_state": "off",
-    "uuid": "7a66a73b-7e19-4f7d-a12b-3917ee413616"
+    "uuid": "c8b2a7c7-ccc9-4796-83b3-f6d36b228737"
   }
 }

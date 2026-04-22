@@ -14,61 +14,61 @@
   ],
   "digest_hex": "3ea6924fe84cc48072e626740e2896f1f2e17be2cf1e47da115cdde4ccbeab3a",
   "seed": "hewn-bench-v1",
-  "timestamp": "2026-04-22T00:33:33.301943+00:00",
-  "output_tokens_tiktoken": 656,
-  "output_tokens_anthropic": 1036,
+  "timestamp": "2026-04-22T08:18:53.052475+00:00",
+  "output_tokens_tiktoken": 484,
+  "output_tokens_anthropic": 788,
   "input_tokens_anthropic": 6,
-  "cache_creation_input_tokens": 24534,
+  "cache_creation_input_tokens": 25595,
   "cache_read_input_tokens": 16805,
-  "total_input_tokens": 41345,
+  "total_input_tokens": 42406,
   "cache_state": "warm",
-  "wallclock_ms": 24817.9292010027,
-  "duration_ms": 20460,
-  "duration_api_ms": 21416,
-  "wrapper_overhead_ms": 3401.9292010026984,
+  "wallclock_ms": 22656.054271006724,
+  "duration_ms": 16451,
+  "duration_api_ms": 18316,
+  "wrapper_overhead_ms": 4340.054271006724,
   "stop_reason": "end_turn",
   "num_turns": 1,
-  "session_id": "a0194ea0-a08a-4082-8b7f-e82bc02b000a",
-  "total_cost_usd": 0.193339,
+  "session_id": "4aaa6ecc-af98-4bc8-b917-790f68cc62b0",
+  "total_cost_usd": 0.19376025,
   "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
-  "result": "1. Trusts client-supplied X-Forwarded-For for rate-limit keying\nevidence: `rl:${req.headers['x-forwarded-for']||req.ip}` reads header directly, violates Section 2 rule 2 + 2025-09 SEV1 RCA\nimpact: attacker rotates XFF per request, bypasses per-IP limits, enables brute-force (same exploit path as the 2025-09 incident)\nfix: key off `trustedClientIp(req)` from `src/edge/util/trustedClientIp.ts`; lint rule `no-direct-xff-read` should already block this\nverify: add test with spoofed XFF header — limiter must key off socket remoteAddress, not header\n\n2. Missing EXPIRE on INCR — Redis OOM risk\nevidence: `await redis.incr(key)` with no paired `EXPIRE`, violates Section 2 rule 3 + 2025-11 SEV2 RCA\nimpact: unbounded key growth, Redis OOM eviction, edge offline (replays 2025-11 incident)\nfix: wrap in `MULTI`: `incr(key)` + `expire(key, 90)`; `no-unbounded-redis-key` lint rule should flag this\nverify: integration test asserts TTL > 0 after first INCR on a fresh key\n\n3. Key missing route prefix, minute bucket, and region — collision + wrong limit semantics\nevidence: key is `rl:{ip}` only; spec format is `rl:{ip}:{route_prefix}:{minute_bucket}` with region prefix per 2025-12 RCA\nimpact: all routes share one counter per IP (wrong limit enforcement); no sliding window (bucket never rotates); cross-region global throttle (2025-12 replay)\nfix: `rl:{region}:{trustedClientIp}:{routePrefix}:{Math.floor(Date.now()/60000)}`\nverify: unit test key format per region + route; regression test from 2025-12\n\n4. No limit check / no 429 response\nevidence: code increments but never compares `count > limit` nor returns RFC 7807 `429` with `retry_after`\nimpact: limiter is a no-op — accepts all traffic, just counts it\nfix: read `[count]` from `multi.exec()`, compare against `config/rate_limits.json` lookup, return problem+json `429` body per Section 4\nverify: test exceeds limit → `429` with `type:/errors/rate-limited` and `retry_after`\n\n5. `req.ip` fallback still header-derived when Express `trust proxy` is set\nevidence: `||req.ip` — Express resolves `req.ip` from XFF when `trust proxy` is enabled, so fallback is also spoofable\nimpact: even if XFF is absent, attacker controls `req.ip` via other forwarded headers depending on proxy config\nfix: single source of truth — `trustedClientIp(req)` which validates chain against `config/trusted_proxies.json`\nverify: unit test with `app.set('trust proxy', true)` + spoofed XFF → `trustedClientIp` returns socket address, not header value",
+  "result": "1. spoofable XFF key — `req.headers['x-forwarded-for']` read direct, Section 2 rule 2 + 2025-09 SEV1 repeat. Attacker rotates XFF header per request, bypasses per-IP limit, brute-forces auth. Replace with `trustedClientIp(req)` from `src/edge/util/trustedClientIp.ts`; verify via lint rule `no-direct-xff-read` + integration test rotating XFF sees single counter.\n2. unbounded Redis key — `INCR` without `EXPIRE`, Section 4 + 2025-11 SEV2 repeat. Key lives forever, Redis OOM under traffic spike, edge offline. Wrap in `multi().incr(key).expire(key, 90).exec()`; verify via `no-unbounded-redis-key` lint + assert TTL>0 post-INCR in integration test.\n3. missing route + method + region prefix — key is `rl:{ip}` only, Section 4 key format + 2025-12 SEV2 repeat. Cross-route global limit collision; one busy user throttled across regions. Use `rl:{region}:{ip}:{routePrefix}:{minuteBucket}`; verify by hitting two routes and confirming separate counters in `redis-cli KEYS rl:*`.\n4. no minute bucket — no sliding window, counter never resets per window. Limit becomes lifetime-of-key cap, diverges from 60s window contract. Add `Math.floor(Date.now()/60000)` segment per Section 4; verify counter resets across bucket boundary in test.\n5. no limit check / 429 response — `incr` result unused, no threshold comparison, no RFC 7807 body. Limiter is a no-op; metric `atlas_edge_rate_limit_total{action=throttled}` never increments. Compare `count > limit` from `config/rate_limits.json`, return `problem+json` with `retry_after`; verify 429 fires at limit+1 in test.\n6. no error path / metric — bare `await redis.incr`; Redis transient error throws, middleware 500s instead of fail-open or retry. Wrap in try/catch, emit `atlas_edge_rate_limit_total{action=errored}`, retry via `src/util/retry.ts`; verify by killing Redis in integration test — edge should degrade not crash.",
   "assertion_pass": true,
   "raw_payload": {
     "type": "result",
     "subtype": "success",
     "is_error": false,
     "api_error_status": null,
-    "duration_ms": 20460,
-    "duration_api_ms": 21416,
+    "duration_ms": 16451,
+    "duration_api_ms": 18316,
     "num_turns": 1,
-    "result": "1. Trusts client-supplied X-Forwarded-For for rate-limit keying\nevidence: `rl:${req.headers['x-forwarded-for']||req.ip}` reads header directly, violates Section 2 rule 2 + 2025-09 SEV1 RCA\nimpact: attacker rotates XFF per request, bypasses per-IP limits, enables brute-force (same exploit path as the 2025-09 incident)\nfix: key off `trustedClientIp(req)` from `src/edge/util/trustedClientIp.ts`; lint rule `no-direct-xff-read` should already block this\nverify: add test with spoofed XFF header — limiter must key off socket remoteAddress, not header\n\n2. Missing EXPIRE on INCR — Redis OOM risk\nevidence: `await redis.incr(key)` with no paired `EXPIRE`, violates Section 2 rule 3 + 2025-11 SEV2 RCA\nimpact: unbounded key growth, Redis OOM eviction, edge offline (replays 2025-11 incident)\nfix: wrap in `MULTI`: `incr(key)` + `expire(key, 90)`; `no-unbounded-redis-key` lint rule should flag this\nverify: integration test asserts TTL > 0 after first INCR on a fresh key\n\n3. Key missing route prefix, minute bucket, and region — collision + wrong limit semantics\nevidence: key is `rl:{ip}` only; spec format is `rl:{ip}:{route_prefix}:{minute_bucket}` with region prefix per 2025-12 RCA\nimpact: all routes share one counter per IP (wrong limit enforcement); no sliding window (bucket never rotates); cross-region global throttle (2025-12 replay)\nfix: `rl:{region}:{trustedClientIp}:{routePrefix}:{Math.floor(Date.now()/60000)}`\nverify: unit test key format per region + route; regression test from 2025-12\n\n4. No limit check / no 429 response\nevidence: code increments but never compares `count > limit` nor returns RFC 7807 `429` with `retry_after`\nimpact: limiter is a no-op — accepts all traffic, just counts it\nfix: read `[count]` from `multi.exec()`, compare against `config/rate_limits.json` lookup, return problem+json `429` body per Section 4\nverify: test exceeds limit → `429` with `type:/errors/rate-limited` and `retry_after`\n\n5. `req.ip` fallback still header-derived when Express `trust proxy` is set\nevidence: `||req.ip` — Express resolves `req.ip` from XFF when `trust proxy` is enabled, so fallback is also spoofable\nimpact: even if XFF is absent, attacker controls `req.ip` via other forwarded headers depending on proxy config\nfix: single source of truth — `trustedClientIp(req)` which validates chain against `config/trusted_proxies.json`\nverify: unit test with `app.set('trust proxy', true)` + spoofed XFF → `trustedClientIp` returns socket address, not header value",
+    "result": "1. spoofable XFF key — `req.headers['x-forwarded-for']` read direct, Section 2 rule 2 + 2025-09 SEV1 repeat. Attacker rotates XFF header per request, bypasses per-IP limit, brute-forces auth. Replace with `trustedClientIp(req)` from `src/edge/util/trustedClientIp.ts`; verify via lint rule `no-direct-xff-read` + integration test rotating XFF sees single counter.\n2. unbounded Redis key — `INCR` without `EXPIRE`, Section 4 + 2025-11 SEV2 repeat. Key lives forever, Redis OOM under traffic spike, edge offline. Wrap in `multi().incr(key).expire(key, 90).exec()`; verify via `no-unbounded-redis-key` lint + assert TTL>0 post-INCR in integration test.\n3. missing route + method + region prefix — key is `rl:{ip}` only, Section 4 key format + 2025-12 SEV2 repeat. Cross-route global limit collision; one busy user throttled across regions. Use `rl:{region}:{ip}:{routePrefix}:{minuteBucket}`; verify by hitting two routes and confirming separate counters in `redis-cli KEYS rl:*`.\n4. no minute bucket — no sliding window, counter never resets per window. Limit becomes lifetime-of-key cap, diverges from 60s window contract. Add `Math.floor(Date.now()/60000)` segment per Section 4; verify counter resets across bucket boundary in test.\n5. no limit check / 429 response — `incr` result unused, no threshold comparison, no RFC 7807 body. Limiter is a no-op; metric `atlas_edge_rate_limit_total{action=throttled}` never increments. Compare `count > limit` from `config/rate_limits.json`, return `problem+json` with `retry_after`; verify 429 fires at limit+1 in test.\n6. no error path / metric — bare `await redis.incr`; Redis transient error throws, middleware 500s instead of fail-open or retry. Wrap in try/catch, emit `atlas_edge_rate_limit_total{action=errored}`, retry via `src/util/retry.ts`; verify by killing Redis in integration test — edge should degrade not crash.",
     "stop_reason": "end_turn",
-    "session_id": "a0194ea0-a08a-4082-8b7f-e82bc02b000a",
-    "total_cost_usd": 0.193339,
+    "session_id": "4aaa6ecc-af98-4bc8-b917-790f68cc62b0",
+    "total_cost_usd": 0.19376025,
     "usage": {
       "input_tokens": 6,
-      "cache_creation_input_tokens": 24534,
+      "cache_creation_input_tokens": 25595,
       "cache_read_input_tokens": 16805,
-      "output_tokens": 1036,
+      "output_tokens": 788,
       "server_tool_use": {
         "web_search_requests": 0,
         "web_fetch_requests": 0
       },
       "service_tier": "standard",
       "cache_creation": {
-        "ephemeral_1h_input_tokens": 24534,
+        "ephemeral_1h_input_tokens": 25595,
         "ephemeral_5m_input_tokens": 0
       },
       "inference_geo": "",
       "iterations": [
         {
           "input_tokens": 6,
-          "output_tokens": 1036,
+          "output_tokens": 788,
           "cache_read_input_tokens": 16805,
-          "cache_creation_input_tokens": 24534,
+          "cache_creation_input_tokens": 25595,
           "cache_creation": {
             "ephemeral_5m_input_tokens": 0,
-            "ephemeral_1h_input_tokens": 24534
+            "ephemeral_1h_input_tokens": 25595
           },
           "type": "message"
         }
@@ -78,21 +78,21 @@
     "modelUsage": {
       "claude-haiku-4-5-20251001": {
         "inputTokens": 5584,
-        "outputTokens": 17,
+        "outputTokens": 15,
         "cacheReadInputTokens": 0,
         "cacheCreationInputTokens": 0,
         "webSearchRequests": 0,
-        "costUSD": 0.005669,
+        "costUSD": 0.005659000000000001,
         "contextWindow": 200000,
         "maxOutputTokens": 32000
       },
       "claude-opus-4-7": {
         "inputTokens": 6,
-        "outputTokens": 1036,
+        "outputTokens": 788,
         "cacheReadInputTokens": 16805,
-        "cacheCreationInputTokens": 24534,
+        "cacheCreationInputTokens": 25595,
         "webSearchRequests": 0,
-        "costUSD": 0.18767,
+        "costUSD": 0.18810125,
         "contextWindow": 1000000,
         "maxOutputTokens": 64000
       }
@@ -100,6 +100,6 @@
     "permission_denials": [],
     "terminal_reason": "completed",
     "fast_mode_state": "off",
-    "uuid": "be172433-fa9e-4a01-98f3-47173b8fe523"
+    "uuid": "64b8235e-fd8b-4034-ba42-344bbeb90f60"
   }
 }

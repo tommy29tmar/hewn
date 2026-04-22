@@ -1,0 +1,96 @@
+{
+  "track": "T4",
+  "arm": "hewn_prompt_only",
+  "sequence_id": "design-feature",
+  "run_index": 1,
+  "turn": 2,
+  "arm_order_index": 1,
+  "arm_order_full": [
+    "hewn_full",
+    "hewn_prompt_only",
+    "terse",
+    "baseline",
+    "caveman_full"
+  ],
+  "digest_hex": "30a2f9a62df0d790c0598917c3ab42509bbadd672a0a484741ea201d2da3b44f",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T01:05:26.274959+00:00",
+  "session_id_used_for_resume": "c02819a2-ad2a-4986-87e1-163d9a52cd4b",
+  "output_tokens_tiktoken": 799,
+  "output_tokens_anthropic": 1519,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 1366,
+  "cache_read_input_tokens": 32671,
+  "total_input_tokens": 34043,
+  "cache_state": "warm",
+  "wallclock_ms": 34757.29126500664,
+  "duration_ms": 31727,
+  "duration_api_ms": 31696,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "c02819a2-ad2a-4986-87e1-163d9a52cd4b",
+  "total_cost_usd": 0.062878,
+  "model_used": "claude-opus-4-7",
+  "result": "Short version: **ledger for gift cards, even though wallets are mutable.** The audit, refund, and regulatory demands are different enough to justify the inconsistency.\n\n**Mutable balance row**\n- Pros\n  - Matches existing wallet code — one pattern, one mental model, less to explain to new engineers.\n  - Trivially fast reads (`SELECT balance`), no aggregation.\n  - Simpler schema, simpler admin tooling.\n  - Row-level locking (`SELECT … FOR UPDATE`) handles concurrent decrements cleanly if you're already doing it for wallets.\n- Cons\n  - No built-in history. \"Why is this $12.43?\" requires you to have *also* written an audit log, which people forget or half-implement.\n  - Reversals are destructive: a bug that double-decrements is hard to detect and harder to unwind because the prior state is gone.\n  - Chargebacks/refunds months later need to reference the *original* debit — you'll end up bolting a ledger on anyway.\n  - Escheatment and CARD Act reporting want a dated event stream. Deriving one retroactively from a mutable row is painful.\n\n**Append-only ledger (events)**\n- Pros\n  - Balance is `SUM(entries)` — every change is an immutable record with timestamp, reason, order ID, actor. Audit is free.\n  - Reversals are just a compensating entry; you never destroy prior state. Makes partial refunds, chargebacks, and \"undo this op agent's adjustment\" straightforward.\n  - Natural fit for the reserve→commit pattern (write a `HOLD` entry, then `CAPTURE` or `RELEASE`) which is what you actually want for checkout concurrency.\n  - Regulatory reporting, fraud investigations, and customer support (\"show me every debit on this card\") become queries instead of projects.\n  - Double-entry variant gives you reconciliation against the PSP side essentially for free.\n- Cons\n  - Reads cost an aggregation. Solved with a materialized `balance` cache or a rollup snapshot per N entries — but that's extra machinery.\n  - More schema, more code, more things to get right (entry types, idempotency keys, snapshot invalidation).\n  - Diverges from the wallet pattern — engineers will ask why, and occasionally try to \"fix\" the inconsistency.\n  - Slightly more subtle concurrency story: you're relying on uniqueness of idempotency keys + serializable-ish semantics rather than a single row lock.\n\n**Why I'd still pick ledger here despite the wallet precedent**\nWallets are typically internal store credit with relaxed audit needs — if a wallet balance is off by a cent you refund the user and move on. Gift cards have three properties wallets usually don't: (1) they're sold for real money, so they're a liability on your balance sheet that auditors will ask about; (2) they're subject to state/federal consumer protection rules in most jurisdictions; (3) refunds and chargebacks can arrive long after the balance has been spent, and you need to trace which debit corresponds to which original credit. All three of those want an event log.\n\n**Middle path worth considering**\nLedger as source of truth + a denormalized `gift_card.balance` column updated in the same transaction as the entry insert. Reads stay O(1), writes stay atomic, and if the cached column ever drifts from `SUM(entries)` you have a reconciliation job that tells you something is broken. This is what most mature billing systems actually run.\n\nOne thing to watch: if you do go ledger, decide upfront whether it's single-entry (just this card's debits/credits) or double-entry (every movement has a matching entry on another account — gift card liability, revenue, refunds payable). Double-entry is overkill for a small feature and essential for a real one; the migration between them is ugly, so pick based on where you think this lands in 2 years.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 31727,
+    "duration_api_ms": 31696,
+    "num_turns": 1,
+    "result": "Short version: **ledger for gift cards, even though wallets are mutable.** The audit, refund, and regulatory demands are different enough to justify the inconsistency.\n\n**Mutable balance row**\n- Pros\n  - Matches existing wallet code — one pattern, one mental model, less to explain to new engineers.\n  - Trivially fast reads (`SELECT balance`), no aggregation.\n  - Simpler schema, simpler admin tooling.\n  - Row-level locking (`SELECT … FOR UPDATE`) handles concurrent decrements cleanly if you're already doing it for wallets.\n- Cons\n  - No built-in history. \"Why is this $12.43?\" requires you to have *also* written an audit log, which people forget or half-implement.\n  - Reversals are destructive: a bug that double-decrements is hard to detect and harder to unwind because the prior state is gone.\n  - Chargebacks/refunds months later need to reference the *original* debit — you'll end up bolting a ledger on anyway.\n  - Escheatment and CARD Act reporting want a dated event stream. Deriving one retroactively from a mutable row is painful.\n\n**Append-only ledger (events)**\n- Pros\n  - Balance is `SUM(entries)` — every change is an immutable record with timestamp, reason, order ID, actor. Audit is free.\n  - Reversals are just a compensating entry; you never destroy prior state. Makes partial refunds, chargebacks, and \"undo this op agent's adjustment\" straightforward.\n  - Natural fit for the reserve→commit pattern (write a `HOLD` entry, then `CAPTURE` or `RELEASE`) which is what you actually want for checkout concurrency.\n  - Regulatory reporting, fraud investigations, and customer support (\"show me every debit on this card\") become queries instead of projects.\n  - Double-entry variant gives you reconciliation against the PSP side essentially for free.\n- Cons\n  - Reads cost an aggregation. Solved with a materialized `balance` cache or a rollup snapshot per N entries — but that's extra machinery.\n  - More schema, more code, more things to get right (entry types, idempotency keys, snapshot invalidation).\n  - Diverges from the wallet pattern — engineers will ask why, and occasionally try to \"fix\" the inconsistency.\n  - Slightly more subtle concurrency story: you're relying on uniqueness of idempotency keys + serializable-ish semantics rather than a single row lock.\n\n**Why I'd still pick ledger here despite the wallet precedent**\nWallets are typically internal store credit with relaxed audit needs — if a wallet balance is off by a cent you refund the user and move on. Gift cards have three properties wallets usually don't: (1) they're sold for real money, so they're a liability on your balance sheet that auditors will ask about; (2) they're subject to state/federal consumer protection rules in most jurisdictions; (3) refunds and chargebacks can arrive long after the balance has been spent, and you need to trace which debit corresponds to which original credit. All three of those want an event log.\n\n**Middle path worth considering**\nLedger as source of truth + a denormalized `gift_card.balance` column updated in the same transaction as the entry insert. Reads stay O(1), writes stay atomic, and if the cached column ever drifts from `SUM(entries)` you have a reconciliation job that tells you something is broken. This is what most mature billing systems actually run.\n\nOne thing to watch: if you do go ledger, decide upfront whether it's single-entry (just this card's debits/credits) or double-entry (every movement has a matching entry on another account — gift card liability, revenue, refunds payable). Double-entry is overkill for a small feature and essential for a real one; the migration between them is ugly, so pick based on where you think this lands in 2 years.",
+    "stop_reason": "end_turn",
+    "session_id": "c02819a2-ad2a-4986-87e1-163d9a52cd4b",
+    "total_cost_usd": 0.062878,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 1366,
+      "cache_read_input_tokens": 32671,
+      "output_tokens": 1519,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 1366,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 1519,
+          "cache_read_input_tokens": 32671,
+          "cache_creation_input_tokens": 1366,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 1366
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 1519,
+        "cacheReadInputTokens": 32671,
+        "cacheCreationInputTokens": 1366,
+        "webSearchRequests": 0,
+        "costUSD": 0.062878,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "e7c8e2ba-d8fe-4c58-97ed-5ce18cfd0e23"
+  }
+}

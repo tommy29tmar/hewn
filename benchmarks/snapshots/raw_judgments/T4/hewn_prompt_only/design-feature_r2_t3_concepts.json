@@ -6,8 +6,8 @@
   "history": [
     {
       "attempt": 0,
-      "raw": "{\"names_select_for_update_or_advisory_lock_or_serializable_isolation\": true, \"explains_why_simple_select_then_update_is_unsafe\": false}"
+      "raw": "{\"names_select_for_update_or_advisory_lock_or_serializable_isolation\":true,\"explains_why_simple_select_then_update_is_unsafe\":false}"
     }
   ],
-  "ts": "2026-04-22T02:10:40.431162+00:00"
+  "ts": "2026-04-22T09:11:25.073296+00:00"
 }

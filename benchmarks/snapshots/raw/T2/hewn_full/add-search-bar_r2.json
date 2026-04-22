@@ -14,61 +14,61 @@
   ],
   "digest_hex": "e4d553ad3e355ccffc56234ee1f9b935b3963f152f24e81c5cb452140df74b94",
   "seed": "hewn-bench-v1",
-  "timestamp": "2026-04-22T00:21:01.174636+00:00",
-  "output_tokens_tiktoken": 90,
-  "output_tokens_anthropic": 131,
+  "timestamp": "2026-04-22T08:13:19.931092+00:00",
+  "output_tokens_tiktoken": 23,
+  "output_tokens_anthropic": 38,
   "input_tokens_anthropic": 6,
-  "cache_creation_input_tokens": 17293,
+  "cache_creation_input_tokens": 18192,
   "cache_read_input_tokens": 16805,
-  "total_input_tokens": 34104,
+  "total_input_tokens": 35003,
   "cache_state": "warm",
-  "wallclock_ms": 10867.147626995575,
-  "duration_ms": 6060,
-  "duration_api_ms": 6686,
-  "wrapper_overhead_ms": 4181.147626995575,
+  "wallclock_ms": 11781.362932990305,
+  "duration_ms": 5305,
+  "duration_api_ms": 6551,
+  "wrapper_overhead_ms": 5230.362932990305,
   "stop_reason": "end_turn",
   "num_turns": 1,
-  "session_id": "a57596c5-8eb5-42fc-8344-c32343e88c4a",
-  "total_cost_usd": 0.12020574999999999,
+  "session_id": "eadf8130-e097-40f1-98f4-8335d728ed98",
+  "total_cost_usd": 0.1234995,
   "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
-  "result": "depends on stack — what app? web/mobile/desktop, framework?\n\nalso: search over what? local list in memory, database, API, full-text index?\n\ncheapest start: filter existing list client-side with input onChange → array.filter on substring match. ship that, see if users need more (fuzzy, ranking, server-side, debounce, highlights).\n\ntell me stack + data source and I point you at exact file to edit.",
+  "result": "Need stack + where search lives. Frontend framework? Searching what data (list in memory, API, DB)?",
   "assertion_pass": true,
   "raw_payload": {
     "type": "result",
     "subtype": "success",
     "is_error": false,
     "api_error_status": null,
-    "duration_ms": 6060,
-    "duration_api_ms": 6686,
+    "duration_ms": 5305,
+    "duration_api_ms": 6551,
     "num_turns": 1,
-    "result": "depends on stack — what app? web/mobile/desktop, framework?\n\nalso: search over what? local list in memory, database, API, full-text index?\n\ncheapest start: filter existing list client-side with input onChange → array.filter on substring match. ship that, see if users need more (fuzzy, ranking, server-side, debounce, highlights).\n\ntell me stack + data source and I point you at exact file to edit.",
+    "result": "Need stack + where search lives. Frontend framework? Searching what data (list in memory, API, DB)?",
     "stop_reason": "end_turn",
-    "session_id": "a57596c5-8eb5-42fc-8344-c32343e88c4a",
-    "total_cost_usd": 0.12020574999999999,
+    "session_id": "eadf8130-e097-40f1-98f4-8335d728ed98",
+    "total_cost_usd": 0.1234995,
     "usage": {
       "input_tokens": 6,
-      "cache_creation_input_tokens": 17293,
+      "cache_creation_input_tokens": 18192,
       "cache_read_input_tokens": 16805,
-      "output_tokens": 131,
+      "output_tokens": 38,
       "server_tool_use": {
         "web_search_requests": 0,
         "web_fetch_requests": 0
       },
       "service_tier": "standard",
       "cache_creation": {
-        "ephemeral_1h_input_tokens": 17293,
+        "ephemeral_1h_input_tokens": 18192,
         "ephemeral_5m_input_tokens": 0
       },
       "inference_geo": "",
       "iterations": [
         {
           "input_tokens": 6,
-          "output_tokens": 131,
+          "output_tokens": 38,
           "cache_read_input_tokens": 16805,
-          "cache_creation_input_tokens": 17293,
+          "cache_creation_input_tokens": 18192,
           "cache_creation": {
             "ephemeral_5m_input_tokens": 0,
-            "ephemeral_1h_input_tokens": 17293
+            "ephemeral_1h_input_tokens": 18192
           },
           "type": "message"
         }
@@ -88,11 +88,11 @@
       },
       "claude-opus-4-7": {
         "inputTokens": 6,
-        "outputTokens": 131,
+        "outputTokens": 38,
         "cacheReadInputTokens": 16805,
-        "cacheCreationInputTokens": 17293,
+        "cacheCreationInputTokens": 18192,
         "webSearchRequests": 0,
-        "costUSD": 0.11978874999999999,
+        "costUSD": 0.1230825,
         "contextWindow": 1000000,
         "maxOutputTokens": 64000
       }
@@ -100,6 +100,6 @@
     "permission_denials": [],
     "terminal_reason": "completed",
     "fast_mode_state": "off",
-    "uuid": "6ce9547e-37cb-4f24-9b8d-eed5e67ca382"
+    "uuid": "8d335d53-624b-48cb-97c4-9ff50234568e"
   }
 }

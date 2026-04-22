@@ -1,0 +1,105 @@
+{
+  "track": "T2",
+  "arm": "hewn_full",
+  "prompt_id": "make-website-faster",
+  "run_index": 1,
+  "arm_order_index": 0,
+  "arm_order_full": [
+    "hewn_full",
+    "hewn_prompt_only",
+    "terse",
+    "caveman_full",
+    "baseline",
+    "caveman_full_plus_ultra_directive"
+  ],
+  "digest_hex": "7f50b87761132f5aa42b93557a015fe57f3c5214edc0baf0cfc53704c3da3593",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T00:13:50.890819+00:00",
+  "output_tokens_tiktoken": 38,
+  "output_tokens_anthropic": 53,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 17289,
+  "cache_read_input_tokens": 16805,
+  "total_input_tokens": 34100,
+  "cache_state": "warm",
+  "wallclock_ms": 6627.544091985328,
+  "duration_ms": 3300,
+  "duration_api_ms": 3203,
+  "wrapper_overhead_ms": 3424.544091985328,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "41c07228-56fc-478c-9723-284290db4314",
+  "total_cost_usd": 0.11781375,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "need more info\nwhich website\nhave url or repo path\nwhat slow means here (page load, api, specific flow)\ncan measure or just guessing\nwithout that cant do anything useful",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 3300,
+    "duration_api_ms": 3203,
+    "num_turns": 1,
+    "result": "need more info\nwhich website\nhave url or repo path\nwhat slow means here (page load, api, specific flow)\ncan measure or just guessing\nwithout that cant do anything useful",
+    "stop_reason": "end_turn",
+    "session_id": "41c07228-56fc-478c-9723-284290db4314",
+    "total_cost_usd": 0.11781375,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 17289,
+      "cache_read_input_tokens": 16805,
+      "output_tokens": 53,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 17289,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 53,
+          "cache_read_input_tokens": 16805,
+          "cache_creation_input_tokens": 17289,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 17289
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 53,
+        "cacheReadInputTokens": 16805,
+        "cacheCreationInputTokens": 17289,
+        "webSearchRequests": 0,
+        "costUSD": 0.11781375,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      },
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 347,
+        "outputTokens": 12,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.00040699999999999997,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "d7bebbe3-41f9-441e-aed1-7ce5618cee8c"
+  }
+}

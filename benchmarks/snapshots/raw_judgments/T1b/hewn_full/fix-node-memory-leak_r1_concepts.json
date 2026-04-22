@@ -2,14 +2,14 @@
   "final": {
     "use_heap_snapshot_or_profiler": true,
     "look_for_growing_object_retainers": true,
-    "common_culprits_event_listeners_or_closures_or_caches": true,
-    "tools_like_node_inspect_or_clinic_or_chrome_devtools": true
+    "common_culprits_event_listeners_or_closures_or_caches": false,
+    "tools_like_node_inspect_or_clinic_or_chrome_devtools": false
   },
   "history": [
     {
       "attempt": 0,
-      "raw": "{\"use_heap_snapshot_or_profiler\": true, \"look_for_growing_object_retainers\": true, \"common_culprits_event_listeners_or_closures_or_caches\": true, \"tools_like_node_inspect_or_clinic_or_chrome_devtools\": true}"
+      "raw": "{\"use_heap_snapshot_or_profiler\":true,\"look_for_growing_object_retainers\":true,\"common_culprits_event_listeners_or_closures_or_caches\":false,\"tools_like_node_inspect_or_clinic_or_chrome_devtools\":false}"
     }
   ],
-  "ts": "2026-04-22T01:11:21.732797+00:00"
+  "ts": "2026-04-22T08:43:36.181155+00:00"
 }

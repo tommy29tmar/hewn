@@ -14,62 +14,62 @@
   ],
   "digest_hex": "30a2f9a62df0d790c0598917c3ab42509bbadd672a0a484741ea201d2da3b44f",
   "seed": "hewn-bench-v1",
-  "timestamp": "2026-04-22T01:04:20.404086+00:00",
-  "session_id_used_for_resume": "b3f40e90-02ea-4c6b-a1d6-396c50dde0bb",
-  "output_tokens_tiktoken": 824,
-  "output_tokens_anthropic": 1243,
+  "timestamp": "2026-04-22T08:31:07.911854+00:00",
+  "session_id_used_for_resume": "a5b861a6-3ae3-47ab-bc99-1526aaf8a5f4",
+  "output_tokens_tiktoken": 243,
+  "output_tokens_anthropic": 363,
   "input_tokens_anthropic": 6,
-  "cache_creation_input_tokens": 1194,
-  "cache_read_input_tokens": 37702,
-  "total_input_tokens": 38902,
+  "cache_creation_input_tokens": 402,
+  "cache_read_input_tokens": 36316,
+  "total_input_tokens": 36724,
   "cache_state": "warm",
-  "wallclock_ms": 29173.65715300548,
-  "duration_ms": 26175,
-  "duration_api_ms": 26081,
-  "wrapper_overhead_ms": 3092.657153005479,
+  "wallclock_ms": 16381.720718025463,
+  "duration_ms": 10015,
+  "duration_api_ms": 9929,
+  "wrapper_overhead_ms": 6452.720718025463,
   "stop_reason": "end_turn",
   "num_turns": 1,
-  "session_id": "b3f40e90-02ea-4c6b-a1d6-396c50dde0bb",
-  "total_cost_usd": 0.0574185,
+  "session_id": "a5b861a6-3ae3-47ab-bc99-1526aaf8a5f4",
+  "total_cost_usd": 0.029775500000000003,
   "model_used": "claude-opus-4-7",
-  "result": "policy first, code path second. policy drives everything.\n\npolicy options, pick one and document it\n\nproportional split (most common, most fair)\n- refund goes back to each tender in same ratio as original payment\n- order was $100: $30 gift card + $70 card. refund $50 → $15 gift card + $35 card\n- matches user intuition, defensible to finance and CS\n- downside: arithmetic rounding (split $0.01 somewhere — usually favor the card so gift card doesn't go fractional)\n\ngift-card-first return (favors the house)\n- refund fills gift card until original debit restored, overflow to card\n- refund $50 on same order → $30 gift card + $20 card\n- retains more money in your ecosystem (gift card can only be spent with you)\n- feels unfair to user if gift card since expired — you're returning value they can't use\n\ncard-first return (favors the user)\n- refund card first, gift card only takes overflow\n- refund $50 → $50 to card, $0 to gift card\n- simplest, most user-friendly, worst for retention\n- gift cards that were fully consumed stay fully consumed — never reactivated\n\nproportional is the right default. document the rule, show it on refund screen, no surprises.\n\nedge cases the policy must answer\n- expired gift card at time of refund: cash to card, or reactivate card with new expiry, or forfeit? most clean: extend expiry or issue new card with refunded portion, never silently drop value (legal risk in some jurisdictions)\n- deleted / closed gift card: fallback to card\n- original card no longer valid (expired, closed): issue store credit or new gift card\n- refund exceeds original card payment (shouldn't happen but guard): cap at original, rest to gift card\n- multiple gift cards on one order: proportional across all of them\n\ncode path (proportional, mutable-row model, Postgres)\n\ninputs: order_id, refund_amount, refund_idempotency_key\n\n1. begin transaction\n2. load order's payment breakdown: all tenders used, each with original amount\n3. idempotency check: SELECT from refunds table WHERE order_id + idempotency_key — if exists, return stored result, done\n4. compute splits: for each tender, share = refund_amount * (tender.original / order.total); round, reconcile pennies deterministically (last tender absorbs rounding delta, or always favor card)\n5. for each gift card tender, SELECT ... FOR UPDATE the card row — lock order: sort by code to prevent deadlock\n6. validate each card still refundable (not deleted; if expired, apply expired-card policy from above)\n7. UPDATE gift_cards SET balance = balance + :share WHERE id = :id — no max-balance check needed unless you cap\n8. insert ledger row per card: type=refund, amount, order_id, idempotency_key, ref to original debit\n9. call payment gateway for card portion — this is the risky step, external + slow\n10. if gateway succeeds, insert refund record with status=completed, commit\n11. if gateway fails, rollback everything (gift card restore undone automatically by txn rollback) and surface error\n\nordering matters: do gift card restore inside same txn as gateway call, OR do gateway first then gift card. if you commit gift card before gateway call and gateway fails, you've over-refunded.\n\nsafer pattern for external call\n- reserve refund intent in txn (status=pending), commit\n- call gateway outside txn\n- on success, second txn: apply gift card credits, mark refund completed\n- on failure, second txn: mark refund failed, no gift card change\n- requires idempotent gateway call (use idempotency_key as gateway reference)\n\nfinal guard: invariant check — sum of refunds against an order never exceeds sum of payments. enforce with a CHECK or a trigger, or at least a nightly audit query. catches bugs before finance does.",
+  "result": "Standard policy: refund to the original tender, proportionally. If the order used $30 gift card + $70 card, a $50 refund returns $15 to the gift card (restore balance, extending expiry or not is a separate call) and $35 to the card. Simpler alternative is \"card first, gift card last\" — refund up to the card charge before touching the gift card — which favors the customer but complicates accounting because the refunded tender mix no longer matches the original.\n\nCode path: load the original payment allocation from the order (you'll need to persist it at checkout — gift_card_amount, card_amount, gift_card_id), compute the refund split, then in one transaction credit the gift card balance (with the same row lock as consumption) and issue the card refund via your PSP. If the PSP call fails after the gift card credit, you need a compensating debit or a retry queue — same conditional-debit pattern as the original charge, inverted.\n\nWatch for: refunds after gift card expiry (credit to a new card? refuse? policy call), and refunds that exceed the original gift card portion (cap the gift card credit at what was consumed, rest goes to card).",
   "assertion_pass": true,
   "raw_payload": {
     "type": "result",
     "subtype": "success",
     "is_error": false,
     "api_error_status": null,
-    "duration_ms": 26175,
-    "duration_api_ms": 26081,
+    "duration_ms": 10015,
+    "duration_api_ms": 9929,
     "num_turns": 1,
-    "result": "policy first, code path second. policy drives everything.\n\npolicy options, pick one and document it\n\nproportional split (most common, most fair)\n- refund goes back to each tender in same ratio as original payment\n- order was $100: $30 gift card + $70 card. refund $50 → $15 gift card + $35 card\n- matches user intuition, defensible to finance and CS\n- downside: arithmetic rounding (split $0.01 somewhere — usually favor the card so gift card doesn't go fractional)\n\ngift-card-first return (favors the house)\n- refund fills gift card until original debit restored, overflow to card\n- refund $50 on same order → $30 gift card + $20 card\n- retains more money in your ecosystem (gift card can only be spent with you)\n- feels unfair to user if gift card since expired — you're returning value they can't use\n\ncard-first return (favors the user)\n- refund card first, gift card only takes overflow\n- refund $50 → $50 to card, $0 to gift card\n- simplest, most user-friendly, worst for retention\n- gift cards that were fully consumed stay fully consumed — never reactivated\n\nproportional is the right default. document the rule, show it on refund screen, no surprises.\n\nedge cases the policy must answer\n- expired gift card at time of refund: cash to card, or reactivate card with new expiry, or forfeit? most clean: extend expiry or issue new card with refunded portion, never silently drop value (legal risk in some jurisdictions)\n- deleted / closed gift card: fallback to card\n- original card no longer valid (expired, closed): issue store credit or new gift card\n- refund exceeds original card payment (shouldn't happen but guard): cap at original, rest to gift card\n- multiple gift cards on one order: proportional across all of them\n\ncode path (proportional, mutable-row model, Postgres)\n\ninputs: order_id, refund_amount, refund_idempotency_key\n\n1. begin transaction\n2. load order's payment breakdown: all tenders used, each with original amount\n3. idempotency check: SELECT from refunds table WHERE order_id + idempotency_key — if exists, return stored result, done\n4. compute splits: for each tender, share = refund_amount * (tender.original / order.total); round, reconcile pennies deterministically (last tender absorbs rounding delta, or always favor card)\n5. for each gift card tender, SELECT ... FOR UPDATE the card row — lock order: sort by code to prevent deadlock\n6. validate each card still refundable (not deleted; if expired, apply expired-card policy from above)\n7. UPDATE gift_cards SET balance = balance + :share WHERE id = :id — no max-balance check needed unless you cap\n8. insert ledger row per card: type=refund, amount, order_id, idempotency_key, ref to original debit\n9. call payment gateway for card portion — this is the risky step, external + slow\n10. if gateway succeeds, insert refund record with status=completed, commit\n11. if gateway fails, rollback everything (gift card restore undone automatically by txn rollback) and surface error\n\nordering matters: do gift card restore inside same txn as gateway call, OR do gateway first then gift card. if you commit gift card before gateway call and gateway fails, you've over-refunded.\n\nsafer pattern for external call\n- reserve refund intent in txn (status=pending), commit\n- call gateway outside txn\n- on success, second txn: apply gift card credits, mark refund completed\n- on failure, second txn: mark refund failed, no gift card change\n- requires idempotent gateway call (use idempotency_key as gateway reference)\n\nfinal guard: invariant check — sum of refunds against an order never exceeds sum of payments. enforce with a CHECK or a trigger, or at least a nightly audit query. catches bugs before finance does.",
+    "result": "Standard policy: refund to the original tender, proportionally. If the order used $30 gift card + $70 card, a $50 refund returns $15 to the gift card (restore balance, extending expiry or not is a separate call) and $35 to the card. Simpler alternative is \"card first, gift card last\" — refund up to the card charge before touching the gift card — which favors the customer but complicates accounting because the refunded tender mix no longer matches the original.\n\nCode path: load the original payment allocation from the order (you'll need to persist it at checkout — gift_card_amount, card_amount, gift_card_id), compute the refund split, then in one transaction credit the gift card balance (with the same row lock as consumption) and issue the card refund via your PSP. If the PSP call fails after the gift card credit, you need a compensating debit or a retry queue — same conditional-debit pattern as the original charge, inverted.\n\nWatch for: refunds after gift card expiry (credit to a new card? refuse? policy call), and refunds that exceed the original gift card portion (cap the gift card credit at what was consumed, rest goes to card).",
     "stop_reason": "end_turn",
-    "session_id": "b3f40e90-02ea-4c6b-a1d6-396c50dde0bb",
-    "total_cost_usd": 0.0574185,
+    "session_id": "a5b861a6-3ae3-47ab-bc99-1526aaf8a5f4",
+    "total_cost_usd": 0.029775500000000003,
     "usage": {
       "input_tokens": 6,
-      "cache_creation_input_tokens": 1194,
-      "cache_read_input_tokens": 37702,
-      "output_tokens": 1243,
+      "cache_creation_input_tokens": 402,
+      "cache_read_input_tokens": 36316,
+      "output_tokens": 363,
       "server_tool_use": {
         "web_search_requests": 0,
         "web_fetch_requests": 0
       },
       "service_tier": "standard",
       "cache_creation": {
-        "ephemeral_1h_input_tokens": 1194,
+        "ephemeral_1h_input_tokens": 402,
         "ephemeral_5m_input_tokens": 0
       },
       "inference_geo": "",
       "iterations": [
         {
           "input_tokens": 6,
-          "output_tokens": 1243,
-          "cache_read_input_tokens": 37702,
-          "cache_creation_input_tokens": 1194,
+          "output_tokens": 363,
+          "cache_read_input_tokens": 36316,
+          "cache_creation_input_tokens": 402,
           "cache_creation": {
             "ephemeral_5m_input_tokens": 0,
-            "ephemeral_1h_input_tokens": 1194
+            "ephemeral_1h_input_tokens": 402
           },
           "type": "message"
         }
@@ -79,11 +79,11 @@
     "modelUsage": {
       "claude-opus-4-7": {
         "inputTokens": 6,
-        "outputTokens": 1243,
-        "cacheReadInputTokens": 37702,
-        "cacheCreationInputTokens": 1194,
+        "outputTokens": 363,
+        "cacheReadInputTokens": 36316,
+        "cacheCreationInputTokens": 402,
         "webSearchRequests": 0,
-        "costUSD": 0.0574185,
+        "costUSD": 0.029775500000000003,
         "contextWindow": 1000000,
         "maxOutputTokens": 64000
       }
@@ -91,6 +91,6 @@
     "permission_denials": [],
     "terminal_reason": "completed",
     "fast_mode_state": "off",
-    "uuid": "ab028470-da52-4c3b-b0f1-3c590a391d12"
+    "uuid": "02e85c90-082d-46fd-b66c-7d715f9bfd0d"
   }
 }

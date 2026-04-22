@@ -2303,8 +2303,8 @@
     "concepts_count_present": 6,
     "concepts_count_total": 6
   },
-  "hewn_full/cors-errors_r1": {
-    "arm": "hewn_full",
+  "hewn_full_v1/cors-errors_r1": {
+    "arm": "hewn_full_v1",
     "prompt_id": "cors-errors",
     "run_index": 1,
     "literals_present": {
@@ -2329,8 +2329,8 @@
     "concepts_count_present": 1,
     "concepts_count_total": 4
   },
-  "hewn_full/cors-errors_r2": {
-    "arm": "hewn_full",
+  "hewn_full_v1/cors-errors_r2": {
+    "arm": "hewn_full_v1",
     "prompt_id": "cors-errors",
     "run_index": 2,
     "literals_present": {
@@ -2355,8 +2355,8 @@
     "concepts_count_present": 3,
     "concepts_count_total": 4
   },
-  "hewn_full/cors-errors_r3": {
-    "arm": "hewn_full",
+  "hewn_full_v1/cors-errors_r3": {
+    "arm": "hewn_full_v1",
     "prompt_id": "cors-errors",
     "run_index": 3,
     "literals_present": {
@@ -2381,8 +2381,8 @@
     "concepts_count_present": 4,
     "concepts_count_total": 4
   },
-  "hewn_full/debounce-search_r1": {
-    "arm": "hewn_full",
+  "hewn_full_v1/debounce-search_r1": {
+    "arm": "hewn_full_v1",
     "prompt_id": "debounce-search",
     "run_index": 1,
     "literals_present": {},
@@ -2405,8 +2405,8 @@
     "concepts_count_present": 4,
     "concepts_count_total": 4
   },
-  "hewn_full/debounce-search_r2": {
-    "arm": "hewn_full",
+  "hewn_full_v1/debounce-search_r2": {
+    "arm": "hewn_full_v1",
     "prompt_id": "debounce-search",
     "run_index": 2,
     "literals_present": {},
@@ -2429,8 +2429,8 @@
     "concepts_count_present": 4,
     "concepts_count_total": 4
   },
-  "hewn_full/debounce-search_r3": {
-    "arm": "hewn_full",
+  "hewn_full_v1/debounce-search_r3": {
+    "arm": "hewn_full_v1",
     "prompt_id": "debounce-search",
     "run_index": 3,
     "literals_present": {},
@@ -2453,8 +2453,8 @@
     "concepts_count_present": 4,
     "concepts_count_total": 4
   },
-  "hewn_full/explain-db-pool_r1": {
-    "arm": "hewn_full",
+  "hewn_full_v1/explain-db-pool_r1": {
+    "arm": "hewn_full_v1",
     "prompt_id": "explain-db-pool",
     "run_index": 1,
     "literals_present": {},
@@ -2477,8 +2477,8 @@
     "concepts_count_present": 4,
     "concepts_count_total": 4
   },
-  "hewn_full/explain-db-pool_r2": {
-    "arm": "hewn_full",
+  "hewn_full_v1/explain-db-pool_r2": {
+    "arm": "hewn_full_v1",
     "prompt_id": "explain-db-pool",
     "run_index": 2,
     "literals_present": {},
@@ -2501,8 +2501,8 @@
     "concepts_count_present": 4,
     "concepts_count_total": 4
   },
-  "hewn_full/explain-db-pool_r3": {
-    "arm": "hewn_full",
+  "hewn_full_v1/explain-db-pool_r3": {
+    "arm": "hewn_full_v1",
     "prompt_id": "explain-db-pool",
     "run_index": 3,
     "literals_present": {},
@@ -2525,8 +2525,8 @@
     "concepts_count_present": 4,
     "concepts_count_total": 4
   },
-  "hewn_full/fix-node-memory-leak_r1": {
-    "arm": "hewn_full",
+  "hewn_full_v1/fix-node-memory-leak_r1": {
+    "arm": "hewn_full_v1",
     "prompt_id": "fix-node-memory-leak",
     "run_index": 1,
     "literals_present": {},
@@ -2549,8 +2549,8 @@
     "concepts_count_present": 4,
     "concepts_count_total": 4
   },
-  "hewn_full/fix-node-memory-leak_r2": {
-    "arm": "hewn_full",
+  "hewn_full_v1/fix-node-memory-leak_r2": {
+    "arm": "hewn_full_v1",
     "prompt_id": "fix-node-memory-leak",
     "run_index": 2,
     "literals_present": {},
@@ -2573,8 +2573,8 @@
     "concepts_count_present": 4,
     "concepts_count_total": 4
   },
-  "hewn_full/fix-node-memory-leak_r3": {
-    "arm": "hewn_full",
+  "hewn_full_v1/fix-node-memory-leak_r3": {
+    "arm": "hewn_full_v1",
     "prompt_id": "fix-node-memory-leak",
     "run_index": 3,
     "literals_present": {},
@@ -2597,8 +2597,8 @@
     "concepts_count_present": 4,
     "concepts_count_total": 4
   },
-  "hewn_full/git-rebase-vs-merge_r1": {
-    "arm": "hewn_full",
+  "hewn_full_v1/git-rebase-vs-merge_r1": {
+    "arm": "hewn_full_v1",
     "prompt_id": "git-rebase-vs-merge",
     "run_index": 1,
     "literals_present": {
@@ -2625,8 +2625,8 @@
     "concepts_count_present": 5,
     "concepts_count_total": 5
   },
-  "hewn_full/git-rebase-vs-merge_r2": {
-    "arm": "hewn_full",
+  "hewn_full_v1/git-rebase-vs-merge_r2": {
+    "arm": "hewn_full_v1",
     "prompt_id": "git-rebase-vs-merge",
     "run_index": 2,
     "literals_present": {
@@ -2653,8 +2653,8 @@
     "concepts_count_present": 5,
     "concepts_count_total": 5
   },
-  "hewn_full/git-rebase-vs-merge_r3": {
-    "arm": "hewn_full",
+  "hewn_full_v1/git-rebase-vs-merge_r3": {
+    "arm": "hewn_full_v1",
     "prompt_id": "git-rebase-vs-merge",
     "run_index": 3,
     "literals_present": {
@@ -2681,8 +2681,8 @@
     "concepts_count_present": 5,
     "concepts_count_total": 5
   },
-  "hewn_full/hash-table-collisions_r1": {
-    "arm": "hewn_full",
+  "hewn_full_v1/hash-table-collisions_r1": {
+    "arm": "hewn_full_v1",
     "prompt_id": "hash-table-collisions",
     "run_index": 1,
     "literals_present": {},
@@ -2705,8 +2705,8 @@
     "concepts_count_present": 4,
     "concepts_count_total": 4
   },
-  "hewn_full/hash-table-collisions_r2": {
-    "arm": "hewn_full",
+  "hewn_full_v1/hash-table-collisions_r2": {
+    "arm": "hewn_full_v1",
     "prompt_id": "hash-table-collisions",
     "run_index": 2,
     "literals_present": {},
@@ -2729,8 +2729,8 @@
     "concepts_count_present": 3,
     "concepts_count_total": 4
   },
-  "hewn_full/hash-table-collisions_r3": {
-    "arm": "hewn_full",
+  "hewn_full_v1/hash-table-collisions_r3": {
+    "arm": "hewn_full_v1",
     "prompt_id": "hash-table-collisions",
     "run_index": 3,
     "literals_present": {},
@@ -2753,8 +2753,8 @@
     "concepts_count_present": 4,
     "concepts_count_total": 4
   },
-  "hewn_full/queue-vs-topic_r1": {
-    "arm": "hewn_full",
+  "hewn_full_v1/queue-vs-topic_r1": {
+    "arm": "hewn_full_v1",
     "prompt_id": "queue-vs-topic",
     "run_index": 1,
     "literals_present": {},
@@ -2778,8 +2778,8 @@
     "concepts_count_present": 5,
     "concepts_count_total": 5
   },
-  "hewn_full/queue-vs-topic_r2": {
-    "arm": "hewn_full",
+  "hewn_full_v1/queue-vs-topic_r2": {
+    "arm": "hewn_full_v1",
     "prompt_id": "queue-vs-topic",
     "run_index": 2,
     "literals_present": {},
@@ -2803,8 +2803,8 @@
     "concepts_count_present": 5,
     "concepts_count_total": 5
   },
-  "hewn_full/queue-vs-topic_r3": {
-    "arm": "hewn_full",
+  "hewn_full_v1/queue-vs-topic_r3": {
+    "arm": "hewn_full_v1",
     "prompt_id": "queue-vs-topic",
     "run_index": 3,
     "literals_present": {},
@@ -2828,8 +2828,8 @@
     "concepts_count_present": 5,
     "concepts_count_total": 5
   },
-  "hewn_full/react-rerender-parent_r1": {
-    "arm": "hewn_full",
+  "hewn_full_v1/react-rerender-parent_r1": {
+    "arm": "hewn_full_v1",
     "prompt_id": "react-rerender-parent",
     "run_index": 1,
     "literals_present": {
@@ -2854,8 +2854,8 @@
     "concepts_count_present": 4,
     "concepts_count_total": 4
   },
-  "hewn_full/react-rerender-parent_r2": {
-    "arm": "hewn_full",
+  "hewn_full_v1/react-rerender-parent_r2": {
+    "arm": "hewn_full_v1",
     "prompt_id": "react-rerender-parent",
     "run_index": 2,
     "literals_present": {
@@ -2880,8 +2880,8 @@
     "concepts_count_present": 4,
     "concepts_count_total": 4
   },
-  "hewn_full/react-rerender-parent_r3": {
-    "arm": "hewn_full",
+  "hewn_full_v1/react-rerender-parent_r3": {
+    "arm": "hewn_full_v1",
     "prompt_id": "react-rerender-parent",
     "run_index": 3,
     "literals_present": {
@@ -2906,8 +2906,8 @@
     "concepts_count_present": 4,
     "concepts_count_total": 4
   },
-  "hewn_full/sql-explain_r1": {
-    "arm": "hewn_full",
+  "hewn_full_v1/sql-explain_r1": {
+    "arm": "hewn_full_v1",
     "prompt_id": "sql-explain",
     "run_index": 1,
     "literals_present": {
@@ -2932,8 +2932,8 @@
     "concepts_count_present": 4,
     "concepts_count_total": 4
   },
-  "hewn_full/sql-explain_r2": {
-    "arm": "hewn_full",
+  "hewn_full_v1/sql-explain_r2": {
+    "arm": "hewn_full_v1",
     "prompt_id": "sql-explain",
     "run_index": 2,
     "literals_present": {
@@ -2958,8 +2958,8 @@
     "concepts_count_present": 4,
     "concepts_count_total": 4
   },
-  "hewn_full/sql-explain_r3": {
-    "arm": "hewn_full",
+  "hewn_full_v1/sql-explain_r3": {
+    "arm": "hewn_full_v1",
     "prompt_id": "sql-explain",
     "run_index": 3,
     "literals_present": {
@@ -2984,8 +2984,8 @@
     "concepts_count_present": 4,
     "concepts_count_total": 4
   },
-  "hewn_full/tcp-vs-udp_r1": {
-    "arm": "hewn_full",
+  "hewn_full_v1/tcp-vs-udp_r1": {
+    "arm": "hewn_full_v1",
     "prompt_id": "tcp-vs-udp",
     "run_index": 1,
     "literals_present": {
@@ -3013,8 +3013,8 @@
     "concepts_count_present": 6,
     "concepts_count_total": 6
   },
-  "hewn_full/tcp-vs-udp_r2": {
-    "arm": "hewn_full",
+  "hewn_full_v1/tcp-vs-udp_r2": {
+    "arm": "hewn_full_v1",
     "prompt_id": "tcp-vs-udp",
     "run_index": 2,
     "literals_present": {
@@ -3042,8 +3042,8 @@
     "concepts_count_present": 6,
     "concepts_count_total": 6
   },
-  "hewn_full/tcp-vs-udp_r3": {
-    "arm": "hewn_full",
+  "hewn_full_v1/tcp-vs-udp_r3": {
+    "arm": "hewn_full_v1",
     "prompt_id": "tcp-vs-udp",
     "run_index": 3,
     "literals_present": {
@@ -3071,8 +3071,8 @@
     "concepts_count_present": 6,
     "concepts_count_total": 6
   },
-  "hewn_prompt_only/cors-errors_r1": {
-    "arm": "hewn_prompt_only",
+  "hewn_prompt_only_v1/cors-errors_r1": {
+    "arm": "hewn_prompt_only_v1",
     "prompt_id": "cors-errors",
     "run_index": 1,
     "literals_present": {
@@ -3097,8 +3097,8 @@
     "concepts_count_present": 3,
     "concepts_count_total": 4
   },
-  "hewn_prompt_only/cors-errors_r2": {
-    "arm": "hewn_prompt_only",
+  "hewn_prompt_only_v1/cors-errors_r2": {
+    "arm": "hewn_prompt_only_v1",
     "prompt_id": "cors-errors",
     "run_index": 2,
     "literals_present": {
@@ -3123,8 +3123,8 @@
     "concepts_count_present": 3,
     "concepts_count_total": 4
   },
-  "hewn_prompt_only/cors-errors_r3": {
-    "arm": "hewn_prompt_only",
+  "hewn_prompt_only_v1/cors-errors_r3": {
+    "arm": "hewn_prompt_only_v1",
     "prompt_id": "cors-errors",
     "run_index": 3,
     "literals_present": {
@@ -3149,8 +3149,8 @@
     "concepts_count_present": 4,
     "concepts_count_total": 4
   },
-  "hewn_prompt_only/debounce-search_r1": {
-    "arm": "hewn_prompt_only",
+  "hewn_prompt_only_v1/debounce-search_r1": {
+    "arm": "hewn_prompt_only_v1",
     "prompt_id": "debounce-search",
     "run_index": 1,
     "literals_present": {},
@@ -3173,8 +3173,8 @@
     "concepts_count_present": 4,
     "concepts_count_total": 4
   },
-  "hewn_prompt_only/debounce-search_r2": {
-    "arm": "hewn_prompt_only",
+  "hewn_prompt_only_v1/debounce-search_r2": {
+    "arm": "hewn_prompt_only_v1",
     "prompt_id": "debounce-search",
     "run_index": 2,
     "literals_present": {},
@@ -3197,8 +3197,8 @@
     "concepts_count_present": 4,
     "concepts_count_total": 4
   },
-  "hewn_prompt_only/debounce-search_r3": {
-    "arm": "hewn_prompt_only",
+  "hewn_prompt_only_v1/debounce-search_r3": {
+    "arm": "hewn_prompt_only_v1",
     "prompt_id": "debounce-search",
     "run_index": 3,
     "literals_present": {},
@@ -3221,8 +3221,8 @@
     "concepts_count_present": 4,
     "concepts_count_total": 4
   },
-  "hewn_prompt_only/explain-db-pool_r1": {
-    "arm": "hewn_prompt_only",
+  "hewn_prompt_only_v1/explain-db-pool_r1": {
+    "arm": "hewn_prompt_only_v1",
     "prompt_id": "explain-db-pool",
     "run_index": 1,
     "literals_present": {},
@@ -3245,8 +3245,8 @@
     "concepts_count_present": 4,
     "concepts_count_total": 4
   },
-  "hewn_prompt_only/explain-db-pool_r2": {
-    "arm": "hewn_prompt_only",
+  "hewn_prompt_only_v1/explain-db-pool_r2": {
+    "arm": "hewn_prompt_only_v1",
     "prompt_id": "explain-db-pool",
     "run_index": 2,
     "literals_present": {},
@@ -3269,8 +3269,8 @@
     "concepts_count_present": 4,
     "concepts_count_total": 4
   },
-  "hewn_prompt_only/explain-db-pool_r3": {
-    "arm": "hewn_prompt_only",
+  "hewn_prompt_only_v1/explain-db-pool_r3": {
+    "arm": "hewn_prompt_only_v1",
     "prompt_id": "explain-db-pool",
     "run_index": 3,
     "literals_present": {},
@@ -3293,8 +3293,8 @@
     "concepts_count_present": 4,
     "concepts_count_total": 4
   },
-  "hewn_prompt_only/fix-node-memory-leak_r1": {
-    "arm": "hewn_prompt_only",
+  "hewn_prompt_only_v1/fix-node-memory-leak_r1": {
+    "arm": "hewn_prompt_only_v1",
     "prompt_id": "fix-node-memory-leak",
     "run_index": 1,
     "literals_present": {},
@@ -3317,8 +3317,8 @@
     "concepts_count_present": 4,
     "concepts_count_total": 4
   },
-  "hewn_prompt_only/fix-node-memory-leak_r2": {
-    "arm": "hewn_prompt_only",
+  "hewn_prompt_only_v1/fix-node-memory-leak_r2": {
+    "arm": "hewn_prompt_only_v1",
     "prompt_id": "fix-node-memory-leak",
     "run_index": 2,
     "literals_present": {},
@@ -3341,8 +3341,8 @@
     "concepts_count_present": 4,
     "concepts_count_total": 4
   },
-  "hewn_prompt_only/fix-node-memory-leak_r3": {
-    "arm": "hewn_prompt_only",
+  "hewn_prompt_only_v1/fix-node-memory-leak_r3": {
+    "arm": "hewn_prompt_only_v1",
     "prompt_id": "fix-node-memory-leak",
     "run_index": 3,
     "literals_present": {},
@@ -3365,8 +3365,8 @@
     "concepts_count_present": 4,
     "concepts_count_total": 4
   },
-  "hewn_prompt_only/git-rebase-vs-merge_r1": {
-    "arm": "hewn_prompt_only",
+  "hewn_prompt_only_v1/git-rebase-vs-merge_r1": {
+    "arm": "hewn_prompt_only_v1",
     "prompt_id": "git-rebase-vs-merge",
     "run_index": 1,
     "literals_present": {
@@ -3393,8 +3393,8 @@
     "concepts_count_present": 5,
     "concepts_count_total": 5
   },
-  "hewn_prompt_only/git-rebase-vs-merge_r2": {
-    "arm": "hewn_prompt_only",
+  "hewn_prompt_only_v1/git-rebase-vs-merge_r2": {
+    "arm": "hewn_prompt_only_v1",
     "prompt_id": "git-rebase-vs-merge",
     "run_index": 2,
     "literals_present": {
@@ -3421,8 +3421,8 @@
     "concepts_count_present": 5,
     "concepts_count_total": 5
   },
-  "hewn_prompt_only/git-rebase-vs-merge_r3": {
-    "arm": "hewn_prompt_only",
+  "hewn_prompt_only_v1/git-rebase-vs-merge_r3": {
+    "arm": "hewn_prompt_only_v1",
     "prompt_id": "git-rebase-vs-merge",
     "run_index": 3,
     "literals_present": {
@@ -3449,8 +3449,8 @@
     "concepts_count_present": 5,
     "concepts_count_total": 5
   },
-  "hewn_prompt_only/hash-table-collisions_r1": {
-    "arm": "hewn_prompt_only",
+  "hewn_prompt_only_v1/hash-table-collisions_r1": {
+    "arm": "hewn_prompt_only_v1",
     "prompt_id": "hash-table-collisions",
     "run_index": 1,
     "literals_present": {},
@@ -3473,8 +3473,8 @@
     "concepts_count_present": 3,
     "concepts_count_total": 4
   },
-  "hewn_prompt_only/hash-table-collisions_r2": {
-    "arm": "hewn_prompt_only",
+  "hewn_prompt_only_v1/hash-table-collisions_r2": {
+    "arm": "hewn_prompt_only_v1",
     "prompt_id": "hash-table-collisions",
     "run_index": 2,
     "literals_present": {},
@@ -3497,8 +3497,8 @@
     "concepts_count_present": 3,
     "concepts_count_total": 4
   },
-  "hewn_prompt_only/hash-table-collisions_r3": {
-    "arm": "hewn_prompt_only",
+  "hewn_prompt_only_v1/hash-table-collisions_r3": {
+    "arm": "hewn_prompt_only_v1",
     "prompt_id": "hash-table-collisions",
     "run_index": 3,
     "literals_present": {},
@@ -3521,8 +3521,8 @@
     "concepts_count_present": 3,
     "concepts_count_total": 4
   },
-  "hewn_prompt_only/queue-vs-topic_r1": {
-    "arm": "hewn_prompt_only",
+  "hewn_prompt_only_v1/queue-vs-topic_r1": {
+    "arm": "hewn_prompt_only_v1",
     "prompt_id": "queue-vs-topic",
     "run_index": 1,
     "literals_present": {},
@@ -3546,8 +3546,8 @@
     "concepts_count_present": 5,
     "concepts_count_total": 5
   },
-  "hewn_prompt_only/queue-vs-topic_r2": {
-    "arm": "hewn_prompt_only",
+  "hewn_prompt_only_v1/queue-vs-topic_r2": {
+    "arm": "hewn_prompt_only_v1",
     "prompt_id": "queue-vs-topic",
     "run_index": 2,
     "literals_present": {},
@@ -3571,8 +3571,8 @@
     "concepts_count_present": 5,
     "concepts_count_total": 5
   },
-  "hewn_prompt_only/queue-vs-topic_r3": {
-    "arm": "hewn_prompt_only",
+  "hewn_prompt_only_v1/queue-vs-topic_r3": {
+    "arm": "hewn_prompt_only_v1",
     "prompt_id": "queue-vs-topic",
     "run_index": 3,
     "literals_present": {},
@@ -3596,8 +3596,8 @@
     "concepts_count_present": 5,
     "concepts_count_total": 5
   },
-  "hewn_prompt_only/react-rerender-parent_r1": {
-    "arm": "hewn_prompt_only",
+  "hewn_prompt_only_v1/react-rerender-parent_r1": {
+    "arm": "hewn_prompt_only_v1",
     "prompt_id": "react-rerender-parent",
     "run_index": 1,
     "literals_present": {
@@ -3622,8 +3622,8 @@
     "concepts_count_present": 4,
     "concepts_count_total": 4
   },
-  "hewn_prompt_only/react-rerender-parent_r2": {
-    "arm": "hewn_prompt_only",
+  "hewn_prompt_only_v1/react-rerender-parent_r2": {
+    "arm": "hewn_prompt_only_v1",
     "prompt_id": "react-rerender-parent",
     "run_index": 2,
     "literals_present": {
@@ -3648,8 +3648,8 @@
     "concepts_count_present": 4,
     "concepts_count_total": 4
   },
-  "hewn_prompt_only/react-rerender-parent_r3": {
-    "arm": "hewn_prompt_only",
+  "hewn_prompt_only_v1/react-rerender-parent_r3": {
+    "arm": "hewn_prompt_only_v1",
     "prompt_id": "react-rerender-parent",
     "run_index": 3,
     "literals_present": {
@@ -3674,8 +3674,8 @@
     "concepts_count_present": 4,
     "concepts_count_total": 4
   },
-  "hewn_prompt_only/sql-explain_r1": {
-    "arm": "hewn_prompt_only",
+  "hewn_prompt_only_v1/sql-explain_r1": {
+    "arm": "hewn_prompt_only_v1",
     "prompt_id": "sql-explain",
     "run_index": 1,
     "literals_present": {
@@ -3700,8 +3700,8 @@
     "concepts_count_present": 4,
     "concepts_count_total": 4
   },
-  "hewn_prompt_only/sql-explain_r2": {
-    "arm": "hewn_prompt_only",
+  "hewn_prompt_only_v1/sql-explain_r2": {
+    "arm": "hewn_prompt_only_v1",
     "prompt_id": "sql-explain",
     "run_index": 2,
     "literals_present": {
@@ -3726,8 +3726,8 @@
     "concepts_count_present": 4,
     "concepts_count_total": 4
   },
-  "hewn_prompt_only/sql-explain_r3": {
-    "arm": "hewn_prompt_only",
+  "hewn_prompt_only_v1/sql-explain_r3": {
+    "arm": "hewn_prompt_only_v1",
     "prompt_id": "sql-explain",
     "run_index": 3,
     "literals_present": {
@@ -3752,8 +3752,8 @@
     "concepts_count_present": 4,
     "concepts_count_total": 4
   },
-  "hewn_prompt_only/tcp-vs-udp_r1": {
-    "arm": "hewn_prompt_only",
+  "hewn_prompt_only_v1/tcp-vs-udp_r1": {
+    "arm": "hewn_prompt_only_v1",
     "prompt_id": "tcp-vs-udp",
     "run_index": 1,
     "literals_present": {
@@ -3781,8 +3781,8 @@
     "concepts_count_present": 6,
     "concepts_count_total": 6
   },
-  "hewn_prompt_only/tcp-vs-udp_r2": {
-    "arm": "hewn_prompt_only",
+  "hewn_prompt_only_v1/tcp-vs-udp_r2": {
+    "arm": "hewn_prompt_only_v1",
     "prompt_id": "tcp-vs-udp",
     "run_index": 2,
     "literals_present": {
@@ -3810,8 +3810,8 @@
     "concepts_count_present": 6,
     "concepts_count_total": 6
   },
-  "hewn_prompt_only/tcp-vs-udp_r3": {
-    "arm": "hewn_prompt_only",
+  "hewn_prompt_only_v1/tcp-vs-udp_r3": {
+    "arm": "hewn_prompt_only_v1",
     "prompt_id": "tcp-vs-udp",
     "run_index": 3,
     "literals_present": {
@@ -4605,6 +4605,1542 @@
       "use_case_examples_for_each": true
     },
     "concepts_count_present": 6,
+    "concepts_count_total": 6
+  },
+  "hewn_full/cors-errors_r1": {
+    "arm": "hewn_full",
+    "prompt_id": "cors-errors",
+    "run_index": 1,
+    "literals_present": {
+      "CORS": false
+    },
+    "format": {
+      "hewn_ir_valid": true,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 13,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "browser_enforces_same_origin_policy": false,
+      "server_must_send_access_control_allow_origin_header": true,
+      "preflight_options_request_for_non_simple_methods": false,
+      "credentials_require_explicit_allow_credentials": false
+    },
+    "concepts_count_present": 1,
+    "concepts_count_total": 4
+  },
+  "hewn_full/cors-errors_r2": {
+    "arm": "hewn_full",
+    "prompt_id": "cors-errors",
+    "run_index": 2,
+    "literals_present": {
+      "CORS": false
+    },
+    "format": {
+      "hewn_ir_valid": true,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 13,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "browser_enforces_same_origin_policy": false,
+      "server_must_send_access_control_allow_origin_header": true,
+      "preflight_options_request_for_non_simple_methods": false,
+      "credentials_require_explicit_allow_credentials": false
+    },
+    "concepts_count_present": 1,
+    "concepts_count_total": 4
+  },
+  "hewn_full/cors-errors_r3": {
+    "arm": "hewn_full",
+    "prompt_id": "cors-errors",
+    "run_index": 3,
+    "literals_present": {
+      "CORS": false
+    },
+    "format": {
+      "hewn_ir_valid": true,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 13,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "browser_enforces_same_origin_policy": false,
+      "server_must_send_access_control_allow_origin_header": true,
+      "preflight_options_request_for_non_simple_methods": false,
+      "credentials_require_explicit_allow_credentials": false
+    },
+    "concepts_count_present": 1,
+    "concepts_count_total": 4
+  },
+  "hewn_full/debounce-search_r1": {
+    "arm": "hewn_full",
+    "prompt_id": "debounce-search",
+    "run_index": 1,
+    "literals_present": {},
+    "format": {
+      "hewn_ir_valid": true,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 13,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "limits_request_rate_during_typing": true,
+      "fires_only_after_user_pauses": true,
+      "saves_server_load_or_api_quota": true,
+      "improves_user_experience_or_avoids_stale_results": false
+    },
+    "concepts_count_present": 3,
+    "concepts_count_total": 4
+  },
+  "hewn_full/debounce-search_r2": {
+    "arm": "hewn_full",
+    "prompt_id": "debounce-search",
+    "run_index": 2,
+    "literals_present": {},
+    "format": {
+      "hewn_ir_valid": true,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 13,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "limits_request_rate_during_typing": true,
+      "fires_only_after_user_pauses": true,
+      "saves_server_load_or_api_quota": true,
+      "improves_user_experience_or_avoids_stale_results": true
+    },
+    "concepts_count_present": 4,
+    "concepts_count_total": 4
+  },
+  "hewn_full/debounce-search_r3": {
+    "arm": "hewn_full",
+    "prompt_id": "debounce-search",
+    "run_index": 3,
+    "literals_present": {},
+    "format": {
+      "hewn_ir_valid": true,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 13,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "limits_request_rate_during_typing": true,
+      "fires_only_after_user_pauses": true,
+      "saves_server_load_or_api_quota": true,
+      "improves_user_experience_or_avoids_stale_results": false
+    },
+    "concepts_count_present": 3,
+    "concepts_count_total": 4
+  },
+  "hewn_full/explain-db-pool_r1": {
+    "arm": "hewn_full",
+    "prompt_id": "explain-db-pool",
+    "run_index": 1,
+    "literals_present": {},
+    "format": {
+      "hewn_ir_valid": true,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 13,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "pool_reuses_open_connections": true,
+      "avoids_per_request_connection_handshake_cost": true,
+      "max_pool_size_is_bounded": false,
+      "idle_or_acquire_timeout_relevant": false
+    },
+    "concepts_count_present": 2,
+    "concepts_count_total": 4
+  },
+  "hewn_full/explain-db-pool_r2": {
+    "arm": "hewn_full",
+    "prompt_id": "explain-db-pool",
+    "run_index": 2,
+    "literals_present": {},
+    "format": {
+      "hewn_ir_valid": true,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 13,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "pool_reuses_open_connections": true,
+      "avoids_per_request_connection_handshake_cost": true,
+      "max_pool_size_is_bounded": false,
+      "idle_or_acquire_timeout_relevant": false
+    },
+    "concepts_count_present": 2,
+    "concepts_count_total": 4
+  },
+  "hewn_full/explain-db-pool_r3": {
+    "arm": "hewn_full",
+    "prompt_id": "explain-db-pool",
+    "run_index": 3,
+    "literals_present": {},
+    "format": {
+      "hewn_ir_valid": true,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 13,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "pool_reuses_open_connections": true,
+      "avoids_per_request_connection_handshake_cost": true,
+      "max_pool_size_is_bounded": false,
+      "idle_or_acquire_timeout_relevant": false
+    },
+    "concepts_count_present": 2,
+    "concepts_count_total": 4
+  },
+  "hewn_full/fix-node-memory-leak_r1": {
+    "arm": "hewn_full",
+    "prompt_id": "fix-node-memory-leak",
+    "run_index": 1,
+    "literals_present": {},
+    "format": {
+      "hewn_ir_valid": true,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 13,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "use_heap_snapshot_or_profiler": true,
+      "look_for_growing_object_retainers": true,
+      "common_culprits_event_listeners_or_closures_or_caches": false,
+      "tools_like_node_inspect_or_clinic_or_chrome_devtools": false
+    },
+    "concepts_count_present": 2,
+    "concepts_count_total": 4
+  },
+  "hewn_full/fix-node-memory-leak_r2": {
+    "arm": "hewn_full",
+    "prompt_id": "fix-node-memory-leak",
+    "run_index": 2,
+    "literals_present": {},
+    "format": {
+      "hewn_ir_valid": true,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 13,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "use_heap_snapshot_or_profiler": true,
+      "look_for_growing_object_retainers": true,
+      "common_culprits_event_listeners_or_closures_or_caches": false,
+      "tools_like_node_inspect_or_clinic_or_chrome_devtools": false
+    },
+    "concepts_count_present": 2,
+    "concepts_count_total": 4
+  },
+  "hewn_full/fix-node-memory-leak_r3": {
+    "arm": "hewn_full",
+    "prompt_id": "fix-node-memory-leak",
+    "run_index": 3,
+    "literals_present": {},
+    "format": {
+      "hewn_ir_valid": true,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 13,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "use_heap_snapshot_or_profiler": true,
+      "look_for_growing_object_retainers": true,
+      "common_culprits_event_listeners_or_closures_or_caches": false,
+      "tools_like_node_inspect_or_clinic_or_chrome_devtools": false
+    },
+    "concepts_count_present": 2,
+    "concepts_count_total": 4
+  },
+  "hewn_full/git-rebase-vs-merge_r1": {
+    "arm": "hewn_full",
+    "prompt_id": "git-rebase-vs-merge",
+    "run_index": 1,
+    "literals_present": {
+      "rebase": true,
+      "merge": true
+    },
+    "format": {
+      "hewn_ir_valid": true,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 13,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "rebase_rewrites_history_replays_commits": true,
+      "merge_creates_a_merge_commit": false,
+      "rebase_produces_linear_history": true,
+      "merge_preserves_branch_topology": true,
+      "rebase_should_not_be_used_on_shared_public_branches": true
+    },
+    "concepts_count_present": 4,
+    "concepts_count_total": 5
+  },
+  "hewn_full/git-rebase-vs-merge_r2": {
+    "arm": "hewn_full",
+    "prompt_id": "git-rebase-vs-merge",
+    "run_index": 2,
+    "literals_present": {
+      "rebase": true,
+      "merge": true
+    },
+    "format": {
+      "hewn_ir_valid": true,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 13,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "rebase_rewrites_history_replays_commits": false,
+      "merge_creates_a_merge_commit": false,
+      "rebase_produces_linear_history": true,
+      "merge_preserves_branch_topology": false,
+      "rebase_should_not_be_used_on_shared_public_branches": false
+    },
+    "concepts_count_present": 1,
+    "concepts_count_total": 5
+  },
+  "hewn_full/git-rebase-vs-merge_r3": {
+    "arm": "hewn_full",
+    "prompt_id": "git-rebase-vs-merge",
+    "run_index": 3,
+    "literals_present": {
+      "rebase": true,
+      "merge": true
+    },
+    "format": {
+      "hewn_ir_valid": true,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 13,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "rebase_rewrites_history_replays_commits": false,
+      "merge_creates_a_merge_commit": false,
+      "rebase_produces_linear_history": true,
+      "merge_preserves_branch_topology": true,
+      "rebase_should_not_be_used_on_shared_public_branches": false
+    },
+    "concepts_count_present": 2,
+    "concepts_count_total": 5
+  },
+  "hewn_full/hash-table-collisions_r1": {
+    "arm": "hewn_full",
+    "prompt_id": "hash-table-collisions",
+    "run_index": 1,
+    "literals_present": {},
+    "format": {
+      "hewn_ir_valid": true,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 13,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "chaining_with_linked_list": false,
+      "open_addressing_with_probing": false,
+      "load_factor_relevance": false,
+      "hash_function_quality_matters": false
+    },
+    "concepts_count_present": 0,
+    "concepts_count_total": 4
+  },
+  "hewn_full/hash-table-collisions_r2": {
+    "arm": "hewn_full",
+    "prompt_id": "hash-table-collisions",
+    "run_index": 2,
+    "literals_present": {},
+    "format": {
+      "hewn_ir_valid": true,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 13,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "chaining_with_linked_list": false,
+      "open_addressing_with_probing": false,
+      "load_factor_relevance": false,
+      "hash_function_quality_matters": false
+    },
+    "concepts_count_present": 0,
+    "concepts_count_total": 4
+  },
+  "hewn_full/hash-table-collisions_r3": {
+    "arm": "hewn_full",
+    "prompt_id": "hash-table-collisions",
+    "run_index": 3,
+    "literals_present": {},
+    "format": {
+      "hewn_ir_valid": true,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 13,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "chaining_with_linked_list": false,
+      "open_addressing_with_probing": false,
+      "load_factor_relevance": false,
+      "hash_function_quality_matters": false
+    },
+    "concepts_count_present": 0,
+    "concepts_count_total": 4
+  },
+  "hewn_full/queue-vs-topic_r1": {
+    "arm": "hewn_full",
+    "prompt_id": "queue-vs-topic",
+    "run_index": 1,
+    "literals_present": {},
+    "format": {
+      "hewn_ir_valid": true,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 13,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "queue_is_one_to_one_or_competing_consumers": false,
+      "topic_is_one_to_many_publish_subscribe": false,
+      "queue_message_consumed_once": false,
+      "topic_message_delivered_to_each_subscriber": false,
+      "use_case_examples_for_each": false
+    },
+    "concepts_count_present": 0,
+    "concepts_count_total": 5
+  },
+  "hewn_full/queue-vs-topic_r2": {
+    "arm": "hewn_full",
+    "prompt_id": "queue-vs-topic",
+    "run_index": 2,
+    "literals_present": {},
+    "format": {
+      "hewn_ir_valid": true,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 13,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "queue_is_one_to_one_or_competing_consumers": false,
+      "topic_is_one_to_many_publish_subscribe": false,
+      "queue_message_consumed_once": false,
+      "topic_message_delivered_to_each_subscriber": false,
+      "use_case_examples_for_each": false
+    },
+    "concepts_count_present": 0,
+    "concepts_count_total": 5
+  },
+  "hewn_full/queue-vs-topic_r3": {
+    "arm": "hewn_full",
+    "prompt_id": "queue-vs-topic",
+    "run_index": 3,
+    "literals_present": {},
+    "format": {
+      "hewn_ir_valid": true,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 13,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "queue_is_one_to_one_or_competing_consumers": false,
+      "topic_is_one_to_many_publish_subscribe": false,
+      "queue_message_consumed_once": false,
+      "topic_message_delivered_to_each_subscriber": false,
+      "use_case_examples_for_each": false
+    },
+    "concepts_count_present": 0,
+    "concepts_count_total": 5
+  },
+  "hewn_full/react-rerender-parent_r1": {
+    "arm": "hewn_full",
+    "prompt_id": "react-rerender-parent",
+    "run_index": 1,
+    "literals_present": {
+      "useMemo": false
+    },
+    "format": {
+      "hewn_ir_valid": true,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 13,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "parent_re_render_triggers_child_re_render_by_default": true,
+      "react_memo_can_skip_re_render_if_props_unchanged": true,
+      "object_or_function_props_create_new_reference_each_render": false,
+      "useMemo_or_useCallback_to_stabilize_references": false
+    },
+    "concepts_count_present": 2,
+    "concepts_count_total": 4
+  },
+  "hewn_full/react-rerender-parent_r2": {
+    "arm": "hewn_full",
+    "prompt_id": "react-rerender-parent",
+    "run_index": 2,
+    "literals_present": {
+      "useMemo": false
+    },
+    "format": {
+      "hewn_ir_valid": true,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 13,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "parent_re_render_triggers_child_re_render_by_default": false,
+      "react_memo_can_skip_re_render_if_props_unchanged": true,
+      "object_or_function_props_create_new_reference_each_render": true,
+      "useMemo_or_useCallback_to_stabilize_references": true
+    },
+    "concepts_count_present": 3,
+    "concepts_count_total": 4
+  },
+  "hewn_full/react-rerender-parent_r3": {
+    "arm": "hewn_full",
+    "prompt_id": "react-rerender-parent",
+    "run_index": 3,
+    "literals_present": {
+      "useMemo": false
+    },
+    "format": {
+      "hewn_ir_valid": true,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 13,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "parent_re_render_triggers_child_re_render_by_default": true,
+      "react_memo_can_skip_re_render_if_props_unchanged": true,
+      "object_or_function_props_create_new_reference_each_render": true,
+      "useMemo_or_useCallback_to_stabilize_references": false
+    },
+    "concepts_count_present": 3,
+    "concepts_count_total": 4
+  },
+  "hewn_full/sql-explain_r1": {
+    "arm": "hewn_full",
+    "prompt_id": "sql-explain",
+    "run_index": 1,
+    "literals_present": {
+      "EXPLAIN": false
+    },
+    "format": {
+      "hewn_ir_valid": true,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 13,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "shows_query_execution_plan": true,
+      "indicates_index_usage_or_scan_type": false,
+      "estimated_row_counts_or_costs": false,
+      "helps_diagnose_slow_queries": true
+    },
+    "concepts_count_present": 2,
+    "concepts_count_total": 4
+  },
+  "hewn_full/sql-explain_r2": {
+    "arm": "hewn_full",
+    "prompt_id": "sql-explain",
+    "run_index": 2,
+    "literals_present": {
+      "EXPLAIN": false
+    },
+    "format": {
+      "hewn_ir_valid": true,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 13,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "shows_query_execution_plan": true,
+      "indicates_index_usage_or_scan_type": false,
+      "estimated_row_counts_or_costs": false,
+      "helps_diagnose_slow_queries": true
+    },
+    "concepts_count_present": 2,
+    "concepts_count_total": 4
+  },
+  "hewn_full/sql-explain_r3": {
+    "arm": "hewn_full",
+    "prompt_id": "sql-explain",
+    "run_index": 3,
+    "literals_present": {
+      "EXPLAIN": false
+    },
+    "format": {
+      "hewn_ir_valid": true,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 13,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "shows_query_execution_plan": true,
+      "indicates_index_usage_or_scan_type": false,
+      "estimated_row_counts_or_costs": false,
+      "helps_diagnose_slow_queries": true
+    },
+    "concepts_count_present": 2,
+    "concepts_count_total": 4
+  },
+  "hewn_full/tcp-vs-udp_r1": {
+    "arm": "hewn_full",
+    "prompt_id": "tcp-vs-udp",
+    "run_index": 1,
+    "literals_present": {
+      "TCP": false,
+      "UDP": false
+    },
+    "format": {
+      "hewn_ir_valid": true,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 13,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "tcp_is_connection_oriented": false,
+      "udp_is_connectionless": false,
+      "tcp_guarantees_ordered_delivery": true,
+      "udp_does_not_guarantee_delivery_or_order": false,
+      "tcp_higher_overhead_lower_throughput": false,
+      "use_case_examples_for_each": false
+    },
+    "concepts_count_present": 1,
+    "concepts_count_total": 6
+  },
+  "hewn_full/tcp-vs-udp_r2": {
+    "arm": "hewn_full",
+    "prompt_id": "tcp-vs-udp",
+    "run_index": 2,
+    "literals_present": {
+      "TCP": false,
+      "UDP": false
+    },
+    "format": {
+      "hewn_ir_valid": true,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 13,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "tcp_is_connection_oriented": false,
+      "udp_is_connectionless": false,
+      "tcp_guarantees_ordered_delivery": false,
+      "udp_does_not_guarantee_delivery_or_order": false,
+      "tcp_higher_overhead_lower_throughput": false,
+      "use_case_examples_for_each": false
+    },
+    "concepts_count_present": 0,
+    "concepts_count_total": 6
+  },
+  "hewn_full/tcp-vs-udp_r3": {
+    "arm": "hewn_full",
+    "prompt_id": "tcp-vs-udp",
+    "run_index": 3,
+    "literals_present": {
+      "TCP": false,
+      "UDP": false
+    },
+    "format": {
+      "hewn_ir_valid": true,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 13,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "tcp_is_connection_oriented": false,
+      "udp_is_connectionless": false,
+      "tcp_guarantees_ordered_delivery": true,
+      "udp_does_not_guarantee_delivery_or_order": false,
+      "tcp_higher_overhead_lower_throughput": false,
+      "use_case_examples_for_each": false
+    },
+    "concepts_count_present": 1,
+    "concepts_count_total": 6
+  },
+  "hewn_prompt_only/cors-errors_r1": {
+    "arm": "hewn_prompt_only",
+    "prompt_id": "cors-errors",
+    "run_index": 1,
+    "literals_present": {
+      "CORS": true
+    },
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 195,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "browser_enforces_same_origin_policy": true,
+      "server_must_send_access_control_allow_origin_header": true,
+      "preflight_options_request_for_non_simple_methods": true,
+      "credentials_require_explicit_allow_credentials": true
+    },
+    "concepts_count_present": 4,
+    "concepts_count_total": 4
+  },
+  "hewn_prompt_only/cors-errors_r2": {
+    "arm": "hewn_prompt_only",
+    "prompt_id": "cors-errors",
+    "run_index": 2,
+    "literals_present": {
+      "CORS": true
+    },
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 1,
+        "leading_article_count": 0,
+        "words": 173,
+        "filler_per_100w": 0.58,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "browser_enforces_same_origin_policy": true,
+      "server_must_send_access_control_allow_origin_header": true,
+      "preflight_options_request_for_non_simple_methods": true,
+      "credentials_require_explicit_allow_credentials": true
+    },
+    "concepts_count_present": 4,
+    "concepts_count_total": 4
+  },
+  "hewn_prompt_only/cors-errors_r3": {
+    "arm": "hewn_prompt_only",
+    "prompt_id": "cors-errors",
+    "run_index": 3,
+    "literals_present": {
+      "CORS": true
+    },
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 208,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "browser_enforces_same_origin_policy": true,
+      "server_must_send_access_control_allow_origin_header": true,
+      "preflight_options_request_for_non_simple_methods": true,
+      "credentials_require_explicit_allow_credentials": true
+    },
+    "concepts_count_present": 4,
+    "concepts_count_total": 4
+  },
+  "hewn_prompt_only/debounce-search_r1": {
+    "arm": "hewn_prompt_only",
+    "prompt_id": "debounce-search",
+    "run_index": 1,
+    "literals_present": {},
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 1,
+        "leading_article_count": 1,
+        "words": 127,
+        "filler_per_100w": 0.79,
+        "leading_article_per_100w": 0.79
+      }
+    },
+    "concepts": {
+      "limits_request_rate_during_typing": true,
+      "fires_only_after_user_pauses": true,
+      "saves_server_load_or_api_quota": true,
+      "improves_user_experience_or_avoids_stale_results": true
+    },
+    "concepts_count_present": 4,
+    "concepts_count_total": 4
+  },
+  "hewn_prompt_only/debounce-search_r2": {
+    "arm": "hewn_prompt_only",
+    "prompt_id": "debounce-search",
+    "run_index": 2,
+    "literals_present": {},
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 1,
+        "words": 113,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.88
+      }
+    },
+    "concepts": {
+      "limits_request_rate_during_typing": true,
+      "fires_only_after_user_pauses": true,
+      "saves_server_load_or_api_quota": true,
+      "improves_user_experience_or_avoids_stale_results": true
+    },
+    "concepts_count_present": 4,
+    "concepts_count_total": 4
+  },
+  "hewn_prompt_only/debounce-search_r3": {
+    "arm": "hewn_prompt_only",
+    "prompt_id": "debounce-search",
+    "run_index": 3,
+    "literals_present": {},
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 1,
+        "words": 101,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.99
+      }
+    },
+    "concepts": {
+      "limits_request_rate_during_typing": true,
+      "fires_only_after_user_pauses": true,
+      "saves_server_load_or_api_quota": true,
+      "improves_user_experience_or_avoids_stale_results": true
+    },
+    "concepts_count_present": 4,
+    "concepts_count_total": 4
+  },
+  "hewn_prompt_only/explain-db-pool_r1": {
+    "arm": "hewn_prompt_only",
+    "prompt_id": "explain-db-pool",
+    "run_index": 1,
+    "literals_present": {},
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 1,
+        "words": 190,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.53
+      }
+    },
+    "concepts": {
+      "pool_reuses_open_connections": true,
+      "avoids_per_request_connection_handshake_cost": true,
+      "max_pool_size_is_bounded": true,
+      "idle_or_acquire_timeout_relevant": true
+    },
+    "concepts_count_present": 4,
+    "concepts_count_total": 4
+  },
+  "hewn_prompt_only/explain-db-pool_r2": {
+    "arm": "hewn_prompt_only",
+    "prompt_id": "explain-db-pool",
+    "run_index": 2,
+    "literals_present": {},
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 209,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "pool_reuses_open_connections": true,
+      "avoids_per_request_connection_handshake_cost": true,
+      "max_pool_size_is_bounded": true,
+      "idle_or_acquire_timeout_relevant": true
+    },
+    "concepts_count_present": 4,
+    "concepts_count_total": 4
+  },
+  "hewn_prompt_only/explain-db-pool_r3": {
+    "arm": "hewn_prompt_only",
+    "prompt_id": "explain-db-pool",
+    "run_index": 3,
+    "literals_present": {},
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 1,
+        "words": 272,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.37
+      }
+    },
+    "concepts": {
+      "pool_reuses_open_connections": true,
+      "avoids_per_request_connection_handshake_cost": true,
+      "max_pool_size_is_bounded": true,
+      "idle_or_acquire_timeout_relevant": true
+    },
+    "concepts_count_present": 4,
+    "concepts_count_total": 4
+  },
+  "hewn_prompt_only/fix-node-memory-leak_r1": {
+    "arm": "hewn_prompt_only",
+    "prompt_id": "fix-node-memory-leak",
+    "run_index": 1,
+    "literals_present": {},
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 1,
+        "leading_article_count": 0,
+        "words": 255,
+        "filler_per_100w": 0.39,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "use_heap_snapshot_or_profiler": true,
+      "look_for_growing_object_retainers": true,
+      "common_culprits_event_listeners_or_closures_or_caches": true,
+      "tools_like_node_inspect_or_clinic_or_chrome_devtools": true
+    },
+    "concepts_count_present": 4,
+    "concepts_count_total": 4
+  },
+  "hewn_prompt_only/fix-node-memory-leak_r2": {
+    "arm": "hewn_prompt_only",
+    "prompt_id": "fix-node-memory-leak",
+    "run_index": 2,
+    "literals_present": {},
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 277,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "use_heap_snapshot_or_profiler": true,
+      "look_for_growing_object_retainers": true,
+      "common_culprits_event_listeners_or_closures_or_caches": true,
+      "tools_like_node_inspect_or_clinic_or_chrome_devtools": true
+    },
+    "concepts_count_present": 4,
+    "concepts_count_total": 4
+  },
+  "hewn_prompt_only/fix-node-memory-leak_r3": {
+    "arm": "hewn_prompt_only",
+    "prompt_id": "fix-node-memory-leak",
+    "run_index": 3,
+    "literals_present": {},
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 199,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "use_heap_snapshot_or_profiler": true,
+      "look_for_growing_object_retainers": true,
+      "common_culprits_event_listeners_or_closures_or_caches": true,
+      "tools_like_node_inspect_or_clinic_or_chrome_devtools": true
+    },
+    "concepts_count_present": 4,
+    "concepts_count_total": 4
+  },
+  "hewn_prompt_only/git-rebase-vs-merge_r1": {
+    "arm": "hewn_prompt_only",
+    "prompt_id": "git-rebase-vs-merge",
+    "run_index": 1,
+    "literals_present": {
+      "rebase": true,
+      "merge": true
+    },
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 186,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "rebase_rewrites_history_replays_commits": true,
+      "merge_creates_a_merge_commit": true,
+      "rebase_produces_linear_history": true,
+      "merge_preserves_branch_topology": true,
+      "rebase_should_not_be_used_on_shared_public_branches": true
+    },
+    "concepts_count_present": 5,
+    "concepts_count_total": 5
+  },
+  "hewn_prompt_only/git-rebase-vs-merge_r2": {
+    "arm": "hewn_prompt_only",
+    "prompt_id": "git-rebase-vs-merge",
+    "run_index": 2,
+    "literals_present": {
+      "rebase": true,
+      "merge": true
+    },
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 93,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "rebase_rewrites_history_replays_commits": true,
+      "merge_creates_a_merge_commit": true,
+      "rebase_produces_linear_history": true,
+      "merge_preserves_branch_topology": true,
+      "rebase_should_not_be_used_on_shared_public_branches": true
+    },
+    "concepts_count_present": 5,
+    "concepts_count_total": 5
+  },
+  "hewn_prompt_only/git-rebase-vs-merge_r3": {
+    "arm": "hewn_prompt_only",
+    "prompt_id": "git-rebase-vs-merge",
+    "run_index": 3,
+    "literals_present": {
+      "rebase": true,
+      "merge": true
+    },
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 93,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "rebase_rewrites_history_replays_commits": true,
+      "merge_creates_a_merge_commit": true,
+      "rebase_produces_linear_history": true,
+      "merge_preserves_branch_topology": true,
+      "rebase_should_not_be_used_on_shared_public_branches": true
+    },
+    "concepts_count_present": 5,
+    "concepts_count_total": 5
+  },
+  "hewn_prompt_only/hash-table-collisions_r1": {
+    "arm": "hewn_prompt_only",
+    "prompt_id": "hash-table-collisions",
+    "run_index": 1,
+    "literals_present": {},
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 145,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "chaining_with_linked_list": true,
+      "open_addressing_with_probing": true,
+      "load_factor_relevance": true,
+      "hash_function_quality_matters": false
+    },
+    "concepts_count_present": 3,
+    "concepts_count_total": 4
+  },
+  "hewn_prompt_only/hash-table-collisions_r2": {
+    "arm": "hewn_prompt_only",
+    "prompt_id": "hash-table-collisions",
+    "run_index": 2,
+    "literals_present": {},
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 1,
+        "words": 108,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.93
+      }
+    },
+    "concepts": {
+      "chaining_with_linked_list": true,
+      "open_addressing_with_probing": true,
+      "load_factor_relevance": true,
+      "hash_function_quality_matters": false
+    },
+    "concepts_count_present": 3,
+    "concepts_count_total": 4
+  },
+  "hewn_prompt_only/hash-table-collisions_r3": {
+    "arm": "hewn_prompt_only",
+    "prompt_id": "hash-table-collisions",
+    "run_index": 3,
+    "literals_present": {},
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 191,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "chaining_with_linked_list": true,
+      "open_addressing_with_probing": true,
+      "load_factor_relevance": true,
+      "hash_function_quality_matters": true
+    },
+    "concepts_count_present": 4,
+    "concepts_count_total": 4
+  },
+  "hewn_prompt_only/queue-vs-topic_r1": {
+    "arm": "hewn_prompt_only",
+    "prompt_id": "queue-vs-topic",
+    "run_index": 1,
+    "literals_present": {},
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 56,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "queue_is_one_to_one_or_competing_consumers": true,
+      "topic_is_one_to_many_publish_subscribe": true,
+      "queue_message_consumed_once": true,
+      "topic_message_delivered_to_each_subscriber": true,
+      "use_case_examples_for_each": true
+    },
+    "concepts_count_present": 5,
+    "concepts_count_total": 5
+  },
+  "hewn_prompt_only/queue-vs-topic_r2": {
+    "arm": "hewn_prompt_only",
+    "prompt_id": "queue-vs-topic",
+    "run_index": 2,
+    "literals_present": {},
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 124,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "queue_is_one_to_one_or_competing_consumers": true,
+      "topic_is_one_to_many_publish_subscribe": true,
+      "queue_message_consumed_once": true,
+      "topic_message_delivered_to_each_subscriber": true,
+      "use_case_examples_for_each": true
+    },
+    "concepts_count_present": 5,
+    "concepts_count_total": 5
+  },
+  "hewn_prompt_only/queue-vs-topic_r3": {
+    "arm": "hewn_prompt_only",
+    "prompt_id": "queue-vs-topic",
+    "run_index": 3,
+    "literals_present": {},
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 51,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "queue_is_one_to_one_or_competing_consumers": true,
+      "topic_is_one_to_many_publish_subscribe": true,
+      "queue_message_consumed_once": true,
+      "topic_message_delivered_to_each_subscriber": true,
+      "use_case_examples_for_each": true
+    },
+    "concepts_count_present": 5,
+    "concepts_count_total": 5
+  },
+  "hewn_prompt_only/react-rerender-parent_r1": {
+    "arm": "hewn_prompt_only",
+    "prompt_id": "react-rerender-parent",
+    "run_index": 1,
+    "literals_present": {
+      "useMemo": true
+    },
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 145,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "parent_re_render_triggers_child_re_render_by_default": true,
+      "react_memo_can_skip_re_render_if_props_unchanged": true,
+      "object_or_function_props_create_new_reference_each_render": true,
+      "useMemo_or_useCallback_to_stabilize_references": true
+    },
+    "concepts_count_present": 4,
+    "concepts_count_total": 4
+  },
+  "hewn_prompt_only/react-rerender-parent_r2": {
+    "arm": "hewn_prompt_only",
+    "prompt_id": "react-rerender-parent",
+    "run_index": 2,
+    "literals_present": {
+      "useMemo": true
+    },
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 145,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "parent_re_render_triggers_child_re_render_by_default": true,
+      "react_memo_can_skip_re_render_if_props_unchanged": true,
+      "object_or_function_props_create_new_reference_each_render": true,
+      "useMemo_or_useCallback_to_stabilize_references": true
+    },
+    "concepts_count_present": 4,
+    "concepts_count_total": 4
+  },
+  "hewn_prompt_only/react-rerender-parent_r3": {
+    "arm": "hewn_prompt_only",
+    "prompt_id": "react-rerender-parent",
+    "run_index": 3,
+    "literals_present": {
+      "useMemo": true
+    },
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 1,
+        "leading_article_count": 0,
+        "words": 161,
+        "filler_per_100w": 0.62,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "parent_re_render_triggers_child_re_render_by_default": true,
+      "react_memo_can_skip_re_render_if_props_unchanged": true,
+      "object_or_function_props_create_new_reference_each_render": true,
+      "useMemo_or_useCallback_to_stabilize_references": true
+    },
+    "concepts_count_present": 4,
+    "concepts_count_total": 4
+  },
+  "hewn_prompt_only/sql-explain_r1": {
+    "arm": "hewn_prompt_only",
+    "prompt_id": "sql-explain",
+    "run_index": 1,
+    "literals_present": {
+      "EXPLAIN": true
+    },
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 1,
+        "leading_article_count": 0,
+        "words": 157,
+        "filler_per_100w": 0.64,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "shows_query_execution_plan": true,
+      "indicates_index_usage_or_scan_type": true,
+      "estimated_row_counts_or_costs": true,
+      "helps_diagnose_slow_queries": true
+    },
+    "concepts_count_present": 4,
+    "concepts_count_total": 4
+  },
+  "hewn_prompt_only/sql-explain_r2": {
+    "arm": "hewn_prompt_only",
+    "prompt_id": "sql-explain",
+    "run_index": 2,
+    "literals_present": {
+      "EXPLAIN": true
+    },
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 1,
+        "leading_article_count": 0,
+        "words": 204,
+        "filler_per_100w": 0.49,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "shows_query_execution_plan": true,
+      "indicates_index_usage_or_scan_type": true,
+      "estimated_row_counts_or_costs": true,
+      "helps_diagnose_slow_queries": true
+    },
+    "concepts_count_present": 4,
+    "concepts_count_total": 4
+  },
+  "hewn_prompt_only/sql-explain_r3": {
+    "arm": "hewn_prompt_only",
+    "prompt_id": "sql-explain",
+    "run_index": 3,
+    "literals_present": {
+      "EXPLAIN": true
+    },
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 2,
+        "leading_article_count": 0,
+        "words": 197,
+        "filler_per_100w": 1.02,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "shows_query_execution_plan": true,
+      "indicates_index_usage_or_scan_type": true,
+      "estimated_row_counts_or_costs": true,
+      "helps_diagnose_slow_queries": true
+    },
+    "concepts_count_present": 4,
+    "concepts_count_total": 4
+  },
+  "hewn_prompt_only/tcp-vs-udp_r1": {
+    "arm": "hewn_prompt_only",
+    "prompt_id": "tcp-vs-udp",
+    "run_index": 1,
+    "literals_present": {
+      "TCP": true,
+      "UDP": true
+    },
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 75,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "tcp_is_connection_oriented": true,
+      "udp_is_connectionless": true,
+      "tcp_guarantees_ordered_delivery": true,
+      "udp_does_not_guarantee_delivery_or_order": true,
+      "tcp_higher_overhead_lower_throughput": true,
+      "use_case_examples_for_each": true
+    },
+    "concepts_count_present": 6,
+    "concepts_count_total": 6
+  },
+  "hewn_prompt_only/tcp-vs-udp_r2": {
+    "arm": "hewn_prompt_only",
+    "prompt_id": "tcp-vs-udp",
+    "run_index": 2,
+    "literals_present": {
+      "TCP": true,
+      "UDP": true
+    },
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 78,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "tcp_is_connection_oriented": true,
+      "udp_is_connectionless": true,
+      "tcp_guarantees_ordered_delivery": true,
+      "udp_does_not_guarantee_delivery_or_order": true,
+      "tcp_higher_overhead_lower_throughput": true,
+      "use_case_examples_for_each": true
+    },
+    "concepts_count_present": 6,
+    "concepts_count_total": 6
+  },
+  "hewn_prompt_only/tcp-vs-udp_r3": {
+    "arm": "hewn_prompt_only",
+    "prompt_id": "tcp-vs-udp",
+    "run_index": 3,
+    "literals_present": {
+      "TCP": true,
+      "UDP": true
+    },
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 1,
+        "leading_article_count": 0,
+        "words": 65,
+        "filler_per_100w": 1.54,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "tcp_is_connection_oriented": true,
+      "udp_is_connectionless": true,
+      "tcp_guarantees_ordered_delivery": true,
+      "udp_does_not_guarantee_delivery_or_order": true,
+      "tcp_higher_overhead_lower_throughput": false,
+      "use_case_examples_for_each": true
+    },
+    "concepts_count_present": 5,
     "concepts_count_total": 6
   }
 }

@@ -1,0 +1,105 @@
+{
+  "track": "T1b",
+  "arm": "hewn_full",
+  "prompt_id": "fix-node-memory-leak",
+  "run_index": 2,
+  "arm_order_index": 1,
+  "arm_order_full": [
+    "caveman_full",
+    "hewn_full",
+    "hewn_prompt_only",
+    "caveman_full_plus_ultra_directive",
+    "baseline",
+    "terse"
+  ],
+  "digest_hex": "7d425b5467d57aae182ad8e9c94b0501514aa39b8cfa8d933e096ea5f14e6554",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-21T23:55:10.254776+00:00",
+  "output_tokens_tiktoken": 147,
+  "output_tokens_anthropic": 265,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 13154,
+  "cache_read_input_tokens": 16805,
+  "total_input_tokens": 29965,
+  "cache_state": "warm",
+  "wallclock_ms": 13299.428973987233,
+  "duration_ms": 6855,
+  "duration_api_ms": 7480,
+  "wrapper_overhead_ms": 5819.428973987233,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "98abc8fd-204b-4f7f-ad74-13ff5357d4ff",
+  "total_cost_usd": 0.09770500000000001,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "@hewn v0 hybrid\nG: fix_nodejs_memory_leak\nC: long_running_process ∧ heap_grows_unbounded\nP: capture_heap_snapshots(\"node --inspect\") ∧ diff_snapshots_in_devtools ∧ inspect_retainers ∧ check_common_sources(\"closures,timers,listeners,caches,globals\") ∧ remove_root_or_bound_cache\nV: heap_stable_across_snapshots ∧ rss_flat_under_load ∧ no_detached_dom_or_retained_closures\nA: use_weakref_or_lru_cache ∧ clearinterval_and_removelistener_on_teardown ∧ enable_gc_logs(\"--trace-gc\") ∧ run_clinic_heapprofiler",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 6855,
+    "duration_api_ms": 7480,
+    "num_turns": 1,
+    "result": "@hewn v0 hybrid\nG: fix_nodejs_memory_leak\nC: long_running_process ∧ heap_grows_unbounded\nP: capture_heap_snapshots(\"node --inspect\") ∧ diff_snapshots_in_devtools ∧ inspect_retainers ∧ check_common_sources(\"closures,timers,listeners,caches,globals\") ∧ remove_root_or_bound_cache\nV: heap_stable_across_snapshots ∧ rss_flat_under_load ∧ no_detached_dom_or_retained_closures\nA: use_weakref_or_lru_cache ∧ clearinterval_and_removelistener_on_teardown ∧ enable_gc_logs(\"--trace-gc\") ∧ run_clinic_heapprofiler",
+    "stop_reason": "end_turn",
+    "session_id": "98abc8fd-204b-4f7f-ad74-13ff5357d4ff",
+    "total_cost_usd": 0.09770500000000001,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 13154,
+      "cache_read_input_tokens": 16805,
+      "output_tokens": 265,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 13154,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 265,
+          "cache_read_input_tokens": 16805,
+          "cache_creation_input_tokens": 13154,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 13154
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 355,
+        "outputTokens": 16,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.000435,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 265,
+        "cacheReadInputTokens": 16805,
+        "cacheCreationInputTokens": 13154,
+        "webSearchRequests": 0,
+        "costUSD": 0.09727000000000001,
+        "contextWindow": 200000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "dd787203-d828-41cd-9526-4399bb8c7cca"
+  }
+}

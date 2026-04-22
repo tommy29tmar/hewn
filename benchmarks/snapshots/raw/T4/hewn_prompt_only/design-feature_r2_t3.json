@@ -14,62 +14,62 @@
   ],
   "digest_hex": "3191b019d37f08f3d5b68d9000f1aeb1e1a3524225f9daa893803df1e240ffd1",
   "seed": "hewn-bench-v1",
-  "timestamp": "2026-04-22T01:30:08.738324+00:00",
-  "session_id_used_for_resume": "c14f8450-3d3a-4157-a4e7-41cae41a530a",
-  "output_tokens_tiktoken": 554,
-  "output_tokens_anthropic": 2113,
+  "timestamp": "2026-04-22T08:39:09.469903+00:00",
+  "session_id_used_for_resume": "ca9e1511-157b-402b-982e-a059f045fd4d",
+  "output_tokens_tiktoken": 603,
+  "output_tokens_anthropic": 1605,
   "input_tokens_anthropic": 6,
-  "cache_creation_input_tokens": 1856,
-  "cache_read_input_tokens": 34348,
-  "total_input_tokens": 36210,
+  "cache_creation_input_tokens": 1717,
+  "cache_read_input_tokens": 35160,
+  "total_input_tokens": 36883,
   "cache_state": "warm",
-  "wallclock_ms": 37958.9808669989,
-  "duration_ms": 33968,
-  "duration_api_ms": 33941,
+  "wallclock_ms": 34246.70291799703,
+  "duration_ms": 27908,
+  "duration_api_ms": 27878,
   "wrapper_overhead_ms": null,
   "stop_reason": "end_turn",
   "num_turns": 1,
-  "session_id": "c14f8450-3d3a-4157-a4e7-41cae41a530a",
-  "total_cost_usd": 0.081629,
+  "session_id": "ca9e1511-157b-402b-982e-a059f045fd4d",
+  "total_cost_usd": 0.06846625,
   "model_used": "claude-opus-4-7",
-  "result": "Three options, plus one thing that's orthogonal but needed.\n\n**1. Conditional UPDATE (recommended).** Single statement is atomic at the DB level:\n```sql\nUPDATE gift_cards\nSET balance = balance - :amount\nWHERE id = :id AND balance >= :amount\n```\nCheck rows affected = 1. If 0, the redemption failed — either insufficient balance or lost the race; for gift cards the caller's response is the same either way (reject, or re-read and decide). No version column, no explicit lock, no retry loop needed for this case. Simplest thing that works.\n\n**2. Optimistic with version column.** Add `version`, `UPDATE ... WHERE id = :id AND version = :v`. Retry on mismatch. Fine, but more moving parts than (1) with no real win for gift cards — contention per card is near zero.\n\n**3. Pessimistic `SELECT ... FOR UPDATE`.** Works, but the footgun is huge: if the transaction stays open across the payment-processor call, you hold a row lock during an external HTTP call. Avoid unless the debit is purely local and the transaction is known to be short.\n\n**Orthogonal but required: idempotency key.** None of the above prevents the *same* checkout from debiting twice if the client retries. Add a unique constraint on `(gift_card_id, redemption_id)` in a `gift_card_redemptions` table — duplicate insert fails, you return the prior result. You need this regardless of which locking option you pick.\n\n**The real gotcha you'll hit next:** you don't want to commit the gift card debit before you know the card payment succeeded, and you don't want to hold a DB transaction open across the payment processor call. Standard pattern:\n\n1. Short txn: insert a redemption row (status=`pending`) and decrement balance atomically.\n2. Call payment processor for the remainder — no DB txn open.\n3. Short txn: on success, mark redemption `committed`; on failure, increment balance back and mark `reversed`.\n\nWith a mutable balance row, the pending redemptions effectively act as reservations. You may want an `available_balance` view = `balance - SUM(pending redemptions)` so UI and other concurrent redemptions see the right number. A cleaner alternative: keep `balance` as \"currently reserved or spent is subtracted already\" and use the redemption row's status to govern reversal — that's simpler but makes \"how much is available\" equal to `balance`, which is easier to reason about.\n\nWant me to sketch the schema (gift_cards + gift_card_redemptions) with the conditional-UPDATE + idempotency pattern written out?",
+  "result": "Two solid patterns; I'd default to #1 for your case.\n\n**1. Atomic conditional update (recommended)**\n\n```sql\nUPDATE gift_cards\nSET balance = balance - :amount,\n    updated_at = now()\nWHERE id = :id\n  AND balance >= :amount\n  AND status = 'active';\n-- if rows_affected = 0: insufficient / already consumed / inactive\n```\n\nOne round-trip, atomic under read-committed, no explicit locking, no deadlock risk. The `WHERE balance >= :amount` is the guard. Check the affected-row count; zero means \"couldn't debit\" and you treat it like a failed payment.\n\n**2. `SELECT … FOR UPDATE` inside a tx**\n\n```sql\nBEGIN;\nSELECT balance FROM gift_cards WHERE id = :id FOR UPDATE;\n-- compute amount_to_consume = min(balance, amount_due) in app\nUPDATE gift_cards SET balance = balance - :consumed WHERE id = :id;\nINSERT INTO gift_card_ledger (...);\nCOMMIT;\n```\n\nMore flexible when the debit logic is non-trivial (expiry checks, partial consumption math, writing audit rows in the same tx). Pay for it with a held lock and a chance of lock contention if the same card is hit hard. Fine for gift cards since the hot-key case is rare.\n\n**What this does not solve on its own**\n\n- **Payment failure after debit.** If you debit the card and then the credit-card charge fails, you've lost the customer's balance. Two fixes: (a) debit *after* payment authorization succeeds, or (b) reserve-then-capture — a `reserved_amount` column decrements on checkout-start and converts to a real debit on payment success, released on failure/timeout. Reserve+capture is standard for checkout flows where the two tabs / back-button / abandoned-cart cases matter.\n- **Idempotency on retry.** The checkout service will retry. Put a unique `idempotency_key` (or `order_id` + operation) on the ledger row so the second attempt is a PK conflict, not a second debit. This is independent of the locking choice — you need it either way.\n- **Two tabs, same card, same user.** Reserve+capture handles this cleanly; pure debit-on-success does not — the user can briefly \"spend\" the same balance in two carts until one of them settles. Depending on your tolerance, this may be fine (whichever payment commits first wins, the other fails on the conditional update).\n\nMy recommendation for your stack: **atomic conditional update + ledger row with an idempotency key + reserve-then-capture around the payment authorization.** The conditional update handles the DB race; the idempotency key handles retries; reserve/capture handles the window between \"user clicks pay\" and \"Stripe says yes.\"\n\nDoes your checkout already have a reserve/capture concept, or is payment authorization a single step today?",
   "assertion_pass": true,
   "raw_payload": {
     "type": "result",
     "subtype": "success",
     "is_error": false,
     "api_error_status": null,
-    "duration_ms": 33968,
-    "duration_api_ms": 33941,
+    "duration_ms": 27908,
+    "duration_api_ms": 27878,
     "num_turns": 1,
-    "result": "Three options, plus one thing that's orthogonal but needed.\n\n**1. Conditional UPDATE (recommended).** Single statement is atomic at the DB level:\n```sql\nUPDATE gift_cards\nSET balance = balance - :amount\nWHERE id = :id AND balance >= :amount\n```\nCheck rows affected = 1. If 0, the redemption failed — either insufficient balance or lost the race; for gift cards the caller's response is the same either way (reject, or re-read and decide). No version column, no explicit lock, no retry loop needed for this case. Simplest thing that works.\n\n**2. Optimistic with version column.** Add `version`, `UPDATE ... WHERE id = :id AND version = :v`. Retry on mismatch. Fine, but more moving parts than (1) with no real win for gift cards — contention per card is near zero.\n\n**3. Pessimistic `SELECT ... FOR UPDATE`.** Works, but the footgun is huge: if the transaction stays open across the payment-processor call, you hold a row lock during an external HTTP call. Avoid unless the debit is purely local and the transaction is known to be short.\n\n**Orthogonal but required: idempotency key.** None of the above prevents the *same* checkout from debiting twice if the client retries. Add a unique constraint on `(gift_card_id, redemption_id)` in a `gift_card_redemptions` table — duplicate insert fails, you return the prior result. You need this regardless of which locking option you pick.\n\n**The real gotcha you'll hit next:** you don't want to commit the gift card debit before you know the card payment succeeded, and you don't want to hold a DB transaction open across the payment processor call. Standard pattern:\n\n1. Short txn: insert a redemption row (status=`pending`) and decrement balance atomically.\n2. Call payment processor for the remainder — no DB txn open.\n3. Short txn: on success, mark redemption `committed`; on failure, increment balance back and mark `reversed`.\n\nWith a mutable balance row, the pending redemptions effectively act as reservations. You may want an `available_balance` view = `balance - SUM(pending redemptions)` so UI and other concurrent redemptions see the right number. A cleaner alternative: keep `balance` as \"currently reserved or spent is subtracted already\" and use the redemption row's status to govern reversal — that's simpler but makes \"how much is available\" equal to `balance`, which is easier to reason about.\n\nWant me to sketch the schema (gift_cards + gift_card_redemptions) with the conditional-UPDATE + idempotency pattern written out?",
+    "result": "Two solid patterns; I'd default to #1 for your case.\n\n**1. Atomic conditional update (recommended)**\n\n```sql\nUPDATE gift_cards\nSET balance = balance - :amount,\n    updated_at = now()\nWHERE id = :id\n  AND balance >= :amount\n  AND status = 'active';\n-- if rows_affected = 0: insufficient / already consumed / inactive\n```\n\nOne round-trip, atomic under read-committed, no explicit locking, no deadlock risk. The `WHERE balance >= :amount` is the guard. Check the affected-row count; zero means \"couldn't debit\" and you treat it like a failed payment.\n\n**2. `SELECT … FOR UPDATE` inside a tx**\n\n```sql\nBEGIN;\nSELECT balance FROM gift_cards WHERE id = :id FOR UPDATE;\n-- compute amount_to_consume = min(balance, amount_due) in app\nUPDATE gift_cards SET balance = balance - :consumed WHERE id = :id;\nINSERT INTO gift_card_ledger (...);\nCOMMIT;\n```\n\nMore flexible when the debit logic is non-trivial (expiry checks, partial consumption math, writing audit rows in the same tx). Pay for it with a held lock and a chance of lock contention if the same card is hit hard. Fine for gift cards since the hot-key case is rare.\n\n**What this does not solve on its own**\n\n- **Payment failure after debit.** If you debit the card and then the credit-card charge fails, you've lost the customer's balance. Two fixes: (a) debit *after* payment authorization succeeds, or (b) reserve-then-capture — a `reserved_amount` column decrements on checkout-start and converts to a real debit on payment success, released on failure/timeout. Reserve+capture is standard for checkout flows where the two tabs / back-button / abandoned-cart cases matter.\n- **Idempotency on retry.** The checkout service will retry. Put a unique `idempotency_key` (or `order_id` + operation) on the ledger row so the second attempt is a PK conflict, not a second debit. This is independent of the locking choice — you need it either way.\n- **Two tabs, same card, same user.** Reserve+capture handles this cleanly; pure debit-on-success does not — the user can briefly \"spend\" the same balance in two carts until one of them settles. Depending on your tolerance, this may be fine (whichever payment commits first wins, the other fails on the conditional update).\n\nMy recommendation for your stack: **atomic conditional update + ledger row with an idempotency key + reserve-then-capture around the payment authorization.** The conditional update handles the DB race; the idempotency key handles retries; reserve/capture handles the window between \"user clicks pay\" and \"Stripe says yes.\"\n\nDoes your checkout already have a reserve/capture concept, or is payment authorization a single step today?",
     "stop_reason": "end_turn",
-    "session_id": "c14f8450-3d3a-4157-a4e7-41cae41a530a",
-    "total_cost_usd": 0.081629,
+    "session_id": "ca9e1511-157b-402b-982e-a059f045fd4d",
+    "total_cost_usd": 0.06846625,
     "usage": {
       "input_tokens": 6,
-      "cache_creation_input_tokens": 1856,
-      "cache_read_input_tokens": 34348,
-      "output_tokens": 2113,
+      "cache_creation_input_tokens": 1717,
+      "cache_read_input_tokens": 35160,
+      "output_tokens": 1605,
       "server_tool_use": {
         "web_search_requests": 0,
         "web_fetch_requests": 0
       },
       "service_tier": "standard",
       "cache_creation": {
-        "ephemeral_1h_input_tokens": 1856,
+        "ephemeral_1h_input_tokens": 1717,
         "ephemeral_5m_input_tokens": 0
       },
       "inference_geo": "",
       "iterations": [
         {
           "input_tokens": 6,
-          "output_tokens": 2113,
-          "cache_read_input_tokens": 34348,
-          "cache_creation_input_tokens": 1856,
+          "output_tokens": 1605,
+          "cache_read_input_tokens": 35160,
+          "cache_creation_input_tokens": 1717,
           "cache_creation": {
             "ephemeral_5m_input_tokens": 0,
-            "ephemeral_1h_input_tokens": 1856
+            "ephemeral_1h_input_tokens": 1717
           },
           "type": "message"
         }
@@ -79,11 +79,11 @@
     "modelUsage": {
       "claude-opus-4-7": {
         "inputTokens": 6,
-        "outputTokens": 2113,
-        "cacheReadInputTokens": 34348,
-        "cacheCreationInputTokens": 1856,
+        "outputTokens": 1605,
+        "cacheReadInputTokens": 35160,
+        "cacheCreationInputTokens": 1717,
         "webSearchRequests": 0,
-        "costUSD": 0.081629,
+        "costUSD": 0.06846625,
         "contextWindow": 1000000,
         "maxOutputTokens": 64000
       }
@@ -91,6 +91,6 @@
     "permission_denials": [],
     "terminal_reason": "completed",
     "fast_mode_state": "off",
-    "uuid": "f55fc750-4027-4df5-acf4-0d8fedf09133"
+    "uuid": "f9f259a7-4dce-4068-a6ac-a5aaf5c5bffc"
   }
 }

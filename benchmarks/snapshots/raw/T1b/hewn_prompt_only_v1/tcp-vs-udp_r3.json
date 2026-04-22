@@ -1,0 +1,105 @@
+{
+  "track": "T1b",
+  "arm": "hewn_prompt_only",
+  "prompt_id": "tcp-vs-udp",
+  "run_index": 3,
+  "arm_order_index": 1,
+  "arm_order_full": [
+    "baseline",
+    "hewn_prompt_only",
+    "terse",
+    "caveman_full_plus_ultra_directive",
+    "hewn_full",
+    "caveman_full"
+  ],
+  "digest_hex": "8a5fe974231ca88c5efc1ce50a9c75f85d32ed1d99c9592b5ec854d1814a7202",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T00:05:47.107664+00:00",
+  "output_tokens_tiktoken": 102,
+  "output_tokens_anthropic": 180,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 11727,
+  "cache_read_input_tokens": 16796,
+  "total_input_tokens": 28529,
+  "cache_state": "warm",
+  "wallclock_ms": 9536.216313019395,
+  "duration_ms": 4058,
+  "duration_api_ms": 4904,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "0f2aea6a-b9d0-4782-8a91-cdc810badfc0",
+  "total_cost_usd": 0.08663874999999999,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "**TCP** — connection-oriented, reliable. Handshake, ordered delivery, retransmission, flow/congestion control. Used for HTTP, SSH, email.\n\n**UDP** — connectionless, best-effort. No handshake, no ordering, no retransmission. Lower latency, smaller header. Used for DNS, video/voice, games, QUIC.\n\nTradeoff: TCP guarantees delivery at the cost of latency and overhead; UDP is fast and cheap but the application must handle loss/ordering if it cares.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 4058,
+    "duration_api_ms": 4904,
+    "num_turns": 1,
+    "result": "**TCP** — connection-oriented, reliable. Handshake, ordered delivery, retransmission, flow/congestion control. Used for HTTP, SSH, email.\n\n**UDP** — connectionless, best-effort. No handshake, no ordering, no retransmission. Lower latency, smaller header. Used for DNS, video/voice, games, QUIC.\n\nTradeoff: TCP guarantees delivery at the cost of latency and overhead; UDP is fast and cheap but the application must handle loss/ordering if it cares.",
+    "stop_reason": "end_turn",
+    "session_id": "0f2aea6a-b9d0-4782-8a91-cdc810badfc0",
+    "total_cost_usd": 0.08663874999999999,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 11727,
+      "cache_read_input_tokens": 16796,
+      "output_tokens": 180,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 11727,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 180,
+          "cache_read_input_tokens": 16796,
+          "cache_creation_input_tokens": 11727,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 11727
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 347,
+        "outputTokens": 14,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.00041699999999999994,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 180,
+        "cacheReadInputTokens": 16796,
+        "cacheCreationInputTokens": 11727,
+        "webSearchRequests": 0,
+        "costUSD": 0.08622174999999999,
+        "contextWindow": 200000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "dd54019e-e681-49de-a6b4-784ec8c0f0db"
+  }
+}

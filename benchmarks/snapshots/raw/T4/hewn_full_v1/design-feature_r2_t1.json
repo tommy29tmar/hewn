@@ -1,0 +1,106 @@
+{
+  "track": "T4",
+  "arm": "hewn_full",
+  "sequence_id": "design-feature",
+  "run_index": 2,
+  "turn": 1,
+  "arm_order_index": 4,
+  "arm_order_full": [
+    "baseline",
+    "caveman_full",
+    "hewn_prompt_only",
+    "terse",
+    "hewn_full"
+  ],
+  "digest_hex": "3191b019d37f08f3d5b68d9000f1aeb1e1a3524225f9daa893803df1e240ffd1",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T01:34:05.733346+00:00",
+  "session_id_used_for_resume": null,
+  "output_tokens_tiktoken": 579,
+  "output_tokens_anthropic": 1071,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 34154,
+  "total_input_tokens": 34160,
+  "cache_state": "warm",
+  "wallclock_ms": 28486.69245399651,
+  "duration_ms": 25044,
+  "duration_api_ms": 27003,
+  "wrapper_overhead_ms": 1483.6924539965112,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "6e1e9b6f-4231-446d-bb78-7ccf3f2e0132",
+  "total_cost_usd": 0.04433799999999999,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "Storage model — one row per card vs ledger of issue/redeem/refund events. Ledger wins if you ever need partial refunds, expiry, or audit.\n\nBalance source of truth — store remaining_balance column, or always recompute from ledger. Recompute is safer, column is faster; most teams cache + reconcile.\n\nCode format + entropy — how long, charset, check digit? Needs enough entropy that codes can't be guessed. Decide if code IS the secret or if there's a separate PIN.\n\nAt-rest secrecy — hash codes in DB (like passwords) so a DB leak doesn't hand over live balances. Means lookup by hash, not by code.\n\nConcurrency — two tabs redeeming same card at same time. Row lock, optimistic version, or idempotency key on redeem. Pick one and commit.\n\nPartial redemption semantics — card covers $30 of $50 order. Does card charge before tax, after tax, before shipping? Affects accounting and refund math.\n\nRefund path — customer returns item paid 60% card / 40% credit card. Refund proportionally, card-first, or card-last? Pick rule, document it, because finance will ask.\n\nMulti-card stacking — can user apply 2+ codes per order? If yes, define order of application and UI for it.\n\nCurrency + FX — card issued in USD, order in EUR. Freeze FX at redemption time or at issuance? Or restrict card to single currency.\n\nExpiry + dormancy — do cards expire? Many jurisdictions (US states, EU) ban or restrict expiry and dormancy fees. Legal, not just product.\n\nFraud — velocity limits on redemption attempts, lockout after N bad codes, alerting on bulk redemption from one IP/account. Gift cards are a classic money-laundering + carding target.\n\nIssuance channel — purchased (real money in), promo (marketing grant), refund-as-credit. Each has different tax and revenue-recognition treatment.\n\nTaxability — in most places gift card purchase is not taxed, redemption is. Your tax engine must treat card tender differently from cash tender.\n\nRevenue recognition — liability on balance sheet until redeemed, then revenue. Accounting team needs a report; build it from day one or regret it.\n\nPCI + checkout flow — where in checkout does code entry happen? Before payment method selection so remaining total is known before card auth. Pre-auth for full amount then void is worse.\n\nIdempotency — redeem endpoint must be idempotent on client retry, or a flaky network double-spends the card.\n\nTransferability — is card bound to an account or bearer-instrument? Bearer means whoever has code spends it; account-bound means you need login. Big UX + fraud tradeoff.\n\nFirst decisions I'd lock before coding: ledger-vs-column, hash-at-rest yes/no, refund rule, expiry policy, single-currency vs multi. Rest can follow.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 25044,
+    "duration_api_ms": 27003,
+    "num_turns": 1,
+    "result": "Storage model — one row per card vs ledger of issue/redeem/refund events. Ledger wins if you ever need partial refunds, expiry, or audit.\n\nBalance source of truth — store remaining_balance column, or always recompute from ledger. Recompute is safer, column is faster; most teams cache + reconcile.\n\nCode format + entropy — how long, charset, check digit? Needs enough entropy that codes can't be guessed. Decide if code IS the secret or if there's a separate PIN.\n\nAt-rest secrecy — hash codes in DB (like passwords) so a DB leak doesn't hand over live balances. Means lookup by hash, not by code.\n\nConcurrency — two tabs redeeming same card at same time. Row lock, optimistic version, or idempotency key on redeem. Pick one and commit.\n\nPartial redemption semantics — card covers $30 of $50 order. Does card charge before tax, after tax, before shipping? Affects accounting and refund math.\n\nRefund path — customer returns item paid 60% card / 40% credit card. Refund proportionally, card-first, or card-last? Pick rule, document it, because finance will ask.\n\nMulti-card stacking — can user apply 2+ codes per order? If yes, define order of application and UI for it.\n\nCurrency + FX — card issued in USD, order in EUR. Freeze FX at redemption time or at issuance? Or restrict card to single currency.\n\nExpiry + dormancy — do cards expire? Many jurisdictions (US states, EU) ban or restrict expiry and dormancy fees. Legal, not just product.\n\nFraud — velocity limits on redemption attempts, lockout after N bad codes, alerting on bulk redemption from one IP/account. Gift cards are a classic money-laundering + carding target.\n\nIssuance channel — purchased (real money in), promo (marketing grant), refund-as-credit. Each has different tax and revenue-recognition treatment.\n\nTaxability — in most places gift card purchase is not taxed, redemption is. Your tax engine must treat card tender differently from cash tender.\n\nRevenue recognition — liability on balance sheet until redeemed, then revenue. Accounting team needs a report; build it from day one or regret it.\n\nPCI + checkout flow — where in checkout does code entry happen? Before payment method selection so remaining total is known before card auth. Pre-auth for full amount then void is worse.\n\nIdempotency — redeem endpoint must be idempotent on client retry, or a flaky network double-spends the card.\n\nTransferability — is card bound to an account or bearer-instrument? Bearer means whoever has code spends it; account-bound means you need login. Big UX + fraud tradeoff.\n\nFirst decisions I'd lock before coding: ledger-vs-column, hash-at-rest yes/no, refund rule, expiry policy, single-currency vs multi. Rest can follow.",
+    "stop_reason": "end_turn",
+    "session_id": "6e1e9b6f-4231-446d-bb78-7ccf3f2e0132",
+    "total_cost_usd": 0.04433799999999999,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 34154,
+      "output_tokens": 1071,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 0,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 1071,
+          "cache_read_input_tokens": 34154,
+          "cache_creation_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 391,
+        "outputTokens": 13,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.000456,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 1071,
+        "cacheReadInputTokens": 34154,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.04388199999999999,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "e6b72c67-5560-444c-9355-92f774903026"
+  }
+}

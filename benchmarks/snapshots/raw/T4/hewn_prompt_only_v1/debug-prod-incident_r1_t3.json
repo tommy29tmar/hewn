@@ -1,0 +1,96 @@
+{
+  "track": "T4",
+  "arm": "hewn_prompt_only",
+  "sequence_id": "debug-prod-incident",
+  "run_index": 1,
+  "turn": 3,
+  "arm_order_index": 2,
+  "arm_order_full": [
+    "baseline",
+    "hewn_full",
+    "hewn_prompt_only",
+    "caveman_full",
+    "terse"
+  ],
+  "digest_hex": "c436155c1e87e76d88e6f2c66d47c90c16ae78237b0a8de1b93824cf92fb5c9b",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T00:59:29.453069+00:00",
+  "session_id_used_for_resume": "0e7e4bdc-736c-4be7-9b1e-03208a6201c8",
+  "output_tokens_tiktoken": 416,
+  "output_tokens_anthropic": 789,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 631,
+  "cache_read_input_tokens": 33486,
+  "total_input_tokens": 34123,
+  "cache_state": "warm",
+  "wallclock_ms": 17197.903331980342,
+  "duration_ms": 14113,
+  "duration_api_ms": 14063,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "0e7e4bdc-736c-4be7-9b1e-03208a6201c8",
+  "total_cost_usd": 0.040441750000000005,
+  "model_used": "claude-opus-4-7",
+  "result": "Lock down the *contract*, not the implementation. The bug was a shape regression, so assert the shape.\n\n```js\ndescribe('buildCart', () => {\n  const cart = {\n    id: 'c_1',\n    items: [\n      { price: 10, qty: 2 },\n      { price: 5, qty: 1 },\n    ],\n  };\n\n  it('preserves items in the returned cart', () => {\n    // Regression: refactor dropped `items`, breaking createOrder (incident 2026-04-22)\n    expect(buildCart(cart)).toHaveProperty('items', cart.items);\n  });\n\n  it('returns the expected shape', () => {\n    expect(buildCart(cart)).toEqual({\n      id: 'c_1',\n      items: cart.items,\n      total: 25,\n    });\n  });\n});\n```\n\nTwo tests, two jobs:\n\n- **The regression test** — a single focused assertion named after the thing that broke. If someone drops `items` again, this fails with a message that points straight at the cause. The comment referencing the incident is the one case where a code comment earns its place: it explains *why* this seemingly redundant test exists so a future refactorer doesn't delete it.\n- **The shape test** — `toEqual` with the full object locks the contract. Any added, removed, or renamed field fails loudly. This is the one that catches the *next* shape regression, not just this one.\n\nAvoid:\n\n- Asserting only `total` — that's what the broken version still computed correctly.\n- `toMatchObject` for the shape test — it permits extra fields, which defeats the point.\n- Snapshot tests here — they encourage \"just update the snapshot\" when something breaks, which is exactly the failure mode you're trying to prevent.\n\nIf `buildCart` has other call sites with different expectations, add a contract test per consumer (e.g., `describe('buildCart contract for order service')`) so the intent is documented.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 14113,
+    "duration_api_ms": 14063,
+    "num_turns": 1,
+    "result": "Lock down the *contract*, not the implementation. The bug was a shape regression, so assert the shape.\n\n```js\ndescribe('buildCart', () => {\n  const cart = {\n    id: 'c_1',\n    items: [\n      { price: 10, qty: 2 },\n      { price: 5, qty: 1 },\n    ],\n  };\n\n  it('preserves items in the returned cart', () => {\n    // Regression: refactor dropped `items`, breaking createOrder (incident 2026-04-22)\n    expect(buildCart(cart)).toHaveProperty('items', cart.items);\n  });\n\n  it('returns the expected shape', () => {\n    expect(buildCart(cart)).toEqual({\n      id: 'c_1',\n      items: cart.items,\n      total: 25,\n    });\n  });\n});\n```\n\nTwo tests, two jobs:\n\n- **The regression test** — a single focused assertion named after the thing that broke. If someone drops `items` again, this fails with a message that points straight at the cause. The comment referencing the incident is the one case where a code comment earns its place: it explains *why* this seemingly redundant test exists so a future refactorer doesn't delete it.\n- **The shape test** — `toEqual` with the full object locks the contract. Any added, removed, or renamed field fails loudly. This is the one that catches the *next* shape regression, not just this one.\n\nAvoid:\n\n- Asserting only `total` — that's what the broken version still computed correctly.\n- `toMatchObject` for the shape test — it permits extra fields, which defeats the point.\n- Snapshot tests here — they encourage \"just update the snapshot\" when something breaks, which is exactly the failure mode you're trying to prevent.\n\nIf `buildCart` has other call sites with different expectations, add a contract test per consumer (e.g., `describe('buildCart contract for order service')`) so the intent is documented.",
+    "stop_reason": "end_turn",
+    "session_id": "0e7e4bdc-736c-4be7-9b1e-03208a6201c8",
+    "total_cost_usd": 0.040441750000000005,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 631,
+      "cache_read_input_tokens": 33486,
+      "output_tokens": 789,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 631,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 789,
+          "cache_read_input_tokens": 33486,
+          "cache_creation_input_tokens": 631,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 631
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 789,
+        "cacheReadInputTokens": 33486,
+        "cacheCreationInputTokens": 631,
+        "webSearchRequests": 0,
+        "costUSD": 0.040441750000000005,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "189002e9-7a7b-44ad-ad1a-019eb6207fe0"
+  }
+}

@@ -1,0 +1,96 @@
+{
+  "track": "T4",
+  "arm": "hewn_full",
+  "sequence_id": "debug-prod-incident",
+  "run_index": 1,
+  "turn": 5,
+  "arm_order_index": 1,
+  "arm_order_full": [
+    "baseline",
+    "hewn_full",
+    "hewn_prompt_only",
+    "caveman_full",
+    "terse"
+  ],
+  "digest_hex": "c436155c1e87e76d88e6f2c66d47c90c16ae78237b0a8de1b93824cf92fb5c9b",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T00:58:40.594686+00:00",
+  "session_id_used_for_resume": "5d1851be-da18-4cec-aee4-bc97c1f25d2d",
+  "output_tokens_tiktoken": 150,
+  "output_tokens_anthropic": 245,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 665,
+  "cache_read_input_tokens": 35996,
+  "total_input_tokens": 36667,
+  "cache_state": "warm",
+  "wallclock_ms": 11535.481058992445,
+  "duration_ms": 7103,
+  "duration_api_ms": 7007,
+  "wrapper_overhead_ms": 4528.4810589924455,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "5d1851be-da18-4cec-aee4-bc97c1f25d2d",
+  "total_cost_usd": 0.02830925,
+  "model_used": "claude-opus-4-7",
+  "result": "batched IN query — one SELECT WHERE sku IN (...) regardless of cart size\none connection, one round trip, common case (3 SKUs) faster than sequential and same as parallel\n47-SKU edge case also one connection instead of 47\npreserves order-independent lookup, easy to map results back by sku key\nwatch: IN-list size limits (Postgres fine to thousands, MySQL default max_allowed_packet, SQLite 999)\ncap at something sane (e.g. 500) and chunk if exceeded — future-proof\nif batched query not feasible (different tables per SKU type, etc), fall back to p-limit with concurrency 5\nkeep Promise.all shape, swap inner work for batched fetch + in-memory lookup",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 7103,
+    "duration_api_ms": 7007,
+    "num_turns": 1,
+    "result": "batched IN query — one SELECT WHERE sku IN (...) regardless of cart size\none connection, one round trip, common case (3 SKUs) faster than sequential and same as parallel\n47-SKU edge case also one connection instead of 47\npreserves order-independent lookup, easy to map results back by sku key\nwatch: IN-list size limits (Postgres fine to thousands, MySQL default max_allowed_packet, SQLite 999)\ncap at something sane (e.g. 500) and chunk if exceeded — future-proof\nif batched query not feasible (different tables per SKU type, etc), fall back to p-limit with concurrency 5\nkeep Promise.all shape, swap inner work for batched fetch + in-memory lookup",
+    "stop_reason": "end_turn",
+    "session_id": "5d1851be-da18-4cec-aee4-bc97c1f25d2d",
+    "total_cost_usd": 0.02830925,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 665,
+      "cache_read_input_tokens": 35996,
+      "output_tokens": 245,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 665,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 245,
+          "cache_read_input_tokens": 35996,
+          "cache_creation_input_tokens": 665,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 665
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 245,
+        "cacheReadInputTokens": 35996,
+        "cacheCreationInputTokens": 665,
+        "webSearchRequests": 0,
+        "costUSD": 0.02830925,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "d8710705-a148-4667-90ce-8cf883d6bae4"
+  }
+}

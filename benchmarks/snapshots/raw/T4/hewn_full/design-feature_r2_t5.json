@@ -14,62 +14,62 @@
   ],
   "digest_hex": "3191b019d37f08f3d5b68d9000f1aeb1e1a3524225f9daa893803df1e240ffd1",
   "seed": "hewn-bench-v1",
-  "timestamp": "2026-04-22T01:36:03.116976+00:00",
-  "session_id_used_for_resume": "6e1e9b6f-4231-446d-bb78-7ccf3f2e0132",
-  "output_tokens_tiktoken": 1122,
-  "output_tokens_anthropic": 1820,
+  "timestamp": "2026-04-22T08:42:00.131770+00:00",
+  "session_id_used_for_resume": "a54c782e-344b-4398-9b93-e8973f75e9a0",
+  "output_tokens_tiktoken": 165,
+  "output_tokens_anthropic": 260,
   "input_tokens_anthropic": 6,
-  "cache_creation_input_tokens": 1487,
-  "cache_read_input_tokens": 38468,
-  "total_input_tokens": 39961,
+  "cache_creation_input_tokens": 298,
+  "cache_read_input_tokens": 36172,
+  "total_input_tokens": 36476,
   "cache_state": "warm",
-  "wallclock_ms": 40163.627005997114,
-  "duration_ms": 36833,
-  "duration_api_ms": 36735,
-  "wrapper_overhead_ms": 3428.627005997114,
+  "wallclock_ms": 13785.699275991647,
+  "duration_ms": 6911,
+  "duration_api_ms": 6785,
+  "wrapper_overhead_ms": 7000.699275991647,
   "stop_reason": "end_turn",
   "num_turns": 1,
-  "session_id": "6e1e9b6f-4231-446d-bb78-7ccf3f2e0132",
-  "total_cost_usd": 0.07405775,
+  "session_id": "a54c782e-344b-4398-9b93-e8973f75e9a0",
+  "total_cost_usd": 0.0264785,
   "model_used": "claude-opus-4-7",
-  "result": "Policy first, then code. Pick the rule before writing a line.\n\nThree common rules — rank them for this decision:\n\n1. Proportional — refund splits across tenders in the same ratio as original payment. $50 order = $30 card + $20 cc. Refund $25 → $15 card + $10 cc. Fair, mechanical, finance-friendly, easy to explain.\n\n2. Card-first — refund fills the gift card back up to original balance, rest to credit card. Good for customer (keeps spendable balance), good for fraud (less cash out). Worst for support explanations when customer wanted the cash.\n\n3. Cash-first (cc-first) — refund hits credit card until exhausted, rest goes back to card. Customer-preferred. Expensive for you, and lets a bad actor buy with stolen card, refund to gift card, cash out via gift card liquidity markets. Don't pick this.\n\nRecommendation — proportional by default, card-first if you're fraud-sensitive or if the card was promotional (store credit grants, not cash-purchased). Never cash-first.\n\nEdge — if original gift card has expired by refund time, you cannot top it up (nowhere to put the money). Options: extend card expiry on refund, issue a new card for the card portion, or convert card portion to store credit. Pick one and write it down.\n\nEdge — if credit card refund fails (card closed, expired, issuer rejects), what happens to the card portion? Two subcases: refund already partially applied to gift card (commit it, return cc-failure on the rest) or refund atomic (rollback both, escalate to manual). Atomic is cleaner, non-atomic is faster. Atomic loses if cc refunds take days (they do).\n\nPromotional vs purchased cards — track issuance_source on the card. Proportional math uses the original tender split regardless, but a promotional card portion should never refund to credit card. If user paid $30 promo + $20 cc and refunds $25, you refund $10 to cc (proportional of the cc part) and $15 back to the promo card — you do not turn promo credit into cash. This is the single most common place refund logic leaks money.\n\nCode path, assuming proportional + mutable row + FOR UPDATE:\n\n1. Load order with its payment_allocations rows: [{tender: gift_card, card_id: 42, amount: 3000}, {tender: credit_card, charge_id: ch_x, amount: 2000}]. Amounts in minor units, cents.\n\n2. Compute refund split. ratio_card = 3000 / 5000 = 0.6. refund_card = round(refund_amount * 0.6), refund_cc = refund_amount - refund_card. Last-one-takes-remainder avoids rounding drift. Never do both with round() independently or you'll be off by a cent and finance will notice.\n\n3. Begin tx. For each allocation, INSERT a refund_allocation row keyed by (order_id, refund_id, tender) with unique index. Idempotency: if refund retries, unique constraint catches it.\n\n4. Gift card leg: SELECT ... FOR UPDATE on gift_cards WHERE id = 42. Check status and expiry per edge policy above. UPDATE balance = balance + refund_card. Insert ledger-shaped audit row even in mutable world (refund audit is non-negotiable, even if main tracking is a column): gift_card_events(card_id, type=refund, amount, order_id, refund_id).\n\n5. Credit card leg: do NOT call the PSP inside the DB tx. Two-phase:\n   a. Inside tx, mark refund_allocation.status = pending for the cc leg, commit.\n   b. After commit, call Stripe/PSP refunds.create with idempotency_key = refund_id + \"_cc\". On success, update status = succeeded with psp_refund_id. On failure, status = failed, alert, leave card leg committed (you chose non-atomic earlier; if atomic, this is where you'd need a compensating debit on the card, which means you need a reversal_event type in the audit table).\n\n6. Emit domain event refund.completed for downstream (email, analytics, accounting).\n\nWhy PSP call is outside the tx — PSP call can take seconds and can hang. Holding a row lock on a gift card for seconds means concurrent checkouts on that card stall. Never hold DB locks across network calls to third parties.\n\nWhy idempotency_key on PSP call — retries from your worker after a crash must not double-refund. Stripe dedupes on idempotency_key for 24h; make yours deterministic from refund_id.\n\nAccounting — each refund_allocation row is what finance reconciles. Sum of allocations per refund = refund total. Sum of card legs per period = gift card liability increase. Sum of cc legs per period = cash out. Clean, auditable, one source.\n\nSupport tooling — build a \"refund preview\" endpoint that shows the split before the agent confirms. Surprises in refund allocation are the #1 support complaint for mixed-tender orders. Showing \"$15 to your card ending 4242, $10 back to gift card balance\" up front kills half the tickets.\n\nOne sharp edge — refund exceeding original cc charge. Happens when you refund an order plus a goodwill credit in one action. PSPs reject refunds > original charge. Either cap the cc leg at original charge and overflow to gift card, or split into refund + separate credit. Decide, document, test.",
+  "result": "Policy: refund to the gift card first up to the amount consumed from it, then any remainder to the card. This avoids letting users launder expired-soon gift card value into permanent card credit, and keeps the original payment split intact. If the gift card has already expired by refund time, reissue a new code with the same balance rather than pushing it to the card.\n\nCode path: load the original charge's split (gift_card_amount, card_amount), compute refund_to_gift_card = min(refund_total, gift_card_amount_consumed_remaining), refund_to_card = refund_total - refund_to_gift_card. Credit the gift card row under the same FOR UPDATE lock you use for consumption, then issue the card refund via the PSP. Both writes in one transaction so a PSP failure rolls back the balance credit.",
   "assertion_pass": true,
   "raw_payload": {
     "type": "result",
     "subtype": "success",
     "is_error": false,
     "api_error_status": null,
-    "duration_ms": 36833,
-    "duration_api_ms": 36735,
+    "duration_ms": 6911,
+    "duration_api_ms": 6785,
     "num_turns": 1,
-    "result": "Policy first, then code. Pick the rule before writing a line.\n\nThree common rules — rank them for this decision:\n\n1. Proportional — refund splits across tenders in the same ratio as original payment. $50 order = $30 card + $20 cc. Refund $25 → $15 card + $10 cc. Fair, mechanical, finance-friendly, easy to explain.\n\n2. Card-first — refund fills the gift card back up to original balance, rest to credit card. Good for customer (keeps spendable balance), good for fraud (less cash out). Worst for support explanations when customer wanted the cash.\n\n3. Cash-first (cc-first) — refund hits credit card until exhausted, rest goes back to card. Customer-preferred. Expensive for you, and lets a bad actor buy with stolen card, refund to gift card, cash out via gift card liquidity markets. Don't pick this.\n\nRecommendation — proportional by default, card-first if you're fraud-sensitive or if the card was promotional (store credit grants, not cash-purchased). Never cash-first.\n\nEdge — if original gift card has expired by refund time, you cannot top it up (nowhere to put the money). Options: extend card expiry on refund, issue a new card for the card portion, or convert card portion to store credit. Pick one and write it down.\n\nEdge — if credit card refund fails (card closed, expired, issuer rejects), what happens to the card portion? Two subcases: refund already partially applied to gift card (commit it, return cc-failure on the rest) or refund atomic (rollback both, escalate to manual). Atomic is cleaner, non-atomic is faster. Atomic loses if cc refunds take days (they do).\n\nPromotional vs purchased cards — track issuance_source on the card. Proportional math uses the original tender split regardless, but a promotional card portion should never refund to credit card. If user paid $30 promo + $20 cc and refunds $25, you refund $10 to cc (proportional of the cc part) and $15 back to the promo card — you do not turn promo credit into cash. This is the single most common place refund logic leaks money.\n\nCode path, assuming proportional + mutable row + FOR UPDATE:\n\n1. Load order with its payment_allocations rows: [{tender: gift_card, card_id: 42, amount: 3000}, {tender: credit_card, charge_id: ch_x, amount: 2000}]. Amounts in minor units, cents.\n\n2. Compute refund split. ratio_card = 3000 / 5000 = 0.6. refund_card = round(refund_amount * 0.6), refund_cc = refund_amount - refund_card. Last-one-takes-remainder avoids rounding drift. Never do both with round() independently or you'll be off by a cent and finance will notice.\n\n3. Begin tx. For each allocation, INSERT a refund_allocation row keyed by (order_id, refund_id, tender) with unique index. Idempotency: if refund retries, unique constraint catches it.\n\n4. Gift card leg: SELECT ... FOR UPDATE on gift_cards WHERE id = 42. Check status and expiry per edge policy above. UPDATE balance = balance + refund_card. Insert ledger-shaped audit row even in mutable world (refund audit is non-negotiable, even if main tracking is a column): gift_card_events(card_id, type=refund, amount, order_id, refund_id).\n\n5. Credit card leg: do NOT call the PSP inside the DB tx. Two-phase:\n   a. Inside tx, mark refund_allocation.status = pending for the cc leg, commit.\n   b. After commit, call Stripe/PSP refunds.create with idempotency_key = refund_id + \"_cc\". On success, update status = succeeded with psp_refund_id. On failure, status = failed, alert, leave card leg committed (you chose non-atomic earlier; if atomic, this is where you'd need a compensating debit on the card, which means you need a reversal_event type in the audit table).\n\n6. Emit domain event refund.completed for downstream (email, analytics, accounting).\n\nWhy PSP call is outside the tx — PSP call can take seconds and can hang. Holding a row lock on a gift card for seconds means concurrent checkouts on that card stall. Never hold DB locks across network calls to third parties.\n\nWhy idempotency_key on PSP call — retries from your worker after a crash must not double-refund. Stripe dedupes on idempotency_key for 24h; make yours deterministic from refund_id.\n\nAccounting — each refund_allocation row is what finance reconciles. Sum of allocations per refund = refund total. Sum of card legs per period = gift card liability increase. Sum of cc legs per period = cash out. Clean, auditable, one source.\n\nSupport tooling — build a \"refund preview\" endpoint that shows the split before the agent confirms. Surprises in refund allocation are the #1 support complaint for mixed-tender orders. Showing \"$15 to your card ending 4242, $10 back to gift card balance\" up front kills half the tickets.\n\nOne sharp edge — refund exceeding original cc charge. Happens when you refund an order plus a goodwill credit in one action. PSPs reject refunds > original charge. Either cap the cc leg at original charge and overflow to gift card, or split into refund + separate credit. Decide, document, test.",
+    "result": "Policy: refund to the gift card first up to the amount consumed from it, then any remainder to the card. This avoids letting users launder expired-soon gift card value into permanent card credit, and keeps the original payment split intact. If the gift card has already expired by refund time, reissue a new code with the same balance rather than pushing it to the card.\n\nCode path: load the original charge's split (gift_card_amount, card_amount), compute refund_to_gift_card = min(refund_total, gift_card_amount_consumed_remaining), refund_to_card = refund_total - refund_to_gift_card. Credit the gift card row under the same FOR UPDATE lock you use for consumption, then issue the card refund via the PSP. Both writes in one transaction so a PSP failure rolls back the balance credit.",
     "stop_reason": "end_turn",
-    "session_id": "6e1e9b6f-4231-446d-bb78-7ccf3f2e0132",
-    "total_cost_usd": 0.07405775,
+    "session_id": "a54c782e-344b-4398-9b93-e8973f75e9a0",
+    "total_cost_usd": 0.0264785,
     "usage": {
       "input_tokens": 6,
-      "cache_creation_input_tokens": 1487,
-      "cache_read_input_tokens": 38468,
-      "output_tokens": 1820,
+      "cache_creation_input_tokens": 298,
+      "cache_read_input_tokens": 36172,
+      "output_tokens": 260,
       "server_tool_use": {
         "web_search_requests": 0,
         "web_fetch_requests": 0
       },
       "service_tier": "standard",
       "cache_creation": {
-        "ephemeral_1h_input_tokens": 1487,
+        "ephemeral_1h_input_tokens": 298,
         "ephemeral_5m_input_tokens": 0
       },
       "inference_geo": "",
       "iterations": [
         {
           "input_tokens": 6,
-          "output_tokens": 1820,
-          "cache_read_input_tokens": 38468,
-          "cache_creation_input_tokens": 1487,
+          "output_tokens": 260,
+          "cache_read_input_tokens": 36172,
+          "cache_creation_input_tokens": 298,
           "cache_creation": {
             "ephemeral_5m_input_tokens": 0,
-            "ephemeral_1h_input_tokens": 1487
+            "ephemeral_1h_input_tokens": 298
           },
           "type": "message"
         }
@@ -79,11 +79,11 @@
     "modelUsage": {
       "claude-opus-4-7": {
         "inputTokens": 6,
-        "outputTokens": 1820,
-        "cacheReadInputTokens": 38468,
-        "cacheCreationInputTokens": 1487,
+        "outputTokens": 260,
+        "cacheReadInputTokens": 36172,
+        "cacheCreationInputTokens": 298,
         "webSearchRequests": 0,
-        "costUSD": 0.07405775,
+        "costUSD": 0.0264785,
         "contextWindow": 1000000,
         "maxOutputTokens": 64000
       }
@@ -91,6 +91,6 @@
     "permission_denials": [],
     "terminal_reason": "completed",
     "fast_mode_state": "off",
-    "uuid": "f4244fd6-e4cc-4830-82ea-aa289670163c"
+    "uuid": "8d38fb7b-09c8-429f-ac35-2438f8e87506"
   }
 }

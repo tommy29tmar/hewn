@@ -14,61 +14,61 @@
   ],
   "digest_hex": "2b21fc020c9f9514ecfb89de5292bc8e27d0913b3aa966344ba89e05bc88db91",
   "seed": "hewn-bench-v1",
-  "timestamp": "2026-04-21T23:40:23.261590+00:00",
-  "output_tokens_tiktoken": 260,
-  "output_tokens_anthropic": 476,
+  "timestamp": "2026-04-22T07:58:18.901255+00:00",
+  "output_tokens_tiktoken": 32,
+  "output_tokens_anthropic": 56,
   "input_tokens_anthropic": 6,
-  "cache_creation_input_tokens": 13197,
+  "cache_creation_input_tokens": 18752,
   "cache_read_input_tokens": 16805,
-  "total_input_tokens": 30008,
+  "total_input_tokens": 35563,
   "cache_state": "warm",
-  "wallclock_ms": 15689.144268981181,
-  "duration_ms": 10571,
-  "duration_api_ms": 11471,
-  "wrapper_overhead_ms": 4218.144268981181,
+  "wallclock_ms": 10112.173300003633,
+  "duration_ms": 3589,
+  "duration_api_ms": 4355,
+  "wrapper_overhead_ms": 5757.173300003633,
   "stop_reason": "end_turn",
   "num_turns": 1,
-  "session_id": "deefa1fa-1f63-4824-b3a7-3589a61a6cee",
-  "total_cost_usd": 0.10322875000000001,
+  "session_id": "92597031-b3c9-443c-9296-0fba010f4daf",
+  "total_cost_usd": 0.12744750000000002,
   "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
-  "result": "Opening DB connection costs real time — TCP handshake, TLS, auth round-trips. Doing it per request burns latency and DB resources.\n\nPool keeps N connections already open, idle, ready.\nApp borrows one, runs query, returns it.\nNext request reuses same socket — no handshake tax.\n\nKnobs that matter:\nmin_size — connections held even when idle\nmax_size — ceiling before new requests wait or error\nidle_timeout — close connections nobody touched\nmax_lifetime — force-recycle old connections (avoid stale TCP, rotate credentials, dodge DB-side timeouts)\nacquire_timeout — how long caller waits before giving up\n\nSizing rule of thumb: max_size ≈ cores_on_db × small_factor, not \"number of app threads.\" More connections ≠ more throughput — past a point DB spends time context-switching instead of working.\n\nGotchas:\nTransactions pin connection for their duration — long transactions starve pool.\nPrepared statements may be per-connection — cache invalidated on recycle.\nServerless/short-lived workers defeat pooling → use external pooler (PgBouncer, RDS Proxy).\nOne pool per process, not per request. Don't wrap pool in another pool.\nUnder load, exhausted pool manifests as latency spike, not error — monitor wait time, not just errors.",
+  "result": "@hewn v0 hybrid\nG: db_pool\nC: conn_open_cost\nP: reuse_conn\nV: lower_latency\nA: tune_size",
   "assertion_pass": true,
   "raw_payload": {
     "type": "result",
     "subtype": "success",
     "is_error": false,
     "api_error_status": null,
-    "duration_ms": 10571,
-    "duration_api_ms": 11471,
+    "duration_ms": 3589,
+    "duration_api_ms": 4355,
     "num_turns": 1,
-    "result": "Opening DB connection costs real time — TCP handshake, TLS, auth round-trips. Doing it per request burns latency and DB resources.\n\nPool keeps N connections already open, idle, ready.\nApp borrows one, runs query, returns it.\nNext request reuses same socket — no handshake tax.\n\nKnobs that matter:\nmin_size — connections held even when idle\nmax_size — ceiling before new requests wait or error\nidle_timeout — close connections nobody touched\nmax_lifetime — force-recycle old connections (avoid stale TCP, rotate credentials, dodge DB-side timeouts)\nacquire_timeout — how long caller waits before giving up\n\nSizing rule of thumb: max_size ≈ cores_on_db × small_factor, not \"number of app threads.\" More connections ≠ more throughput — past a point DB spends time context-switching instead of working.\n\nGotchas:\nTransactions pin connection for their duration — long transactions starve pool.\nPrepared statements may be per-connection — cache invalidated on recycle.\nServerless/short-lived workers defeat pooling → use external pooler (PgBouncer, RDS Proxy).\nOne pool per process, not per request. Don't wrap pool in another pool.\nUnder load, exhausted pool manifests as latency spike, not error — monitor wait time, not just errors.",
+    "result": "@hewn v0 hybrid\nG: db_pool\nC: conn_open_cost\nP: reuse_conn\nV: lower_latency\nA: tune_size",
     "stop_reason": "end_turn",
-    "session_id": "deefa1fa-1f63-4824-b3a7-3589a61a6cee",
-    "total_cost_usd": 0.10322875000000001,
+    "session_id": "92597031-b3c9-443c-9296-0fba010f4daf",
+    "total_cost_usd": 0.12744750000000002,
     "usage": {
       "input_tokens": 6,
-      "cache_creation_input_tokens": 13197,
+      "cache_creation_input_tokens": 18752,
       "cache_read_input_tokens": 16805,
-      "output_tokens": 476,
+      "output_tokens": 56,
       "server_tool_use": {
         "web_search_requests": 0,
         "web_fetch_requests": 0
       },
       "service_tier": "standard",
       "cache_creation": {
-        "ephemeral_1h_input_tokens": 13197,
+        "ephemeral_1h_input_tokens": 18752,
         "ephemeral_5m_input_tokens": 0
       },
       "inference_geo": "",
       "iterations": [
         {
           "input_tokens": 6,
-          "output_tokens": 476,
+          "output_tokens": 56,
           "cache_read_input_tokens": 16805,
-          "cache_creation_input_tokens": 13197,
+          "cache_creation_input_tokens": 18752,
           "cache_creation": {
             "ephemeral_5m_input_tokens": 0,
-            "ephemeral_1h_input_tokens": 13197
+            "ephemeral_1h_input_tokens": 18752
           },
           "type": "message"
         }
@@ -88,18 +88,18 @@
       },
       "claude-opus-4-7": {
         "inputTokens": 6,
-        "outputTokens": 476,
+        "outputTokens": 56,
         "cacheReadInputTokens": 16805,
-        "cacheCreationInputTokens": 13197,
+        "cacheCreationInputTokens": 18752,
         "webSearchRequests": 0,
-        "costUSD": 0.10281375000000001,
-        "contextWindow": 200000,
+        "costUSD": 0.12703250000000002,
+        "contextWindow": 1000000,
         "maxOutputTokens": 64000
       }
     },
     "permission_denials": [],
     "terminal_reason": "completed",
     "fast_mode_state": "off",
-    "uuid": "0b26c897-6218-4260-a25b-e9e30021ca63"
+    "uuid": "e47948c5-7320-4385-8a08-71e420a1c432"
   }
 }

@@ -14,61 +14,61 @@
   ],
   "digest_hex": "322754c2ebc09f71e86e46b9ab4501d055dac72445f2e52e0e5526e87eaf7857",
   "seed": "hewn-bench-v1",
-  "timestamp": "2026-04-22T00:11:04.289322+00:00",
-  "output_tokens_tiktoken": 190,
-  "output_tokens_anthropic": 339,
+  "timestamp": "2026-04-22T08:09:17.878853+00:00",
+  "output_tokens_tiktoken": 37,
+  "output_tokens_anthropic": 59,
   "input_tokens_anthropic": 6,
-  "cache_creation_input_tokens": 17295,
+  "cache_creation_input_tokens": 18759,
   "cache_read_input_tokens": 16805,
-  "total_input_tokens": 34106,
+  "total_input_tokens": 35570,
   "cache_state": "warm",
-  "wallclock_ms": 10715.030516003026,
-  "duration_ms": 7779,
-  "duration_api_ms": 8530,
-  "wrapper_overhead_ms": 2185.0305160030257,
+  "wallclock_ms": 9329.060520016355,
+  "duration_ms": 3173,
+  "duration_api_ms": 4406,
+  "wrapper_overhead_ms": 4923.060520016355,
   "stop_reason": "end_turn",
   "num_turns": 1,
-  "session_id": "9c1e805e-1149-4c82-9dad-a7b6325d6d12",
-  "total_cost_usd": 0.12543625,
+  "session_id": "2bdc62ef-1ae9-4085-8c19-44dddb6746cc",
+  "total_cost_usd": 0.12757125,
   "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
-  "result": "CORS errors mean browser blocked cross-origin request — server at different origin (scheme/host/port) didn't return headers browser needs to allow it.\n\nCommon causes:\n- server missing Access-Control-Allow-Origin header (or value doesn't match your page's origin)\n- preflight (OPTIONS) failing — server not handling OPTIONS, or missing Access-Control-Allow-Methods / Access-Control-Allow-Headers\n- sending cookies/auth with request but server lacks Access-Control-Allow-Credentials: true (and ACAO can't be \"*\" in that case, must echo exact origin)\n- custom header (Authorization, X-*) triggers preflight that server doesn't expect\n- wrong port — localhost:3000 calling localhost:8000 counts as cross-origin\n\nQuick diagnosis: open Network tab, find failing request, check response headers. If no ACAO header, server problem. If OPTIONS returns 404/405, server not handling preflight. Paste exact error message for sharper answer.",
+  "result": "@hewn v0 hybrid\nG: cors_error\nC: origin_mismatch\nP: server_sets_acao\nV: req_succeeds\nA: configure_cors",
   "assertion_pass": true,
   "raw_payload": {
     "type": "result",
     "subtype": "success",
     "is_error": false,
     "api_error_status": null,
-    "duration_ms": 7779,
-    "duration_api_ms": 8530,
+    "duration_ms": 3173,
+    "duration_api_ms": 4406,
     "num_turns": 1,
-    "result": "CORS errors mean browser blocked cross-origin request — server at different origin (scheme/host/port) didn't return headers browser needs to allow it.\n\nCommon causes:\n- server missing Access-Control-Allow-Origin header (or value doesn't match your page's origin)\n- preflight (OPTIONS) failing — server not handling OPTIONS, or missing Access-Control-Allow-Methods / Access-Control-Allow-Headers\n- sending cookies/auth with request but server lacks Access-Control-Allow-Credentials: true (and ACAO can't be \"*\" in that case, must echo exact origin)\n- custom header (Authorization, X-*) triggers preflight that server doesn't expect\n- wrong port — localhost:3000 calling localhost:8000 counts as cross-origin\n\nQuick diagnosis: open Network tab, find failing request, check response headers. If no ACAO header, server problem. If OPTIONS returns 404/405, server not handling preflight. Paste exact error message for sharper answer.",
+    "result": "@hewn v0 hybrid\nG: cors_error\nC: origin_mismatch\nP: server_sets_acao\nV: req_succeeds\nA: configure_cors",
     "stop_reason": "end_turn",
-    "session_id": "9c1e805e-1149-4c82-9dad-a7b6325d6d12",
-    "total_cost_usd": 0.12543625,
+    "session_id": "2bdc62ef-1ae9-4085-8c19-44dddb6746cc",
+    "total_cost_usd": 0.12757125,
     "usage": {
       "input_tokens": 6,
-      "cache_creation_input_tokens": 17295,
+      "cache_creation_input_tokens": 18759,
       "cache_read_input_tokens": 16805,
-      "output_tokens": 339,
+      "output_tokens": 59,
       "server_tool_use": {
         "web_search_requests": 0,
         "web_fetch_requests": 0
       },
       "service_tier": "standard",
       "cache_creation": {
-        "ephemeral_1h_input_tokens": 17295,
+        "ephemeral_1h_input_tokens": 18759,
         "ephemeral_5m_input_tokens": 0
       },
       "inference_geo": "",
       "iterations": [
         {
           "input_tokens": 6,
-          "output_tokens": 339,
+          "output_tokens": 59,
           "cache_read_input_tokens": 16805,
-          "cache_creation_input_tokens": 17295,
+          "cache_creation_input_tokens": 18759,
           "cache_creation": {
             "ephemeral_5m_input_tokens": 0,
-            "ephemeral_1h_input_tokens": 17295
+            "ephemeral_1h_input_tokens": 18759
           },
           "type": "message"
         }
@@ -78,21 +78,21 @@
     "modelUsage": {
       "claude-haiku-4-5-20251001": {
         "inputTokens": 350,
-        "outputTokens": 17,
+        "outputTokens": 14,
         "cacheReadInputTokens": 0,
         "cacheCreationInputTokens": 0,
         "webSearchRequests": 0,
-        "costUSD": 0.000435,
+        "costUSD": 0.00042,
         "contextWindow": 200000,
         "maxOutputTokens": 32000
       },
       "claude-opus-4-7": {
         "inputTokens": 6,
-        "outputTokens": 339,
+        "outputTokens": 59,
         "cacheReadInputTokens": 16805,
-        "cacheCreationInputTokens": 17295,
+        "cacheCreationInputTokens": 18759,
         "webSearchRequests": 0,
-        "costUSD": 0.12500125,
+        "costUSD": 0.12715125,
         "contextWindow": 1000000,
         "maxOutputTokens": 64000
       }
@@ -100,6 +100,6 @@
     "permission_denials": [],
     "terminal_reason": "completed",
     "fast_mode_state": "off",
-    "uuid": "94874aee-935e-46a6-91da-cf4302c09262"
+    "uuid": "d5c354b0-3e17-4f9e-b932-ec87b22a9a5b"
   }
 }

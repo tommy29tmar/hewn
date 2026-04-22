@@ -2,14 +2,14 @@
   "final": {
     "uses_plain_language": false,
     "actionable": true,
-    "starts_helpfully": true,
+    "starts_helpfully": false,
     "respects_user_level": false
   },
   "history": [
     {
       "attempt": 0,
-      "raw": "{\"uses_plain_language\":false,\"actionable\":true,\"starts_helpfully\":true,\"respects_user_level\":false}"
+      "raw": "{\"uses_plain_language\":false,\"actionable\":true,\"starts_helpfully\":false,\"respects_user_level\":false}"
     }
   ],
-  "ts": "2026-04-22T01:38:48.650127+00:00"
+  "ts": "2026-04-22T08:53:12.619176+00:00"
 }

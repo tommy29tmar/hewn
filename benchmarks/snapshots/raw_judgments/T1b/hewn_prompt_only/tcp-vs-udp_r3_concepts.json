@@ -4,14 +4,14 @@
     "udp_is_connectionless": true,
     "tcp_guarantees_ordered_delivery": true,
     "udp_does_not_guarantee_delivery_or_order": true,
-    "tcp_higher_overhead_lower_throughput": true,
+    "tcp_higher_overhead_lower_throughput": false,
     "use_case_examples_for_each": true
   },
   "history": [
     {
       "attempt": 0,
-      "raw": "{\"tcp_is_connection_oriented\":true,\"udp_is_connectionless\":true,\"tcp_guarantees_ordered_delivery\":true,\"udp_does_not_guarantee_delivery_or_order\":true,\"tcp_higher_overhead_lower_throughput\":true,\"use_case_examples_for_each\":true}"
+      "raw": "{\"tcp_is_connection_oriented\":true,\"udp_is_connectionless\":true,\"tcp_guarantees_ordered_delivery\":true,\"udp_does_not_guarantee_delivery_or_order\":true,\"tcp_higher_overhead_lower_throughput\":false,\"use_case_examples_for_each\":true}"
     }
   ],
-  "ts": "2026-04-22T01:18:48.994374+00:00"
+  "ts": "2026-04-22T08:51:35.335066+00:00"
 }

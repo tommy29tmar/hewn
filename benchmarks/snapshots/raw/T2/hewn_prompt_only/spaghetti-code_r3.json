@@ -14,61 +14,61 @@
   ],
   "digest_hex": "7c52e02c0161a16855ab7dffa75684d8428461f60fda8988678da48d36f5dfae",
   "seed": "hewn-bench-v1",
-  "timestamp": "2026-04-22T00:28:45.242870+00:00",
-  "output_tokens_tiktoken": 261,
-  "output_tokens_anthropic": 440,
+  "timestamp": "2026-04-22T08:16:10.880763+00:00",
+  "output_tokens_tiktoken": 323,
+  "output_tokens_anthropic": 547,
   "input_tokens_anthropic": 6,
-  "cache_creation_input_tokens": 0,
-  "cache_read_input_tokens": 32624,
-  "total_input_tokens": 32630,
+  "cache_creation_input_tokens": 17032,
+  "cache_read_input_tokens": 16796,
+  "total_input_tokens": 33834,
   "cache_state": "warm",
-  "wallclock_ms": 13313.035728002433,
-  "duration_ms": 9987,
-  "duration_api_ms": 10856,
+  "wallclock_ms": 18400.16079400084,
+  "duration_ms": 11945,
+  "duration_api_ms": 12864,
   "wrapper_overhead_ms": null,
   "stop_reason": "end_turn",
   "num_turns": 1,
-  "session_id": "e6a1b78d-3d1a-4b5a-beff-b6ebaf64baf4",
-  "total_cost_usd": 0.027781,
+  "session_id": "cd21610b-c11e-4fbf-a1f9-07c46c875e8b",
+  "total_cost_usd": 0.12899699999999997,
   "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
-  "result": "Spaghetti usually isn't a style problem — it's a **naming + boundaries** problem. Three things fix 80% of it:\n\n1. **Name things for what they mean, not what they do.** `userEmail` beats `getString2`. If you can't name a function in <5 words, it's doing too much — split it.\n\n2. **One function, one job.** If you're scrolling to read it, it's two functions pretending to be one. Extract until each function fits on a screen and reads top-to-bottom like a paragraph.\n\n3. **Draw the boundary between \"what\" and \"how\".** Keep I/O (DB, network, files) at the edges. Pure logic in the middle. When everything touches everything, you lose the map.\n\nPractical moves when you're lost:\n- Open the file. Can you summarize each function in one sentence? If not, that's where the rot is.\n- Look for functions >50 lines or >3 levels of nesting — those are almost always hiding 2-3 smaller functions.\n- If two things always change together, they belong together. If one thing changes for unrelated reasons, split it.\n\nWant me to look at a specific file and point out where it's tangled? That's usually more useful than abstract advice.",
+  "result": "Spaghetti usually isn't a style problem, it's a **boundaries** problem. The code has no clear seams, so tracing anything means reading everything.\n\nA few practical moves, in order of payoff:\n\n1. **Name things like their job, not their shape.** `processData()` is spaghetti fuel. `parseCsvRow()` or `chargeCustomer()` tells you where to look.\n\n2. **One function = one reason to change.** If you say \"and\" when describing what it does (\"validates input *and* saves to db *and* sends email\"), split it.\n\n3. **Separate the three layers** most code has:\n   - **I/O** (reads files, hits APIs, touches DB)\n   - **Pure logic** (transforms, calculations, rules)\n   - **Orchestration** (glues the first two together)\n   \n   Pure logic is easy to follow and test. Mixing all three in one function is what makes things feel tangled.\n\n4. **Group by feature, not by kind.** A folder named `billing/` beats `utils/`, `helpers/`, `services/` scattered everywhere.\n\n5. **Delete dead branches aggressively.** Old `if flag_from_2023:` paths are a huge source of \"wait, when does this run?\"\n\n6. **When you get lost, draw the call graph on paper** for the feature you're confused about. Usually you'll spot one function that's doing too much — that's where to cut.\n\nIf you paste a specific file that feels spaghetti, I can point at the actual seams.",
   "assertion_pass": true,
   "raw_payload": {
     "type": "result",
     "subtype": "success",
     "is_error": false,
     "api_error_status": null,
-    "duration_ms": 9987,
-    "duration_api_ms": 10856,
+    "duration_ms": 11945,
+    "duration_api_ms": 12864,
     "num_turns": 1,
-    "result": "Spaghetti usually isn't a style problem — it's a **naming + boundaries** problem. Three things fix 80% of it:\n\n1. **Name things for what they mean, not what they do.** `userEmail` beats `getString2`. If you can't name a function in <5 words, it's doing too much — split it.\n\n2. **One function, one job.** If you're scrolling to read it, it's two functions pretending to be one. Extract until each function fits on a screen and reads top-to-bottom like a paragraph.\n\n3. **Draw the boundary between \"what\" and \"how\".** Keep I/O (DB, network, files) at the edges. Pure logic in the middle. When everything touches everything, you lose the map.\n\nPractical moves when you're lost:\n- Open the file. Can you summarize each function in one sentence? If not, that's where the rot is.\n- Look for functions >50 lines or >3 levels of nesting — those are almost always hiding 2-3 smaller functions.\n- If two things always change together, they belong together. If one thing changes for unrelated reasons, split it.\n\nWant me to look at a specific file and point out where it's tangled? That's usually more useful than abstract advice.",
+    "result": "Spaghetti usually isn't a style problem, it's a **boundaries** problem. The code has no clear seams, so tracing anything means reading everything.\n\nA few practical moves, in order of payoff:\n\n1. **Name things like their job, not their shape.** `processData()` is spaghetti fuel. `parseCsvRow()` or `chargeCustomer()` tells you where to look.\n\n2. **One function = one reason to change.** If you say \"and\" when describing what it does (\"validates input *and* saves to db *and* sends email\"), split it.\n\n3. **Separate the three layers** most code has:\n   - **I/O** (reads files, hits APIs, touches DB)\n   - **Pure logic** (transforms, calculations, rules)\n   - **Orchestration** (glues the first two together)\n   \n   Pure logic is easy to follow and test. Mixing all three in one function is what makes things feel tangled.\n\n4. **Group by feature, not by kind.** A folder named `billing/` beats `utils/`, `helpers/`, `services/` scattered everywhere.\n\n5. **Delete dead branches aggressively.** Old `if flag_from_2023:` paths are a huge source of \"wait, when does this run?\"\n\n6. **When you get lost, draw the call graph on paper** for the feature you're confused about. Usually you'll spot one function that's doing too much — that's where to cut.\n\nIf you paste a specific file that feels spaghetti, I can point at the actual seams.",
     "stop_reason": "end_turn",
-    "session_id": "e6a1b78d-3d1a-4b5a-beff-b6ebaf64baf4",
-    "total_cost_usd": 0.027781,
+    "session_id": "cd21610b-c11e-4fbf-a1f9-07c46c875e8b",
+    "total_cost_usd": 0.12899699999999997,
     "usage": {
       "input_tokens": 6,
-      "cache_creation_input_tokens": 0,
-      "cache_read_input_tokens": 32624,
-      "output_tokens": 440,
+      "cache_creation_input_tokens": 17032,
+      "cache_read_input_tokens": 16796,
+      "output_tokens": 547,
       "server_tool_use": {
         "web_search_requests": 0,
         "web_fetch_requests": 0
       },
       "service_tier": "standard",
       "cache_creation": {
-        "ephemeral_1h_input_tokens": 0,
+        "ephemeral_1h_input_tokens": 17032,
         "ephemeral_5m_input_tokens": 0
       },
       "inference_geo": "",
       "iterations": [
         {
           "input_tokens": 6,
-          "output_tokens": 440,
-          "cache_read_input_tokens": 32624,
-          "cache_creation_input_tokens": 0,
+          "output_tokens": 547,
+          "cache_read_input_tokens": 16796,
+          "cache_creation_input_tokens": 17032,
           "cache_creation": {
             "ephemeral_5m_input_tokens": 0,
-            "ephemeral_1h_input_tokens": 0
+            "ephemeral_1h_input_tokens": 17032
           },
           "type": "message"
         }
@@ -78,21 +78,21 @@
     "modelUsage": {
       "claude-haiku-4-5-20251001": {
         "inputTokens": 359,
-        "outputTokens": 16,
+        "outputTokens": 17,
         "cacheReadInputTokens": 0,
         "cacheCreationInputTokens": 0,
         "webSearchRequests": 0,
-        "costUSD": 0.000439,
+        "costUSD": 0.000444,
         "contextWindow": 200000,
         "maxOutputTokens": 32000
       },
       "claude-opus-4-7": {
         "inputTokens": 6,
-        "outputTokens": 440,
-        "cacheReadInputTokens": 32624,
-        "cacheCreationInputTokens": 0,
+        "outputTokens": 547,
+        "cacheReadInputTokens": 16796,
+        "cacheCreationInputTokens": 17032,
         "webSearchRequests": 0,
-        "costUSD": 0.027342,
+        "costUSD": 0.12855299999999997,
         "contextWindow": 1000000,
         "maxOutputTokens": 64000
       }
@@ -100,6 +100,6 @@
     "permission_denials": [],
     "terminal_reason": "completed",
     "fast_mode_state": "off",
-    "uuid": "49e17e94-33c6-4dac-b668-8df2e3076192"
+    "uuid": "b7bc114d-f599-4d0e-a3bc-add5cc28763e"
   }
 }

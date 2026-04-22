@@ -14,61 +14,61 @@
   ],
   "digest_hex": "12d5f12129216ce1c15ddae588d0de60b3bad5ba9e88ba91d072dae61c162ecb",
   "seed": "hewn-bench-v1",
-  "timestamp": "2026-04-22T00:13:14.002334+00:00",
-  "output_tokens_tiktoken": 132,
-  "output_tokens_anthropic": 226,
+  "timestamp": "2026-04-22T08:10:22.226462+00:00",
+  "output_tokens_tiktoken": 74,
+  "output_tokens_anthropic": 120,
   "input_tokens_anthropic": 6,
-  "cache_creation_input_tokens": 15823,
+  "cache_creation_input_tokens": 17027,
   "cache_read_input_tokens": 16796,
-  "total_input_tokens": 32625,
+  "total_input_tokens": 33829,
   "cache_state": "warm",
-  "wallclock_ms": 8712.59124399512,
-  "duration_ms": 5192,
-  "duration_api_ms": 7302,
+  "wallclock_ms": 13614.476927003125,
+  "duration_ms": 7682,
+  "duration_api_ms": 9053,
   "wrapper_overhead_ms": null,
   "stop_reason": "end_turn",
   "num_turns": 1,
-  "session_id": "31729950-4b2d-44b2-84af-b35d5510406d",
-  "total_cost_usd": 0.11338775,
+  "session_id": "8878d681-e51e-40af-80d5-c729cc94e19b",
+  "total_cost_usd": 0.11826275,
   "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
-  "result": "Use a **queue** when each message should be processed by exactly one consumer (work distribution, load balancing). Use a **topic** when each message should be delivered to every subscriber (fan-out, pub/sub).\n\nQuick rules:\n- **Queue (point-to-point)**: job processing, task distribution, command handling. Multiple workers compete; each message consumed once.\n- **Topic (pub/sub)**: event broadcasting, notifications, cache invalidation. Multiple independent subscribers each get their own copy.\n\nHybrid models (Kafka consumer groups, SNS→SQS) give you both: a topic fans out, and each subscriber queue load-balances across its own workers.",
+  "result": "Queue: point-to-point, one consumer processes each message (work distribution, load balancing across workers).\n\nTopic: pub/sub, every subscriber gets a copy (event broadcasting, fanout to independent consumers).\n\nRule of thumb: if adding a second consumer should *share* the load, use a queue; if it should *also* receive every message, use a topic.",
   "assertion_pass": true,
   "raw_payload": {
     "type": "result",
     "subtype": "success",
     "is_error": false,
     "api_error_status": null,
-    "duration_ms": 5192,
-    "duration_api_ms": 7302,
+    "duration_ms": 7682,
+    "duration_api_ms": 9053,
     "num_turns": 1,
-    "result": "Use a **queue** when each message should be processed by exactly one consumer (work distribution, load balancing). Use a **topic** when each message should be delivered to every subscriber (fan-out, pub/sub).\n\nQuick rules:\n- **Queue (point-to-point)**: job processing, task distribution, command handling. Multiple workers compete; each message consumed once.\n- **Topic (pub/sub)**: event broadcasting, notifications, cache invalidation. Multiple independent subscribers each get their own copy.\n\nHybrid models (Kafka consumer groups, SNS→SQS) give you both: a topic fans out, and each subscriber queue load-balances across its own workers.",
+    "result": "Queue: point-to-point, one consumer processes each message (work distribution, load balancing across workers).\n\nTopic: pub/sub, every subscriber gets a copy (event broadcasting, fanout to independent consumers).\n\nRule of thumb: if adding a second consumer should *share* the load, use a queue; if it should *also* receive every message, use a topic.",
     "stop_reason": "end_turn",
-    "session_id": "31729950-4b2d-44b2-84af-b35d5510406d",
-    "total_cost_usd": 0.11338775,
+    "session_id": "8878d681-e51e-40af-80d5-c729cc94e19b",
+    "total_cost_usd": 0.11826275,
     "usage": {
       "input_tokens": 6,
-      "cache_creation_input_tokens": 15823,
+      "cache_creation_input_tokens": 17027,
       "cache_read_input_tokens": 16796,
-      "output_tokens": 226,
+      "output_tokens": 120,
       "server_tool_use": {
         "web_search_requests": 0,
         "web_fetch_requests": 0
       },
       "service_tier": "standard",
       "cache_creation": {
-        "ephemeral_1h_input_tokens": 15823,
+        "ephemeral_1h_input_tokens": 17027,
         "ephemeral_5m_input_tokens": 0
       },
       "inference_geo": "",
       "iterations": [
         {
           "input_tokens": 6,
-          "output_tokens": 226,
+          "output_tokens": 120,
           "cache_read_input_tokens": 16796,
-          "cache_creation_input_tokens": 15823,
+          "cache_creation_input_tokens": 17027,
           "cache_creation": {
             "ephemeral_5m_input_tokens": 0,
-            "ephemeral_1h_input_tokens": 15823
+            "ephemeral_1h_input_tokens": 17027
           },
           "type": "message"
         }
@@ -88,11 +88,11 @@
       },
       "claude-opus-4-7": {
         "inputTokens": 6,
-        "outputTokens": 226,
+        "outputTokens": 120,
         "cacheReadInputTokens": 16796,
-        "cacheCreationInputTokens": 15823,
+        "cacheCreationInputTokens": 17027,
         "webSearchRequests": 0,
-        "costUSD": 0.11297175,
+        "costUSD": 0.11784675,
         "contextWindow": 1000000,
         "maxOutputTokens": 64000
       }
@@ -100,6 +100,6 @@
     "permission_denials": [],
     "terminal_reason": "completed",
     "fast_mode_state": "off",
-    "uuid": "75c26f9b-eb9b-49c4-a8f7-589bb645b2f1"
+    "uuid": "b63f5c95-45c6-4c58-8c2c-40734ea885e7"
   }
 }

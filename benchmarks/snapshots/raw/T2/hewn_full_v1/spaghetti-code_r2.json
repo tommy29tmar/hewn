@@ -1,0 +1,105 @@
+{
+  "track": "T2",
+  "arm": "hewn_full",
+  "prompt_id": "spaghetti-code",
+  "run_index": 2,
+  "arm_order_index": 4,
+  "arm_order_full": [
+    "baseline",
+    "caveman_full",
+    "hewn_prompt_only",
+    "caveman_full_plus_ultra_directive",
+    "hewn_full",
+    "terse"
+  ],
+  "digest_hex": "c5b7a91bb866632a665b169537e636c6632c835cd292573b5020e32ca3fec5f2",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T00:23:58.639410+00:00",
+  "output_tokens_tiktoken": 172,
+  "output_tokens_anthropic": 310,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 17302,
+  "cache_read_input_tokens": 16805,
+  "total_input_tokens": 34113,
+  "cache_state": "warm",
+  "wallclock_ms": 14026.875426992774,
+  "duration_ms": 8250,
+  "duration_api_ms": 9223,
+  "wrapper_overhead_ms": 4803.875426992774,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "cba8ee53-8ed7-4741-8f22-9a5f3196b48d",
+  "total_cost_usd": 0.12475400000000002,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "name things for what they do, not how they do it. if name needs \"And\" or \"Helper\" or \"Manager\", split it.\n\nkeep functions small enough you see whole thing without scrolling. if you can't hold it in head, neither can future-you.\n\ngroup by feature, not by layer. all auth stuff together beats \"all controllers here, all models there\".\n\npush side effects to edges. pure logic in middle, i/o at boundaries. spaghetti usually means db calls tangled inside business rules.\n\ndelete dead code immediately. commented-out blocks, unused helpers, \"might need later\" — gone. uncertainty rots readability.\n\nwhen lost, draw data flow on paper before touching code. if arrows cross or loop back, that's your spaghetti. straighten there.\n\none rule: if explaining function to yourself takes more than one sentence, function does too much.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 8250,
+    "duration_api_ms": 9223,
+    "num_turns": 1,
+    "result": "name things for what they do, not how they do it. if name needs \"And\" or \"Helper\" or \"Manager\", split it.\n\nkeep functions small enough you see whole thing without scrolling. if you can't hold it in head, neither can future-you.\n\ngroup by feature, not by layer. all auth stuff together beats \"all controllers here, all models there\".\n\npush side effects to edges. pure logic in middle, i/o at boundaries. spaghetti usually means db calls tangled inside business rules.\n\ndelete dead code immediately. commented-out blocks, unused helpers, \"might need later\" — gone. uncertainty rots readability.\n\nwhen lost, draw data flow on paper before touching code. if arrows cross or loop back, that's your spaghetti. straighten there.\n\none rule: if explaining function to yourself takes more than one sentence, function does too much.",
+    "stop_reason": "end_turn",
+    "session_id": "cba8ee53-8ed7-4741-8f22-9a5f3196b48d",
+    "total_cost_usd": 0.12475400000000002,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 17302,
+      "cache_read_input_tokens": 16805,
+      "output_tokens": 310,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 17302,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 310,
+          "cache_read_input_tokens": 16805,
+          "cache_creation_input_tokens": 17302,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 17302
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 359,
+        "outputTokens": 15,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.00043400000000000003,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 310,
+        "cacheReadInputTokens": 16805,
+        "cacheCreationInputTokens": 17302,
+        "webSearchRequests": 0,
+        "costUSD": 0.12432000000000001,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "2ada3cef-cf9a-48a1-917c-a041780af586"
+  }
+}

@@ -14,62 +14,62 @@
   ],
   "digest_hex": "30a2f9a62df0d790c0598917c3ab42509bbadd672a0a484741ea201d2da3b44f",
   "seed": "hewn-bench-v1",
-  "timestamp": "2026-04-22T01:03:51.229086+00:00",
-  "session_id_used_for_resume": "b3f40e90-02ea-4c6b-a1d6-396c50dde0bb",
-  "output_tokens_tiktoken": 537,
-  "output_tokens_anthropic": 828,
+  "timestamp": "2026-04-22T08:30:51.529155+00:00",
+  "session_id_used_for_resume": "a5b861a6-3ae3-47ab-bc99-1526aaf8a5f4",
+  "output_tokens_tiktoken": 131,
+  "output_tokens_anthropic": 198,
   "input_tokens_anthropic": 6,
-  "cache_creation_input_tokens": 1338,
-  "cache_read_input_tokens": 36364,
-  "total_input_tokens": 37708,
+  "cache_creation_input_tokens": 468,
+  "cache_read_input_tokens": 35848,
+  "total_input_tokens": 36322,
   "cache_state": "warm",
-  "wallclock_ms": 20277.108373993542,
-  "duration_ms": 17419,
-  "duration_api_ms": 17329,
-  "wrapper_overhead_ms": 2948.108373993542,
+  "wallclock_ms": 11626.436521008145,
+  "duration_ms": 5194,
+  "duration_api_ms": 5103,
+  "wrapper_overhead_ms": 6523.436521008145,
   "stop_reason": "end_turn",
   "num_turns": 1,
-  "session_id": "b3f40e90-02ea-4c6b-a1d6-396c50dde0bb",
-  "total_cost_usd": 0.047274500000000004,
+  "session_id": "a5b861a6-3ae3-47ab-bc99-1526aaf8a5f4",
+  "total_cost_usd": 0.025828999999999998,
   "model_used": "claude-opus-4-7",
-  "result": "both, but they do different jobs.\n\nconsumption path check (mandatory)\n- source of truth at moment of redeem\n- SELECT ... FOR UPDATE, then check expires_at > now() before decrement\n- reject with clear error if expired\n- must live here regardless of batch job — batch can lag, be skipped, race with redeem\n- without this, a card expiring at 00:00:00 could be spent at 00:00:05 if batch hasn't run yet\n\nbatch job (operational hygiene, not correctness)\n- nightly sweep: flip status from active to expired, zero out balance, write ledger event \"expired\"\n- purpose is not to block redemption — consumption check already does that\n- real jobs it does:\n  - finance reporting: outstanding liability excludes expired cards cleanly (no runtime filter everywhere)\n  - user notifications: \"your card expired\" email on day of expiry\n  - data hygiene: list views, admin dashboards, analytics don't have to filter expires_at < now() every query\n  - triggers downstream events (loyalty program, refund policies)\n\nkey principle: consumption check is correctness, batch is bookkeeping. never rely on batch alone — it's an optimization, not a gate.\n\nextra wrinkles worth deciding now\n\nwarn-before-expire job (separate from sweep)\n- email user at T-30d, T-7d, T-1d\n- independent cron, different cadence from expiry sweep\n- reduces \"I lost my money\" support tickets dramatically\n\ngrace period?\n- some jurisdictions require post-expiry reactivation or refund of balance\n- if yes, \"expired\" isn't terminal — need \"expired but reclaimable\" state, or keep balance visible read-only\n- decide before you write the sweep, because schema differs\n\nclock & timezone\n- store expires_at as UTC timestamptz, compare against now() in UTC\n- if you promise \"12 months\" in user-local time, compute expires_at at issue time using user's tz, then store UTC\n- don't do tz math at redeem time, you'll get off-by-one-day bugs at boundaries\n\nidempotent sweep\n- sweep must be safe to re-run: WHERE status = 'active' AND expires_at < now()\n- if it crashes mid-run, next run picks up where it left off\n- log what it expired so you can audit later\n\none thing to avoid: computing is_expired() in application code by reading expires_at and comparing to wall clock. fine for display, but never as the authoritative gate — put the check in SQL inside the same transaction as the decrement, so it's atomic with the lock.",
+  "result": "Both, but for different reasons. Consumption-path check is the source of truth — it's what prevents an expired card from being spent, and it's the only check that matters for correctness. The batch job is housekeeping: flip a status flag, zero the balance, emit analytics, send \"your card expired\" emails.\n\nIf you skip the consumption check and rely on the batch, you have a race window where a card expires at midnight and someone redeems it at 00:00:01 before the job runs. If you skip the batch, expired cards sit with non-zero balances forever, which confuses reporting and makes \"outstanding liability\" reports wrong.",
   "assertion_pass": true,
   "raw_payload": {
     "type": "result",
     "subtype": "success",
     "is_error": false,
     "api_error_status": null,
-    "duration_ms": 17419,
-    "duration_api_ms": 17329,
+    "duration_ms": 5194,
+    "duration_api_ms": 5103,
     "num_turns": 1,
-    "result": "both, but they do different jobs.\n\nconsumption path check (mandatory)\n- source of truth at moment of redeem\n- SELECT ... FOR UPDATE, then check expires_at > now() before decrement\n- reject with clear error if expired\n- must live here regardless of batch job — batch can lag, be skipped, race with redeem\n- without this, a card expiring at 00:00:00 could be spent at 00:00:05 if batch hasn't run yet\n\nbatch job (operational hygiene, not correctness)\n- nightly sweep: flip status from active to expired, zero out balance, write ledger event \"expired\"\n- purpose is not to block redemption — consumption check already does that\n- real jobs it does:\n  - finance reporting: outstanding liability excludes expired cards cleanly (no runtime filter everywhere)\n  - user notifications: \"your card expired\" email on day of expiry\n  - data hygiene: list views, admin dashboards, analytics don't have to filter expires_at < now() every query\n  - triggers downstream events (loyalty program, refund policies)\n\nkey principle: consumption check is correctness, batch is bookkeeping. never rely on batch alone — it's an optimization, not a gate.\n\nextra wrinkles worth deciding now\n\nwarn-before-expire job (separate from sweep)\n- email user at T-30d, T-7d, T-1d\n- independent cron, different cadence from expiry sweep\n- reduces \"I lost my money\" support tickets dramatically\n\ngrace period?\n- some jurisdictions require post-expiry reactivation or refund of balance\n- if yes, \"expired\" isn't terminal — need \"expired but reclaimable\" state, or keep balance visible read-only\n- decide before you write the sweep, because schema differs\n\nclock & timezone\n- store expires_at as UTC timestamptz, compare against now() in UTC\n- if you promise \"12 months\" in user-local time, compute expires_at at issue time using user's tz, then store UTC\n- don't do tz math at redeem time, you'll get off-by-one-day bugs at boundaries\n\nidempotent sweep\n- sweep must be safe to re-run: WHERE status = 'active' AND expires_at < now()\n- if it crashes mid-run, next run picks up where it left off\n- log what it expired so you can audit later\n\none thing to avoid: computing is_expired() in application code by reading expires_at and comparing to wall clock. fine for display, but never as the authoritative gate — put the check in SQL inside the same transaction as the decrement, so it's atomic with the lock.",
+    "result": "Both, but for different reasons. Consumption-path check is the source of truth — it's what prevents an expired card from being spent, and it's the only check that matters for correctness. The batch job is housekeeping: flip a status flag, zero the balance, emit analytics, send \"your card expired\" emails.\n\nIf you skip the consumption check and rely on the batch, you have a race window where a card expires at midnight and someone redeems it at 00:00:01 before the job runs. If you skip the batch, expired cards sit with non-zero balances forever, which confuses reporting and makes \"outstanding liability\" reports wrong.",
     "stop_reason": "end_turn",
-    "session_id": "b3f40e90-02ea-4c6b-a1d6-396c50dde0bb",
-    "total_cost_usd": 0.047274500000000004,
+    "session_id": "a5b861a6-3ae3-47ab-bc99-1526aaf8a5f4",
+    "total_cost_usd": 0.025828999999999998,
     "usage": {
       "input_tokens": 6,
-      "cache_creation_input_tokens": 1338,
-      "cache_read_input_tokens": 36364,
-      "output_tokens": 828,
+      "cache_creation_input_tokens": 468,
+      "cache_read_input_tokens": 35848,
+      "output_tokens": 198,
       "server_tool_use": {
         "web_search_requests": 0,
         "web_fetch_requests": 0
       },
       "service_tier": "standard",
       "cache_creation": {
-        "ephemeral_1h_input_tokens": 1338,
+        "ephemeral_1h_input_tokens": 468,
         "ephemeral_5m_input_tokens": 0
       },
       "inference_geo": "",
       "iterations": [
         {
           "input_tokens": 6,
-          "output_tokens": 828,
-          "cache_read_input_tokens": 36364,
-          "cache_creation_input_tokens": 1338,
+          "output_tokens": 198,
+          "cache_read_input_tokens": 35848,
+          "cache_creation_input_tokens": 468,
           "cache_creation": {
             "ephemeral_5m_input_tokens": 0,
-            "ephemeral_1h_input_tokens": 1338
+            "ephemeral_1h_input_tokens": 468
           },
           "type": "message"
         }
@@ -79,11 +79,11 @@
     "modelUsage": {
       "claude-opus-4-7": {
         "inputTokens": 6,
-        "outputTokens": 828,
-        "cacheReadInputTokens": 36364,
-        "cacheCreationInputTokens": 1338,
+        "outputTokens": 198,
+        "cacheReadInputTokens": 35848,
+        "cacheCreationInputTokens": 468,
         "webSearchRequests": 0,
-        "costUSD": 0.047274500000000004,
+        "costUSD": 0.025828999999999998,
         "contextWindow": 1000000,
         "maxOutputTokens": 64000
       }
@@ -91,6 +91,6 @@
     "permission_denials": [],
     "terminal_reason": "completed",
     "fast_mode_state": "off",
-    "uuid": "07d9be33-8401-4c82-a09a-b14d0a1202da"
+    "uuid": "0ee02fbe-a040-479a-a27b-4f60a57d34e1"
   }
 }

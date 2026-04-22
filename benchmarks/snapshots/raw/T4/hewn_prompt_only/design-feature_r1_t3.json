@@ -14,62 +14,62 @@
   ],
   "digest_hex": "30a2f9a62df0d790c0598917c3ab42509bbadd672a0a484741ea201d2da3b44f",
   "seed": "hewn-bench-v1",
-  "timestamp": "2026-04-22T01:06:04.034228+00:00",
-  "session_id_used_for_resume": "c02819a2-ad2a-4986-87e1-163d9a52cd4b",
-  "output_tokens_tiktoken": 1007,
-  "output_tokens_anthropic": 2042,
+  "timestamp": "2026-04-22T08:33:08.994984+00:00",
+  "session_id_used_for_resume": "dbae8038-082c-4770-a429-b9b4f798bbc6",
+  "output_tokens_tiktoken": 701,
+  "output_tokens_anthropic": 1926,
   "input_tokens_anthropic": 6,
-  "cache_creation_input_tokens": 1590,
-  "cache_read_input_tokens": 34037,
-  "total_input_tokens": 35633,
+  "cache_creation_input_tokens": 1725,
+  "cache_read_input_tokens": 35680,
+  "total_input_tokens": 37411,
   "cache_state": "warm",
-  "wallclock_ms": 37757.62030298938,
-  "duration_ms": 34925,
-  "duration_api_ms": 34898,
+  "wallclock_ms": 46825.149871001486,
+  "duration_ms": 40599,
+  "duration_api_ms": 40568,
   "wrapper_overhead_ms": null,
   "stop_reason": "end_turn",
   "num_turns": 1,
-  "session_id": "c02819a2-ad2a-4986-87e1-163d9a52cd4b",
-  "total_cost_usd": 0.07803600000000001,
+  "session_id": "dbae8038-082c-4770-a429-b9b4f798bbc6",
+  "total_cost_usd": 0.07680124999999999,
   "model_used": "claude-opus-4-7",
-  "result": "Three viable approaches, all on a single mutable row. Pick one; don't mix.\n\n**1. `SELECT … FOR UPDATE` (pessimistic row lock)**\n```sql\nBEGIN;\nSELECT balance FROM gift_cards WHERE code = $1 FOR UPDATE;\n-- application decides how much to consume\nUPDATE gift_cards SET balance = balance - $2 WHERE code = $1;\nCOMMIT;\n```\n- Pros: dead simple, matches what you're probably already doing for wallets, impossible to double-spend if the transaction holds.\n- Cons: holds the lock for the full transaction — if you do *anything* slow between `SELECT` and `COMMIT` (PSP call, external API, cross-service hop), you're serializing checkouts through that card. Don't call Stripe inside the lock.\n\n**2. Atomic conditional update (CAS on balance)**\n```sql\nUPDATE gift_cards\nSET balance = balance - $2\nWHERE code = $1 AND balance >= $2\nRETURNING balance;\n```\n- Pros: no explicit lock, one round-trip, the DB enforces non-negative balance. `rowcount == 0` means \"insufficient balance or concurrent decrement won\" — retry or fail cleanly.\n- Cons: you only find out *after* attempting. Fine for checkout (\"insufficient funds, adjust card payment\"), awkward if you need to pre-quote the split to the user.\n\n**3. Optimistic locking (version column)**\n```sql\nUPDATE gift_cards\nSET balance = $new_balance, version = version + 1\nWHERE code = $1 AND version = $read_version;\n```\n- Pros: lets you read, compute, show to user, then commit. Conflicts retry.\n- Cons: more moving parts than #2 for no real gain in this use case. Use it when the compute-between-read-and-write is expensive; here it isn't.\n\n**Recommendation: #2, with a reserve/release pattern on top.**\n\nReason: checkout isn't a single atomic moment. It's `user submits → you authorize the card → you capture`. If you decrement the gift card balance at submit and the card auth fails, you've silently destroyed the customer's balance until someone notices. If you decrement at capture, two concurrent flows can both pass the pre-check and one gets a nasty \"balance vanished\" error at the worst moment.\n\nThe pattern that works on a mutable row:\n\n```\ngift_cards: balance, held\n```\n\n- **Reserve** (at checkout submit):\n  ```sql\n  UPDATE gift_cards\n  SET held = held + $amt\n  WHERE code = $1 AND (balance - held) >= $amt\n  RETURNING balance, held;\n  ```\n- **Capture** (after PSP success):\n  ```sql\n  UPDATE gift_cards\n  SET balance = balance - $amt, held = held - $amt\n  WHERE code = $1;\n  ```\n- **Release** (PSP fail, user abandons, timeout):\n  ```sql\n  UPDATE gift_cards\n  SET held = held - $amt\n  WHERE code = $1;\n  ```\n\nAvailable balance is always `balance - held`. Double-spend is impossible because the reserve step is a single atomic conditional update. The PSP call happens *between* reserve and capture, with no lock held.\n\n**Three things you still need, no matter which option you pick:**\n\n1. **Idempotency key** on every mutation. Checkout retries *will* happen — network hiccups, user double-clicks, PSP webhook redeliveries. Store `(code, idempotency_key)` with the resulting operation; on retry, return the prior outcome instead of decrementing again. This is the single biggest source of double-spend in production, not raw concurrency.\n\n2. **Held-amount timeout / reaper.** An abandoned checkout must not lock funds forever. Store `held_until` per reservation (or a side table of active holds) and have a job that releases expired ones. 15–30 min is typical; match your PSP auth lifetime.\n\n3. **Audit trail.** Yes, you chose mutable rows — still write an append-only log of every balance change with `(code, delta, reason, order_id, idempotency_key, timestamp)`. When (not if) a customer disputes a balance, this is what saves you. It's the escape hatch from the mutable-row decision without rebuilding the feature.\n\nOne gotcha specific to the wallet consistency angle: if your existing wallet code uses `SELECT … FOR UPDATE`, and you wrap gift card + wallet + PSP auth in one transaction, you can deadlock yourself by acquiring locks in different orders across concurrent checkouts. Either (a) always lock in a canonical order (e.g., by resource type then ID), or (b) use the atomic-conditional-update pattern for gift cards specifically so you're not holding a long lock. I'd do (b).",
+  "result": "The core primitive is a **conditional atomic UPDATE** — don't do read-then-write in application code.\n\n```sql\nUPDATE gift_cards\nSET balance = balance - :amount\nWHERE id = :card_id\n  AND balance >= :amount;\n```\n\nCheck affected rows. If 0, the card either doesn't exist or didn't have enough — reject. One statement, no lock held across round trips, works in any isolation level, safe under arbitrary concurrency. Two sessions both seeing \"balance is $50\" doesn't matter; only one of them wins the conditional update.\n\n`SELECT ... FOR UPDATE` also works and is fine if you need to validate multiple conditions in one transaction, but for a single-card debit the conditional UPDATE is simpler and has less lock contention.\n\n**But debit-at-checkout isn't quite what you want.** Checkout is multi-step: user submits → you authorize card payment → capture on ship/confirm. If you debit the gift card at step 1 and the card auth fails at step 2, you've got to refund. If you debit at step 3, another session can drain the balance in between. The standard pattern is **reserve → commit/release**:\n\n1. **Reserve**: conditional UPDATE debits the balance *and* writes a row to `gift_card_transactions` with `status='held'`, `order_id=:order_id`.\n2. **Commit**: on successful payment capture, flip the transaction row to `status='consumed'`. Balance already reflects it.\n3. **Release**: on cancel/timeout/payment failure, conditional UPDATE credits the balance back and marks the transaction `status='released'`.\n\nHolds should have a TTL and a sweeper that auto-releases stale ones, otherwise abandoned carts permanently lock balance.\n\n**Idempotency** — the same checkout will retry (network blip, payment webhook replay, user double-click). Put a unique constraint on `(gift_card_id, order_id, intent)` in the transactions table so a retried reserve for the same order is a no-op rather than a second debit. The conditional UPDATE protects against concurrent *different* orders; the unique constraint protects against the *same* order arriving twice.\n\n**What not to do:**\n- Read balance → check in app code → UPDATE. Classic TOCTOU; the check and the write aren't atomic.\n- Reach for Redis/distributed locks. Your database already does this correctly and cheaply; adding a lock service adds a new failure mode (lock server down = checkout down) without fixing anything the DB didn't already handle.\n- Serializable isolation across the whole checkout transaction. It works but causes serialization failures under load and is overkill when one conditional UPDATE gets you there.\n- Debit + credit balance on refund as *new transaction rows with opposite sign* rather than mutating or deleting the original hold row. Keeps the transactions table append-only even though the balance column is mutable — preserves the audit trail you wanted from the middle-ground compromise.\n\nOne thing to decide: **what does \"reserve\" return to the caller?** Either (a) the amount actually reserved (min of balance and order total) so the caller knows how much to charge the card, or (b) reserves only if the full ask fits, and the caller handles partial coverage by making two separate calls. (a) is more ergonomic, (b) is more composable when multiple gift cards stack. Given you're not stacking yet, (a) is fine.",
   "assertion_pass": true,
   "raw_payload": {
     "type": "result",
     "subtype": "success",
     "is_error": false,
     "api_error_status": null,
-    "duration_ms": 34925,
-    "duration_api_ms": 34898,
+    "duration_ms": 40599,
+    "duration_api_ms": 40568,
     "num_turns": 1,
-    "result": "Three viable approaches, all on a single mutable row. Pick one; don't mix.\n\n**1. `SELECT … FOR UPDATE` (pessimistic row lock)**\n```sql\nBEGIN;\nSELECT balance FROM gift_cards WHERE code = $1 FOR UPDATE;\n-- application decides how much to consume\nUPDATE gift_cards SET balance = balance - $2 WHERE code = $1;\nCOMMIT;\n```\n- Pros: dead simple, matches what you're probably already doing for wallets, impossible to double-spend if the transaction holds.\n- Cons: holds the lock for the full transaction — if you do *anything* slow between `SELECT` and `COMMIT` (PSP call, external API, cross-service hop), you're serializing checkouts through that card. Don't call Stripe inside the lock.\n\n**2. Atomic conditional update (CAS on balance)**\n```sql\nUPDATE gift_cards\nSET balance = balance - $2\nWHERE code = $1 AND balance >= $2\nRETURNING balance;\n```\n- Pros: no explicit lock, one round-trip, the DB enforces non-negative balance. `rowcount == 0` means \"insufficient balance or concurrent decrement won\" — retry or fail cleanly.\n- Cons: you only find out *after* attempting. Fine for checkout (\"insufficient funds, adjust card payment\"), awkward if you need to pre-quote the split to the user.\n\n**3. Optimistic locking (version column)**\n```sql\nUPDATE gift_cards\nSET balance = $new_balance, version = version + 1\nWHERE code = $1 AND version = $read_version;\n```\n- Pros: lets you read, compute, show to user, then commit. Conflicts retry.\n- Cons: more moving parts than #2 for no real gain in this use case. Use it when the compute-between-read-and-write is expensive; here it isn't.\n\n**Recommendation: #2, with a reserve/release pattern on top.**\n\nReason: checkout isn't a single atomic moment. It's `user submits → you authorize the card → you capture`. If you decrement the gift card balance at submit and the card auth fails, you've silently destroyed the customer's balance until someone notices. If you decrement at capture, two concurrent flows can both pass the pre-check and one gets a nasty \"balance vanished\" error at the worst moment.\n\nThe pattern that works on a mutable row:\n\n```\ngift_cards: balance, held\n```\n\n- **Reserve** (at checkout submit):\n  ```sql\n  UPDATE gift_cards\n  SET held = held + $amt\n  WHERE code = $1 AND (balance - held) >= $amt\n  RETURNING balance, held;\n  ```\n- **Capture** (after PSP success):\n  ```sql\n  UPDATE gift_cards\n  SET balance = balance - $amt, held = held - $amt\n  WHERE code = $1;\n  ```\n- **Release** (PSP fail, user abandons, timeout):\n  ```sql\n  UPDATE gift_cards\n  SET held = held - $amt\n  WHERE code = $1;\n  ```\n\nAvailable balance is always `balance - held`. Double-spend is impossible because the reserve step is a single atomic conditional update. The PSP call happens *between* reserve and capture, with no lock held.\n\n**Three things you still need, no matter which option you pick:**\n\n1. **Idempotency key** on every mutation. Checkout retries *will* happen — network hiccups, user double-clicks, PSP webhook redeliveries. Store `(code, idempotency_key)` with the resulting operation; on retry, return the prior outcome instead of decrementing again. This is the single biggest source of double-spend in production, not raw concurrency.\n\n2. **Held-amount timeout / reaper.** An abandoned checkout must not lock funds forever. Store `held_until` per reservation (or a side table of active holds) and have a job that releases expired ones. 15–30 min is typical; match your PSP auth lifetime.\n\n3. **Audit trail.** Yes, you chose mutable rows — still write an append-only log of every balance change with `(code, delta, reason, order_id, idempotency_key, timestamp)`. When (not if) a customer disputes a balance, this is what saves you. It's the escape hatch from the mutable-row decision without rebuilding the feature.\n\nOne gotcha specific to the wallet consistency angle: if your existing wallet code uses `SELECT … FOR UPDATE`, and you wrap gift card + wallet + PSP auth in one transaction, you can deadlock yourself by acquiring locks in different orders across concurrent checkouts. Either (a) always lock in a canonical order (e.g., by resource type then ID), or (b) use the atomic-conditional-update pattern for gift cards specifically so you're not holding a long lock. I'd do (b).",
+    "result": "The core primitive is a **conditional atomic UPDATE** — don't do read-then-write in application code.\n\n```sql\nUPDATE gift_cards\nSET balance = balance - :amount\nWHERE id = :card_id\n  AND balance >= :amount;\n```\n\nCheck affected rows. If 0, the card either doesn't exist or didn't have enough — reject. One statement, no lock held across round trips, works in any isolation level, safe under arbitrary concurrency. Two sessions both seeing \"balance is $50\" doesn't matter; only one of them wins the conditional update.\n\n`SELECT ... FOR UPDATE` also works and is fine if you need to validate multiple conditions in one transaction, but for a single-card debit the conditional UPDATE is simpler and has less lock contention.\n\n**But debit-at-checkout isn't quite what you want.** Checkout is multi-step: user submits → you authorize card payment → capture on ship/confirm. If you debit the gift card at step 1 and the card auth fails at step 2, you've got to refund. If you debit at step 3, another session can drain the balance in between. The standard pattern is **reserve → commit/release**:\n\n1. **Reserve**: conditional UPDATE debits the balance *and* writes a row to `gift_card_transactions` with `status='held'`, `order_id=:order_id`.\n2. **Commit**: on successful payment capture, flip the transaction row to `status='consumed'`. Balance already reflects it.\n3. **Release**: on cancel/timeout/payment failure, conditional UPDATE credits the balance back and marks the transaction `status='released'`.\n\nHolds should have a TTL and a sweeper that auto-releases stale ones, otherwise abandoned carts permanently lock balance.\n\n**Idempotency** — the same checkout will retry (network blip, payment webhook replay, user double-click). Put a unique constraint on `(gift_card_id, order_id, intent)` in the transactions table so a retried reserve for the same order is a no-op rather than a second debit. The conditional UPDATE protects against concurrent *different* orders; the unique constraint protects against the *same* order arriving twice.\n\n**What not to do:**\n- Read balance → check in app code → UPDATE. Classic TOCTOU; the check and the write aren't atomic.\n- Reach for Redis/distributed locks. Your database already does this correctly and cheaply; adding a lock service adds a new failure mode (lock server down = checkout down) without fixing anything the DB didn't already handle.\n- Serializable isolation across the whole checkout transaction. It works but causes serialization failures under load and is overkill when one conditional UPDATE gets you there.\n- Debit + credit balance on refund as *new transaction rows with opposite sign* rather than mutating or deleting the original hold row. Keeps the transactions table append-only even though the balance column is mutable — preserves the audit trail you wanted from the middle-ground compromise.\n\nOne thing to decide: **what does \"reserve\" return to the caller?** Either (a) the amount actually reserved (min of balance and order total) so the caller knows how much to charge the card, or (b) reserves only if the full ask fits, and the caller handles partial coverage by making two separate calls. (a) is more ergonomic, (b) is more composable when multiple gift cards stack. Given you're not stacking yet, (a) is fine.",
     "stop_reason": "end_turn",
-    "session_id": "c02819a2-ad2a-4986-87e1-163d9a52cd4b",
-    "total_cost_usd": 0.07803600000000001,
+    "session_id": "dbae8038-082c-4770-a429-b9b4f798bbc6",
+    "total_cost_usd": 0.07680124999999999,
     "usage": {
       "input_tokens": 6,
-      "cache_creation_input_tokens": 1590,
-      "cache_read_input_tokens": 34037,
-      "output_tokens": 2042,
+      "cache_creation_input_tokens": 1725,
+      "cache_read_input_tokens": 35680,
+      "output_tokens": 1926,
       "server_tool_use": {
         "web_search_requests": 0,
         "web_fetch_requests": 0
       },
       "service_tier": "standard",
       "cache_creation": {
-        "ephemeral_1h_input_tokens": 1590,
+        "ephemeral_1h_input_tokens": 1725,
         "ephemeral_5m_input_tokens": 0
       },
       "inference_geo": "",
       "iterations": [
         {
           "input_tokens": 6,
-          "output_tokens": 2042,
-          "cache_read_input_tokens": 34037,
-          "cache_creation_input_tokens": 1590,
+          "output_tokens": 1926,
+          "cache_read_input_tokens": 35680,
+          "cache_creation_input_tokens": 1725,
           "cache_creation": {
             "ephemeral_5m_input_tokens": 0,
-            "ephemeral_1h_input_tokens": 1590
+            "ephemeral_1h_input_tokens": 1725
           },
           "type": "message"
         }
@@ -79,11 +79,11 @@
     "modelUsage": {
       "claude-opus-4-7": {
         "inputTokens": 6,
-        "outputTokens": 2042,
-        "cacheReadInputTokens": 34037,
-        "cacheCreationInputTokens": 1590,
+        "outputTokens": 1926,
+        "cacheReadInputTokens": 35680,
+        "cacheCreationInputTokens": 1725,
         "webSearchRequests": 0,
-        "costUSD": 0.07803600000000001,
+        "costUSD": 0.07680124999999999,
         "contextWindow": 1000000,
         "maxOutputTokens": 64000
       }
@@ -91,6 +91,6 @@
     "permission_denials": [],
     "terminal_reason": "completed",
     "fast_mode_state": "off",
-    "uuid": "0db9a48e-3e53-4826-9e68-603592f3c8f8"
+    "uuid": "e1e4cfab-dc21-4de4-91f5-85381a26b0d2"
   }
 }

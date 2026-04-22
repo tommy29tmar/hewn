@@ -14,61 +14,61 @@
   ],
   "digest_hex": "2a54ba54e1f7192ed7b81622a0de8bb31264ddae15be620c57cd7c027de6901e",
   "seed": "hewn-bench-v1",
-  "timestamp": "2026-04-21T23:45:44.255848+00:00",
-  "output_tokens_tiktoken": 270,
-  "output_tokens_anthropic": 434,
+  "timestamp": "2026-04-22T08:00:07.008785+00:00",
+  "output_tokens_tiktoken": 221,
+  "output_tokens_anthropic": 374,
   "input_tokens_anthropic": 6,
-  "cache_creation_input_tokens": 0,
-  "cache_read_input_tokens": 28521,
-  "total_input_tokens": 28527,
+  "cache_creation_input_tokens": 17020,
+  "cache_read_input_tokens": 16796,
+  "total_input_tokens": 33822,
   "cache_state": "warm",
-  "wallclock_ms": 16602.10014198674,
-  "duration_ms": 8549,
-  "duration_api_ms": 9211,
+  "wallclock_ms": 13850.322749000043,
+  "duration_ms": 7932,
+  "duration_api_ms": 8874,
   "wrapper_overhead_ms": null,
   "stop_reason": "end_turn",
   "num_turns": 1,
-  "session_id": "66ceda62-20d2-465d-bac1-0097a33a5f98",
-  "total_cost_usd": 0.025552500000000002,
+  "session_id": "cc782863-11b7-4dff-9cc7-9edb030cbfdc",
+  "total_cost_usd": 0.124565,
   "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
-  "result": "Hash tables handle collisions with two main strategies:\n\n**1. Separate chaining** — each bucket holds a linked list (or dynamic array/tree) of entries. On collision, the new entry is appended to the bucket's list. Lookup scans the list. Java's `HashMap` uses this (and upgrades long chains to red-black trees).\n\n**2. Open addressing** — all entries live in the bucket array itself. On collision, probe for another slot:\n- *Linear probing*: try `h+1, h+2, ...` (cache-friendly but suffers from clustering)\n- *Quadratic probing*: try `h+1, h+4, h+9, ...` (reduces clustering)\n- *Double hashing*: step size comes from a second hash (best distribution)\n\nPython `dict`, Go `map`, and most modern hash tables use open addressing variants.\n\n**Supporting mechanics:**\n- **Load factor** (entries/buckets) is kept below a threshold (e.g., 0.75) via resize-and-rehash to keep expected O(1) operations.\n- **Deletion** under open addressing needs tombstones or backward-shifting, or lookups break.\n- **Adversarial collisions**: randomized seeds (SipHash in Python/Rust) prevent attackers from forcing worst-case O(n) behavior.",
+  "result": "Hash tables handle collisions with two main strategies:\n\n**Separate chaining** — each bucket holds a linked list (or tree) of entries. Collisions append to the list. Lookup walks the chain comparing keys. Simple, tolerates high load factors, but costs pointer indirection and cache misses.\n\n**Open addressing** — all entries live in the array itself. On collision, probe for another slot:\n- *Linear probing*: try slot+1, slot+2… Cache-friendly but suffers primary clustering.\n- *Quadratic probing*: try slot+1², slot+2²… Breaks up clusters.\n- *Double hashing*: step size from a second hash function. Best distribution.\n\nOpen addressing needs load factor < ~0.7 and tombstones for deletion.\n\n**Modern variants**: Robin Hood hashing (evict entries with shorter probe distance), Cuckoo hashing (two tables, guaranteed O(1) lookup), Hopscotch (keep entries within a neighborhood of their home bucket). Java's `HashMap` uses chaining and promotes long chains to red-black trees at threshold 8.",
   "assertion_pass": true,
   "raw_payload": {
     "type": "result",
     "subtype": "success",
     "is_error": false,
     "api_error_status": null,
-    "duration_ms": 8549,
-    "duration_api_ms": 9211,
+    "duration_ms": 7932,
+    "duration_api_ms": 8874,
     "num_turns": 1,
-    "result": "Hash tables handle collisions with two main strategies:\n\n**1. Separate chaining** — each bucket holds a linked list (or dynamic array/tree) of entries. On collision, the new entry is appended to the bucket's list. Lookup scans the list. Java's `HashMap` uses this (and upgrades long chains to red-black trees).\n\n**2. Open addressing** — all entries live in the bucket array itself. On collision, probe for another slot:\n- *Linear probing*: try `h+1, h+2, ...` (cache-friendly but suffers from clustering)\n- *Quadratic probing*: try `h+1, h+4, h+9, ...` (reduces clustering)\n- *Double hashing*: step size comes from a second hash (best distribution)\n\nPython `dict`, Go `map`, and most modern hash tables use open addressing variants.\n\n**Supporting mechanics:**\n- **Load factor** (entries/buckets) is kept below a threshold (e.g., 0.75) via resize-and-rehash to keep expected O(1) operations.\n- **Deletion** under open addressing needs tombstones or backward-shifting, or lookups break.\n- **Adversarial collisions**: randomized seeds (SipHash in Python/Rust) prevent attackers from forcing worst-case O(n) behavior.",
+    "result": "Hash tables handle collisions with two main strategies:\n\n**Separate chaining** — each bucket holds a linked list (or tree) of entries. Collisions append to the list. Lookup walks the chain comparing keys. Simple, tolerates high load factors, but costs pointer indirection and cache misses.\n\n**Open addressing** — all entries live in the array itself. On collision, probe for another slot:\n- *Linear probing*: try slot+1, slot+2… Cache-friendly but suffers primary clustering.\n- *Quadratic probing*: try slot+1², slot+2²… Breaks up clusters.\n- *Double hashing*: step size from a second hash function. Best distribution.\n\nOpen addressing needs load factor < ~0.7 and tombstones for deletion.\n\n**Modern variants**: Robin Hood hashing (evict entries with shorter probe distance), Cuckoo hashing (two tables, guaranteed O(1) lookup), Hopscotch (keep entries within a neighborhood of their home bucket). Java's `HashMap` uses chaining and promotes long chains to red-black trees at threshold 8.",
     "stop_reason": "end_turn",
-    "session_id": "66ceda62-20d2-465d-bac1-0097a33a5f98",
-    "total_cost_usd": 0.025552500000000002,
+    "session_id": "cc782863-11b7-4dff-9cc7-9edb030cbfdc",
+    "total_cost_usd": 0.124565,
     "usage": {
       "input_tokens": 6,
-      "cache_creation_input_tokens": 0,
-      "cache_read_input_tokens": 28521,
-      "output_tokens": 434,
+      "cache_creation_input_tokens": 17020,
+      "cache_read_input_tokens": 16796,
+      "output_tokens": 374,
       "server_tool_use": {
         "web_search_requests": 0,
         "web_fetch_requests": 0
       },
       "service_tier": "standard",
       "cache_creation": {
-        "ephemeral_1h_input_tokens": 0,
+        "ephemeral_1h_input_tokens": 17020,
         "ephemeral_5m_input_tokens": 0
       },
       "inference_geo": "",
       "iterations": [
         {
           "input_tokens": 6,
-          "output_tokens": 434,
-          "cache_read_input_tokens": 28521,
-          "cache_creation_input_tokens": 0,
+          "output_tokens": 374,
+          "cache_read_input_tokens": 16796,
+          "cache_creation_input_tokens": 17020,
           "cache_creation": {
             "ephemeral_5m_input_tokens": 0,
-            "ephemeral_1h_input_tokens": 0
+            "ephemeral_1h_input_tokens": 17020
           },
           "type": "message"
         }
@@ -88,18 +88,18 @@
       },
       "claude-opus-4-7": {
         "inputTokens": 6,
-        "outputTokens": 434,
-        "cacheReadInputTokens": 28521,
-        "cacheCreationInputTokens": 0,
+        "outputTokens": 374,
+        "cacheReadInputTokens": 16796,
+        "cacheCreationInputTokens": 17020,
         "webSearchRequests": 0,
-        "costUSD": 0.025140500000000003,
-        "contextWindow": 200000,
+        "costUSD": 0.124153,
+        "contextWindow": 1000000,
         "maxOutputTokens": 64000
       }
     },
     "permission_denials": [],
     "terminal_reason": "completed",
     "fast_mode_state": "off",
-    "uuid": "a15ff797-478a-4d8c-ae71-a2e51a2afb15"
+    "uuid": "1f62972d-5790-4400-adf3-b7de6440a58c"
   }
 }

@@ -1,13 +1,13 @@
 {
   "final": {
     "identifies_pool_exhaustion_risk_with_promise_all_for_47_skus": true,
-    "considers_average_vs_max_case": true
+    "considers_average_vs_max_case": false
   },
   "history": [
     {
       "attempt": 0,
-      "raw": "{\"identifies_pool_exhaustion_risk_with_promise_all_for_47_skus\":true,\"considers_average_vs_max_case\":true}"
+      "raw": "{\"identifies_pool_exhaustion_risk_with_promise_all_for_47_skus\":true,\"considers_average_vs_max_case\":false}"
     }
   ],
-  "ts": "2026-04-22T02:07:41.639273+00:00"
+  "ts": "2026-04-22T09:06:47.375974+00:00"
 }

@@ -14,62 +14,62 @@
   ],
   "digest_hex": "3191b019d37f08f3d5b68d9000f1aeb1e1a3524225f9daa893803df1e240ffd1",
   "seed": "hewn-bench-v1",
-  "timestamp": "2026-04-22T01:34:28.223047+00:00",
-  "session_id_used_for_resume": "6e1e9b6f-4231-446d-bb78-7ccf3f2e0132",
-  "output_tokens_tiktoken": 484,
-  "output_tokens_anthropic": 869,
+  "timestamp": "2026-04-22T08:41:24.079643+00:00",
+  "session_id_used_for_resume": "a54c782e-344b-4398-9b93-e8973f75e9a0",
+  "output_tokens_tiktoken": 97,
+  "output_tokens_anthropic": 178,
   "input_tokens_anthropic": 6,
-  "cache_creation_input_tokens": 1451,
-  "cache_read_input_tokens": 34154,
-  "total_input_tokens": 35611,
+  "cache_creation_input_tokens": 355,
+  "cache_read_input_tokens": 35053,
+  "total_input_tokens": 35414,
   "cache_state": "warm",
-  "wallclock_ms": 22488.534621021245,
-  "duration_ms": 19129,
-  "duration_api_ms": 19036,
-  "wrapper_overhead_ms": 3452.5346210212447,
+  "wallclock_ms": 12603.043720999267,
+  "duration_ms": 5556,
+  "duration_api_ms": 5451,
+  "wrapper_overhead_ms": 7152.043720999267,
   "stop_reason": "end_turn",
   "num_turns": 1,
-  "session_id": "6e1e9b6f-4231-446d-bb78-7ccf3f2e0132",
-  "total_cost_usd": 0.04790075,
+  "session_id": "a54c782e-344b-4398-9b93-e8973f75e9a0",
+  "total_cost_usd": 0.024225249999999997,
   "model_used": "claude-opus-4-7",
-  "result": "Mutable row — single UPDATE balance = balance - amount WHERE id = ? AND balance >= ?. Atomic via row lock. Fast reads. Matches your wallet code, so reviewers already know the shape.\n\nCost of mutable — history is lost unless you add a separate audit log. If a redemption is disputed (\"card said $50, only $30 left\"), you have no trail. You'll end up building a ledger anyway, just bolted on.\n\nLedger — every issue / redeem / refund / adjust is an insert. Balance = SUM(amount) WHERE card_id = ?. Never updates, only appends. Immutable by construction.\n\nLedger wins — full audit trail for free, partial refunds trivially modeled as negative-redeem rows, adjustments (customer service credits $5 back) are first-class, finance can reconcile any point in time.\n\nLedger costs — read is a SUM not a column fetch. Fine up to millions of rows if indexed on card_id; beyond that you cache or snapshot. Concurrency needs an idempotency key + serializable isolation or a per-card advisory lock, because two concurrent inserts can both read balance=$50 and both decide redeem $40 is fine.\n\nGift cards differ from wallets — wallets are account-scoped, usually one actor, internal money. Gift cards are bearer instruments, touched by finance, legally regulated, often disputed, and auditors will ask for a transaction history. The \"we need history eventually\" probability is ~100%.\n\nHybrid — ledger as source of truth, cached balance column on card row updated in same transaction as insert. Reads hit the column, writes append + update. Reconcile job nightly: assert column == SUM(ledger). Best of both, only real cost is remembering to update both in one tx.\n\nConsistency with wallets — not a strong argument. Wallets and gift cards are different domains with different audit requirements. You can keep wallets mutable and make gift cards ledger without anyone getting confused; the schemas already have different tables.\n\nRecommendation — ledger with cached balance. If you want to skip the cache initially, pure ledger is fine at your likely volume; add the cache when a SUM query shows up in slow logs.\n\nOne trap — refunds. In mutable model, a refund is balance += amount, and you've just lost the ability to answer \"was this card ever used on order X\". In ledger, refund row references the original redeem row, and the story is self-evident.",
+  "result": "Mutable row is simpler and matches your wallet code, but reconstructing history, auditing disputes, and handling partial-redemption reversals all rely on a separate transaction log you'll end up building anyway. Event-sourced ledger makes balance = sum(events), so refunds, chargebacks, and double-spend investigations fall out naturally — at the cost of one extra join and stricter write discipline. Given gift cards attract more fraud and accounting scrutiny than wallets, I'd lean ledger even if wallets stay mutable.",
   "assertion_pass": true,
   "raw_payload": {
     "type": "result",
     "subtype": "success",
     "is_error": false,
     "api_error_status": null,
-    "duration_ms": 19129,
-    "duration_api_ms": 19036,
+    "duration_ms": 5556,
+    "duration_api_ms": 5451,
     "num_turns": 1,
-    "result": "Mutable row — single UPDATE balance = balance - amount WHERE id = ? AND balance >= ?. Atomic via row lock. Fast reads. Matches your wallet code, so reviewers already know the shape.\n\nCost of mutable — history is lost unless you add a separate audit log. If a redemption is disputed (\"card said $50, only $30 left\"), you have no trail. You'll end up building a ledger anyway, just bolted on.\n\nLedger — every issue / redeem / refund / adjust is an insert. Balance = SUM(amount) WHERE card_id = ?. Never updates, only appends. Immutable by construction.\n\nLedger wins — full audit trail for free, partial refunds trivially modeled as negative-redeem rows, adjustments (customer service credits $5 back) are first-class, finance can reconcile any point in time.\n\nLedger costs — read is a SUM not a column fetch. Fine up to millions of rows if indexed on card_id; beyond that you cache or snapshot. Concurrency needs an idempotency key + serializable isolation or a per-card advisory lock, because two concurrent inserts can both read balance=$50 and both decide redeem $40 is fine.\n\nGift cards differ from wallets — wallets are account-scoped, usually one actor, internal money. Gift cards are bearer instruments, touched by finance, legally regulated, often disputed, and auditors will ask for a transaction history. The \"we need history eventually\" probability is ~100%.\n\nHybrid — ledger as source of truth, cached balance column on card row updated in same transaction as insert. Reads hit the column, writes append + update. Reconcile job nightly: assert column == SUM(ledger). Best of both, only real cost is remembering to update both in one tx.\n\nConsistency with wallets — not a strong argument. Wallets and gift cards are different domains with different audit requirements. You can keep wallets mutable and make gift cards ledger without anyone getting confused; the schemas already have different tables.\n\nRecommendation — ledger with cached balance. If you want to skip the cache initially, pure ledger is fine at your likely volume; add the cache when a SUM query shows up in slow logs.\n\nOne trap — refunds. In mutable model, a refund is balance += amount, and you've just lost the ability to answer \"was this card ever used on order X\". In ledger, refund row references the original redeem row, and the story is self-evident.",
+    "result": "Mutable row is simpler and matches your wallet code, but reconstructing history, auditing disputes, and handling partial-redemption reversals all rely on a separate transaction log you'll end up building anyway. Event-sourced ledger makes balance = sum(events), so refunds, chargebacks, and double-spend investigations fall out naturally — at the cost of one extra join and stricter write discipline. Given gift cards attract more fraud and accounting scrutiny than wallets, I'd lean ledger even if wallets stay mutable.",
     "stop_reason": "end_turn",
-    "session_id": "6e1e9b6f-4231-446d-bb78-7ccf3f2e0132",
-    "total_cost_usd": 0.04790075,
+    "session_id": "a54c782e-344b-4398-9b93-e8973f75e9a0",
+    "total_cost_usd": 0.024225249999999997,
     "usage": {
       "input_tokens": 6,
-      "cache_creation_input_tokens": 1451,
-      "cache_read_input_tokens": 34154,
-      "output_tokens": 869,
+      "cache_creation_input_tokens": 355,
+      "cache_read_input_tokens": 35053,
+      "output_tokens": 178,
       "server_tool_use": {
         "web_search_requests": 0,
         "web_fetch_requests": 0
       },
       "service_tier": "standard",
       "cache_creation": {
-        "ephemeral_1h_input_tokens": 1451,
+        "ephemeral_1h_input_tokens": 355,
         "ephemeral_5m_input_tokens": 0
       },
       "inference_geo": "",
       "iterations": [
         {
           "input_tokens": 6,
-          "output_tokens": 869,
-          "cache_read_input_tokens": 34154,
-          "cache_creation_input_tokens": 1451,
+          "output_tokens": 178,
+          "cache_read_input_tokens": 35053,
+          "cache_creation_input_tokens": 355,
           "cache_creation": {
             "ephemeral_5m_input_tokens": 0,
-            "ephemeral_1h_input_tokens": 1451
+            "ephemeral_1h_input_tokens": 355
           },
           "type": "message"
         }
@@ -79,11 +79,11 @@
     "modelUsage": {
       "claude-opus-4-7": {
         "inputTokens": 6,
-        "outputTokens": 869,
-        "cacheReadInputTokens": 34154,
-        "cacheCreationInputTokens": 1451,
+        "outputTokens": 178,
+        "cacheReadInputTokens": 35053,
+        "cacheCreationInputTokens": 355,
         "webSearchRequests": 0,
-        "costUSD": 0.04790075,
+        "costUSD": 0.024225249999999997,
         "contextWindow": 1000000,
         "maxOutputTokens": 64000
       }
@@ -91,6 +91,6 @@
     "permission_denials": [],
     "terminal_reason": "completed",
     "fast_mode_state": "off",
-    "uuid": "ba67740c-bdb2-4050-be71-7b83d62f5a9e"
+    "uuid": "690b2f79-2c9c-414c-b35a-ac1c146fa65b"
   }
 }

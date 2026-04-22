@@ -6,8 +6,8 @@
   "history": [
     {
       "attempt": 0,
-      "raw": "{\"lists_design_decisions_e_g_storage_model_or_concurrency_or_expiry_or_refunds\": true, \"covers_at_least_three_distinct_areas\": true}"
+      "raw": "{\"lists_design_decisions_e_g_storage_model_or_concurrency_or_expiry_or_refunds\":true,\"covers_at_least_three_distinct_areas\":true}"
     }
   ],
-  "ts": "2026-04-22T02:09:58.729077+00:00"
+  "ts": "2026-04-22T09:10:15.757071+00:00"
 }

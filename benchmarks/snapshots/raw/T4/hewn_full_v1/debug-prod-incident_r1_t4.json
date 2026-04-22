@@ -1,0 +1,96 @@
+{
+  "track": "T4",
+  "arm": "hewn_full",
+  "sequence_id": "debug-prod-incident",
+  "run_index": 1,
+  "turn": 4,
+  "arm_order_index": 1,
+  "arm_order_full": [
+    "baseline",
+    "hewn_full",
+    "hewn_prompt_only",
+    "caveman_full",
+    "terse"
+  ],
+  "digest_hex": "c436155c1e87e76d88e6f2c66d47c90c16ae78237b0a8de1b93824cf92fb5c9b",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T00:58:29.058495+00:00",
+  "session_id_used_for_resume": "5d1851be-da18-4cec-aee4-bc97c1f25d2d",
+  "output_tokens_tiktoken": 170,
+  "output_tokens_anthropic": 288,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 681,
+  "cache_read_input_tokens": 35315,
+  "total_input_tokens": 36002,
+  "cache_state": "warm",
+  "wallclock_ms": 12879.610781994415,
+  "duration_ms": 9418,
+  "duration_api_ms": 9332,
+  "wrapper_overhead_ms": 3547.6107819944154,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "5d1851be-da18-4cec-aee4-bc97c1f25d2d",
+  "total_cost_usd": 0.02914375,
+  "model_used": "claude-opus-4-7",
+  "result": "depends on cart size and concurrent request volume\nPromise.all fans out N lookups in parallel — each grabs a pool connection\ncart with 30 SKUs × 10 concurrent requests = 300 connections wanted, pool caps at 20\nrest queue on pool, latency spikes, potential timeouts, maybe pool exhaustion errors\nsafer: bounded concurrency (p-limit, 5-8 parallel) or batched IN query (one lookup for all SKUs)\nbatched IN query best — one connection, one round trip, scales with cart size\ncheck: does SKU lookup hit same table? if yes, SELECT ... WHERE sku IN (...) kills this problem\nalso check: any retry logic? Promise.all fails fast on first rejection, sequential loop may have partial-success semantics the caller relied on\nload test before shipping or gate behind cart-size cap",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 9418,
+    "duration_api_ms": 9332,
+    "num_turns": 1,
+    "result": "depends on cart size and concurrent request volume\nPromise.all fans out N lookups in parallel — each grabs a pool connection\ncart with 30 SKUs × 10 concurrent requests = 300 connections wanted, pool caps at 20\nrest queue on pool, latency spikes, potential timeouts, maybe pool exhaustion errors\nsafer: bounded concurrency (p-limit, 5-8 parallel) or batched IN query (one lookup for all SKUs)\nbatched IN query best — one connection, one round trip, scales with cart size\ncheck: does SKU lookup hit same table? if yes, SELECT ... WHERE sku IN (...) kills this problem\nalso check: any retry logic? Promise.all fails fast on first rejection, sequential loop may have partial-success semantics the caller relied on\nload test before shipping or gate behind cart-size cap",
+    "stop_reason": "end_turn",
+    "session_id": "5d1851be-da18-4cec-aee4-bc97c1f25d2d",
+    "total_cost_usd": 0.02914375,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 681,
+      "cache_read_input_tokens": 35315,
+      "output_tokens": 288,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 681,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 288,
+          "cache_read_input_tokens": 35315,
+          "cache_creation_input_tokens": 681,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 681
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 288,
+        "cacheReadInputTokens": 35315,
+        "cacheCreationInputTokens": 681,
+        "webSearchRequests": 0,
+        "costUSD": 0.02914375,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "7beee0e5-0269-4419-a471-4b9588867659"
+  }
+}

@@ -9,5 +9,5 @@
       "raw": "{\"names_select_for_update_or_advisory_lock_or_serializable_isolation\":true,\"explains_why_simple_select_then_update_is_unsafe\":true}"
     }
   ],
-  "ts": "2026-04-22T02:10:09.526556+00:00"
+  "ts": "2026-04-22T09:10:36.786305+00:00"
 }

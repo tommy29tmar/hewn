@@ -14,62 +14,62 @@
   ],
   "digest_hex": "522341918a5177210ef438fa55486ec5b622aaa576febbd731536d82595ec31b",
   "seed": "hewn-bench-v1",
-  "timestamp": "2026-04-22T01:20:17.775882+00:00",
-  "session_id_used_for_resume": "db9196e2-d77f-437e-94d6-5de4cec74c02",
-  "output_tokens_tiktoken": 403,
-  "output_tokens_anthropic": 1133,
+  "timestamp": "2026-04-22T08:36:45.991946+00:00",
+  "session_id_used_for_resume": "f349cd15-26d0-4a3f-979a-a8e27980ef9b",
+  "output_tokens_tiktoken": 280,
+  "output_tokens_anthropic": 530,
   "input_tokens_anthropic": 6,
-  "cache_creation_input_tokens": 2523,
-  "cache_read_input_tokens": 33590,
-  "total_input_tokens": 36119,
+  "cache_creation_input_tokens": 465,
+  "cache_read_input_tokens": 34473,
+  "total_input_tokens": 34944,
   "cache_state": "warm",
-  "wallclock_ms": 23472.60061299312,
-  "duration_ms": 19542,
-  "duration_api_ms": 19513,
+  "wallclock_ms": 17337.128065992147,
+  "duration_ms": 11071,
+  "duration_api_ms": 11043,
   "wrapper_overhead_ms": null,
   "stop_reason": "end_turn",
   "num_turns": 1,
-  "session_id": "db9196e2-d77f-437e-94d6-5de4cec74c02",
-  "total_cost_usd": 0.060918749999999994,
+  "session_id": "f349cd15-26d0-4a3f-979a-a8e27980ef9b",
+  "total_cost_usd": 0.03342275,
   "model_used": "claude-opus-4-7",
-  "result": "Test at the `createOrder` level, not at `buildCart`. The bug wasn't \"buildCart has wrong shape\" in the abstract — it was \"createOrder breaks when something upstream silently drops a field it needs.\" That's the contract you want to lock in.\n\n```js\ndescribe('createOrder', () => {\n  it('persists line items from the cart', async () => {\n    const cart = { id: 'c1', items: [{ sku: 'A', price: 10, qty: 2 }] };\n    const order = await createOrder({ body: { cart } });\n    expect(order.items).toEqual([{ sku: 'A', price: 10, qty: 2 }]);\n    expect(order.total).toBe(20);\n  });\n});\n```\n\nWhy this shape, not a unit test on `buildCart`:\n\n- A test like `expect(buildCart(c)).toHaveProperty('items')` would have caught *this* bug, but it's testing the implementation. The next \"refactor\" deletes the assertion in the same PR and you're back to square one.\n- The createOrder test expresses the actual invariant the system depends on: given a cart with items, the resulting order has those items. That assertion stays true regardless of how you internally restructure `buildCart`.\n- It also fails in the same way prod failed. That's the gold standard for a regression test — if the original PR had run this test, it would have thrown the same TypeError.\n\nOne add-on worth considering: if `buildCart` is consumed by multiple downstream services (order, invoicing, etc.), a single contract test per consumer beats one giant test on `buildCart`. Each consumer asserts what *it* needs from the shape, so you find out exactly which consumer breaks when the shape drifts.\n\nSkip mocking `buildCart` inside the createOrder test — the whole point is to catch shape drift between the two, and a mock defeats that.",
+  "result": "Test the contract that broke: `buildCart`'s output shape. A caller-side test also works but the bug was a producer breaking its contract, so pin it there.\n\n```js\ndescribe('buildCart', () => {\n  it('returns id, items, and total', () => {\n    const cart = {\n      id: 'c1',\n      items: [{ price: 10, qty: 2 }, { price: 5, qty: 1 }],\n    };\n\n    expect(buildCart(cart)).toEqual({\n      id: 'c1',\n      items: cart.items,\n      total: 25,\n    });\n  });\n});\n```\n\nWhy `toEqual` with the full object (not just `toHaveProperty('items')`): it fails if a field is *removed* AND if one is silently added or reshaped. That's the class of bug you just hit.\n\nOne test is enough for the regression. Don't add five variants — empty cart, one item, many items — unless `total` math has edge cases you actually care about. The bug wasn't arithmetic.\n\nIf `buildCart` has many consumers and you want stronger guarantees, add a TypeScript return type or a JSDoc `@returns` with a shape — the type system catches this at build time, not runtime. A test only catches it if someone runs the test.",
   "assertion_pass": true,
   "raw_payload": {
     "type": "result",
     "subtype": "success",
     "is_error": false,
     "api_error_status": null,
-    "duration_ms": 19542,
-    "duration_api_ms": 19513,
+    "duration_ms": 11071,
+    "duration_api_ms": 11043,
     "num_turns": 1,
-    "result": "Test at the `createOrder` level, not at `buildCart`. The bug wasn't \"buildCart has wrong shape\" in the abstract — it was \"createOrder breaks when something upstream silently drops a field it needs.\" That's the contract you want to lock in.\n\n```js\ndescribe('createOrder', () => {\n  it('persists line items from the cart', async () => {\n    const cart = { id: 'c1', items: [{ sku: 'A', price: 10, qty: 2 }] };\n    const order = await createOrder({ body: { cart } });\n    expect(order.items).toEqual([{ sku: 'A', price: 10, qty: 2 }]);\n    expect(order.total).toBe(20);\n  });\n});\n```\n\nWhy this shape, not a unit test on `buildCart`:\n\n- A test like `expect(buildCart(c)).toHaveProperty('items')` would have caught *this* bug, but it's testing the implementation. The next \"refactor\" deletes the assertion in the same PR and you're back to square one.\n- The createOrder test expresses the actual invariant the system depends on: given a cart with items, the resulting order has those items. That assertion stays true regardless of how you internally restructure `buildCart`.\n- It also fails in the same way prod failed. That's the gold standard for a regression test — if the original PR had run this test, it would have thrown the same TypeError.\n\nOne add-on worth considering: if `buildCart` is consumed by multiple downstream services (order, invoicing, etc.), a single contract test per consumer beats one giant test on `buildCart`. Each consumer asserts what *it* needs from the shape, so you find out exactly which consumer breaks when the shape drifts.\n\nSkip mocking `buildCart` inside the createOrder test — the whole point is to catch shape drift between the two, and a mock defeats that.",
+    "result": "Test the contract that broke: `buildCart`'s output shape. A caller-side test also works but the bug was a producer breaking its contract, so pin it there.\n\n```js\ndescribe('buildCart', () => {\n  it('returns id, items, and total', () => {\n    const cart = {\n      id: 'c1',\n      items: [{ price: 10, qty: 2 }, { price: 5, qty: 1 }],\n    };\n\n    expect(buildCart(cart)).toEqual({\n      id: 'c1',\n      items: cart.items,\n      total: 25,\n    });\n  });\n});\n```\n\nWhy `toEqual` with the full object (not just `toHaveProperty('items')`): it fails if a field is *removed* AND if one is silently added or reshaped. That's the class of bug you just hit.\n\nOne test is enough for the regression. Don't add five variants — empty cart, one item, many items — unless `total` math has edge cases you actually care about. The bug wasn't arithmetic.\n\nIf `buildCart` has many consumers and you want stronger guarantees, add a TypeScript return type or a JSDoc `@returns` with a shape — the type system catches this at build time, not runtime. A test only catches it if someone runs the test.",
     "stop_reason": "end_turn",
-    "session_id": "db9196e2-d77f-437e-94d6-5de4cec74c02",
-    "total_cost_usd": 0.060918749999999994,
+    "session_id": "f349cd15-26d0-4a3f-979a-a8e27980ef9b",
+    "total_cost_usd": 0.03342275,
     "usage": {
       "input_tokens": 6,
-      "cache_creation_input_tokens": 2523,
-      "cache_read_input_tokens": 33590,
-      "output_tokens": 1133,
+      "cache_creation_input_tokens": 465,
+      "cache_read_input_tokens": 34473,
+      "output_tokens": 530,
       "server_tool_use": {
         "web_search_requests": 0,
         "web_fetch_requests": 0
       },
       "service_tier": "standard",
       "cache_creation": {
-        "ephemeral_1h_input_tokens": 2523,
+        "ephemeral_1h_input_tokens": 465,
         "ephemeral_5m_input_tokens": 0
       },
       "inference_geo": "",
       "iterations": [
         {
           "input_tokens": 6,
-          "output_tokens": 1133,
-          "cache_read_input_tokens": 33590,
-          "cache_creation_input_tokens": 2523,
+          "output_tokens": 530,
+          "cache_read_input_tokens": 34473,
+          "cache_creation_input_tokens": 465,
           "cache_creation": {
             "ephemeral_5m_input_tokens": 0,
-            "ephemeral_1h_input_tokens": 2523
+            "ephemeral_1h_input_tokens": 465
           },
           "type": "message"
         }
@@ -79,11 +79,11 @@
     "modelUsage": {
       "claude-opus-4-7": {
         "inputTokens": 6,
-        "outputTokens": 1133,
-        "cacheReadInputTokens": 33590,
-        "cacheCreationInputTokens": 2523,
+        "outputTokens": 530,
+        "cacheReadInputTokens": 34473,
+        "cacheCreationInputTokens": 465,
         "webSearchRequests": 0,
-        "costUSD": 0.060918749999999994,
+        "costUSD": 0.03342275,
         "contextWindow": 1000000,
         "maxOutputTokens": 64000
       }
@@ -91,6 +91,6 @@
     "permission_denials": [],
     "terminal_reason": "completed",
     "fast_mode_state": "off",
-    "uuid": "20f14cfb-3337-4e27-89d3-42047b858829"
+    "uuid": "a89be95d-13cb-4c4a-be8e-45279fe1ac0c"
   }
 }

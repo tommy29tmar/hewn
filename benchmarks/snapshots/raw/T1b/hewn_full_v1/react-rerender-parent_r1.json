@@ -1,0 +1,105 @@
+{
+  "track": "T1b",
+  "arm": "hewn_full",
+  "prompt_id": "react-rerender-parent",
+  "run_index": 1,
+  "arm_order_index": 0,
+  "arm_order_full": [
+    "hewn_full",
+    "hewn_prompt_only",
+    "terse",
+    "caveman_full_plus_ultra_directive",
+    "caveman_full",
+    "baseline"
+  ],
+  "digest_hex": "99b7ab7ba17a8ba246c01cb3b86810b0fa1d28957b03d5604a74b257ab3da763",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-21T23:38:39.999065+00:00",
+  "output_tokens_tiktoken": 118,
+  "output_tokens_anthropic": 199,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 13204,
+  "cache_read_input_tokens": 16805,
+  "total_input_tokens": 30015,
+  "cache_state": "warm",
+  "wallclock_ms": 11163.705548999133,
+  "duration_ms": 5778,
+  "duration_api_ms": 6422,
+  "wrapper_overhead_ms": 4741.705548999133,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "3ee22649-ce3d-4b90-b881-9d17b6983a8a",
+  "total_cost_usd": 0.0963595,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "React re-renders child whenever parent renders, default behavior.\n\nFix options:\n- Wrap child in React.memo — skips re-render if props shallow-equal.\n- Stabilize prop references in parent: useMemo for objects/arrays, useCallback for functions. New reference each render busts memo.\n- Move state down so parent doesn't re-render on unrelated changes.\n- Split parent: isolate volatile state in smaller component, keep child outside that subtree.\n\nMost common trap: memo'd child still re-renders because parent passes inline {} or () => {} — fresh ref every time, memo useless.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 5778,
+    "duration_api_ms": 6422,
+    "num_turns": 1,
+    "result": "React re-renders child whenever parent renders, default behavior.\n\nFix options:\n- Wrap child in React.memo — skips re-render if props shallow-equal.\n- Stabilize prop references in parent: useMemo for objects/arrays, useCallback for functions. New reference each render busts memo.\n- Move state down so parent doesn't re-render on unrelated changes.\n- Split parent: isolate volatile state in smaller component, keep child outside that subtree.\n\nMost common trap: memo'd child still re-renders because parent passes inline {} or () => {} — fresh ref every time, memo useless.",
+    "stop_reason": "end_turn",
+    "session_id": "3ee22649-ce3d-4b90-b881-9d17b6983a8a",
+    "total_cost_usd": 0.0963595,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 13204,
+      "cache_read_input_tokens": 16805,
+      "output_tokens": 199,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 13204,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 199,
+          "cache_read_input_tokens": 16805,
+          "cache_creation_input_tokens": 13204,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 13204
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 352,
+        "outputTokens": 15,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.00042699999999999997,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 199,
+        "cacheReadInputTokens": 16805,
+        "cacheCreationInputTokens": 13204,
+        "webSearchRequests": 0,
+        "costUSD": 0.0959325,
+        "contextWindow": 200000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "1e41f481-61f2-42a7-aacd-a26a451a3802"
+  }
+}

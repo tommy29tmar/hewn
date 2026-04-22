@@ -430,7 +430,7 @@ def smoke_test_2_sentinel() -> bool:
 
 def smoke_test_3_hook_delta() -> bool:
     print("\n[SMOKE 3] hewn_full hook injects extra cache_creation tokens")
-    prompt = "explain in one sentence what caching is"
+    prompt = "Explain database connection pooling."
     a = call_once("hewn_prompt_only", prompt)
     b = call_once("hewn_full", prompt)
     delta = b["cache_creation_input_tokens"] - a["cache_creation_input_tokens"]

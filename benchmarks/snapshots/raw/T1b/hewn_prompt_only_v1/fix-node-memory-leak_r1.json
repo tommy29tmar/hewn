@@ -1,0 +1,105 @@
+{
+  "track": "T1b",
+  "arm": "hewn_prompt_only",
+  "prompt_id": "fix-node-memory-leak",
+  "run_index": 1,
+  "arm_order_index": 5,
+  "arm_order_full": [
+    "caveman_full_plus_ultra_directive",
+    "caveman_full",
+    "terse",
+    "hewn_full",
+    "baseline",
+    "hewn_prompt_only"
+  ],
+  "digest_hex": "edf96b08b6bf832e7f6141e2b1e51b0b7773d43c771414ddf25ddb62f5d6bccd",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-21T23:44:02.577209+00:00",
+  "output_tokens_tiktoken": 455,
+  "output_tokens_anthropic": 724,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 11734,
+  "cache_read_input_tokens": 16796,
+  "total_input_tokens": 28536,
+  "cache_state": "warm",
+  "wallclock_ms": 19988.896899012616,
+  "duration_ms": 14603,
+  "duration_api_ms": 15308,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "3c706568-1b61-4a98-b345-d900e26332f6",
+  "total_cost_usd": 0.1003005,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "Start with a heap snapshot to find what's retained, not what's allocated.\n\n**Capture baseline + growth snapshots**\n```bash\nnode --inspect app.js\n```\nOpen `chrome://inspect`, take a heap snapshot, exercise the app, take another, then use \"Comparison\" view to see what grew. Focus on the **Retained Size** column — that's what's actually holding memory.\n\n**Common culprits, in order of frequency**\n1. **Unbounded caches / Maps** — a `Map` or plain object keyed by request/user ID that never evicts. Fix: use `lru-cache` or `WeakMap` if keys are objects.\n2. **Event listener leaks** — `emitter.on(...)` without matching `off`. Node warns at 10 listeners; raise only if you've proven it's intentional.\n3. **Closures capturing large scopes** — a callback inside a request handler that holds the whole request/response in its closure. Detach what you don't need before storing the callback.\n4. **Timers / intervals** — `setInterval` whose callback references outer state. Always keep the handle and `clearInterval` on shutdown.\n5. **Global arrays used as queues** — pushed to but never drained/trimmed.\n6. **Native addon leaks** — rarer; shows up as RSS growing while heap stays flat.\n\n**Useful flags**\n- `--max-old-space-size=<MB>` to cap heap (makes leaks crash faster, easier to reproduce).\n- `--heapsnapshot-near-heap-limit=3` to auto-dump snapshots before OOM.\n- `--expose-gc` + `global.gc()` in tests to force collection and measure real retention.\n\n**Quick triage loop**\n```js\nsetInterval(() => {\n  const m = process.memoryUsage();\n  console.log({ rss: m.rss, heap: m.heapUsed, ext: m.external });\n}, 10_000);\n```\nHeap growing → JS leak. RSS growing but heap flat → native/Buffer leak (check `external` and `arrayBuffers`).\n\nIf you want, share the process profile (framework, what's long-running — HTTP server, worker, queue consumer?) and I can narrow it down.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 14603,
+    "duration_api_ms": 15308,
+    "num_turns": 1,
+    "result": "Start with a heap snapshot to find what's retained, not what's allocated.\n\n**Capture baseline + growth snapshots**\n```bash\nnode --inspect app.js\n```\nOpen `chrome://inspect`, take a heap snapshot, exercise the app, take another, then use \"Comparison\" view to see what grew. Focus on the **Retained Size** column — that's what's actually holding memory.\n\n**Common culprits, in order of frequency**\n1. **Unbounded caches / Maps** — a `Map` or plain object keyed by request/user ID that never evicts. Fix: use `lru-cache` or `WeakMap` if keys are objects.\n2. **Event listener leaks** — `emitter.on(...)` without matching `off`. Node warns at 10 listeners; raise only if you've proven it's intentional.\n3. **Closures capturing large scopes** — a callback inside a request handler that holds the whole request/response in its closure. Detach what you don't need before storing the callback.\n4. **Timers / intervals** — `setInterval` whose callback references outer state. Always keep the handle and `clearInterval` on shutdown.\n5. **Global arrays used as queues** — pushed to but never drained/trimmed.\n6. **Native addon leaks** — rarer; shows up as RSS growing while heap stays flat.\n\n**Useful flags**\n- `--max-old-space-size=<MB>` to cap heap (makes leaks crash faster, easier to reproduce).\n- `--heapsnapshot-near-heap-limit=3` to auto-dump snapshots before OOM.\n- `--expose-gc` + `global.gc()` in tests to force collection and measure real retention.\n\n**Quick triage loop**\n```js\nsetInterval(() => {\n  const m = process.memoryUsage();\n  console.log({ rss: m.rss, heap: m.heapUsed, ext: m.external });\n}, 10_000);\n```\nHeap growing → JS leak. RSS growing but heap flat → native/Buffer leak (check `external` and `arrayBuffers`).\n\nIf you want, share the process profile (framework, what's long-running — HTTP server, worker, queue consumer?) and I can narrow it down.",
+    "stop_reason": "end_turn",
+    "session_id": "3c706568-1b61-4a98-b345-d900e26332f6",
+    "total_cost_usd": 0.1003005,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 11734,
+      "cache_read_input_tokens": 16796,
+      "output_tokens": 724,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 11734,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 724,
+          "cache_read_input_tokens": 16796,
+          "cache_creation_input_tokens": 11734,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 11734
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 355,
+        "outputTokens": 16,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.000435,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 724,
+        "cacheReadInputTokens": 16796,
+        "cacheCreationInputTokens": 11734,
+        "webSearchRequests": 0,
+        "costUSD": 0.0998655,
+        "contextWindow": 200000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "2faac037-4bb8-44d9-b35d-2fd6bc3f6f65"
+  }
+}

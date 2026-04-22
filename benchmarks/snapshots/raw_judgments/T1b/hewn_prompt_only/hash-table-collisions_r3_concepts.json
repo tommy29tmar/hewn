@@ -3,13 +3,13 @@
     "chaining_with_linked_list": true,
     "open_addressing_with_probing": true,
     "load_factor_relevance": true,
-    "hash_function_quality_matters": false
+    "hash_function_quality_matters": true
   },
   "history": [
     {
       "attempt": 0,
-      "raw": "{\"chaining_with_linked_list\":true,\"open_addressing_with_probing\":true,\"load_factor_relevance\":true,\"hash_function_quality_matters\":false}"
+      "raw": "{\"chaining_with_linked_list\":true,\"open_addressing_with_probing\":true,\"load_factor_relevance\":true,\"hash_function_quality_matters\":true}"
     }
   ],
-  "ts": "2026-04-22T01:16:56.937719+00:00"
+  "ts": "2026-04-22T08:49:44.851186+00:00"
 }

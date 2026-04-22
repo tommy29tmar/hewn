@@ -14,61 +14,61 @@
   ],
   "digest_hex": "394d162344f9342c7b47283b28bfa130e4fb435382a1f0a8aa819239935b955a",
   "seed": "hewn-bench-v1",
-  "timestamp": "2026-04-22T00:40:38.345453+00:00",
-  "output_tokens_tiktoken": 438,
-  "output_tokens_anthropic": 868,
+  "timestamp": "2026-04-22T08:21:02.496074+00:00",
+  "output_tokens_tiktoken": 509,
+  "output_tokens_anthropic": 1149,
   "input_tokens_anthropic": 6,
-  "cache_creation_input_tokens": 23113,
+  "cache_creation_input_tokens": 24317,
   "cache_read_input_tokens": 16796,
-  "total_input_tokens": 39915,
+  "total_input_tokens": 41119,
   "cache_state": "warm",
-  "wallclock_ms": 21516.679969005054,
-  "duration_ms": 16970,
-  "duration_api_ms": 20283,
+  "wallclock_ms": 31114.773136010626,
+  "duration_ms": 24821,
+  "duration_api_ms": 26395,
   "wrapper_overhead_ms": null,
   "stop_reason": "end_turn",
   "num_turns": 1,
-  "session_id": "c04dbaaa-cbf5-47a6-a02c-efce815601f2",
-  "total_cost_usd": 0.18024825,
+  "session_id": "7a6ef0d7-fdf5-4e79-b695-ca26de7edf6b",
+  "total_cost_usd": 0.19480324999999998,
   "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
-  "result": "**Risks**\n- `req.headers['x-forwarded-for']` keying — spoofable per-request, lets attacker bypass per-IP limits (SEV1 2025-09 repeat). Violates Section 2 rule 2; also trips lint `no-direct-xff-read`.\n- `redis.incr(key)` with no `EXPIRE` — unbounded keys, Redis OOM under load (SEV2 2025-11 repeat). Violates Section 2 rule 3 and `no-unbounded-redis-key`.\n- Key missing `route_prefix`, `minute_bucket`, and region prefix (SEV2 2025-12). Single global key per IP collapses all routes/regions into one limiter.\n\n**Mitigation**\n- Replace IP source with `trustedClientIp(req)` from `src/edge/util/trustedClientIp.ts` (validates against `config/trusted_proxies.json`, falls back to `req.socket.remoteAddress`).\n- Use the canonical key `rl:{region}:{ip}:{routePrefix}:{minuteBucket}` and the `MULTI` INCR+EXPIRE(90) pattern from Section 4. Compare against the per-route limit from `config/rate_limits.json` and return RFC 7807 `429` with `retry_after`.\n\n**Verify**\n- `pnpm lint` — both custom rules (`no-direct-xff-read`, `no-unbounded-redis-key`) should now pass.\n- Integration test in `tests/integration/rate_limit.*` asserting (a) spoofed `X-Forwarded-For` does not change the bucket, (b) `TTL` on the created key is > 0, (c) keys differ across regions/routes.\n- Manual: `redis-cli --scan --pattern 'rl:*'` then `TTL` on a sample — must be ≤ 90s, never `-1`.\n\n**Residual risk**\n- If `trusted_proxies.json` is stale, legitimate CDN clients may be keyed by edge IP and over-limit each other — confirm the proxy list is current before merge. Touches rate limiter → CODEOWNERS approval required.",
+  "result": "**Risks**\n- XFF spoof bypass: `req.headers['x-forwarded-for']` is attacker-controlled. Rotating the header defeats per-IP limits — exact repeat of the 2025-09 SEV1 (brute-force against a user).\n- Redis OOM: `INCR` with no `EXPIRE` leaves the key unbounded → eviction-driven outage. Exact repeat of the 2025-11 SEV2.\n- Key design: missing region prefix (2025-12 SEV2), route prefix, and minute bucket. One hot user throttles globally across all routes; no windowing.\n- Lint violation: `no-direct-xff-read` (tools/eslint-plugin-atlas) should block this at CI; if it didn't, the rule or its scope regressed.\n\n**Mitigations**\n- Replace IP source with `trustedClientIp(req)` from `src/edge/util/trustedClientIp.ts` (validated chain against `config/trusted_proxies.json`; falls back to `req.socket.remoteAddress`).\n- Use the canonical key: `rl:${region}:${trustedClientIp(req)}:${routePrefix}:${minuteBucket}` with `minuteBucket = Math.floor(Date.now()/60000)`.\n- Atomic pair via `MULTI`: `INCR` + `EXPIRE` (90s, per Section 4). Enforce via `no-unbounded-redis-key`.\n- Compare count against the per-route limit from `config/rate_limits.json`; emit RFC 7807 `429` with `retry_after`.\n\n**Verify**\n- Unit: spoofed `X-Forwarded-For` must NOT change the limiter key when `req.socket.remoteAddress` is constant.\n- Integration (real Redis 7.4, no mocks): after first `INCR`, `TTL key` ∈ [60, 90]; never `-1`.\n- Metric check: `atlas_edge_rate_limit_total{action=\"throttled\"}` increments under load with rotating XFF from a single socket IP.\n- Lint: `eslint` run should fail on this line via `no-direct-xff-read`; CI gate must be green before merge.\n- CODEOWNERS approval required on `src/edge/rate_limit.ts`.\n\n**Residual risk**\n- If `config/trusted_proxies.json` is stale, genuine CDN egress IPs may be treated as clients → legitimate users share a key. Refresh via the proxy-list automation and confirm in staging.",
   "assertion_pass": true,
   "raw_payload": {
     "type": "result",
     "subtype": "success",
     "is_error": false,
     "api_error_status": null,
-    "duration_ms": 16970,
-    "duration_api_ms": 20283,
+    "duration_ms": 24821,
+    "duration_api_ms": 26395,
     "num_turns": 1,
-    "result": "**Risks**\n- `req.headers['x-forwarded-for']` keying — spoofable per-request, lets attacker bypass per-IP limits (SEV1 2025-09 repeat). Violates Section 2 rule 2; also trips lint `no-direct-xff-read`.\n- `redis.incr(key)` with no `EXPIRE` — unbounded keys, Redis OOM under load (SEV2 2025-11 repeat). Violates Section 2 rule 3 and `no-unbounded-redis-key`.\n- Key missing `route_prefix`, `minute_bucket`, and region prefix (SEV2 2025-12). Single global key per IP collapses all routes/regions into one limiter.\n\n**Mitigation**\n- Replace IP source with `trustedClientIp(req)` from `src/edge/util/trustedClientIp.ts` (validates against `config/trusted_proxies.json`, falls back to `req.socket.remoteAddress`).\n- Use the canonical key `rl:{region}:{ip}:{routePrefix}:{minuteBucket}` and the `MULTI` INCR+EXPIRE(90) pattern from Section 4. Compare against the per-route limit from `config/rate_limits.json` and return RFC 7807 `429` with `retry_after`.\n\n**Verify**\n- `pnpm lint` — both custom rules (`no-direct-xff-read`, `no-unbounded-redis-key`) should now pass.\n- Integration test in `tests/integration/rate_limit.*` asserting (a) spoofed `X-Forwarded-For` does not change the bucket, (b) `TTL` on the created key is > 0, (c) keys differ across regions/routes.\n- Manual: `redis-cli --scan --pattern 'rl:*'` then `TTL` on a sample — must be ≤ 90s, never `-1`.\n\n**Residual risk**\n- If `trusted_proxies.json` is stale, legitimate CDN clients may be keyed by edge IP and over-limit each other — confirm the proxy list is current before merge. Touches rate limiter → CODEOWNERS approval required.",
+    "result": "**Risks**\n- XFF spoof bypass: `req.headers['x-forwarded-for']` is attacker-controlled. Rotating the header defeats per-IP limits — exact repeat of the 2025-09 SEV1 (brute-force against a user).\n- Redis OOM: `INCR` with no `EXPIRE` leaves the key unbounded → eviction-driven outage. Exact repeat of the 2025-11 SEV2.\n- Key design: missing region prefix (2025-12 SEV2), route prefix, and minute bucket. One hot user throttles globally across all routes; no windowing.\n- Lint violation: `no-direct-xff-read` (tools/eslint-plugin-atlas) should block this at CI; if it didn't, the rule or its scope regressed.\n\n**Mitigations**\n- Replace IP source with `trustedClientIp(req)` from `src/edge/util/trustedClientIp.ts` (validated chain against `config/trusted_proxies.json`; falls back to `req.socket.remoteAddress`).\n- Use the canonical key: `rl:${region}:${trustedClientIp(req)}:${routePrefix}:${minuteBucket}` with `minuteBucket = Math.floor(Date.now()/60000)`.\n- Atomic pair via `MULTI`: `INCR` + `EXPIRE` (90s, per Section 4). Enforce via `no-unbounded-redis-key`.\n- Compare count against the per-route limit from `config/rate_limits.json`; emit RFC 7807 `429` with `retry_after`.\n\n**Verify**\n- Unit: spoofed `X-Forwarded-For` must NOT change the limiter key when `req.socket.remoteAddress` is constant.\n- Integration (real Redis 7.4, no mocks): after first `INCR`, `TTL key` ∈ [60, 90]; never `-1`.\n- Metric check: `atlas_edge_rate_limit_total{action=\"throttled\"}` increments under load with rotating XFF from a single socket IP.\n- Lint: `eslint` run should fail on this line via `no-direct-xff-read`; CI gate must be green before merge.\n- CODEOWNERS approval required on `src/edge/rate_limit.ts`.\n\n**Residual risk**\n- If `config/trusted_proxies.json` is stale, genuine CDN egress IPs may be treated as clients → legitimate users share a key. Refresh via the proxy-list automation and confirm in staging.",
     "stop_reason": "end_turn",
-    "session_id": "c04dbaaa-cbf5-47a6-a02c-efce815601f2",
-    "total_cost_usd": 0.18024825,
+    "session_id": "7a6ef0d7-fdf5-4e79-b695-ca26de7edf6b",
+    "total_cost_usd": 0.19480324999999998,
     "usage": {
       "input_tokens": 6,
-      "cache_creation_input_tokens": 23113,
+      "cache_creation_input_tokens": 24317,
       "cache_read_input_tokens": 16796,
-      "output_tokens": 868,
+      "output_tokens": 1149,
       "server_tool_use": {
         "web_search_requests": 0,
         "web_fetch_requests": 0
       },
       "service_tier": "standard",
       "cache_creation": {
-        "ephemeral_1h_input_tokens": 23113,
+        "ephemeral_1h_input_tokens": 24317,
         "ephemeral_5m_input_tokens": 0
       },
       "inference_geo": "",
       "iterations": [
         {
           "input_tokens": 6,
-          "output_tokens": 868,
+          "output_tokens": 1149,
           "cache_read_input_tokens": 16796,
-          "cache_creation_input_tokens": 23113,
+          "cache_creation_input_tokens": 24317,
           "cache_creation": {
             "ephemeral_5m_input_tokens": 0,
-            "ephemeral_1h_input_tokens": 23113
+            "ephemeral_1h_input_tokens": 24317
           },
           "type": "message"
         }
@@ -78,21 +78,21 @@
     "modelUsage": {
       "claude-haiku-4-5-20251001": {
         "inputTokens": 5584,
-        "outputTokens": 16,
+        "outputTokens": 17,
         "cacheReadInputTokens": 0,
         "cacheCreationInputTokens": 0,
         "webSearchRequests": 0,
-        "costUSD": 0.005664000000000001,
+        "costUSD": 0.005669,
         "contextWindow": 200000,
         "maxOutputTokens": 32000
       },
       "claude-opus-4-7": {
         "inputTokens": 6,
-        "outputTokens": 868,
+        "outputTokens": 1149,
         "cacheReadInputTokens": 16796,
-        "cacheCreationInputTokens": 23113,
+        "cacheCreationInputTokens": 24317,
         "webSearchRequests": 0,
-        "costUSD": 0.17458425,
+        "costUSD": 0.18913424999999998,
         "contextWindow": 1000000,
         "maxOutputTokens": 64000
       }
@@ -100,6 +100,6 @@
     "permission_denials": [],
     "terminal_reason": "completed",
     "fast_mode_state": "off",
-    "uuid": "c2a45393-2996-4303-b75e-05e8b62062d7"
+    "uuid": "1b070846-2334-4b08-9f3c-d2cd5f7034e4"
   }
 }

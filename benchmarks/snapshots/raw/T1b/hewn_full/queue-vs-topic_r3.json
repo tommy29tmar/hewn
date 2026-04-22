@@ -14,61 +14,61 @@
   ],
   "digest_hex": "12d5f12129216ce1c15ddae588d0de60b3bad5ba9e88ba91d072dae61c162ecb",
   "seed": "hewn-bench-v1",
-  "timestamp": "2026-04-22T00:13:02.940644+00:00",
-  "output_tokens_tiktoken": 168,
-  "output_tokens_anthropic": 277,
+  "timestamp": "2026-04-22T08:10:11.469078+00:00",
+  "output_tokens_tiktoken": 42,
+  "output_tokens_anthropic": 76,
   "input_tokens_anthropic": 6,
-  "cache_creation_input_tokens": 17297,
+  "cache_creation_input_tokens": 18761,
   "cache_read_input_tokens": 16805,
-  "total_input_tokens": 34108,
+  "total_input_tokens": 35572,
   "cache_state": "warm",
-  "wallclock_ms": 11060.877504991367,
-  "duration_ms": 7457,
-  "duration_api_ms": 8407,
-  "wrapper_overhead_ms": 2653.8775049913675,
+  "wallclock_ms": 10756.691009999486,
+  "duration_ms": 4593,
+  "duration_api_ms": 5496,
+  "wrapper_overhead_ms": 5260.691009999486,
   "stop_reason": "end_turn",
   "num_turns": 1,
-  "session_id": "b41071a7-744c-4fdd-b4aa-0cd0afcde274",
-  "total_cost_usd": 0.12387975,
+  "session_id": "dab02311-b077-4f7a-b2d0-27c0fa15600a",
+  "total_cost_usd": 0.12800475,
   "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
-  "result": "queue: point-to-point, one consumer wins each message, work distribution, load balancing across workers\ntopic: pub/sub, every subscriber gets own copy, fan-out, event broadcasting\n\npick queue when: task must run exactly once (send email, process payment, resize image), workers are interchangeable, you want backpressure via consumer count\npick topic when: multiple independent systems react to same event (order placed → billing + inventory + analytics + email all need it), subscribers evolve independently, you don't know all consumers up front\n\nmodern brokers blur line: kafka \"topics\" act queue-like via consumer groups (group = queue semantics, multiple groups = topic semantics). rabbitmq queues bind to exchanges for fan-out. so real question: do consumers compete for messages or each get copy?\n\nrule of thumb: command → queue, event → topic",
+  "result": "@hewn v0 hybrid\nG: queue_vs_topic\nC: fanout_need\nP: one_consumer_vs_many\nV: delivery_semantics\nA: queue_for_work_topic_for_broadcast",
   "assertion_pass": true,
   "raw_payload": {
     "type": "result",
     "subtype": "success",
     "is_error": false,
     "api_error_status": null,
-    "duration_ms": 7457,
-    "duration_api_ms": 8407,
+    "duration_ms": 4593,
+    "duration_api_ms": 5496,
     "num_turns": 1,
-    "result": "queue: point-to-point, one consumer wins each message, work distribution, load balancing across workers\ntopic: pub/sub, every subscriber gets own copy, fan-out, event broadcasting\n\npick queue when: task must run exactly once (send email, process payment, resize image), workers are interchangeable, you want backpressure via consumer count\npick topic when: multiple independent systems react to same event (order placed → billing + inventory + analytics + email all need it), subscribers evolve independently, you don't know all consumers up front\n\nmodern brokers blur line: kafka \"topics\" act queue-like via consumer groups (group = queue semantics, multiple groups = topic semantics). rabbitmq queues bind to exchanges for fan-out. so real question: do consumers compete for messages or each get copy?\n\nrule of thumb: command → queue, event → topic",
+    "result": "@hewn v0 hybrid\nG: queue_vs_topic\nC: fanout_need\nP: one_consumer_vs_many\nV: delivery_semantics\nA: queue_for_work_topic_for_broadcast",
     "stop_reason": "end_turn",
-    "session_id": "b41071a7-744c-4fdd-b4aa-0cd0afcde274",
-    "total_cost_usd": 0.12387975,
+    "session_id": "dab02311-b077-4f7a-b2d0-27c0fa15600a",
+    "total_cost_usd": 0.12800475,
     "usage": {
       "input_tokens": 6,
-      "cache_creation_input_tokens": 17297,
+      "cache_creation_input_tokens": 18761,
       "cache_read_input_tokens": 16805,
-      "output_tokens": 277,
+      "output_tokens": 76,
       "server_tool_use": {
         "web_search_requests": 0,
         "web_fetch_requests": 0
       },
       "service_tier": "standard",
       "cache_creation": {
-        "ephemeral_1h_input_tokens": 17297,
+        "ephemeral_1h_input_tokens": 18761,
         "ephemeral_5m_input_tokens": 0
       },
       "inference_geo": "",
       "iterations": [
         {
           "input_tokens": 6,
-          "output_tokens": 277,
+          "output_tokens": 76,
           "cache_read_input_tokens": 16805,
-          "cache_creation_input_tokens": 17297,
+          "cache_creation_input_tokens": 18761,
           "cache_creation": {
             "ephemeral_5m_input_tokens": 0,
-            "ephemeral_1h_input_tokens": 17297
+            "ephemeral_1h_input_tokens": 18761
           },
           "type": "message"
         }
@@ -88,11 +88,11 @@
       },
       "claude-opus-4-7": {
         "inputTokens": 6,
-        "outputTokens": 277,
+        "outputTokens": 76,
         "cacheReadInputTokens": 16805,
-        "cacheCreationInputTokens": 17297,
+        "cacheCreationInputTokens": 18761,
         "webSearchRequests": 0,
-        "costUSD": 0.12346375,
+        "costUSD": 0.12758875,
         "contextWindow": 1000000,
         "maxOutputTokens": 64000
       }
@@ -100,6 +100,6 @@
     "permission_denials": [],
     "terminal_reason": "completed",
     "fast_mode_state": "off",
-    "uuid": "2c3400eb-1d0b-4fcc-9e3a-7462893c78a4"
+    "uuid": "cd1d1121-e336-4203-9f6b-ddc05588503b"
   }
 }

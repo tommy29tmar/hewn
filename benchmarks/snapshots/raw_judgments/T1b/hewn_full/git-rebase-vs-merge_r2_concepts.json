@@ -1,16 +1,16 @@
 {
   "final": {
-    "rebase_rewrites_history_replays_commits": true,
-    "merge_creates_a_merge_commit": true,
+    "rebase_rewrites_history_replays_commits": false,
+    "merge_creates_a_merge_commit": false,
     "rebase_produces_linear_history": true,
-    "merge_preserves_branch_topology": true,
-    "rebase_should_not_be_used_on_shared_public_branches": true
+    "merge_preserves_branch_topology": false,
+    "rebase_should_not_be_used_on_shared_public_branches": false
   },
   "history": [
     {
       "attempt": 0,
-      "raw": "{\"rebase_rewrites_history_replays_commits\": true, \"merge_creates_a_merge_commit\": true, \"rebase_produces_linear_history\": true, \"merge_preserves_branch_topology\": true, \"rebase_should_not_be_used_on_shared_public_branches\": true}"
+      "raw": "{\"rebase_rewrites_history_replays_commits\": false, \"merge_creates_a_merge_commit\": false, \"rebase_produces_linear_history\": true, \"merge_preserves_branch_topology\": false, \"rebase_should_not_be_used_on_shared_public_branches\": false}"
     }
   ],
-  "ts": "2026-04-22T01:11:58.787853+00:00"
+  "ts": "2026-04-22T08:44:13.916038+00:00"
 }

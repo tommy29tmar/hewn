@@ -14,61 +14,61 @@
   ],
   "digest_hex": "edf96b08b6bf832e7f6141e2b1e51b0b7773d43c771414ddf25ddb62f5d6bccd",
   "seed": "hewn-bench-v1",
-  "timestamp": "2026-04-21T23:44:02.577209+00:00",
-  "output_tokens_tiktoken": 455,
-  "output_tokens_anthropic": 724,
+  "timestamp": "2026-04-22T07:59:19.535106+00:00",
+  "output_tokens_tiktoken": 439,
+  "output_tokens_anthropic": 779,
   "input_tokens_anthropic": 6,
-  "cache_creation_input_tokens": 11734,
+  "cache_creation_input_tokens": 17029,
   "cache_read_input_tokens": 16796,
-  "total_input_tokens": 28536,
+  "total_input_tokens": 33831,
   "cache_state": "warm",
-  "wallclock_ms": 19988.896899012616,
-  "duration_ms": 14603,
-  "duration_api_ms": 15308,
+  "wallclock_ms": 21505.815032985993,
+  "duration_ms": 15685,
+  "duration_api_ms": 16444,
   "wrapper_overhead_ms": null,
   "stop_reason": "end_turn",
   "num_turns": 1,
-  "session_id": "3c706568-1b61-4a98-b345-d900e26332f6",
-  "total_cost_usd": 0.1003005,
+  "session_id": "bda89534-cf78-49f7-84ca-7c78a094603b",
+  "total_cost_usd": 0.13476924999999998,
   "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
-  "result": "Start with a heap snapshot to find what's retained, not what's allocated.\n\n**Capture baseline + growth snapshots**\n```bash\nnode --inspect app.js\n```\nOpen `chrome://inspect`, take a heap snapshot, exercise the app, take another, then use \"Comparison\" view to see what grew. Focus on the **Retained Size** column — that's what's actually holding memory.\n\n**Common culprits, in order of frequency**\n1. **Unbounded caches / Maps** — a `Map` or plain object keyed by request/user ID that never evicts. Fix: use `lru-cache` or `WeakMap` if keys are objects.\n2. **Event listener leaks** — `emitter.on(...)` without matching `off`. Node warns at 10 listeners; raise only if you've proven it's intentional.\n3. **Closures capturing large scopes** — a callback inside a request handler that holds the whole request/response in its closure. Detach what you don't need before storing the callback.\n4. **Timers / intervals** — `setInterval` whose callback references outer state. Always keep the handle and `clearInterval` on shutdown.\n5. **Global arrays used as queues** — pushed to but never drained/trimmed.\n6. **Native addon leaks** — rarer; shows up as RSS growing while heap stays flat.\n\n**Useful flags**\n- `--max-old-space-size=<MB>` to cap heap (makes leaks crash faster, easier to reproduce).\n- `--heapsnapshot-near-heap-limit=3` to auto-dump snapshots before OOM.\n- `--expose-gc` + `global.gc()` in tests to force collection and measure real retention.\n\n**Quick triage loop**\n```js\nsetInterval(() => {\n  const m = process.memoryUsage();\n  console.log({ rss: m.rss, heap: m.heapUsed, ext: m.external });\n}, 10_000);\n```\nHeap growing → JS leak. RSS growing but heap flat → native/Buffer leak (check `external` and `arrayBuffers`).\n\nIf you want, share the process profile (framework, what's long-running — HTTP server, worker, queue consumer?) and I can narrow it down.",
+  "result": "Start with evidence, not guesses:\n\n**1. Confirm it's a leak**\nRun with `--expose-gc` and log `process.memoryUsage().heapUsed` on an interval. A leak is monotonic growth across GC cycles, not just high RSS.\n\n**2. Capture heap snapshots**\n```js\nrequire('v8').writeHeapSnapshot(`/tmp/heap-${Date.now()}.heapsnapshot`)\n```\nTake 2–3 snapshots spaced apart (e.g., at 10min, 30min, 60min). Load into Chrome DevTools → Memory tab → use the **Comparison** view between snapshots. Sort by \"Delta\" to see what's accumulating.\n\n**3. Common culprits**\n- **Closures retaining large scopes** — an event handler or cached function holding refs to big objects.\n- **Unbounded `Map`/`Set`/arrays** — caches without eviction, request-keyed maps never cleaned up.\n- **`EventEmitter` listeners** — check for `MaxListenersExceededWarning`. Every `.on()` without a matching `.off()` leaks.\n- **Timers/intervals** — `setInterval` with a closure keeps the closure alive forever.\n- **Global state** — anything on `global`, module-level `let`, or singletons.\n- **Outstanding promises** — pending promises hold their `.then` chain. Look for unresolved promise pools.\n- **Native addons / streams** — unclosed streams, DB connections, file handles.\n\n**4. Use the right tool for the shape**\n- `clinic.js doctor` → high-level diagnosis (flame graph of event loop, GC pressure).\n- `clinic heapprofiler` or `--heap-prof` flag → allocation sampling over time, cheaper than full snapshots.\n- `node --inspect` + Chrome DevTools → live allocation timeline.\n\n**5. Fix, then verify**\nRe-run the load that triggered growth and confirm `heapUsed` plateaus after GC. Don't trust \"looks better\" — trust the graph.\n\nIf you want, share the symptom (RSS shape, what the process does, any warnings) and I can narrow it further.",
   "assertion_pass": true,
   "raw_payload": {
     "type": "result",
     "subtype": "success",
     "is_error": false,
     "api_error_status": null,
-    "duration_ms": 14603,
-    "duration_api_ms": 15308,
+    "duration_ms": 15685,
+    "duration_api_ms": 16444,
     "num_turns": 1,
-    "result": "Start with a heap snapshot to find what's retained, not what's allocated.\n\n**Capture baseline + growth snapshots**\n```bash\nnode --inspect app.js\n```\nOpen `chrome://inspect`, take a heap snapshot, exercise the app, take another, then use \"Comparison\" view to see what grew. Focus on the **Retained Size** column — that's what's actually holding memory.\n\n**Common culprits, in order of frequency**\n1. **Unbounded caches / Maps** — a `Map` or plain object keyed by request/user ID that never evicts. Fix: use `lru-cache` or `WeakMap` if keys are objects.\n2. **Event listener leaks** — `emitter.on(...)` without matching `off`. Node warns at 10 listeners; raise only if you've proven it's intentional.\n3. **Closures capturing large scopes** — a callback inside a request handler that holds the whole request/response in its closure. Detach what you don't need before storing the callback.\n4. **Timers / intervals** — `setInterval` whose callback references outer state. Always keep the handle and `clearInterval` on shutdown.\n5. **Global arrays used as queues** — pushed to but never drained/trimmed.\n6. **Native addon leaks** — rarer; shows up as RSS growing while heap stays flat.\n\n**Useful flags**\n- `--max-old-space-size=<MB>` to cap heap (makes leaks crash faster, easier to reproduce).\n- `--heapsnapshot-near-heap-limit=3` to auto-dump snapshots before OOM.\n- `--expose-gc` + `global.gc()` in tests to force collection and measure real retention.\n\n**Quick triage loop**\n```js\nsetInterval(() => {\n  const m = process.memoryUsage();\n  console.log({ rss: m.rss, heap: m.heapUsed, ext: m.external });\n}, 10_000);\n```\nHeap growing → JS leak. RSS growing but heap flat → native/Buffer leak (check `external` and `arrayBuffers`).\n\nIf you want, share the process profile (framework, what's long-running — HTTP server, worker, queue consumer?) and I can narrow it down.",
+    "result": "Start with evidence, not guesses:\n\n**1. Confirm it's a leak**\nRun with `--expose-gc` and log `process.memoryUsage().heapUsed` on an interval. A leak is monotonic growth across GC cycles, not just high RSS.\n\n**2. Capture heap snapshots**\n```js\nrequire('v8').writeHeapSnapshot(`/tmp/heap-${Date.now()}.heapsnapshot`)\n```\nTake 2–3 snapshots spaced apart (e.g., at 10min, 30min, 60min). Load into Chrome DevTools → Memory tab → use the **Comparison** view between snapshots. Sort by \"Delta\" to see what's accumulating.\n\n**3. Common culprits**\n- **Closures retaining large scopes** — an event handler or cached function holding refs to big objects.\n- **Unbounded `Map`/`Set`/arrays** — caches without eviction, request-keyed maps never cleaned up.\n- **`EventEmitter` listeners** — check for `MaxListenersExceededWarning`. Every `.on()` without a matching `.off()` leaks.\n- **Timers/intervals** — `setInterval` with a closure keeps the closure alive forever.\n- **Global state** — anything on `global`, module-level `let`, or singletons.\n- **Outstanding promises** — pending promises hold their `.then` chain. Look for unresolved promise pools.\n- **Native addons / streams** — unclosed streams, DB connections, file handles.\n\n**4. Use the right tool for the shape**\n- `clinic.js doctor` → high-level diagnosis (flame graph of event loop, GC pressure).\n- `clinic heapprofiler` or `--heap-prof` flag → allocation sampling over time, cheaper than full snapshots.\n- `node --inspect` + Chrome DevTools → live allocation timeline.\n\n**5. Fix, then verify**\nRe-run the load that triggered growth and confirm `heapUsed` plateaus after GC. Don't trust \"looks better\" — trust the graph.\n\nIf you want, share the symptom (RSS shape, what the process does, any warnings) and I can narrow it further.",
     "stop_reason": "end_turn",
-    "session_id": "3c706568-1b61-4a98-b345-d900e26332f6",
-    "total_cost_usd": 0.1003005,
+    "session_id": "bda89534-cf78-49f7-84ca-7c78a094603b",
+    "total_cost_usd": 0.13476924999999998,
     "usage": {
       "input_tokens": 6,
-      "cache_creation_input_tokens": 11734,
+      "cache_creation_input_tokens": 17029,
       "cache_read_input_tokens": 16796,
-      "output_tokens": 724,
+      "output_tokens": 779,
       "server_tool_use": {
         "web_search_requests": 0,
         "web_fetch_requests": 0
       },
       "service_tier": "standard",
       "cache_creation": {
-        "ephemeral_1h_input_tokens": 11734,
+        "ephemeral_1h_input_tokens": 17029,
         "ephemeral_5m_input_tokens": 0
       },
       "inference_geo": "",
       "iterations": [
         {
           "input_tokens": 6,
-          "output_tokens": 724,
+          "output_tokens": 779,
           "cache_read_input_tokens": 16796,
-          "cache_creation_input_tokens": 11734,
+          "cache_creation_input_tokens": 17029,
           "cache_creation": {
             "ephemeral_5m_input_tokens": 0,
-            "ephemeral_1h_input_tokens": 11734
+            "ephemeral_1h_input_tokens": 17029
           },
           "type": "message"
         }
@@ -88,18 +88,18 @@
       },
       "claude-opus-4-7": {
         "inputTokens": 6,
-        "outputTokens": 724,
+        "outputTokens": 779,
         "cacheReadInputTokens": 16796,
-        "cacheCreationInputTokens": 11734,
+        "cacheCreationInputTokens": 17029,
         "webSearchRequests": 0,
-        "costUSD": 0.0998655,
-        "contextWindow": 200000,
+        "costUSD": 0.13433425,
+        "contextWindow": 1000000,
         "maxOutputTokens": 64000
       }
     },
     "permission_denials": [],
     "terminal_reason": "completed",
     "fast_mode_state": "off",
-    "uuid": "2faac037-4bb8-44d9-b35d-2fd6bc3f6f65"
+    "uuid": "04e8ec24-7871-4c2b-afa6-9dee77e2b690"
   }
 }

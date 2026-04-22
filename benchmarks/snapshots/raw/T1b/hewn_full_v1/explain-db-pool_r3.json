@@ -1,0 +1,105 @@
+{
+  "track": "T1b",
+  "arm": "hewn_full",
+  "prompt_id": "explain-db-pool",
+  "run_index": 3,
+  "arm_order_index": 4,
+  "arm_order_full": [
+    "baseline",
+    "terse",
+    "caveman_full_plus_ultra_directive",
+    "hewn_prompt_only",
+    "hewn_full",
+    "caveman_full"
+  ],
+  "digest_hex": "e3d10d5f52851e35a719cea7c3f0a4c0fe61c85245c679233b4438ba074b10fe",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T00:05:09.566716+00:00",
+  "output_tokens_tiktoken": 192,
+  "output_tokens_anthropic": 296,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 30002,
+  "total_input_tokens": 30008,
+  "cache_state": "warm",
+  "wallclock_ms": 14691.674170986516,
+  "duration_ms": 9828,
+  "duration_api_ms": 10373,
+  "wrapper_overhead_ms": 4318.674170986516,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "1ecca247-d29c-4208-b1b6-019ee2e557b8",
+  "total_cost_usd": 0.022845999999999998,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "database connection pool = pre-made pool of open DB connections, reused across requests\nopening TCP+TLS+auth handshake per query = slow, so keep N warm connections sitting idle\napp borrows one, runs query, returns it — no handshake cost\npool has max size (cap on concurrent DB load) and min/idle size (keep ready)\nif all busy, new caller waits in queue or gets timeout\nidle connections pinged/recycled so DB doesn't kill them for inactivity\ntune max to DB's connection limit ÷ number of app instances, else you starve other services\ntoo small = request queue backs up, too large = DB chokes on context switches\nserverless messes with this — each lambda = own pool, fanout kills DB, use pgbouncer or proxy\npooler modes: session (sticky, safe), transaction (swap between queries, faster, breaks prepared statements + session state), statement (rare)",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 9828,
+    "duration_api_ms": 10373,
+    "num_turns": 1,
+    "result": "database connection pool = pre-made pool of open DB connections, reused across requests\nopening TCP+TLS+auth handshake per query = slow, so keep N warm connections sitting idle\napp borrows one, runs query, returns it — no handshake cost\npool has max size (cap on concurrent DB load) and min/idle size (keep ready)\nif all busy, new caller waits in queue or gets timeout\nidle connections pinged/recycled so DB doesn't kill them for inactivity\ntune max to DB's connection limit ÷ number of app instances, else you starve other services\ntoo small = request queue backs up, too large = DB chokes on context switches\nserverless messes with this — each lambda = own pool, fanout kills DB, use pgbouncer or proxy\npooler modes: session (sticky, safe), transaction (swap between queries, faster, breaks prepared statements + session state), statement (rare)",
+    "stop_reason": "end_turn",
+    "session_id": "1ecca247-d29c-4208-b1b6-019ee2e557b8",
+    "total_cost_usd": 0.022845999999999998,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 30002,
+      "output_tokens": 296,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 0,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 296,
+          "cache_read_input_tokens": 30002,
+          "cache_creation_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 345,
+        "outputTokens": 14,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.000415,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 296,
+        "cacheReadInputTokens": 30002,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.022431,
+        "contextWindow": 200000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "8b289a00-ec68-448f-bc40-cc13797a6fed"
+  }
+}

@@ -14,61 +14,61 @@
   ],
   "digest_hex": "3da3c2e2c5460b8f1a8ef9414263122f0e5b04cd184ce0c20df6d0951ea45236",
   "seed": "hewn-bench-v1",
-  "timestamp": "2026-04-22T00:48:44.878050+00:00",
-  "output_tokens_tiktoken": 469,
-  "output_tokens_anthropic": 1122,
+  "timestamp": "2026-04-22T08:24:03.009561+00:00",
+  "output_tokens_tiktoken": 398,
+  "output_tokens_anthropic": 793,
   "input_tokens_anthropic": 6,
-  "cache_creation_input_tokens": 0,
-  "cache_read_input_tokens": 39909,
-  "total_input_tokens": 39915,
+  "cache_creation_input_tokens": 24317,
+  "cache_read_input_tokens": 16796,
+  "total_input_tokens": 41119,
   "cache_state": "warm",
-  "wallclock_ms": 22132.02031099354,
-  "duration_ms": 18778,
-  "duration_api_ms": 20110,
+  "wallclock_ms": 19433.34024999058,
+  "duration_ms": 13162,
+  "duration_api_ms": 14309,
   "wrapper_overhead_ms": null,
   "stop_reason": "end_turn",
   "num_turns": 1,
-  "session_id": "6f602edc-a9a4-4a12-802d-6956f8b6d28e",
-  "total_cost_usd": 0.0537135,
+  "session_id": "172255b4-bcd1-4639-bc1f-973030e18503",
+  "total_cost_usd": 0.18591824999999998,
   "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
-  "result": "**Risks**\n\n1. XFF spoof bypass. `req.headers['x-forwarded-for']` is attacker-controlled; rotating it per request defeats per-IP limiting (repeat of 2025-09 SEV1). Violates Section 2 rule 2 and lint rule `no-direct-xff-read`.\n2. Unbounded Redis key. `INCR` without paired `EXPIRE` leaks keys until OOM eviction (repeat of 2025-11 SEV2). Violates Section 2 rule 3 and lint rule `no-unbounded-redis-key`.\n3. Key shape wrong. Missing `route_prefix`, `minute_bucket`, and region prefix — one hot user can globally throttle themselves across regions (repeat of 2025-12 SEV2). No `limit` comparison or `429` RFC 7807 response either.\n\n**Mitigation**\n\n```js\nconst key = `rl:${region}:${trustedClientIp(req)}:${routePrefix}:${minuteBucket}`\nconst multi = redis.multi()\nmulti.incr(key)\nmulti.expire(key, 90)\nconst [count] = await multi.exec()\nif (count > limit) return res.status(429).json({ type:'/errors/rate-limited', title:'Too Many Requests', status:429, detail:`Limit ${limit}/min exceeded`, retry_after: secondsUntilNextBucket() })\n```\n\n**Verify**\n\n- `pnpm lint` — must flag both `no-direct-xff-read` and `no-unbounded-redis-key` on the original, clean on the fix.\n- Integration test: send 1000 requests with rotating `X-Forwarded-For` from an untrusted source IP; assert all share one counter keyed on `req.socket.remoteAddress`.\n- `redis-cli --scan --pattern 'rl:*' | head; redis-cli ttl <key>` post-run — every key must report a TTL ≤ 90, none `-1`.\n- Cross-region test: same user hitting `us-east-1` and `eu-west-1` must not share a counter.\n\n**Residual risk**\n\n`trustedClientIp` is only as good as `config/trusted_proxies.json`; stale CDN egress ranges re-open the spoof. Confirm that config matches current Cloudfront/Cloudflare publications before merge.",
+  "result": "**Risks**\n1. XFF spoof bypass. `req.headers['x-forwarded-for']` is client-controlled; an attacker rotates it per request to defeat per-IP limits (re-creates SEV1 2025-09). Also violates the `no-direct-xff-read` lint rule.\n2. Unbounded Redis key. `INCR` with no `EXPIRE` — key lives forever, drives Redis to OOM under load (re-creates SEV2 2025-11).\n3. Missing region prefix and route/method scoping — one busy user gets globally throttled (re-creates SEV2 2025-12); key format diverges from `rl:{ip}:{route_prefix}:{minute_bucket}`.\n4. No `await` on a pipelined `EXPIRE` and no check of the returned count vs `limit` → not actually enforcing anything.\n\n**Mitigation**\n```ts\nconst ip = trustedClientIp(req) // src/edge/util/trustedClientIp.ts\nconst bucket = Math.floor(Date.now() / 60000)\nconst key = `rl:${region}:${ip}:${routePrefix}:${bucket}`\nconst [count] = await redis.multi().incr(key).expire(key, 90).exec()\nif (count > limit) return res.status(429).json(problem429(limit))\n```\n\n**Verify**\n- Unit: assert `trustedClientIp` is called, not `req.headers['x-forwarded-for']`.\n- Integration (real Redis): after one `INCR`, `TTL key` ∈ (0, 90]; after `limit+1` calls in a bucket, response is `429` with RFC 7807 body.\n- Lint: `eslint` passes `no-direct-xff-read` and `no-unbounded-redis-key`.\n- Metric: `atlas_edge_rate_limit_total{action=\"throttled\"}` increments under synthetic load.",
   "assertion_pass": true,
   "raw_payload": {
     "type": "result",
     "subtype": "success",
     "is_error": false,
     "api_error_status": null,
-    "duration_ms": 18778,
-    "duration_api_ms": 20110,
+    "duration_ms": 13162,
+    "duration_api_ms": 14309,
     "num_turns": 1,
-    "result": "**Risks**\n\n1. XFF spoof bypass. `req.headers['x-forwarded-for']` is attacker-controlled; rotating it per request defeats per-IP limiting (repeat of 2025-09 SEV1). Violates Section 2 rule 2 and lint rule `no-direct-xff-read`.\n2. Unbounded Redis key. `INCR` without paired `EXPIRE` leaks keys until OOM eviction (repeat of 2025-11 SEV2). Violates Section 2 rule 3 and lint rule `no-unbounded-redis-key`.\n3. Key shape wrong. Missing `route_prefix`, `minute_bucket`, and region prefix — one hot user can globally throttle themselves across regions (repeat of 2025-12 SEV2). No `limit` comparison or `429` RFC 7807 response either.\n\n**Mitigation**\n\n```js\nconst key = `rl:${region}:${trustedClientIp(req)}:${routePrefix}:${minuteBucket}`\nconst multi = redis.multi()\nmulti.incr(key)\nmulti.expire(key, 90)\nconst [count] = await multi.exec()\nif (count > limit) return res.status(429).json({ type:'/errors/rate-limited', title:'Too Many Requests', status:429, detail:`Limit ${limit}/min exceeded`, retry_after: secondsUntilNextBucket() })\n```\n\n**Verify**\n\n- `pnpm lint` — must flag both `no-direct-xff-read` and `no-unbounded-redis-key` on the original, clean on the fix.\n- Integration test: send 1000 requests with rotating `X-Forwarded-For` from an untrusted source IP; assert all share one counter keyed on `req.socket.remoteAddress`.\n- `redis-cli --scan --pattern 'rl:*' | head; redis-cli ttl <key>` post-run — every key must report a TTL ≤ 90, none `-1`.\n- Cross-region test: same user hitting `us-east-1` and `eu-west-1` must not share a counter.\n\n**Residual risk**\n\n`trustedClientIp` is only as good as `config/trusted_proxies.json`; stale CDN egress ranges re-open the spoof. Confirm that config matches current Cloudfront/Cloudflare publications before merge.",
+    "result": "**Risks**\n1. XFF spoof bypass. `req.headers['x-forwarded-for']` is client-controlled; an attacker rotates it per request to defeat per-IP limits (re-creates SEV1 2025-09). Also violates the `no-direct-xff-read` lint rule.\n2. Unbounded Redis key. `INCR` with no `EXPIRE` — key lives forever, drives Redis to OOM under load (re-creates SEV2 2025-11).\n3. Missing region prefix and route/method scoping — one busy user gets globally throttled (re-creates SEV2 2025-12); key format diverges from `rl:{ip}:{route_prefix}:{minute_bucket}`.\n4. No `await` on a pipelined `EXPIRE` and no check of the returned count vs `limit` → not actually enforcing anything.\n\n**Mitigation**\n```ts\nconst ip = trustedClientIp(req) // src/edge/util/trustedClientIp.ts\nconst bucket = Math.floor(Date.now() / 60000)\nconst key = `rl:${region}:${ip}:${routePrefix}:${bucket}`\nconst [count] = await redis.multi().incr(key).expire(key, 90).exec()\nif (count > limit) return res.status(429).json(problem429(limit))\n```\n\n**Verify**\n- Unit: assert `trustedClientIp` is called, not `req.headers['x-forwarded-for']`.\n- Integration (real Redis): after one `INCR`, `TTL key` ∈ (0, 90]; after `limit+1` calls in a bucket, response is `429` with RFC 7807 body.\n- Lint: `eslint` passes `no-direct-xff-read` and `no-unbounded-redis-key`.\n- Metric: `atlas_edge_rate_limit_total{action=\"throttled\"}` increments under synthetic load.",
     "stop_reason": "end_turn",
-    "session_id": "6f602edc-a9a4-4a12-802d-6956f8b6d28e",
-    "total_cost_usd": 0.0537135,
+    "session_id": "172255b4-bcd1-4639-bc1f-973030e18503",
+    "total_cost_usd": 0.18591824999999998,
     "usage": {
       "input_tokens": 6,
-      "cache_creation_input_tokens": 0,
-      "cache_read_input_tokens": 39909,
-      "output_tokens": 1122,
+      "cache_creation_input_tokens": 24317,
+      "cache_read_input_tokens": 16796,
+      "output_tokens": 793,
       "server_tool_use": {
         "web_search_requests": 0,
         "web_fetch_requests": 0
       },
       "service_tier": "standard",
       "cache_creation": {
-        "ephemeral_1h_input_tokens": 0,
+        "ephemeral_1h_input_tokens": 24317,
         "ephemeral_5m_input_tokens": 0
       },
       "inference_geo": "",
       "iterations": [
         {
           "input_tokens": 6,
-          "output_tokens": 1122,
-          "cache_read_input_tokens": 39909,
-          "cache_creation_input_tokens": 0,
+          "output_tokens": 793,
+          "cache_read_input_tokens": 16796,
+          "cache_creation_input_tokens": 24317,
           "cache_creation": {
             "ephemeral_5m_input_tokens": 0,
-            "ephemeral_1h_input_tokens": 0
+            "ephemeral_1h_input_tokens": 24317
           },
           "type": "message"
         }
@@ -78,21 +78,21 @@
     "modelUsage": {
       "claude-haiku-4-5-20251001": {
         "inputTokens": 5584,
-        "outputTokens": 19,
+        "outputTokens": 20,
         "cacheReadInputTokens": 0,
         "cacheCreationInputTokens": 0,
         "webSearchRequests": 0,
-        "costUSD": 0.005679,
+        "costUSD": 0.005684000000000001,
         "contextWindow": 200000,
         "maxOutputTokens": 32000
       },
       "claude-opus-4-7": {
         "inputTokens": 6,
-        "outputTokens": 1122,
-        "cacheReadInputTokens": 39909,
-        "cacheCreationInputTokens": 0,
+        "outputTokens": 793,
+        "cacheReadInputTokens": 16796,
+        "cacheCreationInputTokens": 24317,
         "webSearchRequests": 0,
-        "costUSD": 0.048034499999999994,
+        "costUSD": 0.18023424999999998,
         "contextWindow": 1000000,
         "maxOutputTokens": 64000
       }
@@ -100,6 +100,6 @@
     "permission_denials": [],
     "terminal_reason": "completed",
     "fast_mode_state": "off",
-    "uuid": "3f0870d8-06eb-40ab-81c1-15a6fd5fb470"
+    "uuid": "20adc1c3-d99e-48ec-9a85-18431ac4d4c5"
   }
 }

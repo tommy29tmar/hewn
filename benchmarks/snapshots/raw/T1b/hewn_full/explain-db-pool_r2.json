@@ -14,61 +14,61 @@
   ],
   "digest_hex": "59c4393a35281e40f896315f0f5b5a542854dc38ea31bd4db0c6451c6b10b031",
   "seed": "hewn-bench-v1",
-  "timestamp": "2026-04-21T23:52:32.835119+00:00",
-  "output_tokens_tiktoken": 225,
-  "output_tokens_anthropic": 358,
+  "timestamp": "2026-04-22T08:02:38.863048+00:00",
+  "output_tokens_tiktoken": 32,
+  "output_tokens_anthropic": 57,
   "input_tokens_anthropic": 6,
-  "cache_creation_input_tokens": 0,
-  "cache_read_input_tokens": 30002,
-  "total_input_tokens": 30008,
+  "cache_creation_input_tokens": 18752,
+  "cache_read_input_tokens": 16805,
+  "total_input_tokens": 35563,
   "cache_state": "warm",
-  "wallclock_ms": 14853.244708006969,
-  "duration_ms": 9534,
-  "duration_api_ms": 10359,
-  "wrapper_overhead_ms": 4494.244708006969,
+  "wallclock_ms": 9833.749883982819,
+  "duration_ms": 3283,
+  "duration_api_ms": 3938,
+  "wrapper_overhead_ms": 5895.749883982819,
   "stop_reason": "end_turn",
   "num_turns": 1,
-  "session_id": "5d08c5b0-1426-4e39-9bee-644555d8829a",
-  "total_cost_usd": 0.024396,
+  "session_id": "b7d00946-9285-4514-a755-c8ffd9c94ff8",
+  "total_cost_usd": 0.1274675,
   "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
-  "result": "pool keeps set of open db connections alive\nreuse across requests instead of opening new socket each time\nopening connection costly: tcp handshake, tls, auth, session setup — tens of ms\npool amortizes that cost over many queries\n\nclient asks pool for connection, runs query, returns it\nif all busy, caller waits or gets error\nidle connections may be closed after timeout\n\nkey knobs:\nmin size — warm connections kept ready\nmax size — ceiling to avoid overwhelming db\nacquire timeout — how long to wait for free conn\nidle timeout — when to reap unused\nmax lifetime — force recycle to dodge stale state\n\nsizing: too small → queue builds, latency spikes\ntoo big → db runs out of workers/memory, contention worsens\nrule of thumb: max_conns ≈ cpu_cores * 2 + spindles, but depends on workload\n\ngotchas:\ntransaction state leaks if conn returned mid-tx\nprepared statements tied to connection in some drivers\nlong-running query hogs slot\npgbouncer etc. add external pool layer in front of postgres for many app instances",
+  "result": "@hewn v0 hybrid\nG: db_pool\nC: conn_setup_cost\nP: reuse_conn\nV: lower_latency\nA: tune_size",
   "assertion_pass": true,
   "raw_payload": {
     "type": "result",
     "subtype": "success",
     "is_error": false,
     "api_error_status": null,
-    "duration_ms": 9534,
-    "duration_api_ms": 10359,
+    "duration_ms": 3283,
+    "duration_api_ms": 3938,
     "num_turns": 1,
-    "result": "pool keeps set of open db connections alive\nreuse across requests instead of opening new socket each time\nopening connection costly: tcp handshake, tls, auth, session setup — tens of ms\npool amortizes that cost over many queries\n\nclient asks pool for connection, runs query, returns it\nif all busy, caller waits or gets error\nidle connections may be closed after timeout\n\nkey knobs:\nmin size — warm connections kept ready\nmax size — ceiling to avoid overwhelming db\nacquire timeout — how long to wait for free conn\nidle timeout — when to reap unused\nmax lifetime — force recycle to dodge stale state\n\nsizing: too small → queue builds, latency spikes\ntoo big → db runs out of workers/memory, contention worsens\nrule of thumb: max_conns ≈ cpu_cores * 2 + spindles, but depends on workload\n\ngotchas:\ntransaction state leaks if conn returned mid-tx\nprepared statements tied to connection in some drivers\nlong-running query hogs slot\npgbouncer etc. add external pool layer in front of postgres for many app instances",
+    "result": "@hewn v0 hybrid\nG: db_pool\nC: conn_setup_cost\nP: reuse_conn\nV: lower_latency\nA: tune_size",
     "stop_reason": "end_turn",
-    "session_id": "5d08c5b0-1426-4e39-9bee-644555d8829a",
-    "total_cost_usd": 0.024396,
+    "session_id": "b7d00946-9285-4514-a755-c8ffd9c94ff8",
+    "total_cost_usd": 0.1274675,
     "usage": {
       "input_tokens": 6,
-      "cache_creation_input_tokens": 0,
-      "cache_read_input_tokens": 30002,
-      "output_tokens": 358,
+      "cache_creation_input_tokens": 18752,
+      "cache_read_input_tokens": 16805,
+      "output_tokens": 57,
       "server_tool_use": {
         "web_search_requests": 0,
         "web_fetch_requests": 0
       },
       "service_tier": "standard",
       "cache_creation": {
-        "ephemeral_1h_input_tokens": 0,
+        "ephemeral_1h_input_tokens": 18752,
         "ephemeral_5m_input_tokens": 0
       },
       "inference_geo": "",
       "iterations": [
         {
           "input_tokens": 6,
-          "output_tokens": 358,
-          "cache_read_input_tokens": 30002,
-          "cache_creation_input_tokens": 0,
+          "output_tokens": 57,
+          "cache_read_input_tokens": 16805,
+          "cache_creation_input_tokens": 18752,
           "cache_creation": {
             "ephemeral_5m_input_tokens": 0,
-            "ephemeral_1h_input_tokens": 0
+            "ephemeral_1h_input_tokens": 18752
           },
           "type": "message"
         }
@@ -78,28 +78,28 @@
     "modelUsage": {
       "claude-haiku-4-5-20251001": {
         "inputTokens": 345,
-        "outputTokens": 14,
+        "outputTokens": 13,
         "cacheReadInputTokens": 0,
         "cacheCreationInputTokens": 0,
         "webSearchRequests": 0,
-        "costUSD": 0.000415,
+        "costUSD": 0.00041,
         "contextWindow": 200000,
         "maxOutputTokens": 32000
       },
       "claude-opus-4-7": {
         "inputTokens": 6,
-        "outputTokens": 358,
-        "cacheReadInputTokens": 30002,
-        "cacheCreationInputTokens": 0,
+        "outputTokens": 57,
+        "cacheReadInputTokens": 16805,
+        "cacheCreationInputTokens": 18752,
         "webSearchRequests": 0,
-        "costUSD": 0.023981000000000002,
-        "contextWindow": 200000,
+        "costUSD": 0.12705750000000002,
+        "contextWindow": 1000000,
         "maxOutputTokens": 64000
       }
     },
     "permission_denials": [],
     "terminal_reason": "completed",
     "fast_mode_state": "off",
-    "uuid": "aa200a9f-0d27-4653-9331-ed027bdaf77c"
+    "uuid": "bd0a9dda-9ce6-4328-96cf-67432cfdfa43"
   }
 }

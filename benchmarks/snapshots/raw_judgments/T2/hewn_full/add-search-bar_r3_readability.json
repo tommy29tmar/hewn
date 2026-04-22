@@ -8,8 +8,8 @@
   "history": [
     {
       "attempt": 0,
-      "raw": "{\"uses_plain_language\": false, \"actionable\": false, \"starts_helpfully\": false, \"respects_user_level\": false}"
+      "raw": "{\"uses_plain_language\":false,\"actionable\":false,\"starts_helpfully\":false,\"respects_user_level\":false}"
     }
   ],
-  "ts": "2026-04-22T01:38:14.351124+00:00"
+  "ts": "2026-04-22T08:52:32.647181+00:00"
 }

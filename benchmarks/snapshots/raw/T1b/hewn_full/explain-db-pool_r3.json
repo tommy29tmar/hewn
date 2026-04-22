@@ -14,61 +14,61 @@
   ],
   "digest_hex": "e3d10d5f52851e35a719cea7c3f0a4c0fe61c85245c679233b4438ba074b10fe",
   "seed": "hewn-bench-v1",
-  "timestamp": "2026-04-22T00:05:09.566716+00:00",
-  "output_tokens_tiktoken": 192,
-  "output_tokens_anthropic": 296,
+  "timestamp": "2026-04-22T08:07:09.492565+00:00",
+  "output_tokens_tiktoken": 31,
+  "output_tokens_anthropic": 54,
   "input_tokens_anthropic": 6,
-  "cache_creation_input_tokens": 0,
-  "cache_read_input_tokens": 30002,
-  "total_input_tokens": 30008,
+  "cache_creation_input_tokens": 18752,
+  "cache_read_input_tokens": 16805,
+  "total_input_tokens": 35563,
   "cache_state": "warm",
-  "wallclock_ms": 14691.674170986516,
-  "duration_ms": 9828,
-  "duration_api_ms": 10373,
-  "wrapper_overhead_ms": 4318.674170986516,
+  "wallclock_ms": 9555.142024997622,
+  "duration_ms": 3316,
+  "duration_api_ms": 4013,
+  "wrapper_overhead_ms": 5542.142024997622,
   "stop_reason": "end_turn",
   "num_turns": 1,
-  "session_id": "1ecca247-d29c-4208-b1b6-019ee2e557b8",
-  "total_cost_usd": 0.022845999999999998,
+  "session_id": "4db43d2e-98cd-4a92-a88e-93234caa89b0",
+  "total_cost_usd": 0.1273975,
   "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
-  "result": "database connection pool = pre-made pool of open DB connections, reused across requests\nopening TCP+TLS+auth handshake per query = slow, so keep N warm connections sitting idle\napp borrows one, runs query, returns it — no handshake cost\npool has max size (cap on concurrent DB load) and min/idle size (keep ready)\nif all busy, new caller waits in queue or gets timeout\nidle connections pinged/recycled so DB doesn't kill them for inactivity\ntune max to DB's connection limit ÷ number of app instances, else you starve other services\ntoo small = request queue backs up, too large = DB chokes on context switches\nserverless messes with this — each lambda = own pool, fanout kills DB, use pgbouncer or proxy\npooler modes: session (sticky, safe), transaction (swap between queries, faster, breaks prepared statements + session state), statement (rare)",
+  "result": "@hewn v0 hybrid\nG: db_pool\nC: conn_cost\nP: reuse_conn\nV: lower_latency\nA: tune_size",
   "assertion_pass": true,
   "raw_payload": {
     "type": "result",
     "subtype": "success",
     "is_error": false,
     "api_error_status": null,
-    "duration_ms": 9828,
-    "duration_api_ms": 10373,
+    "duration_ms": 3316,
+    "duration_api_ms": 4013,
     "num_turns": 1,
-    "result": "database connection pool = pre-made pool of open DB connections, reused across requests\nopening TCP+TLS+auth handshake per query = slow, so keep N warm connections sitting idle\napp borrows one, runs query, returns it — no handshake cost\npool has max size (cap on concurrent DB load) and min/idle size (keep ready)\nif all busy, new caller waits in queue or gets timeout\nidle connections pinged/recycled so DB doesn't kill them for inactivity\ntune max to DB's connection limit ÷ number of app instances, else you starve other services\ntoo small = request queue backs up, too large = DB chokes on context switches\nserverless messes with this — each lambda = own pool, fanout kills DB, use pgbouncer or proxy\npooler modes: session (sticky, safe), transaction (swap between queries, faster, breaks prepared statements + session state), statement (rare)",
+    "result": "@hewn v0 hybrid\nG: db_pool\nC: conn_cost\nP: reuse_conn\nV: lower_latency\nA: tune_size",
     "stop_reason": "end_turn",
-    "session_id": "1ecca247-d29c-4208-b1b6-019ee2e557b8",
-    "total_cost_usd": 0.022845999999999998,
+    "session_id": "4db43d2e-98cd-4a92-a88e-93234caa89b0",
+    "total_cost_usd": 0.1273975,
     "usage": {
       "input_tokens": 6,
-      "cache_creation_input_tokens": 0,
-      "cache_read_input_tokens": 30002,
-      "output_tokens": 296,
+      "cache_creation_input_tokens": 18752,
+      "cache_read_input_tokens": 16805,
+      "output_tokens": 54,
       "server_tool_use": {
         "web_search_requests": 0,
         "web_fetch_requests": 0
       },
       "service_tier": "standard",
       "cache_creation": {
-        "ephemeral_1h_input_tokens": 0,
+        "ephemeral_1h_input_tokens": 18752,
         "ephemeral_5m_input_tokens": 0
       },
       "inference_geo": "",
       "iterations": [
         {
           "input_tokens": 6,
-          "output_tokens": 296,
-          "cache_read_input_tokens": 30002,
-          "cache_creation_input_tokens": 0,
+          "output_tokens": 54,
+          "cache_read_input_tokens": 16805,
+          "cache_creation_input_tokens": 18752,
           "cache_creation": {
             "ephemeral_5m_input_tokens": 0,
-            "ephemeral_1h_input_tokens": 0
+            "ephemeral_1h_input_tokens": 18752
           },
           "type": "message"
         }
@@ -88,18 +88,18 @@
       },
       "claude-opus-4-7": {
         "inputTokens": 6,
-        "outputTokens": 296,
-        "cacheReadInputTokens": 30002,
-        "cacheCreationInputTokens": 0,
+        "outputTokens": 54,
+        "cacheReadInputTokens": 16805,
+        "cacheCreationInputTokens": 18752,
         "webSearchRequests": 0,
-        "costUSD": 0.022431,
-        "contextWindow": 200000,
+        "costUSD": 0.1269825,
+        "contextWindow": 1000000,
         "maxOutputTokens": 64000
       }
     },
     "permission_denials": [],
     "terminal_reason": "completed",
     "fast_mode_state": "off",
-    "uuid": "8b289a00-ec68-448f-bc40-cc13797a6fed"
+    "uuid": "d8ed5a02-dcc3-4bcd-b844-93beddf78632"
   }
 }

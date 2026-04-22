@@ -14,42 +14,42 @@
   ],
   "digest_hex": "14bddb51c1c5866706ff2e594385e235efce8e94983a8266c26c2b19b478fcc1",
   "seed": "hewn-bench-v1",
-  "timestamp": "2026-04-22T00:21:58.928923+00:00",
-  "output_tokens_tiktoken": 72,
-  "output_tokens_anthropic": 298,
+  "timestamp": "2026-04-22T08:13:45.868802+00:00",
+  "output_tokens_tiktoken": 146,
+  "output_tokens_anthropic": 297,
   "input_tokens_anthropic": 6,
   "cache_creation_input_tokens": 0,
-  "cache_read_input_tokens": 32639,
-  "total_input_tokens": 32645,
+  "cache_read_input_tokens": 33843,
+  "total_input_tokens": 33849,
   "cache_state": "warm",
-  "wallclock_ms": 11200.126701995032,
-  "duration_ms": 6465,
-  "duration_api_ms": 7520,
+  "wallclock_ms": 12716.127747000428,
+  "duration_ms": 6423,
+  "duration_api_ms": 7933,
   "wrapper_overhead_ms": null,
   "stop_reason": "end_turn",
   "num_turns": 1,
-  "session_id": "2200f46b-2eca-40d3-a34e-f4656c36b80e",
-  "total_cost_usd": 0.0242285,
+  "session_id": "12539109-9c72-46ea-ab16-db194b4dc21b",
+  "total_cost_usd": 0.0248205,
   "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
-  "result": "That error means something you're calling `.map()` on is `undefined` — an array you expected isn't there yet (or came back empty from an API/prop).\n\nTo pinpoint it I need the stack trace line (file + line number), or at minimum which file/component. Can you paste the full error with the stack, or point me at the file?",
+  "result": "Something you're calling `.map()` on is `undefined` instead of an array. Common causes:\n\n1. **Data hasn't loaded yet** — e.g., `items.map(...)` runs before `fetch` resolves. Fix: initialize state as `[]` (`useState([])`), or guard with `items?.map(...)` / `(items ?? []).map(...)`.\n2. **Wrong shape** — API returns `{ data: [...] }` but you're mapping the whole response. Log it and check.\n3. **Typo / missing prop** — parent didn't pass the array, or you destructured the wrong key.\n\nPaste the stack trace (the file + line above the error) and I'll point at the exact spot.",
   "assertion_pass": true,
   "raw_payload": {
     "type": "result",
     "subtype": "success",
     "is_error": false,
     "api_error_status": null,
-    "duration_ms": 6465,
-    "duration_api_ms": 7520,
+    "duration_ms": 6423,
+    "duration_api_ms": 7933,
     "num_turns": 1,
-    "result": "That error means something you're calling `.map()` on is `undefined` — an array you expected isn't there yet (or came back empty from an API/prop).\n\nTo pinpoint it I need the stack trace line (file + line number), or at minimum which file/component. Can you paste the full error with the stack, or point me at the file?",
+    "result": "Something you're calling `.map()` on is `undefined` instead of an array. Common causes:\n\n1. **Data hasn't loaded yet** — e.g., `items.map(...)` runs before `fetch` resolves. Fix: initialize state as `[]` (`useState([])`), or guard with `items?.map(...)` / `(items ?? []).map(...)`.\n2. **Wrong shape** — API returns `{ data: [...] }` but you're mapping the whole response. Log it and check.\n3. **Typo / missing prop** — parent didn't pass the array, or you destructured the wrong key.\n\nPaste the stack trace (the file + line above the error) and I'll point at the exact spot.",
     "stop_reason": "end_turn",
-    "session_id": "2200f46b-2eca-40d3-a34e-f4656c36b80e",
-    "total_cost_usd": 0.0242285,
+    "session_id": "12539109-9c72-46ea-ab16-db194b4dc21b",
+    "total_cost_usd": 0.0248205,
     "usage": {
       "input_tokens": 6,
       "cache_creation_input_tokens": 0,
-      "cache_read_input_tokens": 32639,
-      "output_tokens": 298,
+      "cache_read_input_tokens": 33843,
+      "output_tokens": 297,
       "server_tool_use": {
         "web_search_requests": 0,
         "web_fetch_requests": 0
@@ -63,8 +63,8 @@
       "iterations": [
         {
           "input_tokens": 6,
-          "output_tokens": 298,
-          "cache_read_input_tokens": 32639,
+          "output_tokens": 297,
+          "cache_read_input_tokens": 33843,
           "cache_creation_input_tokens": 0,
           "cache_creation": {
             "ephemeral_5m_input_tokens": 0,
@@ -78,21 +78,21 @@
     "modelUsage": {
       "claude-haiku-4-5-20251001": {
         "inputTokens": 364,
-        "outputTokens": 13,
+        "outputTokens": 16,
         "cacheReadInputTokens": 0,
         "cacheCreationInputTokens": 0,
         "webSearchRequests": 0,
-        "costUSD": 0.000429,
+        "costUSD": 0.000444,
         "contextWindow": 200000,
         "maxOutputTokens": 32000
       },
       "claude-opus-4-7": {
         "inputTokens": 6,
-        "outputTokens": 298,
-        "cacheReadInputTokens": 32639,
+        "outputTokens": 297,
+        "cacheReadInputTokens": 33843,
         "cacheCreationInputTokens": 0,
         "webSearchRequests": 0,
-        "costUSD": 0.0237995,
+        "costUSD": 0.0243765,
         "contextWindow": 1000000,
         "maxOutputTokens": 64000
       }
@@ -100,6 +100,6 @@
     "permission_denials": [],
     "terminal_reason": "completed",
     "fast_mode_state": "off",
-    "uuid": "5fdbe5a6-d519-4bca-87bd-eadfbeb6bbea"
+    "uuid": "0c181602-8073-4320-b0c5-d7c6f8c72695"
   }
 }

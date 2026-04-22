@@ -1,0 +1,106 @@
+{
+  "track": "T4",
+  "arm": "hewn_full",
+  "sequence_id": "debug-prod-incident",
+  "run_index": 1,
+  "turn": 1,
+  "arm_order_index": 1,
+  "arm_order_full": [
+    "baseline",
+    "hewn_full",
+    "hewn_prompt_only",
+    "caveman_full",
+    "terse"
+  ],
+  "digest_hex": "c436155c1e87e76d88e6f2c66d47c90c16ae78237b0a8de1b93824cf92fb5c9b",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T00:57:58.958902+00:00",
+  "session_id_used_for_resume": null,
+  "output_tokens_tiktoken": 139,
+  "output_tokens_anthropic": 207,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 17362,
+  "cache_read_input_tokens": 16805,
+  "total_input_tokens": 34173,
+  "cache_state": "warm",
+  "wallclock_ms": 10074.284008005634,
+  "duration_ms": 6647,
+  "duration_api_ms": 7449,
+  "wrapper_overhead_ms": 2625.284008005634,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "5d1851be-da18-4cec-aee4-bc97c1f25d2d",
+  "total_cost_usd": 0.12260599999999999,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "rollback 14:18 deploy first — fastest path to green, investigate after\n\ncheck diff between last-good and 14:18: focus on createOrder handler and request shape\n\"reading items\" on undefined → req.body.items or order.items, likely body parsing or schema change\nverify: did route change body validator? did client contract change (items moved, renamed, nested)?\ncheck if middleware order changed (body-parser before handler?)\ncheck if new field made items optional in types but handler still dereferences\nrepro locally with prod payload sample from logs before redeploying fix\nif rollback not possible: add guard + 400 on missing items, ship hotfix, then root cause",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 6647,
+    "duration_api_ms": 7449,
+    "num_turns": 1,
+    "result": "rollback 14:18 deploy first — fastest path to green, investigate after\n\ncheck diff between last-good and 14:18: focus on createOrder handler and request shape\n\"reading items\" on undefined → req.body.items or order.items, likely body parsing or schema change\nverify: did route change body validator? did client contract change (items moved, renamed, nested)?\ncheck if middleware order changed (body-parser before handler?)\ncheck if new field made items optional in types but handler still dereferences\nrepro locally with prod payload sample from logs before redeploying fix\nif rollback not possible: add guard + 400 on missing items, ship hotfix, then root cause",
+    "stop_reason": "end_turn",
+    "session_id": "5d1851be-da18-4cec-aee4-bc97c1f25d2d",
+    "total_cost_usd": 0.12260599999999999,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 17362,
+      "cache_read_input_tokens": 16805,
+      "output_tokens": 207,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 17362,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 207,
+          "cache_read_input_tokens": 16805,
+          "cache_creation_input_tokens": 17362,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 17362
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 396,
+        "outputTokens": 18,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.000486,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 207,
+        "cacheReadInputTokens": 16805,
+        "cacheCreationInputTokens": 17362,
+        "webSearchRequests": 0,
+        "costUSD": 0.12211999999999999,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "6dce6aa8-50fa-4c58-9291-fc16d344507f"
+  }
+}

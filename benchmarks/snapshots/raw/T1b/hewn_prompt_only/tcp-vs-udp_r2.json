@@ -14,61 +14,61 @@
   ],
   "digest_hex": "f12180983420f4a94b3592c84a1684c904419bcb9246fe5b531e2451e68c7956",
   "seed": "hewn-bench-v1",
-  "timestamp": "2026-04-21T23:54:23.625037+00:00",
-  "output_tokens_tiktoken": 117,
-  "output_tokens_anthropic": 220,
+  "timestamp": "2026-04-22T08:03:07.004086+00:00",
+  "output_tokens_tiktoken": 116,
+  "output_tokens_anthropic": 210,
   "input_tokens_anthropic": 6,
-  "cache_creation_input_tokens": 0,
-  "cache_read_input_tokens": 28523,
-  "total_input_tokens": 28529,
+  "cache_creation_input_tokens": 17022,
+  "cache_read_input_tokens": 16796,
+  "total_input_tokens": 33824,
   "cache_state": "warm",
-  "wallclock_ms": 9906.871307000984,
-  "duration_ms": 4534,
-  "duration_api_ms": 5251,
+  "wallclock_ms": 11403.969489998417,
+  "duration_ms": 5109,
+  "duration_api_ms": 6503,
   "wrapper_overhead_ms": null,
   "stop_reason": "end_turn",
   "num_turns": 1,
-  "session_id": "0e2ff264-f410-4360-aed9-61f4858f8238",
-  "total_cost_usd": 0.0202085,
+  "session_id": "1cb64217-c6fa-4977-9960-902f38c8a2a3",
+  "total_cost_usd": 0.12047749999999999,
   "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
-  "result": "**TCP** — connection-oriented, reliable. Establishes a handshake, guarantees delivery, preserves order, retransmits lost packets, and controls congestion/flow. Higher overhead. Used for HTTP, SSH, email, file transfer.\n\n**UDP** — connectionless, best-effort. No handshake, no delivery guarantee, no ordering, no retransmission. Lower overhead, lower latency. Used for DNS, VoIP, video streaming, gaming, QUIC.\n\nKey tradeoff: TCP trades latency for reliability; UDP trades reliability for speed and lets the application handle whichever guarantees it actually needs.",
+  "result": "TCP is connection-oriented and reliable: it establishes a session (3-way handshake), guarantees ordered delivery, retransmits lost packets, and does flow/congestion control. Use it when correctness matters (HTTP, SSH, databases).\n\nUDP is connectionless and best-effort: no handshake, no ordering, no retransmission, minimal overhead. Use it when speed or low latency beats reliability (DNS, video/voice, game netcode, QUIC's substrate).\n\nKey tradeoff: TCP trades latency for reliability; UDP trades reliability for latency — and leaves any guarantees to the application layer.",
   "assertion_pass": true,
   "raw_payload": {
     "type": "result",
     "subtype": "success",
     "is_error": false,
     "api_error_status": null,
-    "duration_ms": 4534,
-    "duration_api_ms": 5251,
+    "duration_ms": 5109,
+    "duration_api_ms": 6503,
     "num_turns": 1,
-    "result": "**TCP** — connection-oriented, reliable. Establishes a handshake, guarantees delivery, preserves order, retransmits lost packets, and controls congestion/flow. Higher overhead. Used for HTTP, SSH, email, file transfer.\n\n**UDP** — connectionless, best-effort. No handshake, no delivery guarantee, no ordering, no retransmission. Lower overhead, lower latency. Used for DNS, VoIP, video streaming, gaming, QUIC.\n\nKey tradeoff: TCP trades latency for reliability; UDP trades reliability for speed and lets the application handle whichever guarantees it actually needs.",
+    "result": "TCP is connection-oriented and reliable: it establishes a session (3-way handshake), guarantees ordered delivery, retransmits lost packets, and does flow/congestion control. Use it when correctness matters (HTTP, SSH, databases).\n\nUDP is connectionless and best-effort: no handshake, no ordering, no retransmission, minimal overhead. Use it when speed or low latency beats reliability (DNS, video/voice, game netcode, QUIC's substrate).\n\nKey tradeoff: TCP trades latency for reliability; UDP trades reliability for latency — and leaves any guarantees to the application layer.",
     "stop_reason": "end_turn",
-    "session_id": "0e2ff264-f410-4360-aed9-61f4858f8238",
-    "total_cost_usd": 0.0202085,
+    "session_id": "1cb64217-c6fa-4977-9960-902f38c8a2a3",
+    "total_cost_usd": 0.12047749999999999,
     "usage": {
       "input_tokens": 6,
-      "cache_creation_input_tokens": 0,
-      "cache_read_input_tokens": 28523,
-      "output_tokens": 220,
+      "cache_creation_input_tokens": 17022,
+      "cache_read_input_tokens": 16796,
+      "output_tokens": 210,
       "server_tool_use": {
         "web_search_requests": 0,
         "web_fetch_requests": 0
       },
       "service_tier": "standard",
       "cache_creation": {
-        "ephemeral_1h_input_tokens": 0,
+        "ephemeral_1h_input_tokens": 17022,
         "ephemeral_5m_input_tokens": 0
       },
       "inference_geo": "",
       "iterations": [
         {
           "input_tokens": 6,
-          "output_tokens": 220,
-          "cache_read_input_tokens": 28523,
-          "cache_creation_input_tokens": 0,
+          "output_tokens": 210,
+          "cache_read_input_tokens": 16796,
+          "cache_creation_input_tokens": 17022,
           "cache_creation": {
             "ephemeral_5m_input_tokens": 0,
-            "ephemeral_1h_input_tokens": 0
+            "ephemeral_1h_input_tokens": 17022
           },
           "type": "message"
         }
@@ -78,28 +78,28 @@
     "modelUsage": {
       "claude-haiku-4-5-20251001": {
         "inputTokens": 347,
-        "outputTokens": 14,
+        "outputTokens": 13,
         "cacheReadInputTokens": 0,
         "cacheCreationInputTokens": 0,
         "webSearchRequests": 0,
-        "costUSD": 0.00041699999999999994,
+        "costUSD": 0.000412,
         "contextWindow": 200000,
         "maxOutputTokens": 32000
       },
       "claude-opus-4-7": {
         "inputTokens": 6,
-        "outputTokens": 220,
-        "cacheReadInputTokens": 28523,
-        "cacheCreationInputTokens": 0,
+        "outputTokens": 210,
+        "cacheReadInputTokens": 16796,
+        "cacheCreationInputTokens": 17022,
         "webSearchRequests": 0,
-        "costUSD": 0.0197915,
-        "contextWindow": 200000,
+        "costUSD": 0.12006549999999999,
+        "contextWindow": 1000000,
         "maxOutputTokens": 64000
       }
     },
     "permission_denials": [],
     "terminal_reason": "completed",
     "fast_mode_state": "off",
-    "uuid": "31c7786c-47bc-4834-a522-a8d49a156013"
+    "uuid": "9639a019-24eb-4c90-8fe7-741d2572aaa3"
   }
 }

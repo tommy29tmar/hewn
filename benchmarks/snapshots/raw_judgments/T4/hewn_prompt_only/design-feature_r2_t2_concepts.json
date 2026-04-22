@@ -8,8 +8,8 @@
   "history": [
     {
       "attempt": 0,
-      "raw": "{\"pros_of_event_sourced\":true,\"cons_of_event_sourced\":true,\"pros_of_mutable_row\":true,\"cons_of_mutable_row\":true}"
+      "raw": "{\"pros_of_event_sourced\": true, \"cons_of_event_sourced\": true, \"pros_of_mutable_row\": true, \"cons_of_mutable_row\": true}"
     }
   ],
-  "ts": "2026-04-22T02:10:34.635995+00:00"
+  "ts": "2026-04-22T09:11:15.470211+00:00"
 }

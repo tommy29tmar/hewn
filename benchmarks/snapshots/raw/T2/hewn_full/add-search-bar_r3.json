@@ -14,61 +14,61 @@
   ],
   "digest_hex": "a46d644acd0981610a1422e22f1bd34c2d79b52758fd77a5fa0177b885096c70",
   "seed": "hewn-bench-v1",
-  "timestamp": "2026-04-22T00:27:03.333361+00:00",
-  "output_tokens_tiktoken": 50,
-  "output_tokens_anthropic": 72,
+  "timestamp": "2026-04-22T08:15:24.199105+00:00",
+  "output_tokens_tiktoken": 29,
+  "output_tokens_anthropic": 42,
   "input_tokens_anthropic": 6,
-  "cache_creation_input_tokens": 17293,
-  "cache_read_input_tokens": 16805,
-  "total_input_tokens": 34104,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 34997,
+  "total_input_tokens": 35003,
   "cache_state": "warm",
-  "wallclock_ms": 16960.55763598997,
-  "duration_ms": 11292,
-  "duration_api_ms": 12592,
-  "wrapper_overhead_ms": 4368.5576359899715,
+  "wallclock_ms": 9887.30975499493,
+  "duration_ms": 3100,
+  "duration_api_ms": 3843,
+  "wrapper_overhead_ms": 6044.309754994931,
   "stop_reason": "end_turn",
   "num_turns": 1,
-  "session_id": "451d02ad-4cdb-462e-8c14-2d932a6682c0",
-  "total_cost_usd": 0.11873075,
+  "session_id": "72f8fad1-4a18-4852-ac1c-09ee8a2c8490",
+  "total_cost_usd": 0.018995500000000002,
   "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
-  "result": "depends on stack — what app\nfrontend framework? (react, vue, svelte, vanilla)\nwhat gets searched? (local list, api, db)\nclient-side filter or server query\n\ndrop those + i point you at first file to touch",
+  "result": "Need more info. What framework (React/Vue/plain JS/other) and what are you searching — static list, API, or DB?",
   "assertion_pass": true,
   "raw_payload": {
     "type": "result",
     "subtype": "success",
     "is_error": false,
     "api_error_status": null,
-    "duration_ms": 11292,
-    "duration_api_ms": 12592,
+    "duration_ms": 3100,
+    "duration_api_ms": 3843,
     "num_turns": 1,
-    "result": "depends on stack — what app\nfrontend framework? (react, vue, svelte, vanilla)\nwhat gets searched? (local list, api, db)\nclient-side filter or server query\n\ndrop those + i point you at first file to touch",
+    "result": "Need more info. What framework (React/Vue/plain JS/other) and what are you searching — static list, API, or DB?",
     "stop_reason": "end_turn",
-    "session_id": "451d02ad-4cdb-462e-8c14-2d932a6682c0",
-    "total_cost_usd": 0.11873075,
+    "session_id": "72f8fad1-4a18-4852-ac1c-09ee8a2c8490",
+    "total_cost_usd": 0.018995500000000002,
     "usage": {
       "input_tokens": 6,
-      "cache_creation_input_tokens": 17293,
-      "cache_read_input_tokens": 16805,
-      "output_tokens": 72,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 34997,
+      "output_tokens": 42,
       "server_tool_use": {
         "web_search_requests": 0,
         "web_fetch_requests": 0
       },
       "service_tier": "standard",
       "cache_creation": {
-        "ephemeral_1h_input_tokens": 17293,
+        "ephemeral_1h_input_tokens": 0,
         "ephemeral_5m_input_tokens": 0
       },
       "inference_geo": "",
       "iterations": [
         {
           "input_tokens": 6,
-          "output_tokens": 72,
-          "cache_read_input_tokens": 16805,
-          "cache_creation_input_tokens": 17293,
+          "output_tokens": 42,
+          "cache_read_input_tokens": 34997,
+          "cache_creation_input_tokens": 0,
           "cache_creation": {
             "ephemeral_5m_input_tokens": 0,
-            "ephemeral_1h_input_tokens": 17293
+            "ephemeral_1h_input_tokens": 0
           },
           "type": "message"
         }
@@ -88,11 +88,11 @@
       },
       "claude-opus-4-7": {
         "inputTokens": 6,
-        "outputTokens": 72,
-        "cacheReadInputTokens": 16805,
-        "cacheCreationInputTokens": 17293,
+        "outputTokens": 42,
+        "cacheReadInputTokens": 34997,
+        "cacheCreationInputTokens": 0,
         "webSearchRequests": 0,
-        "costUSD": 0.11831375,
+        "costUSD": 0.0185785,
         "contextWindow": 1000000,
         "maxOutputTokens": 64000
       }
@@ -100,6 +100,6 @@
     "permission_denials": [],
     "terminal_reason": "completed",
     "fast_mode_state": "off",
-    "uuid": "9bb1a081-e019-4b5c-b500-eef2e785157b"
+    "uuid": "69c38b14-9c1a-4f97-9a32-c0426765d9d8"
   }
 }

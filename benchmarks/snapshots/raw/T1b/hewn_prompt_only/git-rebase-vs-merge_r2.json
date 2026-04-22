@@ -14,61 +14,61 @@
   ],
   "digest_hex": "671ce9b36ae9fddc6f5df598e1ba671496437cd76d62e50562f443322938c317",
   "seed": "hewn-bench-v1",
-  "timestamp": "2026-04-22T00:01:46.071805+00:00",
-  "output_tokens_tiktoken": 107,
-  "output_tokens_anthropic": 178,
+  "timestamp": "2026-04-22T08:05:47.395870+00:00",
+  "output_tokens_tiktoken": 129,
+  "output_tokens_anthropic": 205,
   "input_tokens_anthropic": 6,
-  "cache_creation_input_tokens": 0,
-  "cache_read_input_tokens": 28522,
-  "total_input_tokens": 28528,
+  "cache_creation_input_tokens": 17021,
+  "cache_read_input_tokens": 16796,
+  "total_input_tokens": 33823,
   "cache_state": "warm",
-  "wallclock_ms": 10473.426471988205,
-  "duration_ms": 5560,
-  "duration_api_ms": 6658,
+  "wallclock_ms": 12616.074320016196,
+  "duration_ms": 6631,
+  "duration_api_ms": 7833,
   "wrapper_overhead_ms": null,
   "stop_reason": "end_turn",
   "num_turns": 1,
-  "session_id": "10d7270d-4f8b-406c-a7be-51d5b588b59a",
-  "total_cost_usd": 0.019159000000000002,
+  "session_id": "cc3655d8-68ac-42f1-9b43-300d9faa62ff",
+  "total_cost_usd": 0.12035225000000001,
   "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
-  "result": "**Merge** preserves history as-is: it creates a new commit that ties two branch tips together, keeping both parent lineages intact. Non-destructive, but produces a branching graph.\n\n**Rebase** rewrites history: it replays your commits one-by-one on top of another branch, producing a linear sequence. Cleaner log, but the replayed commits have new SHAs — so rebasing already-pushed commits forces collaborators to reset.\n\nRule of thumb: merge for shared/public branches, rebase for local cleanup before pushing.",
+  "result": "**Merge** preserves history as-is: combines two branches by creating a new merge commit with two parents. Non-destructive, keeps the full branching topology.\n\n**Rebase** rewrites history: replays your commits on top of another branch, producing a linear sequence with new commit hashes. Cleaner log, but the original commits are gone.\n\nRules of thumb:\n- Rebase local/private branches before sharing — clean up before others see them.\n- Merge shared branches — never rebase commits others have pulled (force-push rewrites their history).\n- `git pull --rebase` for keeping a feature branch current without merge-commit noise.",
   "assertion_pass": true,
   "raw_payload": {
     "type": "result",
     "subtype": "success",
     "is_error": false,
     "api_error_status": null,
-    "duration_ms": 5560,
-    "duration_api_ms": 6658,
+    "duration_ms": 6631,
+    "duration_api_ms": 7833,
     "num_turns": 1,
-    "result": "**Merge** preserves history as-is: it creates a new commit that ties two branch tips together, keeping both parent lineages intact. Non-destructive, but produces a branching graph.\n\n**Rebase** rewrites history: it replays your commits one-by-one on top of another branch, producing a linear sequence. Cleaner log, but the replayed commits have new SHAs — so rebasing already-pushed commits forces collaborators to reset.\n\nRule of thumb: merge for shared/public branches, rebase for local cleanup before pushing.",
+    "result": "**Merge** preserves history as-is: combines two branches by creating a new merge commit with two parents. Non-destructive, keeps the full branching topology.\n\n**Rebase** rewrites history: replays your commits on top of another branch, producing a linear sequence with new commit hashes. Cleaner log, but the original commits are gone.\n\nRules of thumb:\n- Rebase local/private branches before sharing — clean up before others see them.\n- Merge shared branches — never rebase commits others have pulled (force-push rewrites their history).\n- `git pull --rebase` for keeping a feature branch current without merge-commit noise.",
     "stop_reason": "end_turn",
-    "session_id": "10d7270d-4f8b-406c-a7be-51d5b588b59a",
-    "total_cost_usd": 0.019159000000000002,
+    "session_id": "cc3655d8-68ac-42f1-9b43-300d9faa62ff",
+    "total_cost_usd": 0.12035225000000001,
     "usage": {
       "input_tokens": 6,
-      "cache_creation_input_tokens": 0,
-      "cache_read_input_tokens": 28522,
-      "output_tokens": 178,
+      "cache_creation_input_tokens": 17021,
+      "cache_read_input_tokens": 16796,
+      "output_tokens": 205,
       "server_tool_use": {
         "web_search_requests": 0,
         "web_fetch_requests": 0
       },
       "service_tier": "standard",
       "cache_creation": {
-        "ephemeral_1h_input_tokens": 0,
+        "ephemeral_1h_input_tokens": 17021,
         "ephemeral_5m_input_tokens": 0
       },
       "inference_geo": "",
       "iterations": [
         {
           "input_tokens": 6,
-          "output_tokens": 178,
-          "cache_read_input_tokens": 28522,
-          "cache_creation_input_tokens": 0,
+          "output_tokens": 205,
+          "cache_read_input_tokens": 16796,
+          "cache_creation_input_tokens": 17021,
           "cache_creation": {
             "ephemeral_5m_input_tokens": 0,
-            "ephemeral_1h_input_tokens": 0
+            "ephemeral_1h_input_tokens": 17021
           },
           "type": "message"
         }
@@ -88,18 +88,18 @@
       },
       "claude-opus-4-7": {
         "inputTokens": 6,
-        "outputTokens": 178,
-        "cacheReadInputTokens": 28522,
-        "cacheCreationInputTokens": 0,
+        "outputTokens": 205,
+        "cacheReadInputTokens": 16796,
+        "cacheCreationInputTokens": 17021,
         "webSearchRequests": 0,
-        "costUSD": 0.018741,
-        "contextWindow": 200000,
+        "costUSD": 0.11993425,
+        "contextWindow": 1000000,
         "maxOutputTokens": 64000
       }
     },
     "permission_denials": [],
     "terminal_reason": "completed",
     "fast_mode_state": "off",
-    "uuid": "6d35d9d1-e577-4a9f-8329-5cf082ab82fb"
+    "uuid": "eaeb45ff-dc07-4086-b813-00bdf487ad55"
   }
 }

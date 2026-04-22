@@ -14,61 +14,61 @@
   ],
   "digest_hex": "8f919a0c7b8b1c67b4c06afc835537a9aea81a8fcdfc1009313802d4d28f466f",
   "seed": "hewn-bench-v1",
-  "timestamp": "2026-04-22T00:25:28.532013+00:00",
-  "output_tokens_tiktoken": 143,
-  "output_tokens_anthropic": 631,
-  "input_tokens_anthropic": 7,
-  "cache_creation_input_tokens": 819,
-  "cache_read_input_tokens": 68194,
-  "total_input_tokens": 69020,
+  "timestamp": "2026-04-22T08:15:00.123244+00:00",
+  "output_tokens_tiktoken": 30,
+  "output_tokens_anthropic": 44,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 34996,
+  "total_input_tokens": 35002,
   "cache_state": "warm",
-  "wallclock_ms": 19976.257872011047,
-  "duration_ms": 14489,
-  "duration_api_ms": 15173,
-  "wrapper_overhead_ms": 4803.257872011047,
+  "wallclock_ms": 9868.783209007233,
+  "duration_ms": 3396,
+  "duration_api_ms": 4577,
+  "wrapper_overhead_ms": 5291.783209007233,
   "stop_reason": "end_turn",
-  "num_turns": 2,
-  "session_id": "fd78b803-bb6d-48b6-ac39-82b1a9cfd5c4",
-  "total_cost_usd": 0.055439749999999996,
+  "num_turns": 1,
+  "session_id": "47af0636-e43e-48e6-ac46-a7eee93e9a89",
+  "total_cost_usd": 0.019042,
   "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
-  "result": "no repo, no code, no stack — can't fix blind.\nneed minimum to triage:\n- platform (web, mobile, desktop)\n- browser + console errors on click\n- network tab: request fires? status code? response body?\n- does button click register at all (onclick logs)?\n- worked before? what changed recently?\n- all users or subset (region, browser, auth provider)?\n\nfastest checks while gathering:\n- auth provider status page (google/github/okta down?)\n- recent deploy — rollback candidate?\n- cert/domain expiry on callback url\n- cors/csp headers blocking redirect\n- cookie samesite flipped by browser update\n\npaste console + network output, i dig in.",
+  "result": "Which app, and what happens when they click — nothing, error, redirect loop? Share the URL or a console/network log if you have one.",
   "assertion_pass": true,
   "raw_payload": {
     "type": "result",
     "subtype": "success",
     "is_error": false,
     "api_error_status": null,
-    "duration_ms": 14489,
-    "duration_api_ms": 15173,
-    "num_turns": 2,
-    "result": "no repo, no code, no stack — can't fix blind.\nneed minimum to triage:\n- platform (web, mobile, desktop)\n- browser + console errors on click\n- network tab: request fires? status code? response body?\n- does button click register at all (onclick logs)?\n- worked before? what changed recently?\n- all users or subset (region, browser, auth provider)?\n\nfastest checks while gathering:\n- auth provider status page (google/github/okta down?)\n- recent deploy — rollback candidate?\n- cert/domain expiry on callback url\n- cors/csp headers blocking redirect\n- cookie samesite flipped by browser update\n\npaste console + network output, i dig in.",
+    "duration_ms": 3396,
+    "duration_api_ms": 4577,
+    "num_turns": 1,
+    "result": "Which app, and what happens when they click — nothing, error, redirect loop? Share the URL or a console/network log if you have one.",
     "stop_reason": "end_turn",
-    "session_id": "fd78b803-bb6d-48b6-ac39-82b1a9cfd5c4",
-    "total_cost_usd": 0.055439749999999996,
+    "session_id": "47af0636-e43e-48e6-ac46-a7eee93e9a89",
+    "total_cost_usd": 0.019042,
     "usage": {
-      "input_tokens": 7,
-      "cache_creation_input_tokens": 819,
-      "cache_read_input_tokens": 68194,
-      "output_tokens": 631,
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 34996,
+      "output_tokens": 44,
       "server_tool_use": {
         "web_search_requests": 0,
         "web_fetch_requests": 0
       },
       "service_tier": "standard",
       "cache_creation": {
-        "ephemeral_1h_input_tokens": 819,
+        "ephemeral_1h_input_tokens": 0,
         "ephemeral_5m_input_tokens": 0
       },
       "inference_geo": "",
       "iterations": [
         {
-          "input_tokens": 1,
-          "output_tokens": 350,
-          "cache_read_input_tokens": 34097,
-          "cache_creation_input_tokens": 819,
+          "input_tokens": 6,
+          "output_tokens": 44,
+          "cache_read_input_tokens": 34996,
+          "cache_creation_input_tokens": 0,
           "cache_creation": {
             "ephemeral_5m_input_tokens": 0,
-            "ephemeral_1h_input_tokens": 819
+            "ephemeral_1h_input_tokens": 0
           },
           "type": "message"
         }
@@ -87,12 +87,12 @@
         "maxOutputTokens": 32000
       },
       "claude-opus-4-7": {
-        "inputTokens": 7,
-        "outputTokens": 631,
-        "cacheReadInputTokens": 68194,
-        "cacheCreationInputTokens": 819,
+        "inputTokens": 6,
+        "outputTokens": 44,
+        "cacheReadInputTokens": 34996,
+        "cacheCreationInputTokens": 0,
         "webSearchRequests": 0,
-        "costUSD": 0.05502575,
+        "costUSD": 0.018628,
         "contextWindow": 1000000,
         "maxOutputTokens": 64000
       }
@@ -100,6 +100,6 @@
     "permission_denials": [],
     "terminal_reason": "completed",
     "fast_mode_state": "off",
-    "uuid": "f8384f80-522f-4e4e-a1e2-e3c0ab745de4"
+    "uuid": "2979427e-14c6-4882-b3aa-eab504cf3b94"
   }
 }

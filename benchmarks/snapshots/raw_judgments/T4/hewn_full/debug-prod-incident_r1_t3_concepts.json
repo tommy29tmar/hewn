@@ -1,13 +1,13 @@
 {
   "final": {
-    "proposes_jest_test_shape": true,
-    "test_asserts_items_field_present_in_buildCart_output": true
+    "proposes_jest_test_shape": false,
+    "test_asserts_items_field_present_in_buildCart_output": false
   },
   "history": [
     {
       "attempt": 0,
-      "raw": "{\"proposes_jest_test_shape\": true, \"test_asserts_items_field_present_in_buildCart_output\": true}"
+      "raw": "{\"proposes_jest_test_shape\": false, \"test_asserts_items_field_present_in_buildCart_output\": false}"
     }
   ],
-  "ts": "2026-04-22T02:07:10.401062+00:00"
+  "ts": "2026-04-22T09:05:55.854128+00:00"
 }

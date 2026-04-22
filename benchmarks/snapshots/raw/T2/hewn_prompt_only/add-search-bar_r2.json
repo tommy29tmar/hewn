@@ -14,61 +14,61 @@
   ],
   "digest_hex": "e4d553ad3e355ccffc56234ee1f9b935b3963f152f24e81c5cb452140df74b94",
   "seed": "hewn-bench-v1",
-  "timestamp": "2026-04-22T00:21:19.492749+00:00",
-  "output_tokens_tiktoken": 49,
-  "output_tokens_anthropic": 176,
+  "timestamp": "2026-04-22T08:13:31.713012+00:00",
+  "output_tokens_tiktoken": 149,
+  "output_tokens_anthropic": 337,
   "input_tokens_anthropic": 6,
-  "cache_creation_input_tokens": 0,
-  "cache_read_input_tokens": 32615,
-  "total_input_tokens": 32621,
+  "cache_creation_input_tokens": 17023,
+  "cache_read_input_tokens": 16796,
+  "total_input_tokens": 33825,
   "cache_state": "warm",
-  "wallclock_ms": 9257.530845003203,
-  "duration_ms": 4207,
-  "duration_api_ms": 4989,
+  "wallclock_ms": 14154.987546004122,
+  "duration_ms": 7905,
+  "duration_api_ms": 8858,
   "wrapper_overhead_ms": null,
   "stop_reason": "end_turn",
   "num_turns": 1,
-  "session_id": "2446e4e2-c76f-4b54-a622-5295cc0f3130",
-  "total_cost_usd": 0.0211545,
+  "session_id": "a6833527-cf2e-4155-aac0-deb66353b113",
+  "total_cost_usd": 0.12366374999999999,
   "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
-  "result": "Which app? This repo (`SIGIL/`) is Hewn — a Claude Code CLI wrapper, no UI to add a search bar to. Do you mean a different project, or are you thinking of search over Hewn's output/history?",
+  "result": "Quick reality check before I point you anywhere — this repo (SIGIL/Hewn) is a Claude Code CLI wrapper, not a web/GUI app. There's no frontend to add a search bar to.\n\nA few possibilities:\n1. **Wrong repo?** You might be thinking of a different project. `cd` there and ask again.\n2. **You mean a CLI search feature** inside Hewn (e.g., searching prompt history, locale classifiers, benchmark outputs)? If so, tell me what you want to search over.\n3. **You want to scaffold a new app** from scratch with a search bar? I can, but I'd need to know the stack (React? Vanilla? Something else?).\n\nWhich is it?",
   "assertion_pass": true,
   "raw_payload": {
     "type": "result",
     "subtype": "success",
     "is_error": false,
     "api_error_status": null,
-    "duration_ms": 4207,
-    "duration_api_ms": 4989,
+    "duration_ms": 7905,
+    "duration_api_ms": 8858,
     "num_turns": 1,
-    "result": "Which app? This repo (`SIGIL/`) is Hewn — a Claude Code CLI wrapper, no UI to add a search bar to. Do you mean a different project, or are you thinking of search over Hewn's output/history?",
+    "result": "Quick reality check before I point you anywhere — this repo (SIGIL/Hewn) is a Claude Code CLI wrapper, not a web/GUI app. There's no frontend to add a search bar to.\n\nA few possibilities:\n1. **Wrong repo?** You might be thinking of a different project. `cd` there and ask again.\n2. **You mean a CLI search feature** inside Hewn (e.g., searching prompt history, locale classifiers, benchmark outputs)? If so, tell me what you want to search over.\n3. **You want to scaffold a new app** from scratch with a search bar? I can, but I'd need to know the stack (React? Vanilla? Something else?).\n\nWhich is it?",
     "stop_reason": "end_turn",
-    "session_id": "2446e4e2-c76f-4b54-a622-5295cc0f3130",
-    "total_cost_usd": 0.0211545,
+    "session_id": "a6833527-cf2e-4155-aac0-deb66353b113",
+    "total_cost_usd": 0.12366374999999999,
     "usage": {
       "input_tokens": 6,
-      "cache_creation_input_tokens": 0,
-      "cache_read_input_tokens": 32615,
-      "output_tokens": 176,
+      "cache_creation_input_tokens": 17023,
+      "cache_read_input_tokens": 16796,
+      "output_tokens": 337,
       "server_tool_use": {
         "web_search_requests": 0,
         "web_fetch_requests": 0
       },
       "service_tier": "standard",
       "cache_creation": {
-        "ephemeral_1h_input_tokens": 0,
+        "ephemeral_1h_input_tokens": 17023,
         "ephemeral_5m_input_tokens": 0
       },
       "inference_geo": "",
       "iterations": [
         {
           "input_tokens": 6,
-          "output_tokens": 176,
-          "cache_read_input_tokens": 32615,
-          "cache_creation_input_tokens": 0,
+          "output_tokens": 337,
+          "cache_read_input_tokens": 16796,
+          "cache_creation_input_tokens": 17023,
           "cache_creation": {
             "ephemeral_5m_input_tokens": 0,
-            "ephemeral_1h_input_tokens": 0
+            "ephemeral_1h_input_tokens": 17023
           },
           "type": "message"
         }
@@ -88,11 +88,11 @@
       },
       "claude-opus-4-7": {
         "inputTokens": 6,
-        "outputTokens": 176,
-        "cacheReadInputTokens": 32615,
-        "cacheCreationInputTokens": 0,
+        "outputTokens": 337,
+        "cacheReadInputTokens": 16796,
+        "cacheCreationInputTokens": 17023,
         "webSearchRequests": 0,
-        "costUSD": 0.0207375,
+        "costUSD": 0.12324674999999999,
         "contextWindow": 1000000,
         "maxOutputTokens": 64000
       }
@@ -100,6 +100,6 @@
     "permission_denials": [],
     "terminal_reason": "completed",
     "fast_mode_state": "off",
-    "uuid": "d84d6577-01e1-4687-b6df-fd4bf7915406"
+    "uuid": "48252e98-da44-4f81-a2de-44d8be5a5438"
   }
 }

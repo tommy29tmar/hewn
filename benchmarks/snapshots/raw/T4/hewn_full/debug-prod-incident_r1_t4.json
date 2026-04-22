@@ -14,62 +14,62 @@
   ],
   "digest_hex": "c436155c1e87e76d88e6f2c66d47c90c16ae78237b0a8de1b93824cf92fb5c9b",
   "seed": "hewn-bench-v1",
-  "timestamp": "2026-04-22T00:58:29.058495+00:00",
-  "session_id_used_for_resume": "5d1851be-da18-4cec-aee4-bc97c1f25d2d",
-  "output_tokens_tiktoken": 170,
-  "output_tokens_anthropic": 288,
+  "timestamp": "2026-04-22T08:28:31.332735+00:00",
+  "session_id_used_for_resume": "c579d119-eec3-4ec9-86e2-73fdfa7c99ed",
+  "output_tokens_tiktoken": 50,
+  "output_tokens_anthropic": 82,
   "input_tokens_anthropic": 6,
-  "cache_creation_input_tokens": 681,
-  "cache_read_input_tokens": 35315,
-  "total_input_tokens": 36002,
+  "cache_creation_input_tokens": 284,
+  "cache_read_input_tokens": 36886,
+  "total_input_tokens": 37176,
   "cache_state": "warm",
-  "wallclock_ms": 12879.610781994415,
-  "duration_ms": 9418,
-  "duration_api_ms": 9332,
-  "wrapper_overhead_ms": 3547.6107819944154,
+  "wallclock_ms": 11108.69474100764,
+  "duration_ms": 4505,
+  "duration_api_ms": 4391,
+  "wrapper_overhead_ms": 6717.694741007639,
   "stop_reason": "end_turn",
   "num_turns": 1,
-  "session_id": "5d1851be-da18-4cec-aee4-bc97c1f25d2d",
-  "total_cost_usd": 0.02914375,
+  "session_id": "c579d119-eec3-4ec9-86e2-73fdfa7c99ed",
+  "total_cost_usd": 0.022298,
   "model_used": "claude-opus-4-7",
-  "result": "depends on cart size and concurrent request volume\nPromise.all fans out N lookups in parallel — each grabs a pool connection\ncart with 30 SKUs × 10 concurrent requests = 300 connections wanted, pool caps at 20\nrest queue on pool, latency spikes, potential timeouts, maybe pool exhaustion errors\nsafer: bounded concurrency (p-limit, 5-8 parallel) or batched IN query (one lookup for all SKUs)\nbatched IN query best — one connection, one round trip, scales with cart size\ncheck: does SKU lookup hit same table? if yes, SELECT ... WHERE sku IN (...) kills this problem\nalso check: any retry logic? Promise.all fails fast on first rejection, sequential loop may have partial-success semantics the caller relied on\nload test before shipping or gate behind cart-size cap",
+  "result": "Depends on cart size and concurrent orders. If carts can hit 20+ SKUs or many orders run at once, Promise.all will saturate the pool and queue/timeout. Safer: bound it with p-limit or chunk the lookups.",
   "assertion_pass": true,
   "raw_payload": {
     "type": "result",
     "subtype": "success",
     "is_error": false,
     "api_error_status": null,
-    "duration_ms": 9418,
-    "duration_api_ms": 9332,
+    "duration_ms": 4505,
+    "duration_api_ms": 4391,
     "num_turns": 1,
-    "result": "depends on cart size and concurrent request volume\nPromise.all fans out N lookups in parallel — each grabs a pool connection\ncart with 30 SKUs × 10 concurrent requests = 300 connections wanted, pool caps at 20\nrest queue on pool, latency spikes, potential timeouts, maybe pool exhaustion errors\nsafer: bounded concurrency (p-limit, 5-8 parallel) or batched IN query (one lookup for all SKUs)\nbatched IN query best — one connection, one round trip, scales with cart size\ncheck: does SKU lookup hit same table? if yes, SELECT ... WHERE sku IN (...) kills this problem\nalso check: any retry logic? Promise.all fails fast on first rejection, sequential loop may have partial-success semantics the caller relied on\nload test before shipping or gate behind cart-size cap",
+    "result": "Depends on cart size and concurrent orders. If carts can hit 20+ SKUs or many orders run at once, Promise.all will saturate the pool and queue/timeout. Safer: bound it with p-limit or chunk the lookups.",
     "stop_reason": "end_turn",
-    "session_id": "5d1851be-da18-4cec-aee4-bc97c1f25d2d",
-    "total_cost_usd": 0.02914375,
+    "session_id": "c579d119-eec3-4ec9-86e2-73fdfa7c99ed",
+    "total_cost_usd": 0.022298,
     "usage": {
       "input_tokens": 6,
-      "cache_creation_input_tokens": 681,
-      "cache_read_input_tokens": 35315,
-      "output_tokens": 288,
+      "cache_creation_input_tokens": 284,
+      "cache_read_input_tokens": 36886,
+      "output_tokens": 82,
       "server_tool_use": {
         "web_search_requests": 0,
         "web_fetch_requests": 0
       },
       "service_tier": "standard",
       "cache_creation": {
-        "ephemeral_1h_input_tokens": 681,
+        "ephemeral_1h_input_tokens": 284,
         "ephemeral_5m_input_tokens": 0
       },
       "inference_geo": "",
       "iterations": [
         {
           "input_tokens": 6,
-          "output_tokens": 288,
-          "cache_read_input_tokens": 35315,
-          "cache_creation_input_tokens": 681,
+          "output_tokens": 82,
+          "cache_read_input_tokens": 36886,
+          "cache_creation_input_tokens": 284,
           "cache_creation": {
             "ephemeral_5m_input_tokens": 0,
-            "ephemeral_1h_input_tokens": 681
+            "ephemeral_1h_input_tokens": 284
           },
           "type": "message"
         }
@@ -79,11 +79,11 @@
     "modelUsage": {
       "claude-opus-4-7": {
         "inputTokens": 6,
-        "outputTokens": 288,
-        "cacheReadInputTokens": 35315,
-        "cacheCreationInputTokens": 681,
+        "outputTokens": 82,
+        "cacheReadInputTokens": 36886,
+        "cacheCreationInputTokens": 284,
         "webSearchRequests": 0,
-        "costUSD": 0.02914375,
+        "costUSD": 0.022298,
         "contextWindow": 1000000,
         "maxOutputTokens": 64000
       }
@@ -91,6 +91,6 @@
     "permission_denials": [],
     "terminal_reason": "completed",
     "fast_mode_state": "off",
-    "uuid": "7beee0e5-0269-4419-a471-4b9588867659"
+    "uuid": "a6a917c2-96a4-440d-83f3-949cc2728104"
   }
 }

@@ -14,42 +14,42 @@
   ],
   "digest_hex": "4f33654c9cc752fbb7c1e4089ae3ded5b955b191171e746f3041ab1e443aad4e",
   "seed": "hewn-bench-v1",
-  "timestamp": "2026-04-22T00:24:36.913933+00:00",
-  "output_tokens_tiktoken": 67,
-  "output_tokens_anthropic": 106,
+  "timestamp": "2026-04-22T08:14:38.467690+00:00",
+  "output_tokens_tiktoken": 32,
+  "output_tokens_anthropic": 50,
   "input_tokens_anthropic": 6,
   "cache_creation_input_tokens": 0,
-  "cache_read_input_tokens": 34094,
-  "total_input_tokens": 34100,
+  "cache_read_input_tokens": 34993,
+  "total_input_tokens": 34999,
   "cache_state": "warm",
-  "wallclock_ms": 10572.474390006391,
-  "duration_ms": 3727,
-  "duration_api_ms": 4441,
-  "wrapper_overhead_ms": 6131.474390006391,
+  "wallclock_ms": 9771.767205005744,
+  "duration_ms": 3202,
+  "duration_api_ms": 4108,
+  "wrapper_overhead_ms": 5663.7672050057445,
   "stop_reason": "end_turn",
   "num_turns": 1,
-  "session_id": "da6b5fe8-e7bb-4692-ba8d-910978527f5f",
-  "total_cost_usd": 0.020144000000000002,
+  "session_id": "efa6e74a-2d69-4750-8a83-1b3a5624a78d",
+  "total_cost_usd": 0.019183500000000003,
   "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
-  "result": "need more info\n\nwhich website — URL? repo path?\nwhat stack — static site, SSR, SPA?\nwhat \"slow\" — first paint, navigation, API calls?\nany numbers — Lighthouse score, TTFB, bundle size?\n\nwithout that I'd be guessing. drop URL or path + one symptom and I can dig in.",
+  "result": "Need URL or repo path, stack, and what \"slow\" means (TTFB, LCP, JS exec). Without those, any fix is guessing.",
   "assertion_pass": true,
   "raw_payload": {
     "type": "result",
     "subtype": "success",
     "is_error": false,
     "api_error_status": null,
-    "duration_ms": 3727,
-    "duration_api_ms": 4441,
+    "duration_ms": 3202,
+    "duration_api_ms": 4108,
     "num_turns": 1,
-    "result": "need more info\n\nwhich website — URL? repo path?\nwhat stack — static site, SSR, SPA?\nwhat \"slow\" — first paint, navigation, API calls?\nany numbers — Lighthouse score, TTFB, bundle size?\n\nwithout that I'd be guessing. drop URL or path + one symptom and I can dig in.",
+    "result": "Need URL or repo path, stack, and what \"slow\" means (TTFB, LCP, JS exec). Without those, any fix is guessing.",
     "stop_reason": "end_turn",
-    "session_id": "da6b5fe8-e7bb-4692-ba8d-910978527f5f",
-    "total_cost_usd": 0.020144000000000002,
+    "session_id": "efa6e74a-2d69-4750-8a83-1b3a5624a78d",
+    "total_cost_usd": 0.019183500000000003,
     "usage": {
       "input_tokens": 6,
       "cache_creation_input_tokens": 0,
-      "cache_read_input_tokens": 34094,
-      "output_tokens": 106,
+      "cache_read_input_tokens": 34993,
+      "output_tokens": 50,
       "server_tool_use": {
         "web_search_requests": 0,
         "web_fetch_requests": 0
@@ -63,8 +63,8 @@
       "iterations": [
         {
           "input_tokens": 6,
-          "output_tokens": 106,
-          "cache_read_input_tokens": 34094,
+          "output_tokens": 50,
+          "cache_read_input_tokens": 34993,
           "cache_creation_input_tokens": 0,
           "cache_creation": {
             "ephemeral_5m_input_tokens": 0,
@@ -78,21 +78,21 @@
     "modelUsage": {
       "claude-haiku-4-5-20251001": {
         "inputTokens": 347,
-        "outputTokens": 14,
+        "outputTokens": 12,
         "cacheReadInputTokens": 0,
         "cacheCreationInputTokens": 0,
         "webSearchRequests": 0,
-        "costUSD": 0.00041699999999999994,
+        "costUSD": 0.00040699999999999997,
         "contextWindow": 200000,
         "maxOutputTokens": 32000
       },
       "claude-opus-4-7": {
         "inputTokens": 6,
-        "outputTokens": 106,
-        "cacheReadInputTokens": 34094,
+        "outputTokens": 50,
+        "cacheReadInputTokens": 34993,
         "cacheCreationInputTokens": 0,
         "webSearchRequests": 0,
-        "costUSD": 0.019727,
+        "costUSD": 0.0187765,
         "contextWindow": 1000000,
         "maxOutputTokens": 64000
       }
@@ -100,6 +100,6 @@
     "permission_denials": [],
     "terminal_reason": "completed",
     "fast_mode_state": "off",
-    "uuid": "415b018d-0ccb-47dc-8113-a2345c2a31b7"
+    "uuid": "eaff727e-ecd5-4617-9e1a-da281f340dce"
   }
 }

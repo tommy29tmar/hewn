@@ -1,0 +1,105 @@
+{
+  "track": "T3",
+  "arm": "hewn_prompt_only",
+  "prompt_id": "transfer-handler-review",
+  "run_index": 1,
+  "arm_order_index": 2,
+  "arm_order_full": [
+    "baseline",
+    "caveman_full",
+    "hewn_prompt_only",
+    "hewn_full",
+    "caveman_full_plus_ultra_directive",
+    "terse"
+  ],
+  "digest_hex": "3ea6924fe84cc48072e626740e2896f1f2e17be2cf1e47da115cdde4ccbeab3a",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T00:33:10.536966+00:00",
+  "output_tokens_tiktoken": 456,
+  "output_tokens_anthropic": 1066,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 39909,
+  "total_input_tokens": 39915,
+  "cache_state": "warm",
+  "wallclock_ms": 22762.421541003278,
+  "duration_ms": 18986,
+  "duration_api_ms": 20222,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "ed3e9d3d-8c87-4f1b-a035-d6c524cb811f",
+  "total_cost_usd": 0.0523035,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "**Risks**\n- XFF spoof bypass: `req.headers['x-forwarded-for']` is attacker-controlled; rotating the header defeats per-IP limits. Exact replay of SEV1 2025-09. Also trips lint rule `no-direct-xff-read`.\n- Redis OOM: `INCR` with no `EXPIRE` → unbounded keys. Exact replay of SEV2 2025-11. Trips `no-unbounded-redis-key`.\n- Key shape wrong: no `route_prefix`, no `minute_bucket`, no region → collisions across routes and globally-shared counters (SEV2 2025-12). No `retry_after` / RFC 7807 body on throttle.\n\n**Mitigation**\n- Source IP from `trustedClientIp(req)` (validates against `config/trusted_proxies.json`, falls back to `req.socket.remoteAddress`). Never read XFF directly.\n- Key: `rl:${region}:${trustedClientIp(req)}:${routePrefix}:${minuteBucket}`.\n- Atomic pair via `MULTI`: `INCR` + `EXPIRE key 90`; compare to per-route limit from `config/rate_limits.json`; on exceed return `429` with `type:/errors/rate-limited`, `retry_after: secondsUntilNextBucket()`.\n\n**Verify**\n- `pnpm lint` — must flag `no-direct-xff-read` and `no-unbounded-redis-key` on current diff; clean after fix.\n- Unit: spoofed `X-Forwarded-For` does not change the limiter key; `req.socket.remoteAddress` does.\n- Integration (real Redis 7.4, no mocks): after first `INCR`, `TTL key` ∈ [1, 90]; never `-1`.\n- Integration: two routes under same IP keep independent counters; two regions keep independent counters.\n- Load: sustained spoof rotation over 60s does not grow key count beyond bucket cardinality.\n\n**Residual**\n- Trusted-proxy list must be current or legitimate CF/CDN egress IPs get keyed as the edge itself.\n- Clock skew across edge pods can shift `minuteBucket` by one; tolerated by the 90s TTL grace.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 18986,
+    "duration_api_ms": 20222,
+    "num_turns": 1,
+    "result": "**Risks**\n- XFF spoof bypass: `req.headers['x-forwarded-for']` is attacker-controlled; rotating the header defeats per-IP limits. Exact replay of SEV1 2025-09. Also trips lint rule `no-direct-xff-read`.\n- Redis OOM: `INCR` with no `EXPIRE` → unbounded keys. Exact replay of SEV2 2025-11. Trips `no-unbounded-redis-key`.\n- Key shape wrong: no `route_prefix`, no `minute_bucket`, no region → collisions across routes and globally-shared counters (SEV2 2025-12). No `retry_after` / RFC 7807 body on throttle.\n\n**Mitigation**\n- Source IP from `trustedClientIp(req)` (validates against `config/trusted_proxies.json`, falls back to `req.socket.remoteAddress`). Never read XFF directly.\n- Key: `rl:${region}:${trustedClientIp(req)}:${routePrefix}:${minuteBucket}`.\n- Atomic pair via `MULTI`: `INCR` + `EXPIRE key 90`; compare to per-route limit from `config/rate_limits.json`; on exceed return `429` with `type:/errors/rate-limited`, `retry_after: secondsUntilNextBucket()`.\n\n**Verify**\n- `pnpm lint` — must flag `no-direct-xff-read` and `no-unbounded-redis-key` on current diff; clean after fix.\n- Unit: spoofed `X-Forwarded-For` does not change the limiter key; `req.socket.remoteAddress` does.\n- Integration (real Redis 7.4, no mocks): after first `INCR`, `TTL key` ∈ [1, 90]; never `-1`.\n- Integration: two routes under same IP keep independent counters; two regions keep independent counters.\n- Load: sustained spoof rotation over 60s does not grow key count beyond bucket cardinality.\n\n**Residual**\n- Trusted-proxy list must be current or legitimate CF/CDN egress IPs get keyed as the edge itself.\n- Clock skew across edge pods can shift `minuteBucket` by one; tolerated by the 90s TTL grace.",
+    "stop_reason": "end_turn",
+    "session_id": "ed3e9d3d-8c87-4f1b-a035-d6c524cb811f",
+    "total_cost_usd": 0.0523035,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 39909,
+      "output_tokens": 1066,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 0,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 1066,
+          "cache_read_input_tokens": 39909,
+          "cache_creation_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 5584,
+        "outputTokens": 17,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.005669,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 1066,
+        "cacheReadInputTokens": 39909,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.0466345,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "cb14e421-9778-45ff-888e-4c32ed079132"
+  }
+}

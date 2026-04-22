@@ -14,61 +14,61 @@
   ],
   "digest_hex": "5d6d15de966d2de1a01243f9e0d98a5b8908442798145efdf692af7bd3cb36a9",
   "seed": "hewn-bench-v1",
-  "timestamp": "2026-04-21T23:50:25.584051+00:00",
-  "output_tokens_tiktoken": 102,
-  "output_tokens_anthropic": 167,
+  "timestamp": "2026-04-22T08:01:53.642036+00:00",
+  "output_tokens_tiktoken": 81,
+  "output_tokens_anthropic": 133,
   "input_tokens_anthropic": 6,
-  "cache_creation_input_tokens": 0,
-  "cache_read_input_tokens": 28528,
-  "total_input_tokens": 28534,
+  "cache_creation_input_tokens": 17027,
+  "cache_read_input_tokens": 16796,
+  "total_input_tokens": 33829,
   "cache_state": "warm",
-  "wallclock_ms": 8972.89351199288,
-  "duration_ms": 4619,
-  "duration_api_ms": 5624,
+  "wallclock_ms": 10836.849524988793,
+  "duration_ms": 4891,
+  "duration_api_ms": 6024,
   "wrapper_overhead_ms": null,
   "stop_reason": "end_turn",
   "num_turns": 1,
-  "session_id": "705160c7-f53d-4cc5-a1da-60bb26d4ece8",
-  "total_cost_usd": 0.018885,
+  "session_id": "ae60ef69-b6ef-4060-b84f-287d98054f50",
+  "total_cost_usd": 0.11858775,
   "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
-  "result": "**Queue**: point-to-point, one consumer processes each message. Use for work distribution where each job must be handled exactly once (task processing, order fulfillment, email sending).\n\n**Topic**: pub/sub, every subscriber gets a copy. Use for broadcasting events to multiple independent consumers (user signup triggering analytics + welcome email + CRM sync).\n\nRule of thumb: if adding a second consumer means \"split the work,\" use a queue. If it means \"also notify this other system,\" use a topic.",
+  "result": "Queue: point-to-point, one consumer processes each message (work distribution, task processing, load balancing across workers).\n\nTopic: pub/sub, every subscriber gets a copy (event broadcasting, fan-out, multiple independent reactions to the same event).\n\nRule of thumb: if adding a second consumer should *split* the work, use a queue; if it should *duplicate* the work, use a topic.",
   "assertion_pass": true,
   "raw_payload": {
     "type": "result",
     "subtype": "success",
     "is_error": false,
     "api_error_status": null,
-    "duration_ms": 4619,
-    "duration_api_ms": 5624,
+    "duration_ms": 4891,
+    "duration_api_ms": 6024,
     "num_turns": 1,
-    "result": "**Queue**: point-to-point, one consumer processes each message. Use for work distribution where each job must be handled exactly once (task processing, order fulfillment, email sending).\n\n**Topic**: pub/sub, every subscriber gets a copy. Use for broadcasting events to multiple independent consumers (user signup triggering analytics + welcome email + CRM sync).\n\nRule of thumb: if adding a second consumer means \"split the work,\" use a queue. If it means \"also notify this other system,\" use a topic.",
+    "result": "Queue: point-to-point, one consumer processes each message (work distribution, task processing, load balancing across workers).\n\nTopic: pub/sub, every subscriber gets a copy (event broadcasting, fan-out, multiple independent reactions to the same event).\n\nRule of thumb: if adding a second consumer should *split* the work, use a queue; if it should *duplicate* the work, use a topic.",
     "stop_reason": "end_turn",
-    "session_id": "705160c7-f53d-4cc5-a1da-60bb26d4ece8",
-    "total_cost_usd": 0.018885,
+    "session_id": "ae60ef69-b6ef-4060-b84f-287d98054f50",
+    "total_cost_usd": 0.11858775,
     "usage": {
       "input_tokens": 6,
-      "cache_creation_input_tokens": 0,
-      "cache_read_input_tokens": 28528,
-      "output_tokens": 167,
+      "cache_creation_input_tokens": 17027,
+      "cache_read_input_tokens": 16796,
+      "output_tokens": 133,
       "server_tool_use": {
         "web_search_requests": 0,
         "web_fetch_requests": 0
       },
       "service_tier": "standard",
       "cache_creation": {
-        "ephemeral_1h_input_tokens": 0,
+        "ephemeral_1h_input_tokens": 17027,
         "ephemeral_5m_input_tokens": 0
       },
       "inference_geo": "",
       "iterations": [
         {
           "input_tokens": 6,
-          "output_tokens": 167,
-          "cache_read_input_tokens": 28528,
-          "cache_creation_input_tokens": 0,
+          "output_tokens": 133,
+          "cache_read_input_tokens": 16796,
+          "cache_creation_input_tokens": 17027,
           "cache_creation": {
             "ephemeral_5m_input_tokens": 0,
-            "ephemeral_1h_input_tokens": 0
+            "ephemeral_1h_input_tokens": 17027
           },
           "type": "message"
         }
@@ -88,18 +88,18 @@
       },
       "claude-opus-4-7": {
         "inputTokens": 6,
-        "outputTokens": 167,
-        "cacheReadInputTokens": 28528,
-        "cacheCreationInputTokens": 0,
+        "outputTokens": 133,
+        "cacheReadInputTokens": 16796,
+        "cacheCreationInputTokens": 17027,
         "webSearchRequests": 0,
-        "costUSD": 0.018469,
-        "contextWindow": 200000,
+        "costUSD": 0.11817175,
+        "contextWindow": 1000000,
         "maxOutputTokens": 64000
       }
     },
     "permission_denials": [],
     "terminal_reason": "completed",
     "fast_mode_state": "off",
-    "uuid": "b0766eee-802b-4511-97b7-ca647a1bc479"
+    "uuid": "6a174edb-0e1e-4c54-94be-f0c987ee64bb"
   }
 }

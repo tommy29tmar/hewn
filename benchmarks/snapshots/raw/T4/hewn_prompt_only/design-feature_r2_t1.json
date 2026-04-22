@@ -14,62 +14,62 @@
   ],
   "digest_hex": "3191b019d37f08f3d5b68d9000f1aeb1e1a3524225f9daa893803df1e240ffd1",
   "seed": "hewn-bench-v1",
-  "timestamp": "2026-04-22T01:28:57.531731+00:00",
+  "timestamp": "2026-04-22T08:37:58.468525+00:00",
   "session_id_used_for_resume": null,
-  "output_tokens_tiktoken": 462,
-  "output_tokens_anthropic": 1597,
+  "output_tokens_tiktoken": 377,
+  "output_tokens_anthropic": 1205,
   "input_tokens_anthropic": 6,
-  "cache_creation_input_tokens": 0,
-  "cache_read_input_tokens": 32671,
-  "total_input_tokens": 32677,
+  "cache_creation_input_tokens": 17079,
+  "cache_read_input_tokens": 16796,
+  "total_input_tokens": 33881,
   "cache_state": "warm",
-  "wallclock_ms": 31809.715215000324,
-  "duration_ms": 28433,
-  "duration_api_ms": 34881,
+  "wallclock_ms": 28349.21161000966,
+  "duration_ms": 22213,
+  "duration_api_ms": 23270,
   "wrapper_overhead_ms": null,
   "stop_reason": "end_turn",
   "num_turns": 1,
-  "session_id": "c14f8450-3d3a-4157-a4e7-41cae41a530a",
-  "total_cost_usd": 0.056751499999999996,
+  "session_id": "ca9e1511-157b-402b-982e-a059f045fd4d",
+  "total_cost_usd": 0.14575275000000001,
   "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
-  "result": "The critical ones, roughly in order of risk:\n\n1. **Atomicity of redemption.** How do you prevent the same code being spent twice in concurrent checkouts? Pessimistic lock on the balance row vs. optimistic with a version check vs. an append-only ledger where redemption is an INSERT that conflicts on a unique key. The ledger model is more work up front but gives you an audit trail for free.\n\n2. **Charge ordering and failure rollback.** If you debit the gift card first and the card auth fails, you need to credit back. If you auth the card first for the full amount and then debit the gift card, you overcharge. Usual approach: auth card for the *remainder*, then commit gift card debit + capture card atomically — but decide what happens if capture fails after both are committed.\n\n3. **Tax treatment.** Does the gift card apply pre-tax (reduces taxable base — wrong in most jurisdictions, gift cards are cash equivalents) or post-tax (treated as tender)? This is usually a legal/accounting answer, not a product one.\n\n4. **Refund policy.** Order refunded — does value return to the gift card, to the original card, or split proportionally? Splitting is correct but painful; most shops pick one default and document it.\n\n5. **Stacking and partial use.** One code per order or many? Can a partially-used code be reused later? Reusable partial balances are the common expectation but require the balance-tracking model from (1).\n\n6. **Code lifecycle.** Who issues codes, how are they generated (entropy, format, checksum to reject typos fast), expiration, and can they be voided. Also: rate-limit the redemption endpoint so codes can't be enumerated.\n\n7. **Accounting.** Outstanding gift card balance is a liability until redeemed. Finance will want a report; bake the ledger so you can produce it.\n\n8. **Currency/region.** If you sell in multiple currencies, is the gift card denominated in one currency or a store-credit unit? Cross-border unclaimed-property laws exist and are annoying.\n\nIf you want, tell me which of these are already decided on your side and I'll sketch a data model + redemption flow for the rest.",
+  "result": "The big ones, roughly in order of how much they'll bite you later:\n\n1. **Ledger vs. balance field.** Append-only ledger of debits/credits (auditable, supports disputes, refunds, partial redemptions cleanly) vs. a single `remaining_balance` column (simpler, harder to reconstruct history). Ledger is usually worth it.\n2. **Tax & discount ordering.** Gift card applied *before* tax (treated like a discount — reduces taxable amount) or *after* (treated like tender — tax computed on full price, then balance pays part of the total). These have different legal/accounting implications; in most jurisdictions gift cards are tender, not a discount.\n3. **Concurrency.** Two sessions redeeming the same code, or one session double-submitting. Needs a row lock or atomic decrement — otherwise you oversell balance.\n4. **Refund path.** If the order is refunded, does value go back to the gift card, to the original card, or split proportionally to how it was paid? Pick one rule and stick to it.\n5. **Code security & generation.** Entropy (guessable short codes get brute-forced), rate limiting on the redeem endpoint, whether codes are one-use or reusable-until-empty.\n6. **Scope of balance.** One code one order, or persistent balance across orders? Stackable with promos/other gift cards? Expiry?\n7. **Build vs. buy.** Stripe, Shopify, and others have gift-card primitives. If you're already on one, using theirs handles 1, 3, 4, and part of 2 for free.\n\nWhich of these do you already have opinions on? The answers cascade — especially #2 (tax treatment) and #7 (PSP vs. in-house) determine a lot of the rest.",
   "assertion_pass": true,
   "raw_payload": {
     "type": "result",
     "subtype": "success",
     "is_error": false,
     "api_error_status": null,
-    "duration_ms": 28433,
-    "duration_api_ms": 34881,
+    "duration_ms": 22213,
+    "duration_api_ms": 23270,
     "num_turns": 1,
-    "result": "The critical ones, roughly in order of risk:\n\n1. **Atomicity of redemption.** How do you prevent the same code being spent twice in concurrent checkouts? Pessimistic lock on the balance row vs. optimistic with a version check vs. an append-only ledger where redemption is an INSERT that conflicts on a unique key. The ledger model is more work up front but gives you an audit trail for free.\n\n2. **Charge ordering and failure rollback.** If you debit the gift card first and the card auth fails, you need to credit back. If you auth the card first for the full amount and then debit the gift card, you overcharge. Usual approach: auth card for the *remainder*, then commit gift card debit + capture card atomically — but decide what happens if capture fails after both are committed.\n\n3. **Tax treatment.** Does the gift card apply pre-tax (reduces taxable base — wrong in most jurisdictions, gift cards are cash equivalents) or post-tax (treated as tender)? This is usually a legal/accounting answer, not a product one.\n\n4. **Refund policy.** Order refunded — does value return to the gift card, to the original card, or split proportionally? Splitting is correct but painful; most shops pick one default and document it.\n\n5. **Stacking and partial use.** One code per order or many? Can a partially-used code be reused later? Reusable partial balances are the common expectation but require the balance-tracking model from (1).\n\n6. **Code lifecycle.** Who issues codes, how are they generated (entropy, format, checksum to reject typos fast), expiration, and can they be voided. Also: rate-limit the redemption endpoint so codes can't be enumerated.\n\n7. **Accounting.** Outstanding gift card balance is a liability until redeemed. Finance will want a report; bake the ledger so you can produce it.\n\n8. **Currency/region.** If you sell in multiple currencies, is the gift card denominated in one currency or a store-credit unit? Cross-border unclaimed-property laws exist and are annoying.\n\nIf you want, tell me which of these are already decided on your side and I'll sketch a data model + redemption flow for the rest.",
+    "result": "The big ones, roughly in order of how much they'll bite you later:\n\n1. **Ledger vs. balance field.** Append-only ledger of debits/credits (auditable, supports disputes, refunds, partial redemptions cleanly) vs. a single `remaining_balance` column (simpler, harder to reconstruct history). Ledger is usually worth it.\n2. **Tax & discount ordering.** Gift card applied *before* tax (treated like a discount — reduces taxable amount) or *after* (treated like tender — tax computed on full price, then balance pays part of the total). These have different legal/accounting implications; in most jurisdictions gift cards are tender, not a discount.\n3. **Concurrency.** Two sessions redeeming the same code, or one session double-submitting. Needs a row lock or atomic decrement — otherwise you oversell balance.\n4. **Refund path.** If the order is refunded, does value go back to the gift card, to the original card, or split proportionally to how it was paid? Pick one rule and stick to it.\n5. **Code security & generation.** Entropy (guessable short codes get brute-forced), rate limiting on the redeem endpoint, whether codes are one-use or reusable-until-empty.\n6. **Scope of balance.** One code one order, or persistent balance across orders? Stackable with promos/other gift cards? Expiry?\n7. **Build vs. buy.** Stripe, Shopify, and others have gift-card primitives. If you're already on one, using theirs handles 1, 3, 4, and part of 2 for free.\n\nWhich of these do you already have opinions on? The answers cascade — especially #2 (tax treatment) and #7 (PSP vs. in-house) determine a lot of the rest.",
     "stop_reason": "end_turn",
-    "session_id": "c14f8450-3d3a-4157-a4e7-41cae41a530a",
-    "total_cost_usd": 0.056751499999999996,
+    "session_id": "ca9e1511-157b-402b-982e-a059f045fd4d",
+    "total_cost_usd": 0.14575275000000001,
     "usage": {
       "input_tokens": 6,
-      "cache_creation_input_tokens": 0,
-      "cache_read_input_tokens": 32671,
-      "output_tokens": 1597,
+      "cache_creation_input_tokens": 17079,
+      "cache_read_input_tokens": 16796,
+      "output_tokens": 1205,
       "server_tool_use": {
         "web_search_requests": 0,
         "web_fetch_requests": 0
       },
       "service_tier": "standard",
       "cache_creation": {
-        "ephemeral_1h_input_tokens": 0,
+        "ephemeral_1h_input_tokens": 17079,
         "ephemeral_5m_input_tokens": 0
       },
       "inference_geo": "",
       "iterations": [
         {
           "input_tokens": 6,
-          "output_tokens": 1597,
-          "cache_read_input_tokens": 32671,
-          "cache_creation_input_tokens": 0,
+          "output_tokens": 1205,
+          "cache_read_input_tokens": 16796,
+          "cache_creation_input_tokens": 17079,
           "cache_creation": {
             "ephemeral_5m_input_tokens": 0,
-            "ephemeral_1h_input_tokens": 0
+            "ephemeral_1h_input_tokens": 17079
           },
           "type": "message"
         }
@@ -79,21 +79,21 @@
     "modelUsage": {
       "claude-haiku-4-5-20251001": {
         "inputTokens": 391,
-        "outputTokens": 14,
+        "outputTokens": 13,
         "cacheReadInputTokens": 0,
         "cacheCreationInputTokens": 0,
         "webSearchRequests": 0,
-        "costUSD": 0.00046100000000000004,
+        "costUSD": 0.000456,
         "contextWindow": 200000,
         "maxOutputTokens": 32000
       },
       "claude-opus-4-7": {
         "inputTokens": 6,
-        "outputTokens": 1597,
-        "cacheReadInputTokens": 32671,
-        "cacheCreationInputTokens": 0,
+        "outputTokens": 1205,
+        "cacheReadInputTokens": 16796,
+        "cacheCreationInputTokens": 17079,
         "webSearchRequests": 0,
-        "costUSD": 0.05629049999999999,
+        "costUSD": 0.14529675,
         "contextWindow": 1000000,
         "maxOutputTokens": 64000
       }
@@ -101,6 +101,6 @@
     "permission_denials": [],
     "terminal_reason": "completed",
     "fast_mode_state": "off",
-    "uuid": "7b13bab5-4857-4226-9e06-403be5b58da8"
+    "uuid": "9f48c375-21d6-4d42-8edb-eac9c372cbc7"
   }
 }

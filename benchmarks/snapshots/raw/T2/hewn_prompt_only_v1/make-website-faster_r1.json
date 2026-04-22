@@ -1,0 +1,105 @@
+{
+  "track": "T2",
+  "arm": "hewn_prompt_only",
+  "prompt_id": "make-website-faster",
+  "run_index": 1,
+  "arm_order_index": 1,
+  "arm_order_full": [
+    "hewn_full",
+    "hewn_prompt_only",
+    "terse",
+    "caveman_full",
+    "baseline",
+    "caveman_full_plus_ultra_directive"
+  ],
+  "digest_hex": "7f50b87761132f5aa42b93557a015fe57f3c5214edc0baf0cfc53704c3da3593",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T00:13:57.527835+00:00",
+  "output_tokens_tiktoken": 56,
+  "output_tokens_anthropic": 89,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 15815,
+  "cache_read_input_tokens": 16796,
+  "total_input_tokens": 32617,
+  "cache_state": "warm",
+  "wallclock_ms": 6879.4983309926465,
+  "duration_ms": 3342,
+  "duration_api_ms": 4031,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "9cb14992-4613-4dda-939f-77f56cca2f16",
+  "total_cost_usd": 0.10990375,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "Which website? I don't see one in this repo — SIGIL/ is the Hewn CLI wrapper, no web frontend.\n\nPoint me at a URL or a directory and tell me what \"slow\" means (page load, interaction lag, specific route), and I'll dig in.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 3342,
+    "duration_api_ms": 4031,
+    "num_turns": 1,
+    "result": "Which website? I don't see one in this repo — SIGIL/ is the Hewn CLI wrapper, no web frontend.\n\nPoint me at a URL or a directory and tell me what \"slow\" means (page load, interaction lag, specific route), and I'll dig in.",
+    "stop_reason": "end_turn",
+    "session_id": "9cb14992-4613-4dda-939f-77f56cca2f16",
+    "total_cost_usd": 0.10990375,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 15815,
+      "cache_read_input_tokens": 16796,
+      "output_tokens": 89,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 15815,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 89,
+          "cache_read_input_tokens": 16796,
+          "cache_creation_input_tokens": 15815,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 15815
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 347,
+        "outputTokens": 12,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.00040699999999999997,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 89,
+        "cacheReadInputTokens": 16796,
+        "cacheCreationInputTokens": 15815,
+        "webSearchRequests": 0,
+        "costUSD": 0.10949674999999999,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "aab67737-3967-4480-a46c-96f456c271c5"
+  }
+}

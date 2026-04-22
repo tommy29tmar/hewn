@@ -1,0 +1,106 @@
+{
+  "track": "T4",
+  "arm": "hewn_prompt_only",
+  "sequence_id": "debug-prod-incident",
+  "run_index": 2,
+  "turn": 1,
+  "arm_order_index": 3,
+  "arm_order_full": [
+    "caveman_full",
+    "terse",
+    "hewn_full",
+    "hewn_prompt_only",
+    "baseline"
+  ],
+  "digest_hex": "522341918a5177210ef438fa55486ec5b622aaa576febbd731536d82595ec31b",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T01:19:14.623264+00:00",
+  "session_id_used_for_resume": null,
+  "output_tokens_tiktoken": 259,
+  "output_tokens_anthropic": 712,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 32684,
+  "total_input_tokens": 32690,
+  "cache_state": "warm",
+  "wallclock_ms": 18179.7930719913,
+  "duration_ms": 14881,
+  "duration_api_ms": 16015,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "db9196e2-d77f-437e-94d6-5de4cec74c02",
+  "total_cost_usd": 0.034668,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "Roll back first, debug second — the 5-minute gap between deploy and errors is too tight for coincidence. Then:\n\n1. **Diff the deploy.** `git log 14:18-deploy^..14:18-deploy -- **/createOrder*` and look at what reads `.items`. Most likely the handler now does `req.body.order.items` (or similar) where it used to do `req.body.items`, or vice versa.\n2. **Check one failing request payload.** Grab a real body from logs/APM. Confirm whether `items` is genuinely missing or just moved (nested under `cart`, renamed to `lineItems`, etc.).\n3. **Scope it.** Is it 100% of POSTs or a subset? If subset → client version mismatch (old app sending old schema against new handler, or new validation rejecting a field shape). If 100% → handler bug, straightforward.\n4. **Check the line number in the stack.** Confirms whether the undefined is `req.body`, `req.body.order`, `order`, etc. — that tells you which hop in the chain broke.\n\nIf the diff is small and the fix is obvious, forward-fix. If not, roll back and fix on a branch.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 14881,
+    "duration_api_ms": 16015,
+    "num_turns": 1,
+    "result": "Roll back first, debug second — the 5-minute gap between deploy and errors is too tight for coincidence. Then:\n\n1. **Diff the deploy.** `git log 14:18-deploy^..14:18-deploy -- **/createOrder*` and look at what reads `.items`. Most likely the handler now does `req.body.order.items` (or similar) where it used to do `req.body.items`, or vice versa.\n2. **Check one failing request payload.** Grab a real body from logs/APM. Confirm whether `items` is genuinely missing or just moved (nested under `cart`, renamed to `lineItems`, etc.).\n3. **Scope it.** Is it 100% of POSTs or a subset? If subset → client version mismatch (old app sending old schema against new handler, or new validation rejecting a field shape). If 100% → handler bug, straightforward.\n4. **Check the line number in the stack.** Confirms whether the undefined is `req.body`, `req.body.order`, `order`, etc. — that tells you which hop in the chain broke.\n\nIf the diff is small and the fix is obvious, forward-fix. If not, roll back and fix on a branch.",
+    "stop_reason": "end_turn",
+    "session_id": "db9196e2-d77f-437e-94d6-5de4cec74c02",
+    "total_cost_usd": 0.034668,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 32684,
+      "output_tokens": 712,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 0,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 712,
+          "cache_read_input_tokens": 32684,
+          "cache_creation_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 396,
+        "outputTokens": 20,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.000496,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 712,
+        "cacheReadInputTokens": 32684,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.034171999999999994,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "b1f3d6ad-de2b-4b1c-a7b4-9e37c0bedddf"
+  }
+}

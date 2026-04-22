@@ -14,61 +14,61 @@
   ],
   "digest_hex": "87154785cda4737305ac6142704bf42d817426f83c953447d3e28835e0246410",
   "seed": "hewn-bench-v1",
-  "timestamp": "2026-04-22T00:15:29.045000+00:00",
-  "output_tokens_tiktoken": 48,
-  "output_tokens_anthropic": 79,
+  "timestamp": "2026-04-22T08:11:22.057478+00:00",
+  "output_tokens_tiktoken": 35,
+  "output_tokens_anthropic": 145,
   "input_tokens_anthropic": 6,
-  "cache_creation_input_tokens": 15819,
+  "cache_creation_input_tokens": 17023,
   "cache_read_input_tokens": 16796,
-  "total_input_tokens": 32621,
+  "total_input_tokens": 33825,
   "cache_state": "warm",
-  "wallclock_ms": 7184.049544011941,
-  "duration_ms": 3141,
-  "duration_api_ms": 3985,
+  "wallclock_ms": 11520.40860298439,
+  "duration_ms": 4855,
+  "duration_api_ms": 5680,
   "wrapper_overhead_ms": null,
   "stop_reason": "end_turn",
   "num_turns": 1,
-  "session_id": "688bb2c9-0560-4743-a2e3-7c7cb0c9afdf",
-  "total_cost_usd": 0.10968875,
+  "session_id": "d5fec4dd-9aca-4d99-9ab7-1c76c803e977",
+  "total_cost_usd": 0.11886374999999999,
   "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
-  "result": "Which app? This repo is Hewn, a Claude Code CLI wrapper — no UI to add a search bar to. Do you mean a different project, or searching something specific within Hewn (e.g., prompt history, classifier rules)?",
+  "result": "Which app? This repo (SIGIL/Hewn) is a CLI wrapper for Claude Code — no UI to add a search bar to. Do you mean a different project?",
   "assertion_pass": true,
   "raw_payload": {
     "type": "result",
     "subtype": "success",
     "is_error": false,
     "api_error_status": null,
-    "duration_ms": 3141,
-    "duration_api_ms": 3985,
+    "duration_ms": 4855,
+    "duration_api_ms": 5680,
     "num_turns": 1,
-    "result": "Which app? This repo is Hewn, a Claude Code CLI wrapper — no UI to add a search bar to. Do you mean a different project, or searching something specific within Hewn (e.g., prompt history, classifier rules)?",
+    "result": "Which app? This repo (SIGIL/Hewn) is a CLI wrapper for Claude Code — no UI to add a search bar to. Do you mean a different project?",
     "stop_reason": "end_turn",
-    "session_id": "688bb2c9-0560-4743-a2e3-7c7cb0c9afdf",
-    "total_cost_usd": 0.10968875,
+    "session_id": "d5fec4dd-9aca-4d99-9ab7-1c76c803e977",
+    "total_cost_usd": 0.11886374999999999,
     "usage": {
       "input_tokens": 6,
-      "cache_creation_input_tokens": 15819,
+      "cache_creation_input_tokens": 17023,
       "cache_read_input_tokens": 16796,
-      "output_tokens": 79,
+      "output_tokens": 145,
       "server_tool_use": {
         "web_search_requests": 0,
         "web_fetch_requests": 0
       },
       "service_tier": "standard",
       "cache_creation": {
-        "ephemeral_1h_input_tokens": 15819,
+        "ephemeral_1h_input_tokens": 17023,
         "ephemeral_5m_input_tokens": 0
       },
       "inference_geo": "",
       "iterations": [
         {
           "input_tokens": 6,
-          "output_tokens": 79,
+          "output_tokens": 145,
           "cache_read_input_tokens": 16796,
-          "cache_creation_input_tokens": 15819,
+          "cache_creation_input_tokens": 17023,
           "cache_creation": {
             "ephemeral_5m_input_tokens": 0,
-            "ephemeral_1h_input_tokens": 15819
+            "ephemeral_1h_input_tokens": 17023
           },
           "type": "message"
         }
@@ -88,11 +88,11 @@
       },
       "claude-opus-4-7": {
         "inputTokens": 6,
-        "outputTokens": 79,
+        "outputTokens": 145,
         "cacheReadInputTokens": 16796,
-        "cacheCreationInputTokens": 15819,
+        "cacheCreationInputTokens": 17023,
         "webSearchRequests": 0,
-        "costUSD": 0.10927175,
+        "costUSD": 0.11844674999999999,
         "contextWindow": 1000000,
         "maxOutputTokens": 64000
       }
@@ -100,6 +100,6 @@
     "permission_denials": [],
     "terminal_reason": "completed",
     "fast_mode_state": "off",
-    "uuid": "8ad5ea66-c8ba-40cd-9de9-42cbebb210e2"
+    "uuid": "89bafeb8-aa89-4cbd-ae63-1f3e7c06feba"
   }
 }

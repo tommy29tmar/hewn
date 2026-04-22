@@ -1,0 +1,105 @@
+{
+  "track": "T1b",
+  "arm": "hewn_full",
+  "prompt_id": "git-rebase-vs-merge",
+  "run_index": 3,
+  "arm_order_index": 0,
+  "arm_order_full": [
+    "hewn_full",
+    "hewn_prompt_only",
+    "caveman_full",
+    "terse",
+    "baseline",
+    "caveman_full_plus_ultra_directive"
+  ],
+  "digest_hex": "77ec1f71a402506faa30ccacb9847ce285754a0a0f5675f39158950f756d4fe1",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T00:12:09.865680+00:00",
+  "output_tokens_tiktoken": 96,
+  "output_tokens_anthropic": 155,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 17291,
+  "cache_read_input_tokens": 16805,
+  "total_input_tokens": 34102,
+  "cache_state": "warm",
+  "wallclock_ms": 8150.676744000521,
+  "duration_ms": 5098,
+  "duration_api_ms": 6158,
+  "wrapper_overhead_ms": 1992.6767440005206,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "33af83f1-31a4-4b16-8de7-768dfcff466c",
+  "total_cost_usd": 0.12079425,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "rebase replays your commits on top of target branch, rewrites history, linear result\nmerge ties two branches together with new merge commit, preserves history, non-linear\n\nrebase: clean log, no merge commits, but rewrites SHAs so don't rebase shared/pushed branches\nmerge: safe for shared branches, keeps true timeline, but log gets noisy with merge commits\n\nrule of thumb: rebase local feature branches before pushing, merge when integrating into shared branches",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 5098,
+    "duration_api_ms": 6158,
+    "num_turns": 1,
+    "result": "rebase replays your commits on top of target branch, rewrites history, linear result\nmerge ties two branches together with new merge commit, preserves history, non-linear\n\nrebase: clean log, no merge commits, but rewrites SHAs so don't rebase shared/pushed branches\nmerge: safe for shared branches, keeps true timeline, but log gets noisy with merge commits\n\nrule of thumb: rebase local feature branches before pushing, merge when integrating into shared branches",
+    "stop_reason": "end_turn",
+    "session_id": "33af83f1-31a4-4b16-8de7-768dfcff466c",
+    "total_cost_usd": 0.12079425,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 17291,
+      "cache_read_input_tokens": 16805,
+      "output_tokens": 155,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 17291,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 155,
+          "cache_read_input_tokens": 16805,
+          "cache_creation_input_tokens": 17291,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 17291
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 348,
+        "outputTokens": 14,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.00041799999999999997,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 155,
+        "cacheReadInputTokens": 16805,
+        "cacheCreationInputTokens": 17291,
+        "webSearchRequests": 0,
+        "costUSD": 0.12037625,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "aa2e4bc4-0957-43d8-abb6-5ce05e6797a8"
+  }
+}

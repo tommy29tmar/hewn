@@ -14,61 +14,61 @@
   ],
   "digest_hex": "322754c2ebc09f71e86e46b9ab4501d055dac72445f2e52e0e5526e87eaf7857",
   "seed": "hewn-bench-v1",
-  "timestamp": "2026-04-22T00:10:38.673684+00:00",
-  "output_tokens_tiktoken": 264,
-  "output_tokens_anthropic": 429,
+  "timestamp": "2026-04-22T08:09:00.580042+00:00",
+  "output_tokens_tiktoken": 342,
+  "output_tokens_anthropic": 604,
   "input_tokens_anthropic": 6,
-  "cache_creation_input_tokens": 0,
-  "cache_read_input_tokens": 32617,
-  "total_input_tokens": 32623,
+  "cache_creation_input_tokens": 17025,
+  "cache_read_input_tokens": 16796,
+  "total_input_tokens": 33827,
   "cache_state": "warm",
-  "wallclock_ms": 12265.05145401461,
-  "duration_ms": 8079,
-  "duration_api_ms": 9001,
+  "wallclock_ms": 17297.81635600375,
+  "duration_ms": 11379,
+  "duration_api_ms": 12265,
   "wrapper_overhead_ms": null,
   "stop_reason": "end_turn",
   "num_turns": 1,
-  "session_id": "de7ecd25-4907-435c-9e9b-4a18c36f9dac",
-  "total_cost_usd": 0.0274835,
+  "session_id": "910d3562-59e8-431a-97d3-9faee1c293d9",
+  "total_cost_usd": 0.13035425,
   "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
-  "result": "CORS errors happen when your browser blocks a cross-origin request because the server didn't return the expected `Access-Control-Allow-*` headers. The browser (not the server) enforces this — the request often reaches the server fine, but the response gets rejected client-side.\n\nCommon causes:\n- **Missing `Access-Control-Allow-Origin`** on the response — server needs to echo your origin or send `*`.\n- **Preflight (OPTIONS) failing** — triggered by non-simple requests (custom headers, `PUT`/`DELETE`, `application/json` bodies). Server must handle `OPTIONS` and return `Access-Control-Allow-Methods` / `Access-Control-Allow-Headers`.\n- **Credentials mismatch** — if you send `credentials: 'include'`, the server must return a specific origin (not `*`) plus `Access-Control-Allow-Credentials: true`.\n- **Redirects** — preflights can't follow redirects; the OPTIONS target must respond directly.\n\nTo debug: open the Network tab, find the failing request, check the response headers on both the `OPTIONS` preflight (if any) and the actual request. The exact error message in the console usually names the missing header.\n\nIf you share the specific error text and your stack (frontend framework + backend), I can point at the fix.",
+  "result": "CORS errors mean your browser blocked a cross-origin request because the server didn't return the right headers. The browser, not the server, enforces this.\n\nCommon causes:\n\n1. **Missing `Access-Control-Allow-Origin`** — server doesn't send it, or sends a different origin than yours. Fix on the server: echo back the request's `Origin` (or set it to your exact frontend origin, not `*` if you send credentials).\n2. **Preflight (OPTIONS) failing** — triggered by non-simple requests (custom headers, `PUT`/`DELETE`, `Content-Type: application/json`). Server must respond `200/204` to `OPTIONS` with `Access-Control-Allow-Methods` and `Access-Control-Allow-Headers` covering what the real request uses.\n3. **Credentials mismatch** — if the client sends `credentials: 'include'`, the server must send `Access-Control-Allow-Credentials: true` AND a specific origin (not `*`).\n4. **Wrong protocol/port/subdomain** — `http://localhost:3000` ≠ `http://localhost:5173` ≠ `https://...`. All three pieces must match or be explicitly allowed.\n5. **Redirects** — the server redirected the preflight or the request lost CORS headers along the chain.\n\nTo diagnose: open DevTools → Network → click the failing request → check the **Response Headers** of both the `OPTIONS` preflight and the actual request. The exact missing/mismatched header is named in the console error.\n\nIf you paste the console message and tell me your stack (frontend origin + backend framework), I can give the specific fix.",
   "assertion_pass": true,
   "raw_payload": {
     "type": "result",
     "subtype": "success",
     "is_error": false,
     "api_error_status": null,
-    "duration_ms": 8079,
-    "duration_api_ms": 9001,
+    "duration_ms": 11379,
+    "duration_api_ms": 12265,
     "num_turns": 1,
-    "result": "CORS errors happen when your browser blocks a cross-origin request because the server didn't return the expected `Access-Control-Allow-*` headers. The browser (not the server) enforces this — the request often reaches the server fine, but the response gets rejected client-side.\n\nCommon causes:\n- **Missing `Access-Control-Allow-Origin`** on the response — server needs to echo your origin or send `*`.\n- **Preflight (OPTIONS) failing** — triggered by non-simple requests (custom headers, `PUT`/`DELETE`, `application/json` bodies). Server must handle `OPTIONS` and return `Access-Control-Allow-Methods` / `Access-Control-Allow-Headers`.\n- **Credentials mismatch** — if you send `credentials: 'include'`, the server must return a specific origin (not `*`) plus `Access-Control-Allow-Credentials: true`.\n- **Redirects** — preflights can't follow redirects; the OPTIONS target must respond directly.\n\nTo debug: open the Network tab, find the failing request, check the response headers on both the `OPTIONS` preflight (if any) and the actual request. The exact error message in the console usually names the missing header.\n\nIf you share the specific error text and your stack (frontend framework + backend), I can point at the fix.",
+    "result": "CORS errors mean your browser blocked a cross-origin request because the server didn't return the right headers. The browser, not the server, enforces this.\n\nCommon causes:\n\n1. **Missing `Access-Control-Allow-Origin`** — server doesn't send it, or sends a different origin than yours. Fix on the server: echo back the request's `Origin` (or set it to your exact frontend origin, not `*` if you send credentials).\n2. **Preflight (OPTIONS) failing** — triggered by non-simple requests (custom headers, `PUT`/`DELETE`, `Content-Type: application/json`). Server must respond `200/204` to `OPTIONS` with `Access-Control-Allow-Methods` and `Access-Control-Allow-Headers` covering what the real request uses.\n3. **Credentials mismatch** — if the client sends `credentials: 'include'`, the server must send `Access-Control-Allow-Credentials: true` AND a specific origin (not `*`).\n4. **Wrong protocol/port/subdomain** — `http://localhost:3000` ≠ `http://localhost:5173` ≠ `https://...`. All three pieces must match or be explicitly allowed.\n5. **Redirects** — the server redirected the preflight or the request lost CORS headers along the chain.\n\nTo diagnose: open DevTools → Network → click the failing request → check the **Response Headers** of both the `OPTIONS` preflight and the actual request. The exact missing/mismatched header is named in the console error.\n\nIf you paste the console message and tell me your stack (frontend origin + backend framework), I can give the specific fix.",
     "stop_reason": "end_turn",
-    "session_id": "de7ecd25-4907-435c-9e9b-4a18c36f9dac",
-    "total_cost_usd": 0.0274835,
+    "session_id": "910d3562-59e8-431a-97d3-9faee1c293d9",
+    "total_cost_usd": 0.13035425,
     "usage": {
       "input_tokens": 6,
-      "cache_creation_input_tokens": 0,
-      "cache_read_input_tokens": 32617,
-      "output_tokens": 429,
+      "cache_creation_input_tokens": 17025,
+      "cache_read_input_tokens": 16796,
+      "output_tokens": 604,
       "server_tool_use": {
         "web_search_requests": 0,
         "web_fetch_requests": 0
       },
       "service_tier": "standard",
       "cache_creation": {
-        "ephemeral_1h_input_tokens": 0,
+        "ephemeral_1h_input_tokens": 17025,
         "ephemeral_5m_input_tokens": 0
       },
       "inference_geo": "",
       "iterations": [
         {
           "input_tokens": 6,
-          "output_tokens": 429,
-          "cache_read_input_tokens": 32617,
-          "cache_creation_input_tokens": 0,
+          "output_tokens": 604,
+          "cache_read_input_tokens": 16796,
+          "cache_creation_input_tokens": 17025,
           "cache_creation": {
             "ephemeral_5m_input_tokens": 0,
-            "ephemeral_1h_input_tokens": 0
+            "ephemeral_1h_input_tokens": 17025
           },
           "type": "message"
         }
@@ -88,11 +88,11 @@
       },
       "claude-opus-4-7": {
         "inputTokens": 6,
-        "outputTokens": 429,
-        "cacheReadInputTokens": 32617,
-        "cacheCreationInputTokens": 0,
+        "outputTokens": 604,
+        "cacheReadInputTokens": 16796,
+        "cacheCreationInputTokens": 17025,
         "webSearchRequests": 0,
-        "costUSD": 0.0270635,
+        "costUSD": 0.12993425,
         "contextWindow": 1000000,
         "maxOutputTokens": 64000
       }
@@ -100,6 +100,6 @@
     "permission_denials": [],
     "terminal_reason": "completed",
     "fast_mode_state": "off",
-    "uuid": "0a0600b1-932e-4073-aaa3-49e1ea2981a3"
+    "uuid": "37fb95fb-d7c7-48f6-a308-6b4c5ce36e9f"
   }
 }

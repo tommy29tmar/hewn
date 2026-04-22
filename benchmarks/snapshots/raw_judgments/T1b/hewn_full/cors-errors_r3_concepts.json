@@ -1,15 +1,15 @@
 {
   "final": {
-    "browser_enforces_same_origin_policy": true,
+    "browser_enforces_same_origin_policy": false,
     "server_must_send_access_control_allow_origin_header": true,
-    "preflight_options_request_for_non_simple_methods": true,
-    "credentials_require_explicit_allow_credentials": true
+    "preflight_options_request_for_non_simple_methods": false,
+    "credentials_require_explicit_allow_credentials": false
   },
   "history": [
     {
       "attempt": 0,
-      "raw": "{\"browser_enforces_same_origin_policy\": true, \"server_must_send_access_control_allow_origin_header\": true, \"preflight_options_request_for_non_simple_methods\": true, \"credentials_require_explicit_allow_credentials\": true}"
+      "raw": "{\"browser_enforces_same_origin_policy\":false,\"server_must_send_access_control_allow_origin_header\":true,\"preflight_options_request_for_non_simple_methods\":false,\"credentials_require_explicit_allow_credentials\":false}"
     }
   ],
-  "ts": "2026-04-22T01:10:19.923292+00:00"
+  "ts": "2026-04-22T08:42:30.838122+00:00"
 }

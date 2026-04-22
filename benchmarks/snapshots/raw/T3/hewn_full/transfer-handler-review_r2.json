@@ -14,61 +14,61 @@
   ],
   "digest_hex": "394d162344f9342c7b47283b28bfa130e4fb435382a1f0a8aa819239935b955a",
   "seed": "hewn-bench-v1",
-  "timestamp": "2026-04-22T00:41:17.307770+00:00",
-  "output_tokens_tiktoken": 745,
-  "output_tokens_anthropic": 1193,
+  "timestamp": "2026-04-22T08:21:33.612091+00:00",
+  "output_tokens_tiktoken": 634,
+  "output_tokens_anthropic": 1016,
   "input_tokens_anthropic": 6,
-  "cache_creation_input_tokens": 24534,
-  "cache_read_input_tokens": 16805,
-  "total_input_tokens": 41345,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 42400,
+  "total_input_tokens": 42406,
   "cache_state": "warm",
-  "wallclock_ms": 27355.01432197634,
-  "duration_ms": 22691,
-  "duration_api_ms": 23607,
-  "wrapper_overhead_ms": 3748.0143219763413,
+  "wallclock_ms": 27173.65758001688,
+  "duration_ms": 21016,
+  "duration_api_ms": 22022,
+  "wrapper_overhead_ms": 5151.657580016879,
   "stop_reason": "end_turn",
   "num_turns": 1,
-  "session_id": "83ea98a0-cb19-4315-9ab9-c1934838521c",
-  "total_cost_usd": 0.19726400000000002,
+  "session_id": "8abb45f1-51b1-475a-9115-63f5ace94dc4",
+  "total_cost_usd": 0.052299,
   "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
-  "result": "1. spoofable rate-limit key — `req.headers['x-forwarded-for']` read directly (Section 2 rule 2; SEV1 2025-09)\n   risk: attacker rotates `X-Forwarded-For` per request to bypass per-IP limits (credential brute-force, scraping)\n   fix: key off `trustedClientIp(req)` from `src/edge/util/trustedClientIp.ts`; XFF only honored if hop arrived from `config/trusted_proxies.json`\n   verify: lint `no-direct-xff-read` passes; integration test with rotating `X-Forwarded-For` from untrusted source increments same bucket\n\n2. unbounded Redis key — `INCR` with no `EXPIRE` (Section 2 rule 3; SEV2 2025-11 OOM)\n   risk: keys accumulate forever, Redis OOM evicts live state, edge degrades/offlines\n   fix: `MULTI` → `INCR` + `EXPIRE key 90`; satisfies `no-unbounded-redis-key` lint\n   verify: integration test asserts `TTL key` > 0 after first hit; OOM regression test\n\n3. missing route + minute-bucket in key — collapses all routes/time into one counter (Section 4 key format)\n   risk: one hot route exhausts limits for all routes; no sliding window; legitimate users get spurious `429`\n   fix: `rl:${trustedClientIp(req)}:${routePrefix}:${minuteBucket}` with `Math.floor(Date.now()/60000)`\n   verify: unit test confirms distinct keys per route and per minute bucket\n\n4. missing region prefix — global key collision across regions (Section 4; SEV2 2025-12)\n   risk: one busy user limited globally instead of per-region; ~6k spurious `429`s repeat\n   fix: prepend region: `rl:${region}:${trustedClientIp(req)}:${routePrefix}:${minuteBucket}`\n   verify: regression test from 2025-12 RCA passes\n\n5. no limit comparison / no `429` response — `INCR` result discarded\n   risk: code is a counter, not a limiter; zero enforcement\n   fix: capture `[count]=await multi.exec()`; if `count>limit` return `429` RFC 7807 body (`type`,`title`,`status`,`detail`,`retry_after`) per Section 4 example\n   verify: test asserts `429` with `problem+json` body once limit exceeded; `atlas_edge_rate_limit_total{action=\"throttled\"}` increments\n\n6. `req.ip` fallback still trusts Express trust-proxy chain — same XFF spoof vector if `app.set('trust proxy', true)` is loose\n   risk: even removing direct XFF read, `req.ip` resolves via XFF when `trust proxy` is permissive; bypass persists\n   fix: `trustedClientIp` must derive from `req.socket.remoteAddress` and walk XFF only across IPs in `trusted_proxies.json`\n   verify: unit test with spoofed XFF + untrusted socket peer returns socket IP, not header\n\n7. no error handling on `multi.exec()` — Redis transient failure fails open\n   risk: rate limiter silently bypassed on Redis blip; or unhandled rejection crashes worker\n   fix: try/catch → `next(err)`; emit `atlas_edge_rate_limit_total{action=\"errored\"}`; consider fail-closed for sensitive routes\n   verify: chaos test kills Redis mid-request; metric increments, request handled per policy",
+  "result": "1. Spoofable rate-limit key via raw `X-Forwarded-For` read\nevidence: `req.headers['x-forwarded-for']` used directly in key\ntrigger: attacker rotates XFF per request, bypasses per-IP limits (SEV1 2025-09 repro)\nfix: key off `trustedClientIp(req)` from `src/edge/util/trustedClientIp.ts`; rely on validated proxy chain, never raw header\nverify: lint `no-direct-xff-read` must fail on this diff; integration test with spoofed XFF + fixed `remoteAddress` asserts single bucket\n\n2. Missing `EXPIRE` → Redis OOM\nevidence: `redis.incr(key)` with no paired `expire` in same async fn\ntrigger: unbounded keys accumulate, Redis OOM evicts hot state (SEV2 2025-11 repro); also violates `no-unbounded-redis-key` lint\nfix: wrap in `MULTI`, pair `INCR` + `EXPIRE(key, 90)`, read count from `exec()`\nverify: integration test asserts `TTL key > 0` after first INCR\n\n3. XFF list not parsed — first hop, not client\nevidence: header is CSV `client, proxy1, proxy2`; `||req.ip` fallback masks this\ntrigger: even if source were trusted, keying on full CSV yields per-chain buckets, not per-client; proxy rotation bypasses limit\nfix: use `trustedClientIp(req)` which walks chain against `config/trusted_proxies.json`\nverify: unit test with multi-hop XFF asserts leftmost trusted hop selected\n\n4. Missing route prefix + region prefix in key\nevidence: key is `rl:{ip}` only; no `{route_prefix}`, no `{minute_bucket}`, no region\ntrigger: collides across routes (one noisy route throttles all); global bucket not per-region (SEV2 2025-12 repro)\nfix: `rl:${region}:${trustedClientIp(req)}:${routePrefix}:${minuteBucket}` per Section 4 spec\nverify: regression test from 2025-12 RCA\n\n5. No 429 response path / limit check\nevidence: `incr` result unused; no `count > limit` branch, no RFC 7807 body, no `retry_after`\ntrigger: limiter counts but never throttles — silent failure mode, SLO-invisible\nfix: compare `count` to per-route limit from `config/rate_limits.json`, return `problem+json` with `type:/errors/rate-limited`, `retry_after: secondsUntilNextBucket()`\nverify: test asserts 429 + body shape on `limit+1`th request\n\n6. CODEOWNERS gate — needs human approval\nevidence: diff touches rate-limit logic (implicitly `src/edge/rate_limit.ts`)\ntrigger: auto-merge blocked per Section 6 pre-merge checks; security-sensitive path\nfix: request review from CODEOWNERS before merge; do not bypass",
   "assertion_pass": true,
   "raw_payload": {
     "type": "result",
     "subtype": "success",
     "is_error": false,
     "api_error_status": null,
-    "duration_ms": 22691,
-    "duration_api_ms": 23607,
+    "duration_ms": 21016,
+    "duration_api_ms": 22022,
     "num_turns": 1,
-    "result": "1. spoofable rate-limit key — `req.headers['x-forwarded-for']` read directly (Section 2 rule 2; SEV1 2025-09)\n   risk: attacker rotates `X-Forwarded-For` per request to bypass per-IP limits (credential brute-force, scraping)\n   fix: key off `trustedClientIp(req)` from `src/edge/util/trustedClientIp.ts`; XFF only honored if hop arrived from `config/trusted_proxies.json`\n   verify: lint `no-direct-xff-read` passes; integration test with rotating `X-Forwarded-For` from untrusted source increments same bucket\n\n2. unbounded Redis key — `INCR` with no `EXPIRE` (Section 2 rule 3; SEV2 2025-11 OOM)\n   risk: keys accumulate forever, Redis OOM evicts live state, edge degrades/offlines\n   fix: `MULTI` → `INCR` + `EXPIRE key 90`; satisfies `no-unbounded-redis-key` lint\n   verify: integration test asserts `TTL key` > 0 after first hit; OOM regression test\n\n3. missing route + minute-bucket in key — collapses all routes/time into one counter (Section 4 key format)\n   risk: one hot route exhausts limits for all routes; no sliding window; legitimate users get spurious `429`\n   fix: `rl:${trustedClientIp(req)}:${routePrefix}:${minuteBucket}` with `Math.floor(Date.now()/60000)`\n   verify: unit test confirms distinct keys per route and per minute bucket\n\n4. missing region prefix — global key collision across regions (Section 4; SEV2 2025-12)\n   risk: one busy user limited globally instead of per-region; ~6k spurious `429`s repeat\n   fix: prepend region: `rl:${region}:${trustedClientIp(req)}:${routePrefix}:${minuteBucket}`\n   verify: regression test from 2025-12 RCA passes\n\n5. no limit comparison / no `429` response — `INCR` result discarded\n   risk: code is a counter, not a limiter; zero enforcement\n   fix: capture `[count]=await multi.exec()`; if `count>limit` return `429` RFC 7807 body (`type`,`title`,`status`,`detail`,`retry_after`) per Section 4 example\n   verify: test asserts `429` with `problem+json` body once limit exceeded; `atlas_edge_rate_limit_total{action=\"throttled\"}` increments\n\n6. `req.ip` fallback still trusts Express trust-proxy chain — same XFF spoof vector if `app.set('trust proxy', true)` is loose\n   risk: even removing direct XFF read, `req.ip` resolves via XFF when `trust proxy` is permissive; bypass persists\n   fix: `trustedClientIp` must derive from `req.socket.remoteAddress` and walk XFF only across IPs in `trusted_proxies.json`\n   verify: unit test with spoofed XFF + untrusted socket peer returns socket IP, not header\n\n7. no error handling on `multi.exec()` — Redis transient failure fails open\n   risk: rate limiter silently bypassed on Redis blip; or unhandled rejection crashes worker\n   fix: try/catch → `next(err)`; emit `atlas_edge_rate_limit_total{action=\"errored\"}`; consider fail-closed for sensitive routes\n   verify: chaos test kills Redis mid-request; metric increments, request handled per policy",
+    "result": "1. Spoofable rate-limit key via raw `X-Forwarded-For` read\nevidence: `req.headers['x-forwarded-for']` used directly in key\ntrigger: attacker rotates XFF per request, bypasses per-IP limits (SEV1 2025-09 repro)\nfix: key off `trustedClientIp(req)` from `src/edge/util/trustedClientIp.ts`; rely on validated proxy chain, never raw header\nverify: lint `no-direct-xff-read` must fail on this diff; integration test with spoofed XFF + fixed `remoteAddress` asserts single bucket\n\n2. Missing `EXPIRE` → Redis OOM\nevidence: `redis.incr(key)` with no paired `expire` in same async fn\ntrigger: unbounded keys accumulate, Redis OOM evicts hot state (SEV2 2025-11 repro); also violates `no-unbounded-redis-key` lint\nfix: wrap in `MULTI`, pair `INCR` + `EXPIRE(key, 90)`, read count from `exec()`\nverify: integration test asserts `TTL key > 0` after first INCR\n\n3. XFF list not parsed — first hop, not client\nevidence: header is CSV `client, proxy1, proxy2`; `||req.ip` fallback masks this\ntrigger: even if source were trusted, keying on full CSV yields per-chain buckets, not per-client; proxy rotation bypasses limit\nfix: use `trustedClientIp(req)` which walks chain against `config/trusted_proxies.json`\nverify: unit test with multi-hop XFF asserts leftmost trusted hop selected\n\n4. Missing route prefix + region prefix in key\nevidence: key is `rl:{ip}` only; no `{route_prefix}`, no `{minute_bucket}`, no region\ntrigger: collides across routes (one noisy route throttles all); global bucket not per-region (SEV2 2025-12 repro)\nfix: `rl:${region}:${trustedClientIp(req)}:${routePrefix}:${minuteBucket}` per Section 4 spec\nverify: regression test from 2025-12 RCA\n\n5. No 429 response path / limit check\nevidence: `incr` result unused; no `count > limit` branch, no RFC 7807 body, no `retry_after`\ntrigger: limiter counts but never throttles — silent failure mode, SLO-invisible\nfix: compare `count` to per-route limit from `config/rate_limits.json`, return `problem+json` with `type:/errors/rate-limited`, `retry_after: secondsUntilNextBucket()`\nverify: test asserts 429 + body shape on `limit+1`th request\n\n6. CODEOWNERS gate — needs human approval\nevidence: diff touches rate-limit logic (implicitly `src/edge/rate_limit.ts`)\ntrigger: auto-merge blocked per Section 6 pre-merge checks; security-sensitive path\nfix: request review from CODEOWNERS before merge; do not bypass",
     "stop_reason": "end_turn",
-    "session_id": "83ea98a0-cb19-4315-9ab9-c1934838521c",
-    "total_cost_usd": 0.19726400000000002,
+    "session_id": "8abb45f1-51b1-475a-9115-63f5ace94dc4",
+    "total_cost_usd": 0.052299,
     "usage": {
       "input_tokens": 6,
-      "cache_creation_input_tokens": 24534,
-      "cache_read_input_tokens": 16805,
-      "output_tokens": 1193,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 42400,
+      "output_tokens": 1016,
       "server_tool_use": {
         "web_search_requests": 0,
         "web_fetch_requests": 0
       },
       "service_tier": "standard",
       "cache_creation": {
-        "ephemeral_1h_input_tokens": 24534,
+        "ephemeral_1h_input_tokens": 0,
         "ephemeral_5m_input_tokens": 0
       },
       "inference_geo": "",
       "iterations": [
         {
           "input_tokens": 6,
-          "output_tokens": 1193,
-          "cache_read_input_tokens": 16805,
-          "cache_creation_input_tokens": 24534,
+          "output_tokens": 1016,
+          "cache_read_input_tokens": 42400,
+          "cache_creation_input_tokens": 0,
           "cache_creation": {
             "ephemeral_5m_input_tokens": 0,
-            "ephemeral_1h_input_tokens": 24534
+            "ephemeral_1h_input_tokens": 0
           },
           "type": "message"
         }
@@ -88,11 +88,11 @@
       },
       "claude-opus-4-7": {
         "inputTokens": 6,
-        "outputTokens": 1193,
-        "cacheReadInputTokens": 16805,
-        "cacheCreationInputTokens": 24534,
+        "outputTokens": 1016,
+        "cacheReadInputTokens": 42400,
+        "cacheCreationInputTokens": 0,
         "webSearchRequests": 0,
-        "costUSD": 0.19159500000000002,
+        "costUSD": 0.04663,
         "contextWindow": 1000000,
         "maxOutputTokens": 64000
       }
@@ -100,6 +100,6 @@
     "permission_denials": [],
     "terminal_reason": "completed",
     "fast_mode_state": "off",
-    "uuid": "952f4462-3ae3-4801-9be4-b450a2e74885"
+    "uuid": "8c437c13-235b-47a4-921e-b61a0782b5a8"
   }
 }
