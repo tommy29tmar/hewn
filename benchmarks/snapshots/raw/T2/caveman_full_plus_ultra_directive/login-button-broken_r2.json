@@ -1,0 +1,105 @@
+{
+  "track": "T2",
+  "arm": "caveman_full_plus_ultra_directive",
+  "prompt_id": "login-button-broken",
+  "run_index": 2,
+  "arm_order_index": 0,
+  "arm_order_full": [
+    "caveman_full_plus_ultra_directive",
+    "baseline",
+    "hewn_prompt_only",
+    "terse",
+    "hewn_full",
+    "caveman_full"
+  ],
+  "digest_hex": "e1fff6cb5ce95b9c68e1704c12e3bb9788cf296894302e3a503c3240dcf37267",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T00:19:42.491398+00:00",
+  "output_tokens_tiktoken": 16,
+  "output_tokens_anthropic": 219,
+  "input_tokens_anthropic": 7,
+  "cache_creation_input_tokens": 10766,
+  "cache_read_input_tokens": 40892,
+  "total_input_tokens": 51665,
+  "cache_state": "warm",
+  "wallclock_ms": 10397.665547992801,
+  "duration_ms": 5950,
+  "duration_api_ms": 6370,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 2,
+  "session_id": "2622d838-1654-4aaf-92b1-726b82a615e1",
+  "total_cost_usd": 0.09365250000000001,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "No login button in Hewn repo. Which project? Give path or URL.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 5950,
+    "duration_api_ms": 6370,
+    "num_turns": 2,
+    "result": "No login button in Hewn repo. Which project? Give path or URL.",
+    "stop_reason": "end_turn",
+    "session_id": "2622d838-1654-4aaf-92b1-726b82a615e1",
+    "total_cost_usd": 0.09365250000000001,
+    "usage": {
+      "input_tokens": 7,
+      "cache_creation_input_tokens": 10766,
+      "cache_read_input_tokens": 40892,
+      "output_tokens": 219,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 10766,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 1,
+          "output_tokens": 76,
+          "cache_read_input_tokens": 25691,
+          "cache_creation_input_tokens": 276,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 276
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 349,
+        "outputTokens": 12,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.000409,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 7,
+        "outputTokens": 219,
+        "cacheReadInputTokens": 40892,
+        "cacheCreationInputTokens": 10766,
+        "webSearchRequests": 0,
+        "costUSD": 0.0932435,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "94b2a10c-3ca3-44aa-8779-b00ceb76b2e8"
+  }
+}

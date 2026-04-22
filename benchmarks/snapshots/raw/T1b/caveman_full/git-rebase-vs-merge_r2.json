@@ -1,0 +1,105 @@
+{
+  "track": "T1b",
+  "arm": "caveman_full",
+  "prompt_id": "git-rebase-vs-merge",
+  "run_index": 2,
+  "arm_order_index": 5,
+  "arm_order_full": [
+    "terse",
+    "baseline",
+    "caveman_full_plus_ultra_directive",
+    "hewn_full",
+    "hewn_prompt_only",
+    "caveman_full"
+  ],
+  "digest_hex": "671ce9b36ae9fddc6f5df598e1ba671496437cd76d62e50562f443322938c317",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T00:01:56.547122+00:00",
+  "output_tokens_tiktoken": 61,
+  "output_tokens_anthropic": 103,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 21739,
+  "total_input_tokens": 21745,
+  "cache_state": "warm",
+  "wallclock_ms": 8646.66893001413,
+  "duration_ms": 3339,
+  "duration_api_ms": 4493,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "8be27999-48a2-4b21-8093-f2a47fa83d9a",
+  "total_cost_usd": 0.0139025,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "Rebase: replay commits on top of target. Linear history, new SHAs, rewrites.\nMerge: join branches via merge commit. Preserves history, keeps SHAs, non-linear.\n\nRebase = clean line. Merge = true record.\n\nRule: rebase local/private, merge shared/public.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 3339,
+    "duration_api_ms": 4493,
+    "num_turns": 1,
+    "result": "Rebase: replay commits on top of target. Linear history, new SHAs, rewrites.\nMerge: join branches via merge commit. Preserves history, keeps SHAs, non-linear.\n\nRebase = clean line. Merge = true record.\n\nRule: rebase local/private, merge shared/public.",
+    "stop_reason": "end_turn",
+    "session_id": "8be27999-48a2-4b21-8093-f2a47fa83d9a",
+    "total_cost_usd": 0.0139025,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 21739,
+      "output_tokens": 103,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 0,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 103,
+          "cache_read_input_tokens": 21739,
+          "cache_creation_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 348,
+        "outputTokens": 16,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.000428,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 103,
+        "cacheReadInputTokens": 21739,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.0134745,
+        "contextWindow": 200000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "8ff7b871-7b66-412e-a055-21933d6369ba"
+  }
+}

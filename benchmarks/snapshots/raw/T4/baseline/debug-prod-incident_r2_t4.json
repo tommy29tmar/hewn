@@ -1,0 +1,96 @@
+{
+  "track": "T4",
+  "arm": "baseline",
+  "sequence_id": "debug-prod-incident",
+  "run_index": 2,
+  "turn": 4,
+  "arm_order_index": 4,
+  "arm_order_full": [
+    "caveman_full",
+    "terse",
+    "hewn_full",
+    "hewn_prompt_only",
+    "baseline"
+  ],
+  "digest_hex": "522341918a5177210ef438fa55486ec5b622aaa576febbd731536d82595ec31b",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T01:23:00.923856+00:00",
+  "session_id_used_for_resume": "f21b92b7-d679-4b3a-93e7-d3a4590143e5",
+  "output_tokens_tiktoken": 536,
+  "output_tokens_anthropic": 1388,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 1452,
+  "cache_read_input_tokens": 36522,
+  "total_input_tokens": 37980,
+  "cache_state": "warm",
+  "wallclock_ms": 28130.44807399274,
+  "duration_ms": 24457,
+  "duration_api_ms": 24427,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "f21b92b7-d679-4b3a-93e7-d3a4590143e5",
+  "total_cost_usd": 0.062065999999999996,
+  "model_used": "claude-opus-4-7",
+  "result": "Depends on cart size, but there's real risk. Do the math:\n\n- Pool: 20 connections\n- Per request: N concurrent queries (one per SKU)\n- Concurrent requests: R\n\nWorst case you need `N × R` connections. If average cart is 5 items and you handle 10 concurrent checkouts, that's 50 pending queries against a pool of 20 — requests queue, some time out, and now you're back to 500s under load instead of under a bad deploy.\n\nThe sequential loop was slow but self-limiting (1 connection per request). `Promise.all` is faster but unbounded — one request with a 100-item cart can monopolize the pool by itself.\n\n**The real fix is neither**: collapse the N queries into one.\n\n```js\n// Instead of N queries:\nconst rows = await db.query(\n  'SELECT sku, stock FROM inventory WHERE sku = ANY($1)',\n  [skus]\n);\nconst bySku = new Map(rows.map(r => [r.sku, r.stock]));\n```\n\nOne connection, one roundtrip, scales with cart size as a single query plan. This is almost always the right answer for \"lookup N things by id\" and it's what both the old loop and the new Promise.all are working around.\n\n**If there's a reason you can't batch** (different tables per SKU, external service call, etc.), cap the fan-out:\n\n```js\nimport pLimit from 'p-limit';\nconst limit = pLimit(5);\nawait Promise.all(skus.map(sku => limit(() => checkSku(sku))));\n```\n\nPick the cap based on: `pool_size / expected_concurrent_requests / safety_margin`. With pool 20 and say 10 concurrent checkouts, cap per-request at 2 to leave headroom. 5 is fine if checkout traffic is low.\n\n**Things to check in the PR**:\n1. Is there a max cart size enforced upstream? If not, a 500-item cart just became a pool-exhaustion vector.\n2. What does `checkSku` actually do — one query, or a transaction with multiple? A transaction holds a connection for its entire duration, which changes the math.\n3. Is there a query timeout + statement timeout on the pool? Without them, a stuck query holds a connection until the TCP keepalive gives up.\n\nMy recommendation for the review: ask the author to switch to the `WHERE sku IN (...)` form. It's simpler, faster, and removes the pool question entirely. If they push back, require a `p-limit` cap and a comment explaining why batching isn't possible.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 24457,
+    "duration_api_ms": 24427,
+    "num_turns": 1,
+    "result": "Depends on cart size, but there's real risk. Do the math:\n\n- Pool: 20 connections\n- Per request: N concurrent queries (one per SKU)\n- Concurrent requests: R\n\nWorst case you need `N × R` connections. If average cart is 5 items and you handle 10 concurrent checkouts, that's 50 pending queries against a pool of 20 — requests queue, some time out, and now you're back to 500s under load instead of under a bad deploy.\n\nThe sequential loop was slow but self-limiting (1 connection per request). `Promise.all` is faster but unbounded — one request with a 100-item cart can monopolize the pool by itself.\n\n**The real fix is neither**: collapse the N queries into one.\n\n```js\n// Instead of N queries:\nconst rows = await db.query(\n  'SELECT sku, stock FROM inventory WHERE sku = ANY($1)',\n  [skus]\n);\nconst bySku = new Map(rows.map(r => [r.sku, r.stock]));\n```\n\nOne connection, one roundtrip, scales with cart size as a single query plan. This is almost always the right answer for \"lookup N things by id\" and it's what both the old loop and the new Promise.all are working around.\n\n**If there's a reason you can't batch** (different tables per SKU, external service call, etc.), cap the fan-out:\n\n```js\nimport pLimit from 'p-limit';\nconst limit = pLimit(5);\nawait Promise.all(skus.map(sku => limit(() => checkSku(sku))));\n```\n\nPick the cap based on: `pool_size / expected_concurrent_requests / safety_margin`. With pool 20 and say 10 concurrent checkouts, cap per-request at 2 to leave headroom. 5 is fine if checkout traffic is low.\n\n**Things to check in the PR**:\n1. Is there a max cart size enforced upstream? If not, a 500-item cart just became a pool-exhaustion vector.\n2. What does `checkSku` actually do — one query, or a transaction with multiple? A transaction holds a connection for its entire duration, which changes the math.\n3. Is there a query timeout + statement timeout on the pool? Without them, a stuck query holds a connection until the TCP keepalive gives up.\n\nMy recommendation for the review: ask the author to switch to the `WHERE sku IN (...)` form. It's simpler, faster, and removes the pool question entirely. If they push back, require a `p-limit` cap and a comment explaining why batching isn't possible.",
+    "stop_reason": "end_turn",
+    "session_id": "f21b92b7-d679-4b3a-93e7-d3a4590143e5",
+    "total_cost_usd": 0.062065999999999996,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 1452,
+      "cache_read_input_tokens": 36522,
+      "output_tokens": 1388,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 1452,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 1388,
+          "cache_read_input_tokens": 36522,
+          "cache_creation_input_tokens": 1452,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 1452
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 1388,
+        "cacheReadInputTokens": 36522,
+        "cacheCreationInputTokens": 1452,
+        "webSearchRequests": 0,
+        "costUSD": 0.062065999999999996,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "b7e182ba-2031-45c2-9e90-dd1da75c4805"
+  }
+}

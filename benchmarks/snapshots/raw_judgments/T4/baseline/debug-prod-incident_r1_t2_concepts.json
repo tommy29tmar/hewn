@@ -1,0 +1,13 @@
+{
+  "final": {
+    "identifies_items_field_was_removed_from_returned_object": true,
+    "names_downstream_consumer_expects_items": true
+  },
+  "history": [
+    {
+      "attempt": 0,
+      "raw": "{\"identifies_items_field_was_removed_from_returned_object\": true, \"names_downstream_consumer_expects_items\": true}"
+    }
+  ],
+  "ts": "2026-04-22T02:03:12.698935+00:00"
+}

@@ -1,0 +1,102 @@
+{
+  "track": "T1a",
+  "arm": "terse",
+  "prompt_id": "queue-vs-topic",
+  "run_index": 1,
+  "arm_order_index": 1,
+  "arm_order_full": [
+    "baseline",
+    "terse",
+    "caveman_full"
+  ],
+  "digest_hex": "5d6d15de966d2de1a01243f9e0d98a5b8908442798145efdf692af7bd3cb36a9",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-21T23:38:09.091876+00:00",
+  "output_tokens_tiktoken": 162,
+  "output_tokens_anthropic": 281,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 6559,
+  "cache_read_input_tokens": 13741,
+  "total_input_tokens": 20306,
+  "cache_state": "warm",
+  "wallclock_ms": 12154.104835004546,
+  "duration_ms": 6747,
+  "duration_api_ms": 7523,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "17c3e86b-53cd-420a-8c21-edafda34f928",
+  "total_cost_usd": 0.055335249999999996,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "**Queue**: point-to-point, one message → one consumer. Use for work distribution, task processing, load balancing across workers. Each message is processed exactly once by one of N consumers.\n\n**Topic**: pub/sub, one message → many subscribers. Use for event broadcasting, fan-out notifications, decoupled systems where multiple services react to the same event independently.\n\nRules of thumb:\n- Competing consumers sharing work → queue\n- Multiple independent consumers, each needing their own copy → topic\n- Order-sensitive job pipeline → queue (often partitioned)\n- Domain events others may subscribe to later → topic\n\nHybrid: many brokers (Kafka, JMS, Service Bus) support topic-with-subscriptions, where each subscription is a durable queue — giving you fan-out plus competing consumers within each subscriber group.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 6747,
+    "duration_api_ms": 7523,
+    "num_turns": 1,
+    "result": "**Queue**: point-to-point, one message → one consumer. Use for work distribution, task processing, load balancing across workers. Each message is processed exactly once by one of N consumers.\n\n**Topic**: pub/sub, one message → many subscribers. Use for event broadcasting, fan-out notifications, decoupled systems where multiple services react to the same event independently.\n\nRules of thumb:\n- Competing consumers sharing work → queue\n- Multiple independent consumers, each needing their own copy → topic\n- Order-sensitive job pipeline → queue (often partitioned)\n- Domain events others may subscribe to later → topic\n\nHybrid: many brokers (Kafka, JMS, Service Bus) support topic-with-subscriptions, where each subscription is a durable queue — giving you fan-out plus competing consumers within each subscriber group.",
+    "stop_reason": "end_turn",
+    "session_id": "17c3e86b-53cd-420a-8c21-edafda34f928",
+    "total_cost_usd": 0.055335249999999996,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 6559,
+      "cache_read_input_tokens": 13741,
+      "output_tokens": 281,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 6559,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 281,
+          "cache_read_input_tokens": 13741,
+          "cache_creation_input_tokens": 6559,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 6559
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 351,
+        "outputTokens": 13,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.00041600000000000003,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 281,
+        "cacheReadInputTokens": 13741,
+        "cacheCreationInputTokens": 6559,
+        "webSearchRequests": 0,
+        "costUSD": 0.054919249999999996,
+        "contextWindow": 200000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "e9f1a525-784c-4f5d-8ab0-462aeeacc1fc"
+  }
+}

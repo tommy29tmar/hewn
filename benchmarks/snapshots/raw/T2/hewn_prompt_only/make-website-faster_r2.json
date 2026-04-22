@@ -1,0 +1,105 @@
+{
+  "track": "T2",
+  "arm": "hewn_prompt_only",
+  "prompt_id": "make-website-faster",
+  "run_index": 2,
+  "arm_order_index": 0,
+  "arm_order_full": [
+    "hewn_prompt_only",
+    "terse",
+    "caveman_full",
+    "caveman_full_plus_ultra_directive",
+    "hewn_full",
+    "baseline"
+  ],
+  "digest_hex": "9caf83a97f9c70aad26c54db6edc6ff5dabd66837b4f8a8772db304b1d670fb8",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T00:18:55.222938+00:00",
+  "output_tokens_tiktoken": 21,
+  "output_tokens_anthropic": 28,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 15815,
+  "cache_read_input_tokens": 16796,
+  "total_input_tokens": 32617,
+  "cache_state": "warm",
+  "wallclock_ms": 6841.92873199936,
+  "duration_ms": 2521,
+  "duration_api_ms": 3652,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "62e46ef3-b6aa-4bd9-a5d0-8208c00b245a",
+  "total_cost_usd": 0.10837875,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "Which website? I need a URL or a local path to the project before I can look at anything.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 2521,
+    "duration_api_ms": 3652,
+    "num_turns": 1,
+    "result": "Which website? I need a URL or a local path to the project before I can look at anything.",
+    "stop_reason": "end_turn",
+    "session_id": "62e46ef3-b6aa-4bd9-a5d0-8208c00b245a",
+    "total_cost_usd": 0.10837875,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 15815,
+      "cache_read_input_tokens": 16796,
+      "output_tokens": 28,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 15815,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 28,
+          "cache_read_input_tokens": 16796,
+          "cache_creation_input_tokens": 15815,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 15815
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 347,
+        "outputTokens": 12,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.00040699999999999997,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 28,
+        "cacheReadInputTokens": 16796,
+        "cacheCreationInputTokens": 15815,
+        "webSearchRequests": 0,
+        "costUSD": 0.10797174999999999,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "9d6f841b-dbc0-4a85-98ee-3ac66efbd396"
+  }
+}

@@ -1,0 +1,105 @@
+{
+  "track": "T5",
+  "arm": "terse",
+  "prompt_id": "outage-apology-email",
+  "run_index": 1,
+  "arm_order_index": 1,
+  "arm_order_full": [
+    "hewn_prompt_only",
+    "terse",
+    "caveman_full_plus_ultra_directive",
+    "baseline",
+    "hewn_full",
+    "caveman_full"
+  ],
+  "digest_hex": "36e797c847e3757d1a2926befe138e80e847ce989079f243b0c9f2ab5130be3e",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T00:53:24.717092+00:00",
+  "output_tokens_tiktoken": 322,
+  "output_tokens_anthropic": 492,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 10603,
+  "cache_read_input_tokens": 13741,
+  "total_input_tokens": 24350,
+  "cache_state": "warm",
+  "wallclock_ms": 14232.727015012642,
+  "duration_ms": 11062,
+  "duration_api_ms": 17725,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "846d9e22-fcdf-4801-bbbb-d4b4c8281687",
+  "total_cost_usd": 0.08597925,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "# Introducing Smart Drafts\n\nWe've all been there: cursor blinking, title typed, and then... nothing. The blank page is the hardest part of writing, and we kept hearing from you that it's where momentum goes to die. Great ideas were getting stuck at the starting line — not because you didn't know what to say, but because staring at empty space is a terrible way to start saying it. So we built something to meet you a few steps in.\n\nSay hello to **Smart Drafts**. Create a new document, give it a title, and click *Suggest Outline*. In a beat, you'll see a structured outline tailored to what you're writing — informed by your document title and the recent context of your workspace, so a \"Q3 Planning\" doc in a product team looks very different from a \"Q3 Planning\" doc in marketing. Every section is editable, reorderable, and completely optional. Keep what's useful, toss what isn't, and start writing from somewhere instead of nowhere. It's the same blank canvas — just with a gentle nudge in the right direction.\n\nThis is the first step in a bigger shift toward drafts that feel like *yours*. Next up: **custom voice training**, which will let Smart Drafts learn the phrasing, structure, and rhythm of how your team actually writes, so suggested outlines sound less like a generic assistant and more like a thoughtful colleague who's been reading your docs for years. Smart Drafts is rolling out to all workspaces this week — open a new doc and give it a try. As always, we'd love to hear what you think.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 11062,
+    "duration_api_ms": 17725,
+    "num_turns": 1,
+    "result": "# Introducing Smart Drafts\n\nWe've all been there: cursor blinking, title typed, and then... nothing. The blank page is the hardest part of writing, and we kept hearing from you that it's where momentum goes to die. Great ideas were getting stuck at the starting line — not because you didn't know what to say, but because staring at empty space is a terrible way to start saying it. So we built something to meet you a few steps in.\n\nSay hello to **Smart Drafts**. Create a new document, give it a title, and click *Suggest Outline*. In a beat, you'll see a structured outline tailored to what you're writing — informed by your document title and the recent context of your workspace, so a \"Q3 Planning\" doc in a product team looks very different from a \"Q3 Planning\" doc in marketing. Every section is editable, reorderable, and completely optional. Keep what's useful, toss what isn't, and start writing from somewhere instead of nowhere. It's the same blank canvas — just with a gentle nudge in the right direction.\n\nThis is the first step in a bigger shift toward drafts that feel like *yours*. Next up: **custom voice training**, which will let Smart Drafts learn the phrasing, structure, and rhythm of how your team actually writes, so suggested outlines sound less like a generic assistant and more like a thoughtful colleague who's been reading your docs for years. Smart Drafts is rolling out to all workspaces this week — open a new doc and give it a try. As always, we'd love to hear what you think.",
+    "stop_reason": "end_turn",
+    "session_id": "846d9e22-fcdf-4801-bbbb-d4b4c8281687",
+    "total_cost_usd": 0.08597925,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 10603,
+      "cache_read_input_tokens": 13741,
+      "output_tokens": 492,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 10603,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 492,
+          "cache_read_input_tokens": 13741,
+          "cache_creation_input_tokens": 10603,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 10603
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 435,
+        "outputTokens": 15,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.00051,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 492,
+        "cacheReadInputTokens": 13741,
+        "cacheCreationInputTokens": 10603,
+        "webSearchRequests": 0,
+        "costUSD": 0.08546925,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "dc63064e-dab5-4dc7-a295-99a9b4af9830"
+  }
+}

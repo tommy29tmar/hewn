@@ -1,0 +1,17 @@
+{
+  "final": {
+    "flags_trusting_x_user_id_header_from_client": false,
+    "flags_no_authorization_check_user_belongs_to_org": false,
+    "flags_no_input_validation_amount_or_account_ids": false,
+    "flags_no_authentication_or_jwt_verification_visible": false,
+    "flags_no_idempotency_key_for_money_movement": false,
+    "preserves_literal_X_User_Id_or_X_Internal_User_Id": false
+  },
+  "history": [
+    {
+      "attempt": 0,
+      "raw": "{\"flags_trusting_x_user_id_header_from_client\": false, \"flags_no_authorization_check_user_belongs_to_org\": false, \"flags_no_input_validation_amount_or_account_ids\": false, \"flags_no_authentication_or_jwt_verification_visible\": false, \"flags_no_idempotency_key_for_money_movement\": false, \"preserves_literal_X_User_Id_or_X_Internal_User_Id\": false}"
+    }
+  ],
+  "ts": "2026-04-22T01:57:36.589059+00:00"
+}

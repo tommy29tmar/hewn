@@ -1,0 +1,96 @@
+{
+  "track": "T4",
+  "arm": "terse",
+  "sequence_id": "debug-prod-incident",
+  "run_index": 1,
+  "turn": 5,
+  "arm_order_index": 4,
+  "arm_order_full": [
+    "baseline",
+    "hewn_full",
+    "hewn_prompt_only",
+    "caveman_full",
+    "terse"
+  ],
+  "digest_hex": "c436155c1e87e76d88e6f2c66d47c90c16ae78237b0a8de1b93824cf92fb5c9b",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T01:02:22.653019+00:00",
+  "session_id_used_for_resume": "d88d12d9-978e-4128-8624-4abb35c63ae5",
+  "output_tokens_tiktoken": 395,
+  "output_tokens_anthropic": 617,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 725,
+  "cache_read_input_tokens": 25722,
+  "total_input_tokens": 26453,
+  "cache_state": "warm",
+  "wallclock_ms": 14775.966554996558,
+  "duration_ms": 11775,
+  "duration_api_ms": 11752,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "d88d12d9-978e-4128-8624-4abb35c63ae5",
+  "total_cost_usd": 0.03284725,
+  "model_used": "claude-opus-4-7",
+  "result": "Batch it. One `WHERE sku IN (...)` query.\n\n```js\nasync function checkInventory(skus) {\n  if (skus.length === 0) return new Map();\n  const rows = await db.query(\n    'SELECT sku, stock FROM inventory WHERE sku = ANY($1)',\n    [skus]\n  );\n  return new Map(rows.map(r => [r.sku, r.stock]));\n}\n```\n\nWhy this beats bounded concurrency:\n\n- **Common case (3 SKUs)**: 1 query vs 3. Faster than the original parallel version, not slower.\n- **Worst case (47 SKUs)**: 1 query vs 47. Uses one connection, not 20+. Pool is untouched.\n- **No tuning knob** — no `p-limit` concurrency value to second-guess. The pool question disappears.\n- **DB-side efficiency** — one round trip, one query plan, index hit once.\n\nCaveats to check before shipping:\n\n1. **Driver syntax** — `ANY($1)` is Postgres. MySQL uses `IN (?)` with array expansion via the driver. Match your stack.\n2. **SKU list size limit** — Postgres handles thousands fine, but if SKUs can somehow be unbounded (they can't here — 47 max), chunk at 1000.\n3. **Return shape** — callers probably expect per-SKU results in order. Return a `Map` (as above) and let callers look up by SKU, or re-sort to match input order if the existing contract requires an array.\n4. **Missing SKUs** — decide explicitly: does a missing row mean \"0 stock\" or \"invalid SKU\"? The old sequential code may have thrown on missing; the batched version silently omits. Preserve the existing behavior or the order service may accept invalid SKUs.\n\nAdd a test with a cart containing one known-missing SKU to lock that behavior.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 11775,
+    "duration_api_ms": 11752,
+    "num_turns": 1,
+    "result": "Batch it. One `WHERE sku IN (...)` query.\n\n```js\nasync function checkInventory(skus) {\n  if (skus.length === 0) return new Map();\n  const rows = await db.query(\n    'SELECT sku, stock FROM inventory WHERE sku = ANY($1)',\n    [skus]\n  );\n  return new Map(rows.map(r => [r.sku, r.stock]));\n}\n```\n\nWhy this beats bounded concurrency:\n\n- **Common case (3 SKUs)**: 1 query vs 3. Faster than the original parallel version, not slower.\n- **Worst case (47 SKUs)**: 1 query vs 47. Uses one connection, not 20+. Pool is untouched.\n- **No tuning knob** — no `p-limit` concurrency value to second-guess. The pool question disappears.\n- **DB-side efficiency** — one round trip, one query plan, index hit once.\n\nCaveats to check before shipping:\n\n1. **Driver syntax** — `ANY($1)` is Postgres. MySQL uses `IN (?)` with array expansion via the driver. Match your stack.\n2. **SKU list size limit** — Postgres handles thousands fine, but if SKUs can somehow be unbounded (they can't here — 47 max), chunk at 1000.\n3. **Return shape** — callers probably expect per-SKU results in order. Return a `Map` (as above) and let callers look up by SKU, or re-sort to match input order if the existing contract requires an array.\n4. **Missing SKUs** — decide explicitly: does a missing row mean \"0 stock\" or \"invalid SKU\"? The old sequential code may have thrown on missing; the batched version silently omits. Preserve the existing behavior or the order service may accept invalid SKUs.\n\nAdd a test with a cart containing one known-missing SKU to lock that behavior.",
+    "stop_reason": "end_turn",
+    "session_id": "d88d12d9-978e-4128-8624-4abb35c63ae5",
+    "total_cost_usd": 0.03284725,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 725,
+      "cache_read_input_tokens": 25722,
+      "output_tokens": 617,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 725,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 617,
+          "cache_read_input_tokens": 25722,
+          "cache_creation_input_tokens": 725,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 725
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 617,
+        "cacheReadInputTokens": 25722,
+        "cacheCreationInputTokens": 725,
+        "webSearchRequests": 0,
+        "costUSD": 0.03284725,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "d1477691-d5e0-4f76-8602-076310bb766d"
+  }
+}

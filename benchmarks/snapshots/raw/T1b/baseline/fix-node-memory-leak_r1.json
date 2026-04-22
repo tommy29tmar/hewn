@@ -1,0 +1,105 @@
+{
+  "track": "T1b",
+  "arm": "baseline",
+  "prompt_id": "fix-node-memory-leak",
+  "run_index": 1,
+  "arm_order_index": 4,
+  "arm_order_full": [
+    "caveman_full_plus_ultra_directive",
+    "caveman_full",
+    "terse",
+    "hewn_full",
+    "baseline",
+    "hewn_prompt_only"
+  ],
+  "digest_hex": "edf96b08b6bf832e7f6141e2b1e51b0b7773d43c771414ddf25ddb62f5d6bccd",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-21T23:43:42.387373+00:00",
+  "output_tokens_tiktoken": 456,
+  "output_tokens_anthropic": 739,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 11734,
+  "cache_read_input_tokens": 16796,
+  "total_input_tokens": 28536,
+  "cache_state": "warm",
+  "wallclock_ms": 20187.803929991787,
+  "duration_ms": 13897,
+  "duration_api_ms": 14782,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "9774ebca-9c8f-4e9d-837a-ad529a8b9171",
+  "total_cost_usd": 0.1006755,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "Common causes and fixes:\n\n**1. Find the leak**\n- Run with `node --inspect` and open `chrome://inspect` → take heap snapshots at intervals, compare retained size by constructor.\n- Or use `clinic.js heapprofiler` / `node --heapsnapshot-signal=SIGUSR2` to dump on demand.\n- Watch `process.memoryUsage().heapUsed` over time; steady growth = leak.\n\n**2. Usual suspects**\n- **Unbounded caches / Maps** — use `lru-cache` or a `WeakMap` keyed on objects.\n- **Event listeners** — every `emitter.on(...)` without a matching `off` leaks. Check with `emitter.listenerCount(evt)`; set `setMaxListeners` low to get warnings.\n- **Closures capturing large objects** — a callback retaining `req`/`res` keeps the whole request alive. Null out references after use.\n- **Timers** — `setInterval` keeps its closure alive forever. Always keep a handle and `clearInterval` on shutdown.\n- **Global arrays used as logs/queues** — push without shift = leak. Use a bounded ring buffer.\n- **Promises that never settle** — pending promises retain their `.then` chain. Always add a timeout.\n- **`require` cache** for dynamically-loaded modules — delete from `require.cache` if you reload.\n\n**3. Typical fixes**\n```js\n// Bounded cache\nimport { LRUCache } from 'lru-cache';\nconst cache = new LRUCache({ max: 1000, ttl: 1000 * 60 });\n\n// Listener hygiene\nfunction handler() { ... }\nemitter.on('x', handler);\n// later:\nemitter.off('x', handler);\n\n// Timer cleanup\nconst t = setInterval(tick, 1000);\nprocess.on('SIGTERM', () => clearInterval(t));\n```\n\n**4. Prevent regressions**\n- Add `--max-old-space-size=<MB>` so leaks crash fast instead of swapping.\n- Log `memoryUsage()` on an interval; alert if `heapUsed` trends up across GCs.\n\nStart with a heap snapshot diff — it almost always points straight at the offender.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 13897,
+    "duration_api_ms": 14782,
+    "num_turns": 1,
+    "result": "Common causes and fixes:\n\n**1. Find the leak**\n- Run with `node --inspect` and open `chrome://inspect` → take heap snapshots at intervals, compare retained size by constructor.\n- Or use `clinic.js heapprofiler` / `node --heapsnapshot-signal=SIGUSR2` to dump on demand.\n- Watch `process.memoryUsage().heapUsed` over time; steady growth = leak.\n\n**2. Usual suspects**\n- **Unbounded caches / Maps** — use `lru-cache` or a `WeakMap` keyed on objects.\n- **Event listeners** — every `emitter.on(...)` without a matching `off` leaks. Check with `emitter.listenerCount(evt)`; set `setMaxListeners` low to get warnings.\n- **Closures capturing large objects** — a callback retaining `req`/`res` keeps the whole request alive. Null out references after use.\n- **Timers** — `setInterval` keeps its closure alive forever. Always keep a handle and `clearInterval` on shutdown.\n- **Global arrays used as logs/queues** — push without shift = leak. Use a bounded ring buffer.\n- **Promises that never settle** — pending promises retain their `.then` chain. Always add a timeout.\n- **`require` cache** for dynamically-loaded modules — delete from `require.cache` if you reload.\n\n**3. Typical fixes**\n```js\n// Bounded cache\nimport { LRUCache } from 'lru-cache';\nconst cache = new LRUCache({ max: 1000, ttl: 1000 * 60 });\n\n// Listener hygiene\nfunction handler() { ... }\nemitter.on('x', handler);\n// later:\nemitter.off('x', handler);\n\n// Timer cleanup\nconst t = setInterval(tick, 1000);\nprocess.on('SIGTERM', () => clearInterval(t));\n```\n\n**4. Prevent regressions**\n- Add `--max-old-space-size=<MB>` so leaks crash fast instead of swapping.\n- Log `memoryUsage()` on an interval; alert if `heapUsed` trends up across GCs.\n\nStart with a heap snapshot diff — it almost always points straight at the offender.",
+    "stop_reason": "end_turn",
+    "session_id": "9774ebca-9c8f-4e9d-837a-ad529a8b9171",
+    "total_cost_usd": 0.1006755,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 11734,
+      "cache_read_input_tokens": 16796,
+      "output_tokens": 739,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 11734,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 739,
+          "cache_read_input_tokens": 16796,
+          "cache_creation_input_tokens": 11734,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 11734
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 355,
+        "outputTokens": 16,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.000435,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 739,
+        "cacheReadInputTokens": 16796,
+        "cacheCreationInputTokens": 11734,
+        "webSearchRequests": 0,
+        "costUSD": 0.1002405,
+        "contextWindow": 200000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "89d8648d-7b7e-41b1-85b6-6b5c67704ae1"
+  }
+}

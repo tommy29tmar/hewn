@@ -1,0 +1,105 @@
+{
+  "track": "T1b",
+  "arm": "caveman_full_plus_ultra_directive",
+  "prompt_id": "hash-table-collisions",
+  "run_index": 2,
+  "arm_order_index": 4,
+  "arm_order_full": [
+    "baseline",
+    "hewn_prompt_only",
+    "hewn_full",
+    "terse",
+    "caveman_full_plus_ultra_directive",
+    "caveman_full"
+  ],
+  "digest_hex": "7a7e2664771ede4b86664d7fc5d4494f8f70d62c74a225df1f386f63a681b524",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-21T23:58:25.572094+00:00",
+  "output_tokens_tiktoken": 106,
+  "output_tokens_anthropic": 169,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 6551,
+  "cache_read_input_tokens": 15201,
+  "total_input_tokens": 21758,
+  "cache_state": "warm",
+  "wallclock_ms": 9757.743459980702,
+  "duration_ms": 5014,
+  "duration_api_ms": 5853,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "41a3412f-bff9-4d5f-abe1-4c852e01e89e",
+  "total_cost_usd": 0.05321625,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "Two main ways:\n\n**Chaining** — each bucket hold linked list. Collide → append. Simple, handle high load.\n\n**Open addressing** — probe next slot. Variants:\n- Linear: next slot (+1)\n- Quadratic: +1, +4, +9...\n- Double hash: step = hash2(key)\n\nTradeoff: chaining = more mem, stable perf. Open addr = cache-friendly, degrade near full. Most modern impls (Python dict, Go map) use open addr variant.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 5014,
+    "duration_api_ms": 5853,
+    "num_turns": 1,
+    "result": "Two main ways:\n\n**Chaining** — each bucket hold linked list. Collide → append. Simple, handle high load.\n\n**Open addressing** — probe next slot. Variants:\n- Linear: next slot (+1)\n- Quadratic: +1, +4, +9...\n- Double hash: step = hash2(key)\n\nTradeoff: chaining = more mem, stable perf. Open addr = cache-friendly, degrade near full. Most modern impls (Python dict, Go map) use open addr variant.",
+    "stop_reason": "end_turn",
+    "session_id": "41a3412f-bff9-4d5f-abe1-4c852e01e89e",
+    "total_cost_usd": 0.05321625,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 6551,
+      "cache_read_input_tokens": 15201,
+      "output_tokens": 169,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 6551,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 169,
+          "cache_read_input_tokens": 15201,
+          "cache_creation_input_tokens": 6551,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 6551
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 347,
+        "outputTokens": 14,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.00041699999999999994,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 169,
+        "cacheReadInputTokens": 15201,
+        "cacheCreationInputTokens": 6551,
+        "webSearchRequests": 0,
+        "costUSD": 0.05279925,
+        "contextWindow": 200000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "17dc04b4-6cae-48b9-b720-1b494aebda4f"
+  }
+}

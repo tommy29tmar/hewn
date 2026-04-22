@@ -1,0 +1,96 @@
+{
+  "track": "T4",
+  "arm": "baseline",
+  "sequence_id": "design-feature",
+  "run_index": 1,
+  "turn": 2,
+  "arm_order_index": 3,
+  "arm_order_full": [
+    "hewn_full",
+    "hewn_prompt_only",
+    "terse",
+    "baseline",
+    "caveman_full"
+  ],
+  "digest_hex": "30a2f9a62df0d790c0598917c3ab42509bbadd672a0a484741ea201d2da3b44f",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T01:11:18.641536+00:00",
+  "session_id_used_for_resume": "5632ca07-a42e-4f7d-9684-cf296062756c",
+  "output_tokens_tiktoken": 587,
+  "output_tokens_anthropic": 1768,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 1507,
+  "cache_read_input_tokens": 32671,
+  "total_input_tokens": 34184,
+  "cache_state": "warm",
+  "wallclock_ms": 36143.06517899968,
+  "duration_ms": 32358,
+  "duration_api_ms": 32324,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "5632ca07-a42e-4f7d-9684-cf296062756c",
+  "total_cost_usd": 0.06998425000000001,
+  "model_used": "claude-opus-4-7",
+  "result": "Short answer: **do both — append-only ledger as the source of truth, mutable balance row as a cache**, updated in the same transaction. This is what most payment/gift-card systems end up at. Pure event sourcing is overkill; a bare mutable row leaves you blind when something goes wrong.\n\n**Mutable balance row only (what wallets do)**\n- Pros: simple, fast reads, trivial atomic debit (`UPDATE ... WHERE balance >= amount`), one mental model across wallet + gift card.\n- Cons: no native audit trail. When finance asks \"how did this card reach $237?\" or a customer disputes a redemption, you have nothing. You'll bolt on a log anyway the first time there's an incident — better to design it in. Also weaker for escheatment reporting (you need *when* balances changed, not just current state).\n\n**Pure event-sourced (balance = fold over events, no stored balance)**\n- Pros: perfect audit, easy refunds/reversals (post a compensating event), natural fit for accounting's debit/credit mental model, tamper-evident.\n- Cons: every read aggregates, so you add a cache → you're back to two stores anyway. Fixing bad state requires posting correction events instead of an UPDATE, which is stricter but slower to operate. Diverges from wallet pattern; team now maintains two mental models.\n\n**Hybrid (recommended)**\n- `gift_card_ledger`: append-only, one row per issuance / redemption / refund / adjustment, with `amount` (signed), `reason`, `order_id`, `actor`, `created_at`. Never updated, never deleted.\n- `gift_card`: mutable `balance`, `status`, `updated_at`. Debited with a conditional UPDATE for atomicity.\n- Invariant: `balance == SUM(ledger.amount)` per card. Both writes in the same DB transaction. Add a nightly reconciliation job that flags drift.\n- Reads stay cheap (hit the row). Audits, disputes, and escheatment reports hit the ledger.\n\n**Why this is right for gift cards specifically (and not wallets)**\nGift cards are a balance-sheet liability, often regulated (state escheatment, EU rules), subject to chargebacks, and a fraud target. The ledger is not a nice-to-have — it's the thing auditors and your future-self investigating a fraud ring will ask for. Wallets are usually internal app credit with weaker requirements, which is why the mutable-only pattern has survived there.\n\nOne caveat: if your team has *never* maintained a ledger + cache invariant before, the reconciliation discipline is the part that fails in practice. The fix is to make the ledger insert and balance update literally the same transaction, in one helper function that's the only way to mutate balances — don't let ad-hoc UPDATEs exist.\n\nWant me to sketch the schema + the debit helper next?",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 32358,
+    "duration_api_ms": 32324,
+    "num_turns": 1,
+    "result": "Short answer: **do both — append-only ledger as the source of truth, mutable balance row as a cache**, updated in the same transaction. This is what most payment/gift-card systems end up at. Pure event sourcing is overkill; a bare mutable row leaves you blind when something goes wrong.\n\n**Mutable balance row only (what wallets do)**\n- Pros: simple, fast reads, trivial atomic debit (`UPDATE ... WHERE balance >= amount`), one mental model across wallet + gift card.\n- Cons: no native audit trail. When finance asks \"how did this card reach $237?\" or a customer disputes a redemption, you have nothing. You'll bolt on a log anyway the first time there's an incident — better to design it in. Also weaker for escheatment reporting (you need *when* balances changed, not just current state).\n\n**Pure event-sourced (balance = fold over events, no stored balance)**\n- Pros: perfect audit, easy refunds/reversals (post a compensating event), natural fit for accounting's debit/credit mental model, tamper-evident.\n- Cons: every read aggregates, so you add a cache → you're back to two stores anyway. Fixing bad state requires posting correction events instead of an UPDATE, which is stricter but slower to operate. Diverges from wallet pattern; team now maintains two mental models.\n\n**Hybrid (recommended)**\n- `gift_card_ledger`: append-only, one row per issuance / redemption / refund / adjustment, with `amount` (signed), `reason`, `order_id`, `actor`, `created_at`. Never updated, never deleted.\n- `gift_card`: mutable `balance`, `status`, `updated_at`. Debited with a conditional UPDATE for atomicity.\n- Invariant: `balance == SUM(ledger.amount)` per card. Both writes in the same DB transaction. Add a nightly reconciliation job that flags drift.\n- Reads stay cheap (hit the row). Audits, disputes, and escheatment reports hit the ledger.\n\n**Why this is right for gift cards specifically (and not wallets)**\nGift cards are a balance-sheet liability, often regulated (state escheatment, EU rules), subject to chargebacks, and a fraud target. The ledger is not a nice-to-have — it's the thing auditors and your future-self investigating a fraud ring will ask for. Wallets are usually internal app credit with weaker requirements, which is why the mutable-only pattern has survived there.\n\nOne caveat: if your team has *never* maintained a ledger + cache invariant before, the reconciliation discipline is the part that fails in practice. The fix is to make the ledger insert and balance update literally the same transaction, in one helper function that's the only way to mutate balances — don't let ad-hoc UPDATEs exist.\n\nWant me to sketch the schema + the debit helper next?",
+    "stop_reason": "end_turn",
+    "session_id": "5632ca07-a42e-4f7d-9684-cf296062756c",
+    "total_cost_usd": 0.06998425000000001,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 1507,
+      "cache_read_input_tokens": 32671,
+      "output_tokens": 1768,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 1507,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 1768,
+          "cache_read_input_tokens": 32671,
+          "cache_creation_input_tokens": 1507,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 1507
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 1768,
+        "cacheReadInputTokens": 32671,
+        "cacheCreationInputTokens": 1507,
+        "webSearchRequests": 0,
+        "costUSD": 0.06998425000000001,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "3cbaaf2c-2721-464b-a369-a485feee297a"
+  }
+}

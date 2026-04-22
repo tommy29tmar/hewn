@@ -1,0 +1,105 @@
+{
+  "track": "T2",
+  "arm": "hewn_prompt_only",
+  "prompt_id": "spaghetti-code",
+  "run_index": 2,
+  "arm_order_index": 2,
+  "arm_order_full": [
+    "baseline",
+    "caveman_full",
+    "hewn_prompt_only",
+    "caveman_full_plus_ultra_directive",
+    "hewn_full",
+    "terse"
+  ],
+  "digest_hex": "c5b7a91bb866632a665b169537e636c6632c835cd292573b5020e32ca3fec5f2",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T00:23:19.834154+00:00",
+  "output_tokens_tiktoken": 269,
+  "output_tokens_anthropic": 435,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 15828,
+  "cache_read_input_tokens": 16796,
+  "total_input_tokens": 32630,
+  "cache_state": "warm",
+  "wallclock_ms": 16226.9667419896,
+  "duration_ms": 10731,
+  "duration_api_ms": 11852,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "d3ef54a5-cfd5-412f-a9bc-2668b29d91c7",
+  "total_cost_usd": 0.11866199999999999,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "A few habits that help most:\n\n1. **Name things for what they mean, not what they do.** `calculateUserDiscount()` beats `processData()`. If you can't name a function clearly, it's probably doing too much.\n2. **One function = one job.** If you're using \"and\" to describe what a function does, split it.\n3. **Keep functions short.** If it doesn't fit on a screen, you'll lose the thread. Extract until each piece is readable in one glance.\n4. **Group by feature, not by type.** Folders like `user/`, `billing/`, `auth/` scale better than `controllers/`, `models/`, `helpers/` once the app grows.\n5. **Push side effects to the edges.** Core logic should be plain functions that take input and return output. I/O, DB, network live at the boundary. Makes everything easier to follow and test.\n6. **Delete dead code immediately.** Commented-out blocks and unused helpers are noise that hides the real flow.\n7. **Read your own code out loud.** If you stumble, rename or restructure until it reads like a sentence.\n\nThe biggest single win: stop writing comments that say *what* — rename the thing instead. Save comments for *why*.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 10731,
+    "duration_api_ms": 11852,
+    "num_turns": 1,
+    "result": "A few habits that help most:\n\n1. **Name things for what they mean, not what they do.** `calculateUserDiscount()` beats `processData()`. If you can't name a function clearly, it's probably doing too much.\n2. **One function = one job.** If you're using \"and\" to describe what a function does, split it.\n3. **Keep functions short.** If it doesn't fit on a screen, you'll lose the thread. Extract until each piece is readable in one glance.\n4. **Group by feature, not by type.** Folders like `user/`, `billing/`, `auth/` scale better than `controllers/`, `models/`, `helpers/` once the app grows.\n5. **Push side effects to the edges.** Core logic should be plain functions that take input and return output. I/O, DB, network live at the boundary. Makes everything easier to follow and test.\n6. **Delete dead code immediately.** Commented-out blocks and unused helpers are noise that hides the real flow.\n7. **Read your own code out loud.** If you stumble, rename or restructure until it reads like a sentence.\n\nThe biggest single win: stop writing comments that say *what* — rename the thing instead. Save comments for *why*.",
+    "stop_reason": "end_turn",
+    "session_id": "d3ef54a5-cfd5-412f-a9bc-2668b29d91c7",
+    "total_cost_usd": 0.11866199999999999,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 15828,
+      "cache_read_input_tokens": 16796,
+      "output_tokens": 435,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 15828,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 435,
+          "cache_read_input_tokens": 16796,
+          "cache_creation_input_tokens": 15828,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 15828
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 359,
+        "outputTokens": 15,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.00043400000000000003,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 435,
+        "cacheReadInputTokens": 16796,
+        "cacheCreationInputTokens": 15828,
+        "webSearchRequests": 0,
+        "costUSD": 0.11822799999999999,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "ddd57100-a440-4287-af80-d9e2b4f9eec6"
+  }
+}

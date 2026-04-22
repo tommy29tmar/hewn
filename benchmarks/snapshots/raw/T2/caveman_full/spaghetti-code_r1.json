@@ -1,0 +1,105 @@
+{
+  "track": "T2",
+  "arm": "caveman_full",
+  "prompt_id": "spaghetti-code",
+  "run_index": 1,
+  "arm_order_index": 1,
+  "arm_order_full": [
+    "hewn_full",
+    "caveman_full",
+    "caveman_full_plus_ultra_directive",
+    "terse",
+    "baseline",
+    "hewn_prompt_only"
+  ],
+  "digest_hex": "4b03fc8be3949c05b432d9b1384c3888f2497445b9d83c4262c2a2a4a9712965",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T00:17:36.765826+00:00",
+  "output_tokens_tiktoken": 243,
+  "output_tokens_anthropic": 373,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 10501,
+  "cache_read_input_tokens": 15186,
+  "total_input_tokens": 25693,
+  "cache_state": "warm",
+  "wallclock_ms": 16068.198279011995,
+  "duration_ms": 10834,
+  "duration_api_ms": 11725,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "bcfc7dea-baa1-4089-b48e-423d36d4c27c",
+  "total_cost_usd": 0.08302325,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "Spaghetti = no structure. Fix:\n\n**1. Small fn.** One job each. >20 lines = split. Name = what it do.\n\n**2. Group by feature, not type.** `user/` folder hold user logic. Not `controllers/` + `models/` split everywhere.\n\n**3. Kill deep nesting.** Early return. Guard clause top. Flat > pyramid.\n```\nif (!user) return null;\nif (!user.active) return null;\n// real work here\n```\n\n**4. Name things right.** `d` bad. `daysUntilExpiry` good. Bool start `is/has/can`.\n\n**5. One layer per fn.** Don't mix HTTP parsing + DB query + email send in one blob. Fn call fn call fn.\n\n**6. Delete dead code.** Unused = lie. Git remember.\n\n**7. Types/interfaces.** Even in JS, JSDoc. Brain offload to compiler.\n\n**8. Comment WHY not WHAT.** Code show what. Comment explain weird choice.\n\nStart rule: when lost, extract. Pull 5 lines → named fn. Repeat til each fn fit in head.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 10834,
+    "duration_api_ms": 11725,
+    "num_turns": 1,
+    "result": "Spaghetti = no structure. Fix:\n\n**1. Small fn.** One job each. >20 lines = split. Name = what it do.\n\n**2. Group by feature, not type.** `user/` folder hold user logic. Not `controllers/` + `models/` split everywhere.\n\n**3. Kill deep nesting.** Early return. Guard clause top. Flat > pyramid.\n```\nif (!user) return null;\nif (!user.active) return null;\n// real work here\n```\n\n**4. Name things right.** `d` bad. `daysUntilExpiry` good. Bool start `is/has/can`.\n\n**5. One layer per fn.** Don't mix HTTP parsing + DB query + email send in one blob. Fn call fn call fn.\n\n**6. Delete dead code.** Unused = lie. Git remember.\n\n**7. Types/interfaces.** Even in JS, JSDoc. Brain offload to compiler.\n\n**8. Comment WHY not WHAT.** Code show what. Comment explain weird choice.\n\nStart rule: when lost, extract. Pull 5 lines → named fn. Repeat til each fn fit in head.",
+    "stop_reason": "end_turn",
+    "session_id": "bcfc7dea-baa1-4089-b48e-423d36d4c27c",
+    "total_cost_usd": 0.08302325,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 10501,
+      "cache_read_input_tokens": 15186,
+      "output_tokens": 373,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 10501,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 373,
+          "cache_read_input_tokens": 15186,
+          "cache_creation_input_tokens": 10501,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 10501
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 359,
+        "outputTokens": 17,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.000444,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 373,
+        "cacheReadInputTokens": 15186,
+        "cacheCreationInputTokens": 10501,
+        "webSearchRequests": 0,
+        "costUSD": 0.08257925,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "5a729d8f-ad1c-4f8f-a990-3f7d884249e3"
+  }
+}

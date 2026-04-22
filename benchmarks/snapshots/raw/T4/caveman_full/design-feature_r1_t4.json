@@ -1,0 +1,96 @@
+{
+  "track": "T4",
+  "arm": "caveman_full",
+  "sequence_id": "design-feature",
+  "run_index": 1,
+  "turn": 4,
+  "arm_order_index": 4,
+  "arm_order_full": [
+    "hewn_full",
+    "hewn_prompt_only",
+    "terse",
+    "baseline",
+    "caveman_full"
+  ],
+  "digest_hex": "30a2f9a62df0d790c0598917c3ab42509bbadd672a0a484741ea201d2da3b44f",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T01:15:14.900730+00:00",
+  "session_id_used_for_resume": "76d6c2fd-4d09-4f39-a793-96e383321b32",
+  "output_tokens_tiktoken": 461,
+  "output_tokens_anthropic": 895,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 1681,
+  "cache_read_input_tokens": 27839,
+  "total_input_tokens": 29526,
+  "cache_state": "warm",
+  "wallclock_ms": 20868.60429099761,
+  "duration_ms": 17327,
+  "duration_api_ms": 17307,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "76d6c2fd-4d09-4f39-a793-96e383321b32",
+  "total_cost_usd": 0.04683075,
+  "model_used": "claude-opus-4-7",
+  "result": "**Short answer: both, but they serve different purposes.**\n\n**Consumption-path check (authoritative, required)**\n- Inside the same txn as the FOR UPDATE:\n  ```sql\n  SELECT balance, expires_at FROM gift_cards WHERE code = :code FOR UPDATE;\n  -- reject if expires_at <= now()\n  ```\n- Or fold into the conditional: `WHERE code = :code AND expires_at > now() AND balance >= :amt`.\n- This is the only check that matters for correctness. Batch job could be broken/lagging/disabled — consumption path must refuse expired cards on its own.\n- Handles edge case: card expires *during* a checkout session (user applied at t0, pays at t0+10min, expiry between).\n\n**Batch job (operational, optional but useful)**\n- Doesn't enforce anything the consumption path doesn't already enforce.\n- What it's actually for:\n  - Flip `status` from `active` → `expired` so admin UI / balance inquiry / reporting show correct state without computing `expires_at > now()` everywhere.\n  - Trigger notifications (\"your card expired\", \"expires in 30 days\").\n  - Accounting: recognize breakage revenue (unredeemed balance becomes income per your policy).\n  - Move expired rows to archive table if you care about hot-table size.\n- Idempotent, can lag, can be re-run. No correctness burden.\n\n**Do not rely on batch alone.** Classic bug: batch runs at 3am, card expires at 00:01, user redeems at 02:59 → succeeds. Consumption-path check prevents this.\n\n**Do not skip batch.** Without it, `status` drifts from reality, reports lie, breakage never booked.\n\n**Bonus: partial index for batch efficiency**\n```sql\nCREATE INDEX ON gift_cards (expires_at) WHERE status = 'active';\n```\nBatch scans only active cards near expiry.\n\n**Legal flag:** 12-month expiry is illegal in many jurisdictions. US CARD Act = 5-year minimum on gift certificates. EU varies. California, Massachusetts effectively ban expiry. Confirm with legal before shipping 12 months — may need per-region expiry policy, or drop expiry entirely for regulated markets and just track breakage on dormancy.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 17327,
+    "duration_api_ms": 17307,
+    "num_turns": 1,
+    "result": "**Short answer: both, but they serve different purposes.**\n\n**Consumption-path check (authoritative, required)**\n- Inside the same txn as the FOR UPDATE:\n  ```sql\n  SELECT balance, expires_at FROM gift_cards WHERE code = :code FOR UPDATE;\n  -- reject if expires_at <= now()\n  ```\n- Or fold into the conditional: `WHERE code = :code AND expires_at > now() AND balance >= :amt`.\n- This is the only check that matters for correctness. Batch job could be broken/lagging/disabled — consumption path must refuse expired cards on its own.\n- Handles edge case: card expires *during* a checkout session (user applied at t0, pays at t0+10min, expiry between).\n\n**Batch job (operational, optional but useful)**\n- Doesn't enforce anything the consumption path doesn't already enforce.\n- What it's actually for:\n  - Flip `status` from `active` → `expired` so admin UI / balance inquiry / reporting show correct state without computing `expires_at > now()` everywhere.\n  - Trigger notifications (\"your card expired\", \"expires in 30 days\").\n  - Accounting: recognize breakage revenue (unredeemed balance becomes income per your policy).\n  - Move expired rows to archive table if you care about hot-table size.\n- Idempotent, can lag, can be re-run. No correctness burden.\n\n**Do not rely on batch alone.** Classic bug: batch runs at 3am, card expires at 00:01, user redeems at 02:59 → succeeds. Consumption-path check prevents this.\n\n**Do not skip batch.** Without it, `status` drifts from reality, reports lie, breakage never booked.\n\n**Bonus: partial index for batch efficiency**\n```sql\nCREATE INDEX ON gift_cards (expires_at) WHERE status = 'active';\n```\nBatch scans only active cards near expiry.\n\n**Legal flag:** 12-month expiry is illegal in many jurisdictions. US CARD Act = 5-year minimum on gift certificates. EU varies. California, Massachusetts effectively ban expiry. Confirm with legal before shipping 12 months — may need per-region expiry policy, or drop expiry entirely for regulated markets and just track breakage on dormancy.",
+    "stop_reason": "end_turn",
+    "session_id": "76d6c2fd-4d09-4f39-a793-96e383321b32",
+    "total_cost_usd": 0.04683075,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 1681,
+      "cache_read_input_tokens": 27839,
+      "output_tokens": 895,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 1681,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 895,
+          "cache_read_input_tokens": 27839,
+          "cache_creation_input_tokens": 1681,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 1681
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 895,
+        "cacheReadInputTokens": 27839,
+        "cacheCreationInputTokens": 1681,
+        "webSearchRequests": 0,
+        "costUSD": 0.04683075,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "8b62e1c1-f3e8-46fe-b1b1-3acdd75d9a73"
+  }
+}

@@ -1,0 +1,106 @@
+{
+  "track": "T4",
+  "arm": "terse",
+  "sequence_id": "design-feature",
+  "run_index": 1,
+  "turn": 1,
+  "arm_order_index": 2,
+  "arm_order_full": [
+    "hewn_full",
+    "hewn_prompt_only",
+    "terse",
+    "baseline",
+    "caveman_full"
+  ],
+  "digest_hex": "30a2f9a62df0d790c0598917c3ab42509bbadd672a0a484741ea201d2da3b44f",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T01:08:15.567980+00:00",
+  "session_id_used_for_resume": null,
+  "output_tokens_tiktoken": 457,
+  "output_tokens_anthropic": 772,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 10548,
+  "cache_read_input_tokens": 13741,
+  "total_input_tokens": 24295,
+  "cache_state": "warm",
+  "wallclock_ms": 19285.96044902224,
+  "duration_ms": 16422,
+  "duration_api_ms": 17359,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "4793f245-7c29-4b32-91fe-683724713458",
+  "total_cost_usd": 0.0925865,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "# Key Design Decisions for Gift Card Feature\n\n**1. Data model**\n- One code = one card, or codes redeemable by many (promo-style)?\n- Store balance on the card, or ledger of transactions (immutable history vs. mutable field)?\n- Currency: single or multi? FX handling at redemption time?\n\n**2. Code format & security**\n- Length, charset, entropy (guessable vs. cryptographically random)?\n- Store hashed or plaintext? (Hashed = safer, but no admin lookup by code.)\n- Rate-limit redemption attempts to prevent brute-force enumeration.\n\n**3. Lifecycle**\n- Activation: live on issue, or requires purchase confirmation?\n- Expiration policy (legal constraints vary by jurisdiction — e.g. US CARD Act: 5 yr minimum).\n- Refund behavior: does refunded order restore balance? Partial refunds?\n\n**4. Checkout mechanics**\n- Stack multiple gift cards on one order? Cap count?\n- Apply before or after tax/shipping/discounts? (Affects tax liability — gift cards are usually tender, not discount.)\n- Order of application vs. promo codes.\n- What if balance ≥ total: zero-auth on card, or still require card on file?\n\n**5. Concurrency**\n- Two simultaneous checkouts draining the same card — lock row, optimistic concurrency, or reserve-then-commit?\n- Handle payment gateway failure after balance debited (compensation / saga).\n\n**6. Auth & fraud**\n- Require login to redeem, or anonymous?\n- PIN in addition to code for high-value cards?\n- Velocity limits per user / IP / card.\n\n**7. Accounting**\n- Gift card sales are a liability, not revenue, until redeemed — need GL separation.\n- Breakage (unredeemed balance) recognition policy.\n\n**8. Ops surface**\n- Admin: issue, void, adjust balance, look up by code/email.\n- Customer: check balance endpoint, transaction history.\n- Audit log for every debit/credit.\n\n**9. Integration boundary**\n- Build in-house or use a provider (Stripe Gift Cards, Givex, etc.)?\n- If in-house, where does redemption live — payment service, order service, or its own?\n\nWhich of these do you want to dig into first?",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 16422,
+    "duration_api_ms": 17359,
+    "num_turns": 1,
+    "result": "# Key Design Decisions for Gift Card Feature\n\n**1. Data model**\n- One code = one card, or codes redeemable by many (promo-style)?\n- Store balance on the card, or ledger of transactions (immutable history vs. mutable field)?\n- Currency: single or multi? FX handling at redemption time?\n\n**2. Code format & security**\n- Length, charset, entropy (guessable vs. cryptographically random)?\n- Store hashed or plaintext? (Hashed = safer, but no admin lookup by code.)\n- Rate-limit redemption attempts to prevent brute-force enumeration.\n\n**3. Lifecycle**\n- Activation: live on issue, or requires purchase confirmation?\n- Expiration policy (legal constraints vary by jurisdiction — e.g. US CARD Act: 5 yr minimum).\n- Refund behavior: does refunded order restore balance? Partial refunds?\n\n**4. Checkout mechanics**\n- Stack multiple gift cards on one order? Cap count?\n- Apply before or after tax/shipping/discounts? (Affects tax liability — gift cards are usually tender, not discount.)\n- Order of application vs. promo codes.\n- What if balance ≥ total: zero-auth on card, or still require card on file?\n\n**5. Concurrency**\n- Two simultaneous checkouts draining the same card — lock row, optimistic concurrency, or reserve-then-commit?\n- Handle payment gateway failure after balance debited (compensation / saga).\n\n**6. Auth & fraud**\n- Require login to redeem, or anonymous?\n- PIN in addition to code for high-value cards?\n- Velocity limits per user / IP / card.\n\n**7. Accounting**\n- Gift card sales are a liability, not revenue, until redeemed — need GL separation.\n- Breakage (unredeemed balance) recognition policy.\n\n**8. Ops surface**\n- Admin: issue, void, adjust balance, look up by code/email.\n- Customer: check balance endpoint, transaction history.\n- Audit log for every debit/credit.\n\n**9. Integration boundary**\n- Build in-house or use a provider (Stripe Gift Cards, Givex, etc.)?\n- If in-house, where does redemption live — payment service, order service, or its own?\n\nWhich of these do you want to dig into first?",
+    "stop_reason": "end_turn",
+    "session_id": "4793f245-7c29-4b32-91fe-683724713458",
+    "total_cost_usd": 0.0925865,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 10548,
+      "cache_read_input_tokens": 13741,
+      "output_tokens": 772,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 10548,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 772,
+          "cache_read_input_tokens": 13741,
+          "cache_creation_input_tokens": 10548,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 10548
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 391,
+        "outputTokens": 14,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.00046100000000000004,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 772,
+        "cacheReadInputTokens": 13741,
+        "cacheCreationInputTokens": 10548,
+        "webSearchRequests": 0,
+        "costUSD": 0.0921255,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "2480e288-3bef-40b8-b8e1-7c8cd4589c86"
+  }
+}

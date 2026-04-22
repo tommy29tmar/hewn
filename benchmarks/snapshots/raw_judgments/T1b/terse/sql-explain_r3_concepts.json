@@ -1,0 +1,15 @@
+{
+  "final": {
+    "shows_query_execution_plan": true,
+    "indicates_index_usage_or_scan_type": true,
+    "estimated_row_counts_or_costs": true,
+    "helps_diagnose_slow_queries": true
+  },
+  "history": [
+    {
+      "attempt": 0,
+      "raw": "{\"shows_query_execution_plan\": true, \"indicates_index_usage_or_scan_type\": true, \"estimated_row_counts_or_costs\": true, \"helps_diagnose_slow_queries\": true}"
+    }
+  ],
+  "ts": "2026-04-22T01:23:04.433187+00:00"
+}

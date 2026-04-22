@@ -1,0 +1,96 @@
+{
+  "track": "T4",
+  "arm": "caveman_full",
+  "sequence_id": "debug-prod-incident",
+  "run_index": 2,
+  "turn": 4,
+  "arm_order_index": 0,
+  "arm_order_full": [
+    "caveman_full",
+    "terse",
+    "hewn_full",
+    "hewn_prompt_only",
+    "baseline"
+  ],
+  "digest_hex": "522341918a5177210ef438fa55486ec5b622aaa576febbd731536d82595ec31b",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T01:16:44.892584+00:00",
+  "session_id_used_for_resume": "33b3e2c0-fd51-423c-b5fa-d7d3d26030e2",
+  "output_tokens_tiktoken": 304,
+  "output_tokens_anthropic": 585,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 573,
+  "cache_read_input_tokens": 26546,
+  "total_input_tokens": 27125,
+  "cache_state": "warm",
+  "wallclock_ms": 14172.823720000451,
+  "duration_ms": 10458,
+  "duration_api_ms": 10436,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "33b3e2c0-fd51-423c-b5fa-d7d3d26030e2",
+  "total_cost_usd": 0.03150925,
+  "model_used": "claude-opus-4-7",
+  "result": "**Depends on cart size + concurrent requests.**\n\nMath: `concurrent_requests × avg_cart_SKUs ≤ pool_size` (with headroom).\n\n**Risk scenarios:**\n- Cart 50 items × 1 request = 50 parallel queries → pool exhausted, other requests block/timeout.\n- 10 concurrent checkouts × 10 items = 100 queries → same problem.\n- Pool exhaustion → cascade 500s, timeouts on unrelated endpoints.\n\n**Sequential loop:** 1 conn per request, slow but safe.\n**Promise.all unbounded:** fast but pool bomb.\n\n**Safe middle — bounded concurrency:**\n```js\nimport pLimit from 'p-limit';\nconst limit = pLimit(5); // per-request cap\nconst results = await Promise.all(\n  skus.map(sku => limit(() => lookupSku(sku)))\n);\n```\n\n**Better — single batched query:**\n```js\nconst rows = await db.query(\n  'SELECT * FROM inventory WHERE sku = ANY($1)',\n  [skus]\n);\n```\nOne connection, one round trip. Beat both loop and Promise.all.\n\n**Check:**\n1. Max cart size (item limit)?\n2. p95 concurrent checkout rate?\n3. Pool metrics — `pg_stat_activity` / pool wait time since deploy.\n4. Other endpoints share pool.\n\n**Recommend:** batch query if ORM support it. Else `pLimit(5)`. Reject raw `Promise.all` on unbounded array hitting DB.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 10458,
+    "duration_api_ms": 10436,
+    "num_turns": 1,
+    "result": "**Depends on cart size + concurrent requests.**\n\nMath: `concurrent_requests × avg_cart_SKUs ≤ pool_size` (with headroom).\n\n**Risk scenarios:**\n- Cart 50 items × 1 request = 50 parallel queries → pool exhausted, other requests block/timeout.\n- 10 concurrent checkouts × 10 items = 100 queries → same problem.\n- Pool exhaustion → cascade 500s, timeouts on unrelated endpoints.\n\n**Sequential loop:** 1 conn per request, slow but safe.\n**Promise.all unbounded:** fast but pool bomb.\n\n**Safe middle — bounded concurrency:**\n```js\nimport pLimit from 'p-limit';\nconst limit = pLimit(5); // per-request cap\nconst results = await Promise.all(\n  skus.map(sku => limit(() => lookupSku(sku)))\n);\n```\n\n**Better — single batched query:**\n```js\nconst rows = await db.query(\n  'SELECT * FROM inventory WHERE sku = ANY($1)',\n  [skus]\n);\n```\nOne connection, one round trip. Beat both loop and Promise.all.\n\n**Check:**\n1. Max cart size (item limit)?\n2. p95 concurrent checkout rate?\n3. Pool metrics — `pg_stat_activity` / pool wait time since deploy.\n4. Other endpoints share pool.\n\n**Recommend:** batch query if ORM support it. Else `pLimit(5)`. Reject raw `Promise.all` on unbounded array hitting DB.",
+    "stop_reason": "end_turn",
+    "session_id": "33b3e2c0-fd51-423c-b5fa-d7d3d26030e2",
+    "total_cost_usd": 0.03150925,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 573,
+      "cache_read_input_tokens": 26546,
+      "output_tokens": 585,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 573,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 585,
+          "cache_read_input_tokens": 26546,
+          "cache_creation_input_tokens": 573,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 573
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 585,
+        "cacheReadInputTokens": 26546,
+        "cacheCreationInputTokens": 573,
+        "webSearchRequests": 0,
+        "costUSD": 0.03150925,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "5f273d3f-ebcf-4ca7-b34e-e9755ec826bb"
+  }
+}

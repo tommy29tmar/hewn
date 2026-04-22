@@ -1,0 +1,105 @@
+{
+  "track": "T5",
+  "arm": "caveman_full_plus_ultra_directive",
+  "prompt_id": "outage-apology-email",
+  "run_index": 2,
+  "arm_order_index": 0,
+  "arm_order_full": [
+    "caveman_full_plus_ultra_directive",
+    "terse",
+    "hewn_prompt_only",
+    "caveman_full",
+    "baseline",
+    "hewn_full"
+  ],
+  "digest_hex": "79c7f153f103ae8cb05b518a7c67b3127fd5c21a2990920ab1827dd6eafbf25d",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T00:55:05.189861+00:00",
+  "output_tokens_tiktoken": 310,
+  "output_tokens_anthropic": 562,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 25803,
+  "total_input_tokens": 25809,
+  "cache_state": "warm",
+  "wallclock_ms": 15728.056361986091,
+  "duration_ms": 12633,
+  "duration_api_ms": 14905,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "2d7ddfb1-b4ff-46b4-a592-e0efa5ec9917",
+  "total_cost_usd": 0.0274915,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "# Introducing Smart Drafts: Never Stare at a Blank Page Again\n\nWe've all been there — a new doc opens, the cursor blinks, and suddenly every thought you had five minutes ago has vanished. The blank page is the single biggest reason good ideas never make it out of people's heads, and it's the friction we've heard about most from you. So we built something to meet you at that exact moment: **Smart Drafts**, now rolling out to every workspace.\n\nHere's how it works. When you create a new document, just give it a title and click **Start with Smart Draft**. We'll generate a tailored outline in seconds, drawing on your doc title and the recent context from your workspace — the project you've been writing in, the meetings you've been in, the threads you've been part of. It's not a generic template; it's a head start that already knows roughly what you're trying to say. Keep what works, rewrite what doesn't, and you're off. Early testers told us they were getting to a real first draft in about a third of the time.\n\nThis is just the first step. Next up, we're working on **custom voice training** — letting Smart Drafts learn how *you* write, so the outlines (and eventually the drafts) sound like they came from you, not from a tool. We'll have more to share on that in the coming weeks. In the meantime, open a new doc, give Smart Drafts a try, and let us know what you think. As always, thanks for building with us.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 12633,
+    "duration_api_ms": 14905,
+    "num_turns": 1,
+    "result": "# Introducing Smart Drafts: Never Stare at a Blank Page Again\n\nWe've all been there — a new doc opens, the cursor blinks, and suddenly every thought you had five minutes ago has vanished. The blank page is the single biggest reason good ideas never make it out of people's heads, and it's the friction we've heard about most from you. So we built something to meet you at that exact moment: **Smart Drafts**, now rolling out to every workspace.\n\nHere's how it works. When you create a new document, just give it a title and click **Start with Smart Draft**. We'll generate a tailored outline in seconds, drawing on your doc title and the recent context from your workspace — the project you've been writing in, the meetings you've been in, the threads you've been part of. It's not a generic template; it's a head start that already knows roughly what you're trying to say. Keep what works, rewrite what doesn't, and you're off. Early testers told us they were getting to a real first draft in about a third of the time.\n\nThis is just the first step. Next up, we're working on **custom voice training** — letting Smart Drafts learn how *you* write, so the outlines (and eventually the drafts) sound like they came from you, not from a tool. We'll have more to share on that in the coming weeks. In the meantime, open a new doc, give Smart Drafts a try, and let us know what you think. As always, thanks for building with us.",
+    "stop_reason": "end_turn",
+    "session_id": "2d7ddfb1-b4ff-46b4-a592-e0efa5ec9917",
+    "total_cost_usd": 0.0274915,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 25803,
+      "output_tokens": 562,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 0,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 562,
+          "cache_read_input_tokens": 25803,
+          "cache_creation_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 435,
+        "outputTokens": 15,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.00051,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 562,
+        "cacheReadInputTokens": 25803,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.0269815,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "2e2b6e32-db45-404e-8454-73443b2b6d49"
+  }
+}

@@ -1,0 +1,103 @@
+{
+  "track": "T0",
+  "arm": "terse_appended",
+  "prompt_id": "debounce-search",
+  "run_index": 1,
+  "arm_order_index": 1,
+  "arm_order_full": [
+    "terse",
+    "terse_appended",
+    "caveman_full",
+    "caveman_full_appended"
+  ],
+  "digest_hex": "37dcfc04f7f9bb03f94bf4fe2a87d8ed70cc588f0bfaceb0e1c634e40f418a20",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-21T23:30:11.302419+00:00",
+  "output_tokens_tiktoken": 167,
+  "output_tokens_anthropic": 255,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 11737,
+  "cache_read_input_tokens": 16805,
+  "total_input_tokens": 28548,
+  "cache_state": "warm",
+  "wallclock_ms": 13650.053899007617,
+  "duration_ms": 7602,
+  "duration_api_ms": 8788,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "bc4c94c0-af0e-4ff1-a38d-b3797176ce3e",
+  "total_cost_usd": 0.08859175,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "A debouncer delays firing the search until the user stops typing for a short window (say 200–300ms), so you send one request for \"react hooks\" instead of seven (\"r\", \"re\", \"rea\", …).\n\nBenefits:\n- **Fewer requests** — less load on the API/DB, lower cost, avoids rate limits.\n- **Less UI churn** — results don't flicker/reshuffle on every keystroke.\n- **Avoids race conditions** — fewer in-flight responses arriving out of order (pair with cancellation for full safety).\n- **Better perceived performance** — one clean result instead of a stuttering stream.\n\nRelated: *throttle* caps the rate (fires periodically while typing); debounce waits for a pause. For search-as-you-type, debounce is usually what you want.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 7602,
+    "duration_api_ms": 8788,
+    "num_turns": 1,
+    "result": "A debouncer delays firing the search until the user stops typing for a short window (say 200–300ms), so you send one request for \"react hooks\" instead of seven (\"r\", \"re\", \"rea\", …).\n\nBenefits:\n- **Fewer requests** — less load on the API/DB, lower cost, avoids rate limits.\n- **Less UI churn** — results don't flicker/reshuffle on every keystroke.\n- **Avoids race conditions** — fewer in-flight responses arriving out of order (pair with cancellation for full safety).\n- **Better perceived performance** — one clean result instead of a stuttering stream.\n\nRelated: *throttle* caps the rate (fires periodically while typing); debounce waits for a pause. For search-as-you-type, debounce is usually what you want.",
+    "stop_reason": "end_turn",
+    "session_id": "bc4c94c0-af0e-4ff1-a38d-b3797176ce3e",
+    "total_cost_usd": 0.08859175,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 11737,
+      "cache_read_input_tokens": 16805,
+      "output_tokens": 255,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 11737,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 255,
+          "cache_read_input_tokens": 16805,
+          "cache_creation_input_tokens": 11737,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 11737
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 353,
+        "outputTokens": 15,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.000428,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 255,
+        "cacheReadInputTokens": 16805,
+        "cacheCreationInputTokens": 11737,
+        "webSearchRequests": 0,
+        "costUSD": 0.08816375,
+        "contextWindow": 200000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "b2b82595-bc86-4549-ac10-9d56720244b5"
+  }
+}

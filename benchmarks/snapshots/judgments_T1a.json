@@ -1,0 +1,770 @@
+{
+  "baseline/cors-errors_r1": {
+    "arm": "baseline",
+    "prompt_id": "cors-errors",
+    "run_index": 1,
+    "literals_present": {
+      "CORS": true
+    },
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 176,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "browser_enforces_same_origin_policy": false,
+      "server_must_send_access_control_allow_origin_header": true,
+      "preflight_options_request_for_non_simple_methods": true,
+      "credentials_require_explicit_allow_credentials": true
+    },
+    "concepts_count_present": 3,
+    "concepts_count_total": 4
+  },
+  "baseline/debounce-search_r1": {
+    "arm": "baseline",
+    "prompt_id": "debounce-search",
+    "run_index": 1,
+    "literals_present": {},
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 1,
+        "words": 90,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 1.11
+      }
+    },
+    "concepts": {
+      "limits_request_rate_during_typing": true,
+      "fires_only_after_user_pauses": true,
+      "saves_server_load_or_api_quota": true,
+      "improves_user_experience_or_avoids_stale_results": true
+    },
+    "concepts_count_present": 4,
+    "concepts_count_total": 4
+  },
+  "baseline/explain-db-pool_r1": {
+    "arm": "baseline",
+    "prompt_id": "explain-db-pool",
+    "run_index": 1,
+    "literals_present": {},
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 279,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "pool_reuses_open_connections": true,
+      "avoids_per_request_connection_handshake_cost": true,
+      "max_pool_size_is_bounded": true,
+      "idle_or_acquire_timeout_relevant": true
+    },
+    "concepts_count_present": 4,
+    "concepts_count_total": 4
+  },
+  "baseline/fix-node-memory-leak_r1": {
+    "arm": "baseline",
+    "prompt_id": "fix-node-memory-leak",
+    "run_index": 1,
+    "literals_present": {},
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 192,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "use_heap_snapshot_or_profiler": true,
+      "look_for_growing_object_retainers": true,
+      "common_culprits_event_listeners_or_closures_or_caches": true,
+      "tools_like_node_inspect_or_clinic_or_chrome_devtools": true
+    },
+    "concepts_count_present": 4,
+    "concepts_count_total": 4
+  },
+  "baseline/git-rebase-vs-merge_r1": {
+    "arm": "baseline",
+    "prompt_id": "git-rebase-vs-merge",
+    "run_index": 1,
+    "literals_present": {
+      "rebase": true,
+      "merge": true
+    },
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 139,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "rebase_rewrites_history_replays_commits": true,
+      "merge_creates_a_merge_commit": true,
+      "rebase_produces_linear_history": true,
+      "merge_preserves_branch_topology": true,
+      "rebase_should_not_be_used_on_shared_public_branches": true
+    },
+    "concepts_count_present": 5,
+    "concepts_count_total": 5
+  },
+  "baseline/hash-table-collisions_r1": {
+    "arm": "baseline",
+    "prompt_id": "hash-table-collisions",
+    "run_index": 1,
+    "literals_present": {},
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 199,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "chaining_with_linked_list": true,
+      "open_addressing_with_probing": true,
+      "load_factor_relevance": true,
+      "hash_function_quality_matters": false
+    },
+    "concepts_count_present": 3,
+    "concepts_count_total": 4
+  },
+  "baseline/queue-vs-topic_r1": {
+    "arm": "baseline",
+    "prompt_id": "queue-vs-topic",
+    "run_index": 1,
+    "literals_present": {},
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 100,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "queue_is_one_to_one_or_competing_consumers": true,
+      "topic_is_one_to_many_publish_subscribe": true,
+      "queue_message_consumed_once": true,
+      "topic_message_delivered_to_each_subscriber": true,
+      "use_case_examples_for_each": true
+    },
+    "concepts_count_present": 5,
+    "concepts_count_total": 5
+  },
+  "baseline/react-rerender-parent_r1": {
+    "arm": "baseline",
+    "prompt_id": "react-rerender-parent",
+    "run_index": 1,
+    "literals_present": {
+      "useMemo": true
+    },
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 123,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "parent_re_render_triggers_child_re_render_by_default": true,
+      "react_memo_can_skip_re_render_if_props_unchanged": true,
+      "object_or_function_props_create_new_reference_each_render": true,
+      "useMemo_or_useCallback_to_stabilize_references": true
+    },
+    "concepts_count_present": 4,
+    "concepts_count_total": 4
+  },
+  "baseline/sql-explain_r1": {
+    "arm": "baseline",
+    "prompt_id": "sql-explain",
+    "run_index": 1,
+    "literals_present": {
+      "EXPLAIN": true
+    },
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 2,
+        "leading_article_count": 0,
+        "words": 173,
+        "filler_per_100w": 1.16,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "shows_query_execution_plan": true,
+      "indicates_index_usage_or_scan_type": true,
+      "estimated_row_counts_or_costs": true,
+      "helps_diagnose_slow_queries": true
+    },
+    "concepts_count_present": 4,
+    "concepts_count_total": 4
+  },
+  "baseline/tcp-vs-udp_r1": {
+    "arm": "baseline",
+    "prompt_id": "tcp-vs-udp",
+    "run_index": 1,
+    "literals_present": {
+      "TCP": true,
+      "UDP": true
+    },
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 58,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "tcp_is_connection_oriented": true,
+      "udp_is_connectionless": true,
+      "tcp_guarantees_ordered_delivery": true,
+      "udp_does_not_guarantee_delivery_or_order": true,
+      "tcp_higher_overhead_lower_throughput": true,
+      "use_case_examples_for_each": true
+    },
+    "concepts_count_present": 6,
+    "concepts_count_total": 6
+  },
+  "caveman_full/cors-errors_r1": {
+    "arm": "caveman_full",
+    "prompt_id": "cors-errors",
+    "run_index": 1,
+    "literals_present": {
+      "CORS": true
+    },
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 71,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "browser_enforces_same_origin_policy": false,
+      "server_must_send_access_control_allow_origin_header": true,
+      "preflight_options_request_for_non_simple_methods": true,
+      "credentials_require_explicit_allow_credentials": true
+    },
+    "concepts_count_present": 3,
+    "concepts_count_total": 4
+  },
+  "caveman_full/debounce-search_r1": {
+    "arm": "caveman_full",
+    "prompt_id": "debounce-search",
+    "run_index": 1,
+    "literals_present": {},
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 24,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "limits_request_rate_during_typing": true,
+      "fires_only_after_user_pauses": true,
+      "saves_server_load_or_api_quota": true,
+      "improves_user_experience_or_avoids_stale_results": true
+    },
+    "concepts_count_present": 4,
+    "concepts_count_total": 4
+  },
+  "caveman_full/explain-db-pool_r1": {
+    "arm": "caveman_full",
+    "prompt_id": "explain-db-pool",
+    "run_index": 1,
+    "literals_present": {},
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 70,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "pool_reuses_open_connections": true,
+      "avoids_per_request_connection_handshake_cost": true,
+      "max_pool_size_is_bounded": true,
+      "idle_or_acquire_timeout_relevant": true
+    },
+    "concepts_count_present": 4,
+    "concepts_count_total": 4
+  },
+  "caveman_full/fix-node-memory-leak_r1": {
+    "arm": "caveman_full",
+    "prompt_id": "fix-node-memory-leak",
+    "run_index": 1,
+    "literals_present": {},
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 123,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "use_heap_snapshot_or_profiler": true,
+      "look_for_growing_object_retainers": true,
+      "common_culprits_event_listeners_or_closures_or_caches": true,
+      "tools_like_node_inspect_or_clinic_or_chrome_devtools": true
+    },
+    "concepts_count_present": 4,
+    "concepts_count_total": 4
+  },
+  "caveman_full/git-rebase-vs-merge_r1": {
+    "arm": "caveman_full",
+    "prompt_id": "git-rebase-vs-merge",
+    "run_index": 1,
+    "literals_present": {
+      "rebase": true,
+      "merge": true
+    },
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 31,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "rebase_rewrites_history_replays_commits": true,
+      "merge_creates_a_merge_commit": true,
+      "rebase_produces_linear_history": true,
+      "merge_preserves_branch_topology": false,
+      "rebase_should_not_be_used_on_shared_public_branches": false
+    },
+    "concepts_count_present": 3,
+    "concepts_count_total": 5
+  },
+  "caveman_full/hash-table-collisions_r1": {
+    "arm": "caveman_full",
+    "prompt_id": "hash-table-collisions",
+    "run_index": 1,
+    "literals_present": {},
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 52,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "chaining_with_linked_list": true,
+      "open_addressing_with_probing": true,
+      "load_factor_relevance": true,
+      "hash_function_quality_matters": false
+    },
+    "concepts_count_present": 3,
+    "concepts_count_total": 4
+  },
+  "caveman_full/queue-vs-topic_r1": {
+    "arm": "caveman_full",
+    "prompt_id": "queue-vs-topic",
+    "run_index": 1,
+    "literals_present": {},
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 41,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "queue_is_one_to_one_or_competing_consumers": true,
+      "topic_is_one_to_many_publish_subscribe": true,
+      "queue_message_consumed_once": true,
+      "topic_message_delivered_to_each_subscriber": true,
+      "use_case_examples_for_each": true
+    },
+    "concepts_count_present": 5,
+    "concepts_count_total": 5
+  },
+  "caveman_full/react-rerender-parent_r1": {
+    "arm": "caveman_full",
+    "prompt_id": "react-rerender-parent",
+    "run_index": 1,
+    "literals_present": {
+      "useMemo": true
+    },
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 50,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "parent_re_render_triggers_child_re_render_by_default": true,
+      "react_memo_can_skip_re_render_if_props_unchanged": true,
+      "object_or_function_props_create_new_reference_each_render": true,
+      "useMemo_or_useCallback_to_stabilize_references": true
+    },
+    "concepts_count_present": 4,
+    "concepts_count_total": 4
+  },
+  "caveman_full/sql-explain_r1": {
+    "arm": "caveman_full",
+    "prompt_id": "sql-explain",
+    "run_index": 1,
+    "literals_present": {
+      "EXPLAIN": true
+    },
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 75,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "shows_query_execution_plan": true,
+      "indicates_index_usage_or_scan_type": true,
+      "estimated_row_counts_or_costs": true,
+      "helps_diagnose_slow_queries": true
+    },
+    "concepts_count_present": 4,
+    "concepts_count_total": 4
+  },
+  "caveman_full/tcp-vs-udp_r1": {
+    "arm": "caveman_full",
+    "prompt_id": "tcp-vs-udp",
+    "run_index": 1,
+    "literals_present": {
+      "TCP": true,
+      "UDP": true
+    },
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 42,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "tcp_is_connection_oriented": true,
+      "udp_is_connectionless": true,
+      "tcp_guarantees_ordered_delivery": true,
+      "udp_does_not_guarantee_delivery_or_order": true,
+      "tcp_higher_overhead_lower_throughput": true,
+      "use_case_examples_for_each": true
+    },
+    "concepts_count_present": 6,
+    "concepts_count_total": 6
+  },
+  "terse/cors-errors_r1": {
+    "arm": "terse",
+    "prompt_id": "cors-errors",
+    "run_index": 1,
+    "literals_present": {
+      "CORS": true
+    },
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 176,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "browser_enforces_same_origin_policy": false,
+      "server_must_send_access_control_allow_origin_header": true,
+      "preflight_options_request_for_non_simple_methods": true,
+      "credentials_require_explicit_allow_credentials": true
+    },
+    "concepts_count_present": 3,
+    "concepts_count_total": 4
+  },
+  "terse/debounce-search_r1": {
+    "arm": "terse",
+    "prompt_id": "debounce-search",
+    "run_index": 1,
+    "literals_present": {},
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 1,
+        "words": 96,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 1.04
+      }
+    },
+    "concepts": {
+      "limits_request_rate_during_typing": true,
+      "fires_only_after_user_pauses": true,
+      "saves_server_load_or_api_quota": true,
+      "improves_user_experience_or_avoids_stale_results": true
+    },
+    "concepts_count_present": 4,
+    "concepts_count_total": 4
+  },
+  "terse/explain-db-pool_r1": {
+    "arm": "terse",
+    "prompt_id": "explain-db-pool",
+    "run_index": 1,
+    "literals_present": {},
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 279,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "pool_reuses_open_connections": true,
+      "avoids_per_request_connection_handshake_cost": true,
+      "max_pool_size_is_bounded": true,
+      "idle_or_acquire_timeout_relevant": true
+    },
+    "concepts_count_present": 4,
+    "concepts_count_total": 4
+  },
+  "terse/fix-node-memory-leak_r1": {
+    "arm": "terse",
+    "prompt_id": "fix-node-memory-leak",
+    "run_index": 1,
+    "literals_present": {},
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 1,
+        "leading_article_count": 0,
+        "words": 165,
+        "filler_per_100w": 0.61,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "use_heap_snapshot_or_profiler": true,
+      "look_for_growing_object_retainers": true,
+      "common_culprits_event_listeners_or_closures_or_caches": true,
+      "tools_like_node_inspect_or_clinic_or_chrome_devtools": true
+    },
+    "concepts_count_present": 4,
+    "concepts_count_total": 4
+  },
+  "terse/git-rebase-vs-merge_r1": {
+    "arm": "terse",
+    "prompt_id": "git-rebase-vs-merge",
+    "run_index": 1,
+    "literals_present": {
+      "rebase": true,
+      "merge": true
+    },
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 91,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "rebase_rewrites_history_replays_commits": true,
+      "merge_creates_a_merge_commit": true,
+      "rebase_produces_linear_history": true,
+      "merge_preserves_branch_topology": true,
+      "rebase_should_not_be_used_on_shared_public_branches": true
+    },
+    "concepts_count_present": 5,
+    "concepts_count_total": 5
+  },
+  "terse/hash-table-collisions_r1": {
+    "arm": "terse",
+    "prompt_id": "hash-table-collisions",
+    "run_index": 1,
+    "literals_present": {},
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 161,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "chaining_with_linked_list": true,
+      "open_addressing_with_probing": true,
+      "load_factor_relevance": true,
+      "hash_function_quality_matters": false
+    },
+    "concepts_count_present": 3,
+    "concepts_count_total": 4
+  },
+  "terse/queue-vs-topic_r1": {
+    "arm": "terse",
+    "prompt_id": "queue-vs-topic",
+    "run_index": 1,
+    "literals_present": {},
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 118,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "queue_is_one_to_one_or_competing_consumers": true,
+      "topic_is_one_to_many_publish_subscribe": true,
+      "queue_message_consumed_once": true,
+      "topic_message_delivered_to_each_subscriber": true,
+      "use_case_examples_for_each": true
+    },
+    "concepts_count_present": 5,
+    "concepts_count_total": 5
+  },
+  "terse/react-rerender-parent_r1": {
+    "arm": "terse",
+    "prompt_id": "react-rerender-parent",
+    "run_index": 1,
+    "literals_present": {
+      "useMemo": true
+    },
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 104,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "parent_re_render_triggers_child_re_render_by_default": true,
+      "react_memo_can_skip_re_render_if_props_unchanged": true,
+      "object_or_function_props_create_new_reference_each_render": true,
+      "useMemo_or_useCallback_to_stabilize_references": true
+    },
+    "concepts_count_present": 4,
+    "concepts_count_total": 4
+  },
+  "terse/sql-explain_r1": {
+    "arm": "terse",
+    "prompt_id": "sql-explain",
+    "run_index": 1,
+    "literals_present": {
+      "EXPLAIN": true
+    },
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 1,
+        "leading_article_count": 0,
+        "words": 180,
+        "filler_per_100w": 0.56,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "shows_query_execution_plan": true,
+      "indicates_index_usage_or_scan_type": true,
+      "estimated_row_counts_or_costs": true,
+      "helps_diagnose_slow_queries": true
+    },
+    "concepts_count_present": 4,
+    "concepts_count_total": 4
+  },
+  "terse/tcp-vs-udp_r1": {
+    "arm": "terse",
+    "prompt_id": "tcp-vs-udp",
+    "run_index": 1,
+    "literals_present": {
+      "TCP": true,
+      "UDP": true
+    },
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 88,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "tcp_is_connection_oriented": true,
+      "udp_is_connectionless": true,
+      "tcp_guarantees_ordered_delivery": true,
+      "udp_does_not_guarantee_delivery_or_order": true,
+      "tcp_higher_overhead_lower_throughput": true,
+      "use_case_examples_for_each": true
+    },
+    "concepts_count_present": 6,
+    "concepts_count_total": 6
+  }
+}

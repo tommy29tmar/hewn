@@ -1,0 +1,102 @@
+{
+  "track": "T1a",
+  "arm": "baseline",
+  "prompt_id": "react-rerender-parent",
+  "run_index": 1,
+  "arm_order_index": 0,
+  "arm_order_full": [
+    "baseline",
+    "terse",
+    "caveman_full"
+  ],
+  "digest_hex": "99b7ab7ba17a8ba246c01cb3b86810b0fa1d28957b03d5604a74b257ab3da763",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-21T23:32:30.495277+00:00",
+  "output_tokens_tiktoken": 181,
+  "output_tokens_anthropic": 310,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 11730,
+  "cache_read_input_tokens": 16796,
+  "total_input_tokens": 28532,
+  "cache_state": "warm",
+  "wallclock_ms": 12210.655272996519,
+  "duration_ms": 7120,
+  "duration_api_ms": 7935,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "8169485f-35c0-4de9-ae95-394ff5e760fb",
+  "total_cost_usd": 0.0899175,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "Because by default React re-renders every child when a parent renders — props equality isn't checked.\n\nFixes, in order of likelihood:\n\n1. **Wrap the child in `React.memo`** — skips re-render when props are shallow-equal.\n2. **Stabilize prop references** — inline objects/arrays/functions (`{}`, `[]`, `() => ...`) are new every render, defeating `memo`. Use `useMemo` / `useCallback`, or lift them out.\n3. **Check context** — any component consuming a context re-renders when the context value changes, even through `memo`.\n4. **Children as props** — passing `<Child />` as JSX children from the parent creates a new element each render; move the child up or memoize it.\n\nIf you paste the component + how the parent uses it, I can point at the specific cause.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 7120,
+    "duration_api_ms": 7935,
+    "num_turns": 1,
+    "result": "Because by default React re-renders every child when a parent renders — props equality isn't checked.\n\nFixes, in order of likelihood:\n\n1. **Wrap the child in `React.memo`** — skips re-render when props are shallow-equal.\n2. **Stabilize prop references** — inline objects/arrays/functions (`{}`, `[]`, `() => ...`) are new every render, defeating `memo`. Use `useMemo` / `useCallback`, or lift them out.\n3. **Check context** — any component consuming a context re-renders when the context value changes, even through `memo`.\n4. **Children as props** — passing `<Child />` as JSX children from the parent creates a new element each render; move the child up or memoize it.\n\nIf you paste the component + how the parent uses it, I can point at the specific cause.",
+    "stop_reason": "end_turn",
+    "session_id": "8169485f-35c0-4de9-ae95-394ff5e760fb",
+    "total_cost_usd": 0.0899175,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 11730,
+      "cache_read_input_tokens": 16796,
+      "output_tokens": 310,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 11730,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 310,
+          "cache_read_input_tokens": 16796,
+          "cache_creation_input_tokens": 11730,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 11730
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 352,
+        "outputTokens": 15,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.00042699999999999997,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 310,
+        "cacheReadInputTokens": 16796,
+        "cacheCreationInputTokens": 11730,
+        "webSearchRequests": 0,
+        "costUSD": 0.0894905,
+        "contextWindow": 200000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "ae17d6f7-515b-40b2-8786-c65635678708"
+  }
+}

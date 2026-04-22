@@ -1,0 +1,96 @@
+{
+  "track": "T4",
+  "arm": "baseline",
+  "sequence_id": "design-feature",
+  "run_index": 2,
+  "turn": 5,
+  "arm_order_index": 0,
+  "arm_order_full": [
+    "baseline",
+    "caveman_full",
+    "hewn_prompt_only",
+    "terse",
+    "hewn_full"
+  ],
+  "digest_hex": "3191b019d37f08f3d5b68d9000f1aeb1e1a3524225f9daa893803df1e240ffd1",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T01:25:53.293962+00:00",
+  "session_id_used_for_resume": "754c5314-d205-4a0d-9e19-5a1e53b97a74",
+  "output_tokens_tiktoken": 766,
+  "output_tokens_anthropic": 2793,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 1382,
+  "cache_read_input_tokens": 35576,
+  "total_input_tokens": 36964,
+  "cache_state": "warm",
+  "wallclock_ms": 51153.61962799216,
+  "duration_ms": 47962,
+  "duration_api_ms": 47934,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "754c5314-d205-4a0d-9e19-5a1e53b97a74",
+  "total_cost_usd": 0.09628049999999999,
+  "model_used": "claude-opus-4-7",
+  "result": "**Policy: refund proportionally to each tender.** It's the industry default (Amazon, Shopify, most big retailers do this), it's fair, it's explainable to the user, and it handles partial refunds without accumulating weird state.\n\nExample: order was $100 — $30 on gift card, $70 on card. User refunds $50. Split: $15 back to gift card, $35 back to card. Ratios preserved.\n\nAlternatives and why they're usually worse:\n- **Card first**: users love it (real money back), but you end up with gift cards stuck at $0 that you've effectively converted to cash — fraud risk and abuse vector.\n- **Gift card first**: your cash flow loves it, users hate it, and you'll get chargebacks from people who'd rather dispute than argue.\n- **LIFO by payment order**: complicated to explain, no real upside.\n\n**Code path for a $50 refund on the example order:**\n\n```\n1. Look up original order → tender split: $30 GC, $70 card\n2. Look up prior refunds → refundable remaining per tender\n3. Compute proportional split:\n     gc_refund   = refund_amount * (gc_paid   / order_total)\n     card_refund = refund_amount * (card_paid / order_total)\n   Cap each at remaining-refundable-per-tender. Reconcile rounding\n   (pennies — assign the rounding remainder to the card side by convention).\n4. Insert a `refunds` row in 'pending' state with both legs and an\n   idempotency key. This is your outbox.\n5. Execute card leg: Stripe refund API with idempotency key = refund_id.\n   On success, store processor refund ID. On failure, mark refund 'failed',\n   alert, stop — do NOT credit the gift card.\n6. Execute gift card leg: atomic UPDATE balance = balance + :gc_refund\n   WHERE id = :id. This can't really fail (it's your DB) but wrap in the\n   idempotency table so retries don't double-credit.\n7. Mark refund 'completed'.\n```\n\n**Order matters: do the card leg first.** It's the one with external dependencies and real-money consequences — if it fails, you bail out cleanly with no internal state to undo. Gift card credit is a local UPDATE that you control and can retry safely.\n\n**Edge cases that will bite you:**\n\n- **Original gift card expired between purchase and refund**: can't credit back to a dead card. Policy: issue a new gift card for the refund amount, or extend the original's expiry. Pick one and document it.\n- **Gift card deleted/consolidated** (rare, but happens with admin merges): same fix — new card.\n- **Multiple partial refunds over time**: track `refunded_to_gift_card` and `refunded_to_card` per order; cap each new refund at `paid - already_refunded` per tender. Otherwise rounding drift compounds.\n- **Chargeback on the card portion**: the bank pulls back the card amount unilaterally. The gift card portion stays consumed — that's fine, it was real value delivered. Don't try to \"balance\" by clawing back the gift card.\n- **Refund before capture** (order canceled pre-ship): void the card auth, re-credit the gift card in full. Different code path — make sure you have it.\n- **Refund exceeds original tender**: shouldn't happen if you cap per-tender, but add a DB check constraint as belt-and-braces (`refunded_amount <= paid_amount` per tender).\n\nThe proportional-split rule + card-leg-first ordering + per-tender caps is the whole shape. Everything else is bookkeeping.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 47962,
+    "duration_api_ms": 47934,
+    "num_turns": 1,
+    "result": "**Policy: refund proportionally to each tender.** It's the industry default (Amazon, Shopify, most big retailers do this), it's fair, it's explainable to the user, and it handles partial refunds without accumulating weird state.\n\nExample: order was $100 — $30 on gift card, $70 on card. User refunds $50. Split: $15 back to gift card, $35 back to card. Ratios preserved.\n\nAlternatives and why they're usually worse:\n- **Card first**: users love it (real money back), but you end up with gift cards stuck at $0 that you've effectively converted to cash — fraud risk and abuse vector.\n- **Gift card first**: your cash flow loves it, users hate it, and you'll get chargebacks from people who'd rather dispute than argue.\n- **LIFO by payment order**: complicated to explain, no real upside.\n\n**Code path for a $50 refund on the example order:**\n\n```\n1. Look up original order → tender split: $30 GC, $70 card\n2. Look up prior refunds → refundable remaining per tender\n3. Compute proportional split:\n     gc_refund   = refund_amount * (gc_paid   / order_total)\n     card_refund = refund_amount * (card_paid / order_total)\n   Cap each at remaining-refundable-per-tender. Reconcile rounding\n   (pennies — assign the rounding remainder to the card side by convention).\n4. Insert a `refunds` row in 'pending' state with both legs and an\n   idempotency key. This is your outbox.\n5. Execute card leg: Stripe refund API with idempotency key = refund_id.\n   On success, store processor refund ID. On failure, mark refund 'failed',\n   alert, stop — do NOT credit the gift card.\n6. Execute gift card leg: atomic UPDATE balance = balance + :gc_refund\n   WHERE id = :id. This can't really fail (it's your DB) but wrap in the\n   idempotency table so retries don't double-credit.\n7. Mark refund 'completed'.\n```\n\n**Order matters: do the card leg first.** It's the one with external dependencies and real-money consequences — if it fails, you bail out cleanly with no internal state to undo. Gift card credit is a local UPDATE that you control and can retry safely.\n\n**Edge cases that will bite you:**\n\n- **Original gift card expired between purchase and refund**: can't credit back to a dead card. Policy: issue a new gift card for the refund amount, or extend the original's expiry. Pick one and document it.\n- **Gift card deleted/consolidated** (rare, but happens with admin merges): same fix — new card.\n- **Multiple partial refunds over time**: track `refunded_to_gift_card` and `refunded_to_card` per order; cap each new refund at `paid - already_refunded` per tender. Otherwise rounding drift compounds.\n- **Chargeback on the card portion**: the bank pulls back the card amount unilaterally. The gift card portion stays consumed — that's fine, it was real value delivered. Don't try to \"balance\" by clawing back the gift card.\n- **Refund before capture** (order canceled pre-ship): void the card auth, re-credit the gift card in full. Different code path — make sure you have it.\n- **Refund exceeds original tender**: shouldn't happen if you cap per-tender, but add a DB check constraint as belt-and-braces (`refunded_amount <= paid_amount` per tender).\n\nThe proportional-split rule + card-leg-first ordering + per-tender caps is the whole shape. Everything else is bookkeeping.",
+    "stop_reason": "end_turn",
+    "session_id": "754c5314-d205-4a0d-9e19-5a1e53b97a74",
+    "total_cost_usd": 0.09628049999999999,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 1382,
+      "cache_read_input_tokens": 35576,
+      "output_tokens": 2793,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 1382,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 2793,
+          "cache_read_input_tokens": 35576,
+          "cache_creation_input_tokens": 1382,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 1382
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 2793,
+        "cacheReadInputTokens": 35576,
+        "cacheCreationInputTokens": 1382,
+        "webSearchRequests": 0,
+        "costUSD": 0.09628049999999999,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "c20dbbc4-f508-4725-84a0-0ba747d94024"
+  }
+}

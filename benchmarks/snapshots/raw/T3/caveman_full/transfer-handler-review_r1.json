@@ -1,0 +1,105 @@
+{
+  "track": "T3",
+  "arm": "caveman_full",
+  "prompt_id": "transfer-handler-review",
+  "run_index": 1,
+  "arm_order_index": 1,
+  "arm_order_full": [
+    "baseline",
+    "caveman_full",
+    "hewn_prompt_only",
+    "hewn_full",
+    "caveman_full_plus_ultra_directive",
+    "terse"
+  ],
+  "digest_hex": "3ea6924fe84cc48072e626740e2896f1f2e17be2cf1e47da115cdde4ccbeab3a",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T00:32:57.008001+00:00",
+  "output_tokens_tiktoken": 313,
+  "output_tokens_anthropic": 532,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 17786,
+  "cache_read_input_tokens": 15186,
+  "total_input_tokens": 32978,
+  "cache_state": "warm",
+  "wallclock_ms": 13527.914620004594,
+  "duration_ms": 9513,
+  "duration_api_ms": 10617,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "0116926f-ebbe-4eb4-a87d-1b5e0c516824",
+  "total_cost_usd": 0.1377545,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "**Risk**\nTwo P0 bugs, both repeat past SEVs.\n\n1. `req.headers['x-forwarded-for']` key = SEV1 2025-09 redux. Attacker rotate XFF → bypass limit. Violate Section 2 rule 2, lint rule `no-direct-xff-read`.\n2. `redis.incr` no `EXPIRE` = SEV2 2025-11 redux. Key unbounded → Redis OOM. Violate Section 2 rule 3, lint rule `no-unbounded-redis-key`.\n\nAlso: key miss route prefix + minute bucket + region (SEV2 2025-12).\n\n**Mitigation**\n```javascript\nconst key = `rl:${region}:${trustedClientIp(req)}:${routePrefix}:${minuteBucket}`\nconst multi = redis.multi()\nmulti.incr(key)\nmulti.expire(key, 90)\nconst [count] = await multi.exec()\n```\nUse `trustedClientIp(req)` from `src/edge/util/trustedClientIp.ts`. Never read XFF direct.\n\n**Verify**\n- `npm run lint` → `no-direct-xff-read` + `no-unbounded-redis-key` clean.\n- Integration test: spoof XFF, assert limit key use `req.socket.remoteAddress`.\n- Integration test: post-INCR `TTL key` > 0.\n- Region-prefix regression test.\n\n**Residual risk**\nTrusted proxy list (`config/trusted_proxies.json`) stale → XFF unwrap trust wrong hop. Audit list current.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 9513,
+    "duration_api_ms": 10617,
+    "num_turns": 1,
+    "result": "**Risk**\nTwo P0 bugs, both repeat past SEVs.\n\n1. `req.headers['x-forwarded-for']` key = SEV1 2025-09 redux. Attacker rotate XFF → bypass limit. Violate Section 2 rule 2, lint rule `no-direct-xff-read`.\n2. `redis.incr` no `EXPIRE` = SEV2 2025-11 redux. Key unbounded → Redis OOM. Violate Section 2 rule 3, lint rule `no-unbounded-redis-key`.\n\nAlso: key miss route prefix + minute bucket + region (SEV2 2025-12).\n\n**Mitigation**\n```javascript\nconst key = `rl:${region}:${trustedClientIp(req)}:${routePrefix}:${minuteBucket}`\nconst multi = redis.multi()\nmulti.incr(key)\nmulti.expire(key, 90)\nconst [count] = await multi.exec()\n```\nUse `trustedClientIp(req)` from `src/edge/util/trustedClientIp.ts`. Never read XFF direct.\n\n**Verify**\n- `npm run lint` → `no-direct-xff-read` + `no-unbounded-redis-key` clean.\n- Integration test: spoof XFF, assert limit key use `req.socket.remoteAddress`.\n- Integration test: post-INCR `TTL key` > 0.\n- Region-prefix regression test.\n\n**Residual risk**\nTrusted proxy list (`config/trusted_proxies.json`) stale → XFF unwrap trust wrong hop. Audit list current.",
+    "stop_reason": "end_turn",
+    "session_id": "0116926f-ebbe-4eb4-a87d-1b5e0c516824",
+    "total_cost_usd": 0.1377545,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 17786,
+      "cache_read_input_tokens": 15186,
+      "output_tokens": 532,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 17786,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 532,
+          "cache_read_input_tokens": 15186,
+          "cache_creation_input_tokens": 17786,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 17786
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 5584,
+        "outputTokens": 17,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.005669,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 532,
+        "cacheReadInputTokens": 15186,
+        "cacheCreationInputTokens": 17786,
+        "webSearchRequests": 0,
+        "costUSD": 0.1320855,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "504e5ed9-5d95-4ce6-ac14-8c6e87db2cb9"
+  }
+}

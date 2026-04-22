@@ -1,0 +1,102 @@
+{
+  "track": "T1a",
+  "arm": "baseline",
+  "prompt_id": "fix-node-memory-leak",
+  "run_index": 1,
+  "arm_order_index": 0,
+  "arm_order_full": [
+    "baseline",
+    "terse",
+    "caveman_full"
+  ],
+  "digest_hex": "edf96b08b6bf832e7f6141e2b1e51b0b7773d43c771414ddf25ddb62f5d6bccd",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-21T23:34:16.731542+00:00",
+  "output_tokens_tiktoken": 319,
+  "output_tokens_anthropic": 528,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 11734,
+  "cache_read_input_tokens": 16796,
+  "total_input_tokens": 28536,
+  "cache_state": "warm",
+  "wallclock_ms": 15638.41569199576,
+  "duration_ms": 11248,
+  "duration_api_ms": 12364,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "c2d55ee6-c40c-4ad8-8e10-b608d4f8cb63",
+  "total_cost_usd": 0.09540050000000001,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "Start by capturing heap snapshots at intervals to find what's growing.\n\n**Quick diagnosis:**\n```bash\nnode --inspect your-app.js\n```\nOpen `chrome://inspect`, take 3 heap snapshots spaced minutes apart, compare with \"Comparison\" view. Objects with steadily growing retained size are your leak.\n\n**Common culprits:**\n- **Event listeners** not removed — check `emitter.listenerCount()`; use `once()` or explicit `off()`.\n- **Closures** capturing large objects in long-lived callbacks (especially in caches/middleware).\n- **Global caches** without bounds — switch to `lru-cache` with `max` or `maxSize`.\n- **Timers** (`setInterval`, `setTimeout`) holding references — always store and `clearInterval` on cleanup.\n- **Promises** that never settle — they retain their closure chain forever.\n- **Module-level arrays/maps** that only append.\n\n**Tools:**\n- `node --expose-gc` + `global.gc()` in tests to force collection before measuring.\n- `process.memoryUsage()` logged periodically to confirm growth trend.\n- `clinic doctor` or `clinic heapprofiler` for automated analysis.\n- `--max-old-space-size=N` only as a stopgap, not a fix.\n\n**Workflow:** reproduce under load → snapshot → diff → find retainer path (right-click object → \"Retainers\") → fix the reference → verify flat memory over time.\n\nIf you share what the process does (HTTP server, worker, queue consumer?) I can narrow it down.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 11248,
+    "duration_api_ms": 12364,
+    "num_turns": 1,
+    "result": "Start by capturing heap snapshots at intervals to find what's growing.\n\n**Quick diagnosis:**\n```bash\nnode --inspect your-app.js\n```\nOpen `chrome://inspect`, take 3 heap snapshots spaced minutes apart, compare with \"Comparison\" view. Objects with steadily growing retained size are your leak.\n\n**Common culprits:**\n- **Event listeners** not removed — check `emitter.listenerCount()`; use `once()` or explicit `off()`.\n- **Closures** capturing large objects in long-lived callbacks (especially in caches/middleware).\n- **Global caches** without bounds — switch to `lru-cache` with `max` or `maxSize`.\n- **Timers** (`setInterval`, `setTimeout`) holding references — always store and `clearInterval` on cleanup.\n- **Promises** that never settle — they retain their closure chain forever.\n- **Module-level arrays/maps** that only append.\n\n**Tools:**\n- `node --expose-gc` + `global.gc()` in tests to force collection before measuring.\n- `process.memoryUsage()` logged periodically to confirm growth trend.\n- `clinic doctor` or `clinic heapprofiler` for automated analysis.\n- `--max-old-space-size=N` only as a stopgap, not a fix.\n\n**Workflow:** reproduce under load → snapshot → diff → find retainer path (right-click object → \"Retainers\") → fix the reference → verify flat memory over time.\n\nIf you share what the process does (HTTP server, worker, queue consumer?) I can narrow it down.",
+    "stop_reason": "end_turn",
+    "session_id": "c2d55ee6-c40c-4ad8-8e10-b608d4f8cb63",
+    "total_cost_usd": 0.09540050000000001,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 11734,
+      "cache_read_input_tokens": 16796,
+      "output_tokens": 528,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 11734,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 528,
+          "cache_read_input_tokens": 16796,
+          "cache_creation_input_tokens": 11734,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 11734
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 355,
+        "outputTokens": 16,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.000435,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 528,
+        "cacheReadInputTokens": 16796,
+        "cacheCreationInputTokens": 11734,
+        "webSearchRequests": 0,
+        "costUSD": 0.09496550000000001,
+        "contextWindow": 200000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "7a1e0aaa-d4c9-4b36-8fb7-a35d428555f8"
+  }
+}

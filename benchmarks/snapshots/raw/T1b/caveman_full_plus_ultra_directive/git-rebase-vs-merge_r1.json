@@ -1,0 +1,105 @@
+{
+  "track": "T1b",
+  "arm": "caveman_full_plus_ultra_directive",
+  "prompt_id": "git-rebase-vs-merge",
+  "run_index": 1,
+  "arm_order_index": 5,
+  "arm_order_full": [
+    "hewn_prompt_only",
+    "terse",
+    "hewn_full",
+    "caveman_full",
+    "baseline",
+    "caveman_full_plus_ultra_directive"
+  ],
+  "digest_hex": "0db86ef9039b5089d2e722b87250da0e6caef801039c526c02d2b461a0eb6acc",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-21T23:50:07.913134+00:00",
+  "output_tokens_tiktoken": 64,
+  "output_tokens_anthropic": 114,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 6552,
+  "cache_read_input_tokens": 15201,
+  "total_input_tokens": 21759,
+  "cache_state": "warm",
+  "wallclock_ms": 8652.64961597859,
+  "duration_ms": 3778,
+  "duration_api_ms": 4544,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "d9adbb62-8da4-4cd8-8915-7e3fd37a536b",
+  "total_cost_usd": 0.051848500000000006,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "Rebase = replay commits onto new base. Linear history, rewrite SHAs.\nMerge = join branches via merge commit. Preserve history, no rewrite.\n\nRebase: clean log, lose context, dangerous on shared branch.\nMerge: true history, extra commit, safe shared.\n\nRule: rebase local, merge public.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 3778,
+    "duration_api_ms": 4544,
+    "num_turns": 1,
+    "result": "Rebase = replay commits onto new base. Linear history, rewrite SHAs.\nMerge = join branches via merge commit. Preserve history, no rewrite.\n\nRebase: clean log, lose context, dangerous on shared branch.\nMerge: true history, extra commit, safe shared.\n\nRule: rebase local, merge public.",
+    "stop_reason": "end_turn",
+    "session_id": "d9adbb62-8da4-4cd8-8915-7e3fd37a536b",
+    "total_cost_usd": 0.051848500000000006,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 6552,
+      "cache_read_input_tokens": 15201,
+      "output_tokens": 114,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 6552,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 114,
+          "cache_read_input_tokens": 15201,
+          "cache_creation_input_tokens": 6552,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 6552
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 348,
+        "outputTokens": 14,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.00041799999999999997,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 114,
+        "cacheReadInputTokens": 15201,
+        "cacheCreationInputTokens": 6552,
+        "webSearchRequests": 0,
+        "costUSD": 0.051430500000000004,
+        "contextWindow": 200000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "2baeb27e-217b-4272-9b2d-42f7b9e561cf"
+  }
+}

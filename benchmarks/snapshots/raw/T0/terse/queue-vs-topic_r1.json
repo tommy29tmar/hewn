@@ -1,0 +1,103 @@
+{
+  "track": "T0",
+  "arm": "terse",
+  "prompt_id": "queue-vs-topic",
+  "run_index": 1,
+  "arm_order_index": 0,
+  "arm_order_full": [
+    "terse",
+    "terse_appended",
+    "caveman_full",
+    "caveman_full_appended"
+  ],
+  "digest_hex": "5d6d15de966d2de1a01243f9e0d98a5b8908442798145efdf692af7bd3cb36a9",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-21T23:31:27.611479+00:00",
+  "output_tokens_tiktoken": 144,
+  "output_tokens_anthropic": 235,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 6559,
+  "cache_read_input_tokens": 13741,
+  "total_input_tokens": 20306,
+  "cache_state": "warm",
+  "wallclock_ms": 11704.043398989597,
+  "duration_ms": 6223,
+  "duration_api_ms": 7448,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "33dc2ce3-3e80-453b-91b4-61478f816701",
+  "total_cost_usd": 0.05418524999999999,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "**Queue**: point-to-point. One message → one consumer. Use for work distribution (task queues, job processing) where each message must be processed exactly once by one worker. Multiple consumers compete; load balances across them.\n\n**Topic**: pub/sub. One message → many subscribers. Use for broadcasting events where multiple independent systems need the same data (order placed → billing, inventory, analytics all react).\n\nRule of thumb:\n- \"Do this work\" → queue\n- \"This happened\" → topic\n\nHybrid (e.g., Kafka consumer groups, SNS→SQS fanout) gives you topic semantics with per-subscriber queue durability — use when each subscriber needs its own independent, replayable stream.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 6223,
+    "duration_api_ms": 7448,
+    "num_turns": 1,
+    "result": "**Queue**: point-to-point. One message → one consumer. Use for work distribution (task queues, job processing) where each message must be processed exactly once by one worker. Multiple consumers compete; load balances across them.\n\n**Topic**: pub/sub. One message → many subscribers. Use for broadcasting events where multiple independent systems need the same data (order placed → billing, inventory, analytics all react).\n\nRule of thumb:\n- \"Do this work\" → queue\n- \"This happened\" → topic\n\nHybrid (e.g., Kafka consumer groups, SNS→SQS fanout) gives you topic semantics with per-subscriber queue durability — use when each subscriber needs its own independent, replayable stream.",
+    "stop_reason": "end_turn",
+    "session_id": "33dc2ce3-3e80-453b-91b4-61478f816701",
+    "total_cost_usd": 0.05418524999999999,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 6559,
+      "cache_read_input_tokens": 13741,
+      "output_tokens": 235,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 6559,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 235,
+          "cache_read_input_tokens": 13741,
+          "cache_creation_input_tokens": 6559,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 6559
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 351,
+        "outputTokens": 13,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.00041600000000000003,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 235,
+        "cacheReadInputTokens": 13741,
+        "cacheCreationInputTokens": 6559,
+        "webSearchRequests": 0,
+        "costUSD": 0.05376924999999999,
+        "contextWindow": 200000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "c73a8a5f-6ec5-4291-8fb1-14313a720373"
+  }
+}

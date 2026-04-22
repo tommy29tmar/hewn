@@ -1,0 +1,103 @@
+{
+  "track": "T0",
+  "arm": "terse",
+  "prompt_id": "tcp-vs-udp",
+  "run_index": 1,
+  "arm_order_index": 0,
+  "arm_order_full": [
+    "terse",
+    "terse_appended",
+    "caveman_full",
+    "caveman_full_appended"
+  ],
+  "digest_hex": "3477bad1c43abfa53a4c2ef843bb8bd5e1878b32d0cfef82b891d77115a5b941",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-21T23:25:45.470695+00:00",
+  "output_tokens_tiktoken": 92,
+  "output_tokens_anthropic": 175,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 6533,
+  "cache_read_input_tokens": 13741,
+  "total_input_tokens": 20280,
+  "cache_state": "warm",
+  "wallclock_ms": 10521.09298997675,
+  "duration_ms": 4252,
+  "duration_api_ms": 5178,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "d40ae575-717c-45be-a1eb-f52f54d71c75",
+  "total_cost_usd": 0.05252375,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "TCP is connection-oriented, reliable, and ordered — it establishes a handshake, guarantees delivery, retransmits lost packets, and keeps bytes in sequence. Used for web, email, SSH.\n\nUDP is connectionless and best-effort — no handshake, no delivery guarantee, no ordering, no retransmission. Lower overhead and latency. Used for DNS, video/voice streaming, gaming.\n\nKey tradeoff: TCP trades speed for reliability; UDP trades reliability for speed.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 4252,
+    "duration_api_ms": 5178,
+    "num_turns": 1,
+    "result": "TCP is connection-oriented, reliable, and ordered — it establishes a handshake, guarantees delivery, retransmits lost packets, and keeps bytes in sequence. Used for web, email, SSH.\n\nUDP is connectionless and best-effort — no handshake, no delivery guarantee, no ordering, no retransmission. Lower overhead and latency. Used for DNS, video/voice streaming, gaming.\n\nKey tradeoff: TCP trades speed for reliability; UDP trades reliability for speed.",
+    "stop_reason": "end_turn",
+    "session_id": "d40ae575-717c-45be-a1eb-f52f54d71c75",
+    "total_cost_usd": 0.05252375,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 6533,
+      "cache_read_input_tokens": 13741,
+      "output_tokens": 175,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 6533,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 175,
+          "cache_read_input_tokens": 13741,
+          "cache_creation_input_tokens": 6533,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 6533
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 347,
+        "outputTokens": 14,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.00041699999999999994,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 175,
+        "cacheReadInputTokens": 13741,
+        "cacheCreationInputTokens": 6533,
+        "webSearchRequests": 0,
+        "costUSD": 0.05210675,
+        "contextWindow": 200000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "1c75f116-6536-43b3-b024-4eda2956eebd"
+  }
+}

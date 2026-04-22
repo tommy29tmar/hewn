@@ -1,0 +1,106 @@
+{
+  "track": "T4",
+  "arm": "terse",
+  "sequence_id": "debug-prod-incident",
+  "run_index": 2,
+  "turn": 1,
+  "arm_order_index": 1,
+  "arm_order_full": [
+    "caveman_full",
+    "terse",
+    "hewn_full",
+    "hewn_prompt_only",
+    "baseline"
+  ],
+  "digest_hex": "522341918a5177210ef438fa55486ec5b622aaa576febbd731536d82595ec31b",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T01:17:10.135428+00:00",
+  "session_id_used_for_resume": null,
+  "output_tokens_tiktoken": 272,
+  "output_tokens_anthropic": 410,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 24302,
+  "total_input_tokens": 24308,
+  "cache_state": "warm",
+  "wallclock_ms": 12835.904109000694,
+  "duration_ms": 9539,
+  "duration_api_ms": 10391,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "4cade8ee-c938-4bc2-a7f1-ed60dadb42fb",
+  "total_cost_usd": 0.022917,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "Roll back the 14:18 deploy, then investigate.\n\nFastest path:\n\n1. **Rollback first.** Five-minute gap between deploy and errors = almost certainly the cause. Stop the bleeding before diagnosing.\n2. **Diff the deploy.** `git log 14:18^..14:18 -- **/createOrder*` — look for changes to the order handler or its request shape.\n3. **Check the payload contract.** `Cannot read properties of undefined (reading items)` means `something.items` where `something` is undefined. Likely culprits:\n   - Request body shape changed (client sends `order.items`, server reads `req.body.items` or vice versa)\n   - Middleware (body-parser, auth, validation) stopped populating the expected field\n   - Destructuring a nested field without a default: `const { cart: { items } } = req.body`\n4. **Grep the handler** for `.items` accesses and trace backwards to find which object is undefined. The stack trace line number tells you exactly which one.\n5. **Check client version skew.** If mobile/web clients deployed a new payload shape, the server may be behind — or ahead.\n\nMost likely: a destructuring change or renamed field in the 14:18 commit. Rollback, then fix forward.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 9539,
+    "duration_api_ms": 10391,
+    "num_turns": 1,
+    "result": "Roll back the 14:18 deploy, then investigate.\n\nFastest path:\n\n1. **Rollback first.** Five-minute gap between deploy and errors = almost certainly the cause. Stop the bleeding before diagnosing.\n2. **Diff the deploy.** `git log 14:18^..14:18 -- **/createOrder*` — look for changes to the order handler or its request shape.\n3. **Check the payload contract.** `Cannot read properties of undefined (reading items)` means `something.items` where `something` is undefined. Likely culprits:\n   - Request body shape changed (client sends `order.items`, server reads `req.body.items` or vice versa)\n   - Middleware (body-parser, auth, validation) stopped populating the expected field\n   - Destructuring a nested field without a default: `const { cart: { items } } = req.body`\n4. **Grep the handler** for `.items` accesses and trace backwards to find which object is undefined. The stack trace line number tells you exactly which one.\n5. **Check client version skew.** If mobile/web clients deployed a new payload shape, the server may be behind — or ahead.\n\nMost likely: a destructuring change or renamed field in the 14:18 commit. Rollback, then fix forward.",
+    "stop_reason": "end_turn",
+    "session_id": "4cade8ee-c938-4bc2-a7f1-ed60dadb42fb",
+    "total_cost_usd": 0.022917,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 24302,
+      "output_tokens": 410,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 0,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 410,
+          "cache_read_input_tokens": 24302,
+          "cache_creation_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 396,
+        "outputTokens": 18,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.000486,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 410,
+        "cacheReadInputTokens": 24302,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.022431,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "7af1bdd2-d9f9-47ce-af61-c2ee6ec7531b"
+  }
+}

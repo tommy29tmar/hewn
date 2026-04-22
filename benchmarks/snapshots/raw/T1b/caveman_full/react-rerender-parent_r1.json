@@ -1,0 +1,105 @@
+{
+  "track": "T1b",
+  "arm": "caveman_full",
+  "prompt_id": "react-rerender-parent",
+  "run_index": 1,
+  "arm_order_index": 4,
+  "arm_order_full": [
+    "hewn_full",
+    "hewn_prompt_only",
+    "terse",
+    "caveman_full_plus_ultra_directive",
+    "caveman_full",
+    "baseline"
+  ],
+  "digest_hex": "99b7ab7ba17a8ba246c01cb3b86810b0fa1d28957b03d5604a74b257ab3da763",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-21T23:39:40.037735+00:00",
+  "output_tokens_tiktoken": 113,
+  "output_tokens_anthropic": 177,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 6557,
+  "cache_read_input_tokens": 15186,
+  "total_input_tokens": 21749,
+  "cache_state": "warm",
+  "wallclock_ms": 11080.952263990184,
+  "duration_ms": 5308,
+  "duration_api_ms": 7047,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "1c3a95a2-e5bc-470d-8214-c1dc3e36fedd",
+  "total_cost_usd": 0.05345625,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "Parent re-render → child re-render by default. React no skip child unless memoized.\n\nFix options:\n- Wrap child: `React.memo(Child)` → skip re-render if props shallow equal.\n- Stabilize props: `useMemo` for objects/arrays, `useCallback` for fns. Inline `{}`/`[]`/`() => {}` = new ref each render → memo busted.\n- Lift state down so parent no re-render.\n\nCheck: props changing ref each render? Use React DevTools Profiler \"Why did this render?\".",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 5308,
+    "duration_api_ms": 7047,
+    "num_turns": 1,
+    "result": "Parent re-render → child re-render by default. React no skip child unless memoized.\n\nFix options:\n- Wrap child: `React.memo(Child)` → skip re-render if props shallow equal.\n- Stabilize props: `useMemo` for objects/arrays, `useCallback` for fns. Inline `{}`/`[]`/`() => {}` = new ref each render → memo busted.\n- Lift state down so parent no re-render.\n\nCheck: props changing ref each render? Use React DevTools Profiler \"Why did this render?\".",
+    "stop_reason": "end_turn",
+    "session_id": "1c3a95a2-e5bc-470d-8214-c1dc3e36fedd",
+    "total_cost_usd": 0.05345625,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 6557,
+      "cache_read_input_tokens": 15186,
+      "output_tokens": 177,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 6557,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 177,
+          "cache_read_input_tokens": 15186,
+          "cache_creation_input_tokens": 6557,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 6557
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 352,
+        "outputTokens": 15,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.00042699999999999997,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 177,
+        "cacheReadInputTokens": 15186,
+        "cacheCreationInputTokens": 6557,
+        "webSearchRequests": 0,
+        "costUSD": 0.05302925,
+        "contextWindow": 200000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "01175f40-cb74-4084-91ec-1bed78d1bfb1"
+  }
+}

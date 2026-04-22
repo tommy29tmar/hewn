@@ -1,0 +1,105 @@
+{
+  "track": "T1b",
+  "arm": "caveman_full",
+  "prompt_id": "hash-table-collisions",
+  "run_index": 2,
+  "arm_order_index": 5,
+  "arm_order_full": [
+    "baseline",
+    "hewn_prompt_only",
+    "hewn_full",
+    "terse",
+    "caveman_full_plus_ultra_directive",
+    "caveman_full"
+  ],
+  "digest_hex": "7a7e2664771ede4b86664d7fc5d4494f8f70d62c74a225df1f386f63a681b524",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-21T23:58:35.330631+00:00",
+  "output_tokens_tiktoken": 133,
+  "output_tokens_anthropic": 204,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 6552,
+  "cache_read_input_tokens": 15186,
+  "total_input_tokens": 21744,
+  "cache_state": "warm",
+  "wallclock_ms": 9791.269134002505,
+  "duration_ms": 5580,
+  "duration_api_ms": 6577,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "24214c93-d48c-4ef5-bb28-2ac4e21460d9",
+  "total_cost_usd": 0.054085,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "Two main ways:\n\n**Chaining**: Each bucket hold linked list (or tree). Collide → append to list. Lookup walk list.\n\n**Open addressing**: Store in table itself. Collide → probe next slot.\n- Linear probe: i+1, i+2...\n- Quadratic: i+1², i+2²...\n- Double hash: step = hash2(key)\n\nLoad factor high → more collide. Resize + rehash when threshold hit (~0.7 open addr, ~1.0 chain).\n\nJava `HashMap` = chain, convert to tree at 8. Python `dict`, Ruby = open addr.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 5580,
+    "duration_api_ms": 6577,
+    "num_turns": 1,
+    "result": "Two main ways:\n\n**Chaining**: Each bucket hold linked list (or tree). Collide → append to list. Lookup walk list.\n\n**Open addressing**: Store in table itself. Collide → probe next slot.\n- Linear probe: i+1, i+2...\n- Quadratic: i+1², i+2²...\n- Double hash: step = hash2(key)\n\nLoad factor high → more collide. Resize + rehash when threshold hit (~0.7 open addr, ~1.0 chain).\n\nJava `HashMap` = chain, convert to tree at 8. Python `dict`, Ruby = open addr.",
+    "stop_reason": "end_turn",
+    "session_id": "24214c93-d48c-4ef5-bb28-2ac4e21460d9",
+    "total_cost_usd": 0.054085,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 6552,
+      "cache_read_input_tokens": 15186,
+      "output_tokens": 204,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 6552,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 204,
+          "cache_read_input_tokens": 15186,
+          "cache_creation_input_tokens": 6552,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 6552
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 347,
+        "outputTokens": 13,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.000412,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 204,
+        "cacheReadInputTokens": 15186,
+        "cacheCreationInputTokens": 6552,
+        "webSearchRequests": 0,
+        "costUSD": 0.053673,
+        "contextWindow": 200000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "29d102d5-17d5-434c-849a-385e2d21198b"
+  }
+}

@@ -1,0 +1,96 @@
+{
+  "track": "T4",
+  "arm": "terse",
+  "sequence_id": "design-feature",
+  "run_index": 1,
+  "turn": 2,
+  "arm_order_index": 2,
+  "arm_order_full": [
+    "hewn_full",
+    "hewn_prompt_only",
+    "terse",
+    "baseline",
+    "caveman_full"
+  ],
+  "digest_hex": "30a2f9a62df0d790c0598917c3ab42509bbadd672a0a484741ea201d2da3b44f",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T01:08:39.397588+00:00",
+  "session_id_used_for_resume": "4793f245-7c29-4b32-91fe-683724713458",
+  "output_tokens_tiktoken": 620,
+  "output_tokens_anthropic": 1025,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 852,
+  "cache_read_input_tokens": 24289,
+  "total_input_tokens": 25147,
+  "cache_state": "warm",
+  "wallclock_ms": 23827.775573998224,
+  "duration_ms": 20818,
+  "duration_api_ms": 20797,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "4793f245-7c29-4b32-91fe-683724713458",
+  "total_cost_usd": 0.043124499999999996,
+  "model_used": "claude-opus-4-7",
+  "result": "# Mutable Balance Row vs. Event-Sourced Ledger\n\n## Mutable row (`balance` field, UPDATE in place)\n\n**Pros**\n- Trivial read: one row, one column. O(1).\n- Matches your existing wallet pattern — shared tooling, mental model, ops playbooks.\n- Simple concurrency: row lock or `UPDATE ... WHERE balance >= $amt`.\n- Smaller storage, no compaction concerns.\n\n**Cons**\n- No history. \"Why is this card at $3.47?\" requires a separate audit/log table anyway — so you often end up with both.\n- Corrections are destructive: a bug that double-debits is fixed by another UPDATE, losing the trail.\n- Harder to answer temporal questions (balance as of Tuesday, breakage reporting, fraud forensics).\n- Refund/void logic tends to sprawl across services.\n\n## Event-sourced ledger (append-only `gift_card_transactions`, balance = SUM)\n\n**Pros**\n- Full history for free — audit, disputes, accounting, fraud all read the same source.\n- Corrections are compensating entries, not overwrites. Regulators and finance love this.\n- Natural fit for double-entry accounting (gift cards are a **liability** on the balance sheet — you'll want this anyway).\n- Easy to replay / rebuild state, easy to add new projections later (per-user balance, breakage cohort, etc.).\n- Concurrency via append + unique constraint on (card_id, idempotency_key) is clean.\n\n**Cons**\n- Reads cost more. Mitigate with a cached `current_balance` column updated in the same txn, or a materialized view. Now you have both — but the ledger is the source of truth.\n- More schema and more discipline (never UPDATE, only INSERT).\n- Diverges from your wallet pattern → two mental models, unless you migrate wallets later.\n\n## Recommendation for gift cards specifically\n\nGo **event-sourced with a cached balance column**.\n\nReasons this case differs from wallets:\n- Gift cards are a **financial liability** with accounting, tax, and often **statutory** requirements (US CARD Act, EU equivalents). Auditors will ask for transaction history. You will build it eventually.\n- Refund-restores-balance, partial refunds, order cancellation compensations — all become natural append operations instead of \"undo the UPDATE\" logic.\n- Breakage recognition (recognizing unredeemed balance as revenue after N years) is a query over events, painful over a mutable row.\n- Fraud/chargeback forensics need \"what happened to this card\" — ledger gives it directly.\n\nThe cached balance column gets you wallet-like read performance while keeping the ledger authoritative. The consistency rule: **balance column is only written inside the same transaction as the ledger insert, derived from it.**\n\nOne caveat: if you foresee migrating wallets to a ledger later, consider a shared `ledger_entries` table with an `account_type` discriminator now, so you don't build two ledger systems.\n\nWant to go into the schema shape next, or concurrency/idempotency?",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 20818,
+    "duration_api_ms": 20797,
+    "num_turns": 1,
+    "result": "# Mutable Balance Row vs. Event-Sourced Ledger\n\n## Mutable row (`balance` field, UPDATE in place)\n\n**Pros**\n- Trivial read: one row, one column. O(1).\n- Matches your existing wallet pattern — shared tooling, mental model, ops playbooks.\n- Simple concurrency: row lock or `UPDATE ... WHERE balance >= $amt`.\n- Smaller storage, no compaction concerns.\n\n**Cons**\n- No history. \"Why is this card at $3.47?\" requires a separate audit/log table anyway — so you often end up with both.\n- Corrections are destructive: a bug that double-debits is fixed by another UPDATE, losing the trail.\n- Harder to answer temporal questions (balance as of Tuesday, breakage reporting, fraud forensics).\n- Refund/void logic tends to sprawl across services.\n\n## Event-sourced ledger (append-only `gift_card_transactions`, balance = SUM)\n\n**Pros**\n- Full history for free — audit, disputes, accounting, fraud all read the same source.\n- Corrections are compensating entries, not overwrites. Regulators and finance love this.\n- Natural fit for double-entry accounting (gift cards are a **liability** on the balance sheet — you'll want this anyway).\n- Easy to replay / rebuild state, easy to add new projections later (per-user balance, breakage cohort, etc.).\n- Concurrency via append + unique constraint on (card_id, idempotency_key) is clean.\n\n**Cons**\n- Reads cost more. Mitigate with a cached `current_balance` column updated in the same txn, or a materialized view. Now you have both — but the ledger is the source of truth.\n- More schema and more discipline (never UPDATE, only INSERT).\n- Diverges from your wallet pattern → two mental models, unless you migrate wallets later.\n\n## Recommendation for gift cards specifically\n\nGo **event-sourced with a cached balance column**.\n\nReasons this case differs from wallets:\n- Gift cards are a **financial liability** with accounting, tax, and often **statutory** requirements (US CARD Act, EU equivalents). Auditors will ask for transaction history. You will build it eventually.\n- Refund-restores-balance, partial refunds, order cancellation compensations — all become natural append operations instead of \"undo the UPDATE\" logic.\n- Breakage recognition (recognizing unredeemed balance as revenue after N years) is a query over events, painful over a mutable row.\n- Fraud/chargeback forensics need \"what happened to this card\" — ledger gives it directly.\n\nThe cached balance column gets you wallet-like read performance while keeping the ledger authoritative. The consistency rule: **balance column is only written inside the same transaction as the ledger insert, derived from it.**\n\nOne caveat: if you foresee migrating wallets to a ledger later, consider a shared `ledger_entries` table with an `account_type` discriminator now, so you don't build two ledger systems.\n\nWant to go into the schema shape next, or concurrency/idempotency?",
+    "stop_reason": "end_turn",
+    "session_id": "4793f245-7c29-4b32-91fe-683724713458",
+    "total_cost_usd": 0.043124499999999996,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 852,
+      "cache_read_input_tokens": 24289,
+      "output_tokens": 1025,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 852,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 1025,
+          "cache_read_input_tokens": 24289,
+          "cache_creation_input_tokens": 852,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 852
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 1025,
+        "cacheReadInputTokens": 24289,
+        "cacheCreationInputTokens": 852,
+        "webSearchRequests": 0,
+        "costUSD": 0.043124499999999996,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "0fac290c-507f-470e-abbb-7968cb38973b"
+  }
+}

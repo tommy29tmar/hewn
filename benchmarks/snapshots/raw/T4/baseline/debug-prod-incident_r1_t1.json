@@ -1,0 +1,106 @@
+{
+  "track": "T4",
+  "arm": "baseline",
+  "sequence_id": "debug-prod-incident",
+  "run_index": 1,
+  "turn": 1,
+  "arm_order_index": 0,
+  "arm_order_full": [
+    "baseline",
+    "hewn_full",
+    "hewn_prompt_only",
+    "caveman_full",
+    "terse"
+  ],
+  "digest_hex": "c436155c1e87e76d88e6f2c66d47c90c16ae78237b0a8de1b93824cf92fb5c9b",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T00:56:49.008409+00:00",
+  "session_id_used_for_resume": null,
+  "output_tokens_tiktoken": 285,
+  "output_tokens_anthropic": 553,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 15888,
+  "cache_read_input_tokens": 16796,
+  "total_input_tokens": 32690,
+  "cache_state": "warm",
+  "wallclock_ms": 15424.794052989455,
+  "duration_ms": 12090,
+  "duration_api_ms": 13104,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "b095a9ed-419c-4efc-bd31-af55f6a295e0",
+  "total_cost_usd": 0.12204899999999999,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "Check in this order:\n\n1. **Diff the deploy.** `git log 14:18..HEAD -- **/createOrder*` (or whatever the handler file is). The error started 5 min after deploy — assume causation until proven otherwise. Look for changes to request body parsing, destructuring of `req.body.items`, or middleware order.\n\n2. **Grab a failing request payload.** From logs, find what the client is actually sending. The error says `items` is on `undefined` — so something one level up is missing. Likely `req.body` itself (body-parser misconfig, wrong Content-Type) or a nested field like `req.body.order.items` where `order` is now undefined.\n\n3. **Check the stack trace line.** Pinpoint exactly which expression threw. `req.body.items` vs `order.items` vs `cart.items` are very different root causes.\n\n4. **Decide: rollback or forward-fix.** If the diff is non-trivial and you can't fix in <5 min, roll back the 14:18 deploy now and debug after. 500s on order creation = revenue loss.\n\nMost likely culprit given the symptom: a refactor that changed the request shape (e.g., moved `items` under a new key) without updating the handler, or a middleware change that stopped populating `req.body`.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 12090,
+    "duration_api_ms": 13104,
+    "num_turns": 1,
+    "result": "Check in this order:\n\n1. **Diff the deploy.** `git log 14:18..HEAD -- **/createOrder*` (or whatever the handler file is). The error started 5 min after deploy — assume causation until proven otherwise. Look for changes to request body parsing, destructuring of `req.body.items`, or middleware order.\n\n2. **Grab a failing request payload.** From logs, find what the client is actually sending. The error says `items` is on `undefined` — so something one level up is missing. Likely `req.body` itself (body-parser misconfig, wrong Content-Type) or a nested field like `req.body.order.items` where `order` is now undefined.\n\n3. **Check the stack trace line.** Pinpoint exactly which expression threw. `req.body.items` vs `order.items` vs `cart.items` are very different root causes.\n\n4. **Decide: rollback or forward-fix.** If the diff is non-trivial and you can't fix in <5 min, roll back the 14:18 deploy now and debug after. 500s on order creation = revenue loss.\n\nMost likely culprit given the symptom: a refactor that changed the request shape (e.g., moved `items` under a new key) without updating the handler, or a middleware change that stopped populating `req.body`.",
+    "stop_reason": "end_turn",
+    "session_id": "b095a9ed-419c-4efc-bd31-af55f6a295e0",
+    "total_cost_usd": 0.12204899999999999,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 15888,
+      "cache_read_input_tokens": 16796,
+      "output_tokens": 553,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 15888,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 553,
+          "cache_read_input_tokens": 16796,
+          "cache_creation_input_tokens": 15888,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 15888
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 396,
+        "outputTokens": 20,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.000496,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 553,
+        "cacheReadInputTokens": 16796,
+        "cacheCreationInputTokens": 15888,
+        "webSearchRequests": 0,
+        "costUSD": 0.121553,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "2ef24d97-f320-4ffd-8e45-90a05378c455"
+  }
+}

@@ -1,0 +1,105 @@
+{
+  "track": "T2",
+  "arm": "terse",
+  "prompt_id": "typeerror-undefined-map",
+  "run_index": 2,
+  "arm_order_index": 0,
+  "arm_order_full": [
+    "terse",
+    "caveman_full_plus_ultra_directive",
+    "hewn_prompt_only",
+    "hewn_full",
+    "caveman_full",
+    "baseline"
+  ],
+  "digest_hex": "14bddb51c1c5866706ff2e594385e235efce8e94983a8266c26c2b19b478fcc1",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T00:21:38.699688+00:00",
+  "output_tokens_tiktoken": 197,
+  "output_tokens_anthropic": 298,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 10516,
+  "cache_read_input_tokens": 13741,
+  "total_input_tokens": 24263,
+  "cache_state": "warm",
+  "wallclock_ms": 11909.00612200494,
+  "duration_ms": 5795,
+  "duration_api_ms": 6686,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "25eaef94-fbb1-41dd-9896-0504a5d27c31",
+  "total_cost_usd": 0.08050449999999999,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "That error means you're calling `.map()` on something that's undefined at render/execution time.\n\nCommon causes:\n1. **Async data not loaded yet** — state starts as `undefined`, component renders before fetch resolves.\n2. **API response shape mismatch** — you expect `res.items` but it's `res.data.items`.\n3. **Prop not passed** — parent didn't pass the array prop.\n4. **Destructuring a missing key** — `const { list } = obj` where `list` doesn't exist.\n\nQuick fixes:\n```js\n{(items ?? []).map(...)}          // default to empty array\n{items?.map(...)}                 // optional chaining\n{items && items.map(...)}         // guard\n```\n\nOr initialize state as `[]` instead of `undefined`:\n```js\nconst [items, setItems] = useState([]);\n```\n\nPaste the stack trace line and the component code if you want me to pinpoint it.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 5795,
+    "duration_api_ms": 6686,
+    "num_turns": 1,
+    "result": "That error means you're calling `.map()` on something that's undefined at render/execution time.\n\nCommon causes:\n1. **Async data not loaded yet** — state starts as `undefined`, component renders before fetch resolves.\n2. **API response shape mismatch** — you expect `res.items` but it's `res.data.items`.\n3. **Prop not passed** — parent didn't pass the array prop.\n4. **Destructuring a missing key** — `const { list } = obj` where `list` doesn't exist.\n\nQuick fixes:\n```js\n{(items ?? []).map(...)}          // default to empty array\n{items?.map(...)}                 // optional chaining\n{items && items.map(...)}         // guard\n```\n\nOr initialize state as `[]` instead of `undefined`:\n```js\nconst [items, setItems] = useState([]);\n```\n\nPaste the stack trace line and the component code if you want me to pinpoint it.",
+    "stop_reason": "end_turn",
+    "session_id": "25eaef94-fbb1-41dd-9896-0504a5d27c31",
+    "total_cost_usd": 0.08050449999999999,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 10516,
+      "cache_read_input_tokens": 13741,
+      "output_tokens": 298,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 10516,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 298,
+          "cache_read_input_tokens": 13741,
+          "cache_creation_input_tokens": 10516,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 10516
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 364,
+        "outputTokens": 13,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.000429,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 298,
+        "cacheReadInputTokens": 13741,
+        "cacheCreationInputTokens": 10516,
+        "webSearchRequests": 0,
+        "costUSD": 0.0800755,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "6cc61623-dd7d-4703-bde4-2b80febe7e12"
+  }
+}

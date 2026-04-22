@@ -1,0 +1,105 @@
+{
+  "track": "T1b",
+  "arm": "caveman_full",
+  "prompt_id": "sql-explain",
+  "run_index": 2,
+  "arm_order_index": 3,
+  "arm_order_full": [
+    "baseline",
+    "caveman_full_plus_ultra_directive",
+    "hewn_prompt_only",
+    "caveman_full",
+    "hewn_full",
+    "terse"
+  ],
+  "digest_hex": "0daec1e665fa21b1ea84e0a54616094044b7ad578b774280ee1e2598cf039bd8",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-21T23:57:03.364024+00:00",
+  "output_tokens_tiktoken": 141,
+  "output_tokens_anthropic": 232,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 21744,
+  "total_input_tokens": 21750,
+  "cache_state": "warm",
+  "wallclock_ms": 10720.840616006171,
+  "duration_ms": 5539,
+  "duration_api_ms": 6314,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "ee2d60d2-a580-4434-a3f8-fd312cde0801",
+  "total_cost_usd": 0.017115,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "EXPLAIN show query plan. How DB execute SQL.\n\nOutput reveal:\n- **Scan type** — seq scan (full table) vs index scan vs bitmap scan\n- **Join order** — which table first, join algorithm (nested loop/hash/merge)\n- **Cost estimate** — startup..total cost units\n- **Row estimate** — planner guess of rows returned\n- **Filter/index use** — which WHERE clauses use index\n\n`EXPLAIN ANALYZE` run query + show actual time + actual rows. Compare estimate vs actual → spot bad stats.\n\nUse: find slow queries, missing index, bad join order, stale stats (`ANALYZE` table fix).",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 5539,
+    "duration_api_ms": 6314,
+    "num_turns": 1,
+    "result": "EXPLAIN show query plan. How DB execute SQL.\n\nOutput reveal:\n- **Scan type** — seq scan (full table) vs index scan vs bitmap scan\n- **Join order** — which table first, join algorithm (nested loop/hash/merge)\n- **Cost estimate** — startup..total cost units\n- **Row estimate** — planner guess of rows returned\n- **Filter/index use** — which WHERE clauses use index\n\n`EXPLAIN ANALYZE` run query + show actual time + actual rows. Compare estimate vs actual → spot bad stats.\n\nUse: find slow queries, missing index, bad join order, stale stats (`ANALYZE` table fix).",
+    "stop_reason": "end_turn",
+    "session_id": "ee2d60d2-a580-4434-a3f8-fd312cde0801",
+    "total_cost_usd": 0.017115,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 21744,
+      "output_tokens": 232,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 0,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 232,
+          "cache_read_input_tokens": 21744,
+          "cache_creation_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 348,
+        "outputTokens": 13,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.000413,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 232,
+        "cacheReadInputTokens": 21744,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.016701999999999998,
+        "contextWindow": 200000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "62cbb92d-7604-46d9-bfe2-a3ca200adc38"
+  }
+}

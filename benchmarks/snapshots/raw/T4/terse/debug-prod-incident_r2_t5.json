@@ -1,0 +1,96 @@
+{
+  "track": "T4",
+  "arm": "terse",
+  "sequence_id": "debug-prod-incident",
+  "run_index": 2,
+  "turn": 5,
+  "arm_order_index": 1,
+  "arm_order_full": [
+    "caveman_full",
+    "terse",
+    "hewn_full",
+    "hewn_prompt_only",
+    "baseline"
+  ],
+  "digest_hex": "522341918a5177210ef438fa55486ec5b622aaa576febbd731536d82595ec31b",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T01:18:02.882905+00:00",
+  "session_id_used_for_resume": "4cade8ee-c938-4bc2-a7f1-ed60dadb42fb",
+  "output_tokens_tiktoken": 234,
+  "output_tokens_anthropic": 390,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 716,
+  "cache_read_input_tokens": 25803,
+  "total_input_tokens": 26525,
+  "cache_state": "warm",
+  "wallclock_ms": 13558.886441984214,
+  "duration_ms": 10304,
+  "duration_api_ms": 10273,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "4cade8ee-c938-4bc2-a7f1-ed60dadb42fb",
+  "total_cost_usd": 0.0271565,
+  "model_used": "claude-opus-4-7",
+  "result": "Single batched query. `SELECT * FROM inventory WHERE sku IN (?)` with the SKU array.\n\n- **Common case (3 SKUs):** one query instead of three. Faster than both sequential and `Promise.all`.\n- **Max case (47 SKUs):** still one query, one connection. Pool-safe.\n- **No concurrency tuning, no `p-limit`, no pool math.** The problem goes away.\n\nCaveats:\n- Watch the `IN (...)` parameter limit. Postgres handles thousands; MySQL has `max_allowed_packet`; SQLite caps at 999 by default. 47 is nowhere near any limit.\n- Result comes back unordered — map by SKU after the fetch: `Object.fromEntries(rows.map(r => [r.sku, r]))`, then look up per cart item.\n- Handle missing SKUs explicitly. `IN` silently omits non-matches; the old loop might have thrown per-SKU. Decide whether missing = 404, empty inventory, or error.\n\nIf the lookup function is shared and you can't change its signature, add a `lookupMany(skus)` variant alongside it rather than rewriting callers.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 10304,
+    "duration_api_ms": 10273,
+    "num_turns": 1,
+    "result": "Single batched query. `SELECT * FROM inventory WHERE sku IN (?)` with the SKU array.\n\n- **Common case (3 SKUs):** one query instead of three. Faster than both sequential and `Promise.all`.\n- **Max case (47 SKUs):** still one query, one connection. Pool-safe.\n- **No concurrency tuning, no `p-limit`, no pool math.** The problem goes away.\n\nCaveats:\n- Watch the `IN (...)` parameter limit. Postgres handles thousands; MySQL has `max_allowed_packet`; SQLite caps at 999 by default. 47 is nowhere near any limit.\n- Result comes back unordered — map by SKU after the fetch: `Object.fromEntries(rows.map(r => [r.sku, r]))`, then look up per cart item.\n- Handle missing SKUs explicitly. `IN` silently omits non-matches; the old loop might have thrown per-SKU. Decide whether missing = 404, empty inventory, or error.\n\nIf the lookup function is shared and you can't change its signature, add a `lookupMany(skus)` variant alongside it rather than rewriting callers.",
+    "stop_reason": "end_turn",
+    "session_id": "4cade8ee-c938-4bc2-a7f1-ed60dadb42fb",
+    "total_cost_usd": 0.0271565,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 716,
+      "cache_read_input_tokens": 25803,
+      "output_tokens": 390,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 716,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 390,
+          "cache_read_input_tokens": 25803,
+          "cache_creation_input_tokens": 716,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 716
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 390,
+        "cacheReadInputTokens": 25803,
+        "cacheCreationInputTokens": 716,
+        "webSearchRequests": 0,
+        "costUSD": 0.0271565,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "373eca71-e5c6-4e8d-9e95-de902eb190f8"
+  }
+}

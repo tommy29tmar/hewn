@@ -1,0 +1,103 @@
+{
+  "track": "T0",
+  "arm": "terse",
+  "prompt_id": "cors-errors",
+  "run_index": 1,
+  "arm_order_index": 0,
+  "arm_order_full": [
+    "terse",
+    "terse_appended",
+    "caveman_full",
+    "caveman_full_appended"
+  ],
+  "digest_hex": "884a34005020aaa2decf7247298a83a400cb843e18bc330b080d55c1b5324fb3",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-21T23:29:09.994342+00:00",
+  "output_tokens_tiktoken": 332,
+  "output_tokens_anthropic": 532,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 6557,
+  "cache_read_input_tokens": 13741,
+  "total_input_tokens": 20304,
+  "cache_state": "warm",
+  "wallclock_ms": 15403.709753998555,
+  "duration_ms": 9869,
+  "duration_api_ms": 11230,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "16db68e7-4950-4df5-aaaf-363f9234858f",
+  "total_cost_usd": 0.061601750000000004,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "CORS errors happen when your frontend makes a request to a different origin (protocol + host + port) than it was served from, and the server doesn't return the headers the browser requires to permit it.\n\nCommon causes:\n\n1. **Missing `Access-Control-Allow-Origin`** — the server doesn't include your frontend's origin in the response.\n2. **Preflight failure** — non-simple requests (custom headers, `PUT`/`DELETE`, `Content-Type: application/json`) trigger an `OPTIONS` preflight; the server must respond 2xx with `Access-Control-Allow-Methods` and `Access-Control-Allow-Headers`.\n3. **Credentials mismatch** — if you send `credentials: 'include'`, the server must return `Access-Control-Allow-Credentials: true` *and* a specific origin (not `*`).\n4. **Wrong origin** — `http://localhost:3000` ≠ `http://127.0.0.1:3000`, and `http` ≠ `https`.\n5. **Error responses missing headers** — 4xx/5xx responses still need CORS headers or the browser reports it as a CORS error.\n\nFixes:\n- **Dev**: proxy API calls through your frontend dev server (Vite `server.proxy`, CRA `proxy`, Next.js rewrites) so the browser sees same-origin.\n- **Backend**: enable CORS middleware (`cors` for Express, `CORSMiddleware` for FastAPI, `django-cors-headers`) and whitelist your frontend origin.\n\nShare the exact error text and your stack if you want a specific fix.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 9869,
+    "duration_api_ms": 11230,
+    "num_turns": 1,
+    "result": "CORS errors happen when your frontend makes a request to a different origin (protocol + host + port) than it was served from, and the server doesn't return the headers the browser requires to permit it.\n\nCommon causes:\n\n1. **Missing `Access-Control-Allow-Origin`** — the server doesn't include your frontend's origin in the response.\n2. **Preflight failure** — non-simple requests (custom headers, `PUT`/`DELETE`, `Content-Type: application/json`) trigger an `OPTIONS` preflight; the server must respond 2xx with `Access-Control-Allow-Methods` and `Access-Control-Allow-Headers`.\n3. **Credentials mismatch** — if you send `credentials: 'include'`, the server must return `Access-Control-Allow-Credentials: true` *and* a specific origin (not `*`).\n4. **Wrong origin** — `http://localhost:3000` ≠ `http://127.0.0.1:3000`, and `http` ≠ `https`.\n5. **Error responses missing headers** — 4xx/5xx responses still need CORS headers or the browser reports it as a CORS error.\n\nFixes:\n- **Dev**: proxy API calls through your frontend dev server (Vite `server.proxy`, CRA `proxy`, Next.js rewrites) so the browser sees same-origin.\n- **Backend**: enable CORS middleware (`cors` for Express, `CORSMiddleware` for FastAPI, `django-cors-headers`) and whitelist your frontend origin.\n\nShare the exact error text and your stack if you want a specific fix.",
+    "stop_reason": "end_turn",
+    "session_id": "16db68e7-4950-4df5-aaaf-363f9234858f",
+    "total_cost_usd": 0.061601750000000004,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 6557,
+      "cache_read_input_tokens": 13741,
+      "output_tokens": 532,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 6557,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 532,
+          "cache_read_input_tokens": 13741,
+          "cache_creation_input_tokens": 6557,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 6557
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 350,
+        "outputTokens": 14,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.00042,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 532,
+        "cacheReadInputTokens": 13741,
+        "cacheCreationInputTokens": 6557,
+        "webSearchRequests": 0,
+        "costUSD": 0.06118175000000001,
+        "contextWindow": 200000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "fe46a314-49d2-40db-a3f1-05a302be6c95"
+  }
+}

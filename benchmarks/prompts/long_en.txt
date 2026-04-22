@@ -1,0 +1,25 @@
+# long_en.txt — 3 long-context prompts (T3)
+# Each prompt is paired with the long_handbook.txt prefix at runtime.
+# Format: each prompt is a single block, separated by lines containing only "---PROMPT---"
+---PROMPT---
+[capsule micro review]
+anchors: "X-Forwarded-For" | "Redis"
+diff: + const key=`rl:${req.headers['x-forwarded-for']||req.ip}`;
+        await redis.incr(key);
+ctx: public_api_gateway rate limiter
+deliver: risk mitigation verify
+---PROMPT---
+A junior dev wants to add a new endpoint `POST /v1/orgs/:org_id/transfer` that moves funds between accounts within an org. They drafted this Express handler:
+
+```javascript
+app.post('/v1/orgs/:org_id/transfer', async (req, res) => {
+  const userId = req.headers['x-user-id'];
+  const { from, to, amount } = req.body;
+  await txSvc.transfer({orgId: req.params.org_id, userId, from, to, amount});
+  res.json({ok: true});
+});
+```
+
+Review it against this handbook. List the issues a senior reviewer would flag, in priority order, with what to fix.
+---PROMPT---
+We need to roll out a new "max body size" limit of 512KB (down from 2MB) for one specific route, `POST /v1/media/upload-meta`, because the route is being abused for DoS. Plan the rollout: what code changes, what config, what tests, what observability, what rollback plan, and what to communicate to whom. Be specific to this codebase.

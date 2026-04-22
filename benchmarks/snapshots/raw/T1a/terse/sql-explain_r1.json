@@ -1,0 +1,102 @@
+{
+  "track": "T1a",
+  "arm": "terse",
+  "prompt_id": "sql-explain",
+  "run_index": 1,
+  "arm_order_index": 1,
+  "arm_order_full": [
+    "baseline",
+    "terse",
+    "caveman_full"
+  ],
+  "digest_hex": "e9b043a6109acd8755235ab57ea2087212a5d2fe093212bffca1c20b840c04e8",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-21T23:35:12.839952+00:00",
+  "output_tokens_tiktoken": 299,
+  "output_tokens_anthropic": 517,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 20299,
+  "total_input_tokens": 20305,
+  "cache_state": "warm",
+  "wallclock_ms": 14070.96031299443,
+  "duration_ms": 9673,
+  "duration_api_ms": 11125,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "d5a387e1-e9f9-402a-aa9e-126276d82700",
+  "total_cost_usd": 0.0235175,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "`EXPLAIN` shows the query execution plan — how the database intends to run your query without actually running it (use `EXPLAIN ANALYZE` to also execute and get real timings).\n\nKey things it reveals:\n\n- **Access method**: sequential scan, index scan, index-only scan, bitmap scan.\n- **Join strategy**: nested loop, hash join, merge join — and join order.\n- **Estimated cost**: startup cost, total cost (in arbitrary planner units).\n- **Estimated rows**: how many rows the planner thinks each node will produce.\n- **Row width**: average bytes per row.\n- **Sort/aggregate/filter steps** and where they happen.\n\nWith `EXPLAIN ANALYZE` you additionally get:\n\n- **Actual time** (ms) per node, startup and total.\n- **Actual rows** vs estimated — large mismatches mean stale statistics or bad estimates.\n- **Loops**: how many times a node executed.\n- **Buffers** (with `BUFFERS`): cache hits vs disk reads.\n\nCommon uses: spotting sequential scans on large tables, missing indexes, bad join orders, row-estimate errors, and expensive sort/hash operations.\n\nSyntax varies slightly: PostgreSQL (`EXPLAIN (ANALYZE, BUFFERS, FORMAT JSON) ...`), MySQL (`EXPLAIN FORMAT=TREE` / `EXPLAIN ANALYZE`), SQLite (`EXPLAIN QUERY PLAN`).",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 9673,
+    "duration_api_ms": 11125,
+    "num_turns": 1,
+    "result": "`EXPLAIN` shows the query execution plan — how the database intends to run your query without actually running it (use `EXPLAIN ANALYZE` to also execute and get real timings).\n\nKey things it reveals:\n\n- **Access method**: sequential scan, index scan, index-only scan, bitmap scan.\n- **Join strategy**: nested loop, hash join, merge join — and join order.\n- **Estimated cost**: startup cost, total cost (in arbitrary planner units).\n- **Estimated rows**: how many rows the planner thinks each node will produce.\n- **Row width**: average bytes per row.\n- **Sort/aggregate/filter steps** and where they happen.\n\nWith `EXPLAIN ANALYZE` you additionally get:\n\n- **Actual time** (ms) per node, startup and total.\n- **Actual rows** vs estimated — large mismatches mean stale statistics or bad estimates.\n- **Loops**: how many times a node executed.\n- **Buffers** (with `BUFFERS`): cache hits vs disk reads.\n\nCommon uses: spotting sequential scans on large tables, missing indexes, bad join orders, row-estimate errors, and expensive sort/hash operations.\n\nSyntax varies slightly: PostgreSQL (`EXPLAIN (ANALYZE, BUFFERS, FORMAT JSON) ...`), MySQL (`EXPLAIN FORMAT=TREE` / `EXPLAIN ANALYZE`), SQLite (`EXPLAIN QUERY PLAN`).",
+    "stop_reason": "end_turn",
+    "session_id": "d5a387e1-e9f9-402a-aa9e-126276d82700",
+    "total_cost_usd": 0.0235175,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 20299,
+      "output_tokens": 517,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 0,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 517,
+          "cache_read_input_tokens": 20299,
+          "cache_creation_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 348,
+        "outputTokens": 13,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.000413,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 517,
+        "cacheReadInputTokens": 20299,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.0231045,
+        "contextWindow": 200000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "f57754c5-3bff-4a75-b34e-46ffa68b5c19"
+  }
+}

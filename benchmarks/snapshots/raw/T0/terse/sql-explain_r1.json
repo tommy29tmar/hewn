@@ -1,0 +1,103 @@
+{
+  "track": "T0",
+  "arm": "terse",
+  "prompt_id": "sql-explain",
+  "run_index": 1,
+  "arm_order_index": 0,
+  "arm_order_full": [
+    "terse",
+    "terse_appended",
+    "caveman_full",
+    "caveman_full_appended"
+  ],
+  "digest_hex": "e9b043a6109acd8755235ab57ea2087212a5d2fe093212bffca1c20b840c04e8",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-21T23:27:31.853064+00:00",
+  "output_tokens_tiktoken": 258,
+  "output_tokens_anthropic": 421,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 6558,
+  "cache_read_input_tokens": 13741,
+  "total_input_tokens": 20305,
+  "cache_state": "warm",
+  "wallclock_ms": 12801.96151699056,
+  "duration_ms": 8529,
+  "duration_api_ms": 9674,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "2ab60543-2c57-4965-a27c-35a8ff1672ff",
+  "total_cost_usd": 0.05882599999999999,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "`EXPLAIN` shows the query execution plan — how the database will run your query, not the results.\n\nTypical output includes:\n- **Access method**: sequential scan, index scan, index-only scan, bitmap scan\n- **Join strategy**: nested loop, hash join, merge join\n- **Order of operations**: which tables/indexes are hit first, how rows flow up the tree\n- **Estimated cost**: startup cost, total cost, estimated row count, row width\n\nUse `EXPLAIN ANALYZE` (Postgres/SQLite) to actually execute the query and get real timings and row counts alongside the estimates — the gap between estimated and actual rows is often where bad plans come from.\n\nCommon uses:\n- Spot missing indexes (sequential scans on large tables)\n- Detect bad row estimates (stale statistics — run `ANALYZE`)\n- Compare plans before/after adding an index or rewriting a query\n- Find the expensive node in a slow query\n\nMySQL, Postgres, SQL Server, and Oracle each have their own flavor (`EXPLAIN FORMAT=JSON`, `EXPLAIN (ANALYZE, BUFFERS)`, `SET SHOWPLAN_ALL`, etc.), but the concept is the same.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 8529,
+    "duration_api_ms": 9674,
+    "num_turns": 1,
+    "result": "`EXPLAIN` shows the query execution plan — how the database will run your query, not the results.\n\nTypical output includes:\n- **Access method**: sequential scan, index scan, index-only scan, bitmap scan\n- **Join strategy**: nested loop, hash join, merge join\n- **Order of operations**: which tables/indexes are hit first, how rows flow up the tree\n- **Estimated cost**: startup cost, total cost, estimated row count, row width\n\nUse `EXPLAIN ANALYZE` (Postgres/SQLite) to actually execute the query and get real timings and row counts alongside the estimates — the gap between estimated and actual rows is often where bad plans come from.\n\nCommon uses:\n- Spot missing indexes (sequential scans on large tables)\n- Detect bad row estimates (stale statistics — run `ANALYZE`)\n- Compare plans before/after adding an index or rewriting a query\n- Find the expensive node in a slow query\n\nMySQL, Postgres, SQL Server, and Oracle each have their own flavor (`EXPLAIN FORMAT=JSON`, `EXPLAIN (ANALYZE, BUFFERS)`, `SET SHOWPLAN_ALL`, etc.), but the concept is the same.",
+    "stop_reason": "end_turn",
+    "session_id": "2ab60543-2c57-4965-a27c-35a8ff1672ff",
+    "total_cost_usd": 0.05882599999999999,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 6558,
+      "cache_read_input_tokens": 13741,
+      "output_tokens": 421,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 6558,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 421,
+          "cache_read_input_tokens": 13741,
+          "cache_creation_input_tokens": 6558,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 6558
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 348,
+        "outputTokens": 13,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.000413,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 421,
+        "cacheReadInputTokens": 13741,
+        "cacheCreationInputTokens": 6558,
+        "webSearchRequests": 0,
+        "costUSD": 0.05841299999999999,
+        "contextWindow": 200000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "b8ac796e-8e0c-4824-b0d0-766f6b8a8eaa"
+  }
+}

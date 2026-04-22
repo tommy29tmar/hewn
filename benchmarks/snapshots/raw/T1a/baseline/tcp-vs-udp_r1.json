@@ -1,0 +1,102 @@
+{
+  "track": "T1a",
+  "arm": "baseline",
+  "prompt_id": "tcp-vs-udp",
+  "run_index": 1,
+  "arm_order_index": 0,
+  "arm_order_full": [
+    "baseline",
+    "terse",
+    "caveman_full"
+  ],
+  "digest_hex": "3477bad1c43abfa53a4c2ef843bb8bd5e1878b32d0cfef82b891d77115a5b941",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-21T23:33:46.083271+00:00",
+  "output_tokens_tiktoken": 98,
+  "output_tokens_anthropic": 177,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 11727,
+  "cache_read_input_tokens": 16796,
+  "total_input_tokens": 28529,
+  "cache_state": "warm",
+  "wallclock_ms": 11947.803297982318,
+  "duration_ms": 7365,
+  "duration_api_ms": 8117,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "3e97f64a-5f39-40ff-88fd-166b4099a505",
+  "total_cost_usd": 0.08656375,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "**TCP** — connection-oriented, reliable. Handshake, ordered delivery, retransmits lost packets, flow/congestion control. Used for HTTP, SSH, file transfer.\n\n**UDP** — connectionless, best-effort. No handshake, no ordering, no retransmit. Lower latency, lower overhead. Used for DNS, video/voice, gaming, QUIC.\n\nTrade-off: TCP trades latency for reliability; UDP trades reliability for speed and lets the app handle loss however it wants.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 7365,
+    "duration_api_ms": 8117,
+    "num_turns": 1,
+    "result": "**TCP** — connection-oriented, reliable. Handshake, ordered delivery, retransmits lost packets, flow/congestion control. Used for HTTP, SSH, file transfer.\n\n**UDP** — connectionless, best-effort. No handshake, no ordering, no retransmit. Lower latency, lower overhead. Used for DNS, video/voice, gaming, QUIC.\n\nTrade-off: TCP trades latency for reliability; UDP trades reliability for speed and lets the app handle loss however it wants.",
+    "stop_reason": "end_turn",
+    "session_id": "3e97f64a-5f39-40ff-88fd-166b4099a505",
+    "total_cost_usd": 0.08656375,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 11727,
+      "cache_read_input_tokens": 16796,
+      "output_tokens": 177,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 11727,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 177,
+          "cache_read_input_tokens": 16796,
+          "cache_creation_input_tokens": 11727,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 11727
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 347,
+        "outputTokens": 14,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.00041699999999999994,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 177,
+        "cacheReadInputTokens": 16796,
+        "cacheCreationInputTokens": 11727,
+        "webSearchRequests": 0,
+        "costUSD": 0.08614675,
+        "contextWindow": 200000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "c1cc9f1a-2a7c-48e7-ad2e-b5c263fce9e5"
+  }
+}

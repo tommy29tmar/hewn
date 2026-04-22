@@ -1,0 +1,105 @@
+{
+  "track": "T2",
+  "arm": "caveman_full",
+  "prompt_id": "login-button-broken",
+  "run_index": 2,
+  "arm_order_index": 5,
+  "arm_order_full": [
+    "caveman_full_plus_ultra_directive",
+    "baseline",
+    "hewn_prompt_only",
+    "terse",
+    "hewn_full",
+    "caveman_full"
+  ],
+  "digest_hex": "e1fff6cb5ce95b9c68e1704c12e3bb9788cf296894302e3a503c3240dcf37267",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T00:20:33.827573+00:00",
+  "output_tokens_tiktoken": 38,
+  "output_tokens_anthropic": 56,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 10491,
+  "cache_read_input_tokens": 15186,
+  "total_input_tokens": 25683,
+  "cache_state": "warm",
+  "wallclock_ms": 8037.157451006351,
+  "duration_ms": 2919,
+  "duration_api_ms": 3930,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "c8ab3405-eb05-46d9-8fc4-b7d5adbe5448",
+  "total_cost_usd": 0.07500575000000001,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "Need more info. What stack? What \"not work\" — click nothing, error, wrong redirect? Console log? Repo path?\n\nSend: file path of login button + error msg.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 2919,
+    "duration_api_ms": 3930,
+    "num_turns": 1,
+    "result": "Need more info. What stack? What \"not work\" — click nothing, error, wrong redirect? Console log? Repo path?\n\nSend: file path of login button + error msg.",
+    "stop_reason": "end_turn",
+    "session_id": "c8ab3405-eb05-46d9-8fc4-b7d5adbe5448",
+    "total_cost_usd": 0.07500575000000001,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 10491,
+      "cache_read_input_tokens": 15186,
+      "output_tokens": 56,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 10491,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 56,
+          "cache_read_input_tokens": 15186,
+          "cache_creation_input_tokens": 10491,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 10491
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 349,
+        "outputTokens": 13,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.00041400000000000003,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 56,
+        "cacheReadInputTokens": 15186,
+        "cacheCreationInputTokens": 10491,
+        "webSearchRequests": 0,
+        "costUSD": 0.07459175000000001,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "ebf0226b-3103-4a83-8a89-45a276dd5115"
+  }
+}

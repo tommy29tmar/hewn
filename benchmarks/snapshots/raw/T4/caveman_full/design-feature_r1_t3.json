@@ -1,0 +1,96 @@
+{
+  "track": "T4",
+  "arm": "caveman_full",
+  "sequence_id": "design-feature",
+  "run_index": 1,
+  "turn": 3,
+  "arm_order_index": 4,
+  "arm_order_full": [
+    "hewn_full",
+    "hewn_prompt_only",
+    "terse",
+    "baseline",
+    "caveman_full"
+  ],
+  "digest_hex": "30a2f9a62df0d790c0598917c3ab42509bbadd672a0a484741ea201d2da3b44f",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T01:14:54.030845+00:00",
+  "session_id_used_for_resume": "76d6c2fd-4d09-4f39-a793-96e383321b32",
+  "output_tokens_tiktoken": 906,
+  "output_tokens_anthropic": 1590,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 1138,
+  "cache_read_input_tokens": 26701,
+  "total_input_tokens": 27845,
+  "cache_state": "warm",
+  "wallclock_ms": 30922.561743005645,
+  "duration_ms": 27522,
+  "duration_api_ms": 27492,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "76d6c2fd-4d09-4f39-a793-96e383321b32",
+  "total_cost_usd": 0.060243000000000005,
+  "model_used": "claude-opus-4-7",
+  "result": "**Options, weakest → strongest:**\n\n**1. Read-then-write (no protection)** — broken. Classic lost update. Skip.\n\n**2. Optimistic concurrency (version column)**\n```sql\nUPDATE gift_cards SET balance = balance - :amt, version = version + 1\nWHERE code = :code AND version = :read_version AND balance >= :amt;\n```\n- If 0 rows affected → retry (re-read, recompute).\n- Pros: no locks held, scales, simple.\n- Cons: retry logic everywhere, livelock risk under heavy contention on one card (rare for gift cards — single user).\n- Good fit here.\n\n**3. Pessimistic row lock (`SELECT ... FOR UPDATE`)**\n```sql\nBEGIN;\nSELECT balance FROM gift_cards WHERE code = :code FOR UPDATE;\n-- compute, then\nUPDATE gift_cards SET balance = balance - :amt WHERE code = :code;\nCOMMIT;\n```\n- Pros: straightforward, no retry loop.\n- Cons: lock held across txn; if txn also does payment gateway call → long lock → contention, deadlock risk, connection starvation. **Never hold DB lock across external API call.**\n\n**4. Conditional atomic update (best for this case)**\n```sql\nUPDATE gift_cards SET balance = balance - :amt\nWHERE code = :code AND balance >= :amt\nRETURNING balance;\n```\n- Single statement, atomic, no explicit lock, no version column needed.\n- 0 rows → insufficient funds OR concurrent consumed it → handle same way (fail/retry).\n- `CHECK (balance >= 0)` constraint as belt-and-suspenders.\n\n**5. Advisory lock / app-level mutex (Redis, pg_advisory_lock)**\n- Serialize per-card.\n- Useful if consume logic spans multiple tables/services.\n- Redis lock → need fencing tokens, TTLs, Redlock debate. Avoid unless needed.\n\n---\n\n**Beyond the UPDATE — the real race is the checkout flow**\n\nDouble-spend isn't just two concurrent UPDATEs. It's:\n- t0: user A applies code to cart → reserve $50\n- t1: user A (different tab) applies same code → reserve $50 again\n- t2: both check out → one wins, other 500s at payment\n\nNeed **reservation/hold** state. Two patterns:\n\n**A. Two-phase: hold → capture**\n- `apply` inserts a `gift_card_hold(card_id, order_id, amount, expires_at)`.\n- Available balance = `balance - SUM(active holds)`.\n- On payment success → delete hold, decrement balance in same txn.\n- On payment fail / cart abandon / TTL expiry → delete hold.\n- This is a ledger-lite pattern sneaking back in. Accept it — holds are operational, not accounting.\n\n**B. Decrement immediately on apply, refund on abandon**\n- Simpler, but abandoned carts leak balance until cleanup job runs.\n- User sees \"balance $0\" right after applying → confusing if they abandon.\n\n**Recommend A.** Holds table even with mutable balance row.\n\n---\n\n**Idempotency**\n- Every consume op takes an `idempotency_key` (order_id + attempt).\n- Unique constraint `(card_id, idempotency_key)` on hold/consume record.\n- Retry safe: second attempt returns existing result, doesn't double-debit.\n\n---\n\n**Payment-fails-after-debit**\n- If you decrement balance, then gateway declines → must credit back.\n- Use saga: `reserve → charge → commit` or `reserve → charge → release`.\n- Never debit balance before payment auth succeeds. Reserve (hold), charge card, then commit (convert hold to permanent decrement). Order matters.\n\n---\n\n**Concrete stack for your case:**\n1. `gift_cards` row with `balance`, `version`, `CHECK (balance >= 0)`.\n2. `gift_card_holds` table: `(card_id, order_id UNIQUE, amount, expires_at)`.\n3. Apply at checkout → insert hold (conditional: `balance - active_holds_sum >= :amt`).\n4. On payment success → txn: delete hold + atomic `UPDATE ... WHERE balance >= :amt`.\n5. TTL sweeper deletes expired holds (15-30 min).\n6. Idempotency key per order on hold insert.\n\nThis keeps mutable-row consistency with wallets while solving the cart-level race, which the UPDATE alone can't.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 27522,
+    "duration_api_ms": 27492,
+    "num_turns": 1,
+    "result": "**Options, weakest → strongest:**\n\n**1. Read-then-write (no protection)** — broken. Classic lost update. Skip.\n\n**2. Optimistic concurrency (version column)**\n```sql\nUPDATE gift_cards SET balance = balance - :amt, version = version + 1\nWHERE code = :code AND version = :read_version AND balance >= :amt;\n```\n- If 0 rows affected → retry (re-read, recompute).\n- Pros: no locks held, scales, simple.\n- Cons: retry logic everywhere, livelock risk under heavy contention on one card (rare for gift cards — single user).\n- Good fit here.\n\n**3. Pessimistic row lock (`SELECT ... FOR UPDATE`)**\n```sql\nBEGIN;\nSELECT balance FROM gift_cards WHERE code = :code FOR UPDATE;\n-- compute, then\nUPDATE gift_cards SET balance = balance - :amt WHERE code = :code;\nCOMMIT;\n```\n- Pros: straightforward, no retry loop.\n- Cons: lock held across txn; if txn also does payment gateway call → long lock → contention, deadlock risk, connection starvation. **Never hold DB lock across external API call.**\n\n**4. Conditional atomic update (best for this case)**\n```sql\nUPDATE gift_cards SET balance = balance - :amt\nWHERE code = :code AND balance >= :amt\nRETURNING balance;\n```\n- Single statement, atomic, no explicit lock, no version column needed.\n- 0 rows → insufficient funds OR concurrent consumed it → handle same way (fail/retry).\n- `CHECK (balance >= 0)` constraint as belt-and-suspenders.\n\n**5. Advisory lock / app-level mutex (Redis, pg_advisory_lock)**\n- Serialize per-card.\n- Useful if consume logic spans multiple tables/services.\n- Redis lock → need fencing tokens, TTLs, Redlock debate. Avoid unless needed.\n\n---\n\n**Beyond the UPDATE — the real race is the checkout flow**\n\nDouble-spend isn't just two concurrent UPDATEs. It's:\n- t0: user A applies code to cart → reserve $50\n- t1: user A (different tab) applies same code → reserve $50 again\n- t2: both check out → one wins, other 500s at payment\n\nNeed **reservation/hold** state. Two patterns:\n\n**A. Two-phase: hold → capture**\n- `apply` inserts a `gift_card_hold(card_id, order_id, amount, expires_at)`.\n- Available balance = `balance - SUM(active holds)`.\n- On payment success → delete hold, decrement balance in same txn.\n- On payment fail / cart abandon / TTL expiry → delete hold.\n- This is a ledger-lite pattern sneaking back in. Accept it — holds are operational, not accounting.\n\n**B. Decrement immediately on apply, refund on abandon**\n- Simpler, but abandoned carts leak balance until cleanup job runs.\n- User sees \"balance $0\" right after applying → confusing if they abandon.\n\n**Recommend A.** Holds table even with mutable balance row.\n\n---\n\n**Idempotency**\n- Every consume op takes an `idempotency_key` (order_id + attempt).\n- Unique constraint `(card_id, idempotency_key)` on hold/consume record.\n- Retry safe: second attempt returns existing result, doesn't double-debit.\n\n---\n\n**Payment-fails-after-debit**\n- If you decrement balance, then gateway declines → must credit back.\n- Use saga: `reserve → charge → commit` or `reserve → charge → release`.\n- Never debit balance before payment auth succeeds. Reserve (hold), charge card, then commit (convert hold to permanent decrement). Order matters.\n\n---\n\n**Concrete stack for your case:**\n1. `gift_cards` row with `balance`, `version`, `CHECK (balance >= 0)`.\n2. `gift_card_holds` table: `(card_id, order_id UNIQUE, amount, expires_at)`.\n3. Apply at checkout → insert hold (conditional: `balance - active_holds_sum >= :amt`).\n4. On payment success → txn: delete hold + atomic `UPDATE ... WHERE balance >= :amt`.\n5. TTL sweeper deletes expired holds (15-30 min).\n6. Idempotency key per order on hold insert.\n\nThis keeps mutable-row consistency with wallets while solving the cart-level race, which the UPDATE alone can't.",
+    "stop_reason": "end_turn",
+    "session_id": "76d6c2fd-4d09-4f39-a793-96e383321b32",
+    "total_cost_usd": 0.060243000000000005,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 1138,
+      "cache_read_input_tokens": 26701,
+      "output_tokens": 1590,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 1138,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 1590,
+          "cache_read_input_tokens": 26701,
+          "cache_creation_input_tokens": 1138,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 1138
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 1590,
+        "cacheReadInputTokens": 26701,
+        "cacheCreationInputTokens": 1138,
+        "webSearchRequests": 0,
+        "costUSD": 0.060243000000000005,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "e9fecafa-0c28-421f-8d2d-b5784e3e274d"
+  }
+}

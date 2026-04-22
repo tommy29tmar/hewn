@@ -1,0 +1,106 @@
+{
+  "track": "T4",
+  "arm": "caveman_full",
+  "sequence_id": "design-feature",
+  "run_index": 1,
+  "turn": 1,
+  "arm_order_index": 4,
+  "arm_order_full": [
+    "hewn_full",
+    "hewn_prompt_only",
+    "terse",
+    "baseline",
+    "caveman_full"
+  ],
+  "digest_hex": "30a2f9a62df0d790c0598917c3ab42509bbadd672a0a484741ea201d2da3b44f",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T01:13:57.727814+00:00",
+  "session_id_used_for_resume": null,
+  "output_tokens_tiktoken": 504,
+  "output_tokens_anthropic": 887,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 10548,
+  "cache_read_input_tokens": 15186,
+  "total_input_tokens": 25740,
+  "cache_state": "warm",
+  "wallclock_ms": 21810.49144399003,
+  "duration_ms": 18635,
+  "duration_api_ms": 20699,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "76d6c2fd-4d09-4f39-a793-96e383321b32",
+  "total_cost_usd": 0.096184,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "Main decisions:\n\n**Data model**\n- Gift card = code + balance + currency + status (active/redeemed/void/expired)? Or code + ledger of txns (issue/redeem/refund)? Ledger = auditable, single-balance = simpler.\n- Code format: human-typed (short, risk collision) vs opaque token. Hash at rest or plaintext?\n- One code = one card, or reloadable?\n\n**Scope**\n- Currency: single or multi? FX on mixed-currency redeem?\n- Expiry? Jurisdictions ban it (US CARD Act, EU varies).\n- Transferable? Per-user bound?\n- Stackable with promo codes? Order of ops: gift card before or after discounts/tax/shipping?\n- Taxable base: apply gift card to pre-tax or post-tax total? (Legal: usually post-tax — treat as tender, not discount.)\n\n**Checkout flow**\n- Apply at checkout vs at payment step. Preview remaining before pay.\n- Partial redemption → leftover to card. What if balance ≥ total? Skip card entirely? Still need card for $0 auth?\n- Multiple codes per order?\n\n**Concurrency / integrity**\n- Prevent double-spend: lock balance on apply, commit on payment success, release on abandon/timeout.\n- Idempotency keys on redeem.\n- What if card auth fails after gift card debited? Saga/compensation: refund gift card atomically.\n\n**Refunds**\n- Refund to original tender split (gift card portion → gift card, card portion → card)? Or all to gift card? Or new card issued?\n- Refund re-credits balance or new code?\n\n**Fraud / abuse**\n- Rate-limit code entry (brute force).\n- CAPTCHA after N failed attempts.\n- Velocity limits per user/IP.\n- KYC for high-value cards.\n\n**Issuance**\n- How cards created: admin, purchase flow, promo, refund. Each path = different audit trail.\n- Delivery: email, print, physical.\n\n**Accounting**\n- Gift card sale = deferred revenue liability, not revenue. Recognize on redemption. Breakage policy for unredeemed.\n- Legal: unclaimed property / escheatment laws vary by state.\n\n**Ops**\n- Balance inquiry endpoint.\n- Admin void/reissue.\n- Reporting: outstanding liability, redemption rate, breakage.\n\nBiggest early forks: **ledger vs single-balance**, **tender vs discount** (tax implications), **refund policy**.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 18635,
+    "duration_api_ms": 20699,
+    "num_turns": 1,
+    "result": "Main decisions:\n\n**Data model**\n- Gift card = code + balance + currency + status (active/redeemed/void/expired)? Or code + ledger of txns (issue/redeem/refund)? Ledger = auditable, single-balance = simpler.\n- Code format: human-typed (short, risk collision) vs opaque token. Hash at rest or plaintext?\n- One code = one card, or reloadable?\n\n**Scope**\n- Currency: single or multi? FX on mixed-currency redeem?\n- Expiry? Jurisdictions ban it (US CARD Act, EU varies).\n- Transferable? Per-user bound?\n- Stackable with promo codes? Order of ops: gift card before or after discounts/tax/shipping?\n- Taxable base: apply gift card to pre-tax or post-tax total? (Legal: usually post-tax — treat as tender, not discount.)\n\n**Checkout flow**\n- Apply at checkout vs at payment step. Preview remaining before pay.\n- Partial redemption → leftover to card. What if balance ≥ total? Skip card entirely? Still need card for $0 auth?\n- Multiple codes per order?\n\n**Concurrency / integrity**\n- Prevent double-spend: lock balance on apply, commit on payment success, release on abandon/timeout.\n- Idempotency keys on redeem.\n- What if card auth fails after gift card debited? Saga/compensation: refund gift card atomically.\n\n**Refunds**\n- Refund to original tender split (gift card portion → gift card, card portion → card)? Or all to gift card? Or new card issued?\n- Refund re-credits balance or new code?\n\n**Fraud / abuse**\n- Rate-limit code entry (brute force).\n- CAPTCHA after N failed attempts.\n- Velocity limits per user/IP.\n- KYC for high-value cards.\n\n**Issuance**\n- How cards created: admin, purchase flow, promo, refund. Each path = different audit trail.\n- Delivery: email, print, physical.\n\n**Accounting**\n- Gift card sale = deferred revenue liability, not revenue. Recognize on redemption. Breakage policy for unredeemed.\n- Legal: unclaimed property / escheatment laws vary by state.\n\n**Ops**\n- Balance inquiry endpoint.\n- Admin void/reissue.\n- Reporting: outstanding liability, redemption rate, breakage.\n\nBiggest early forks: **ledger vs single-balance**, **tender vs discount** (tax implications), **refund policy**.",
+    "stop_reason": "end_turn",
+    "session_id": "76d6c2fd-4d09-4f39-a793-96e383321b32",
+    "total_cost_usd": 0.096184,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 10548,
+      "cache_read_input_tokens": 15186,
+      "output_tokens": 887,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 10548,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 887,
+          "cache_read_input_tokens": 15186,
+          "cache_creation_input_tokens": 10548,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 10548
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 391,
+        "outputTokens": 14,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.00046100000000000004,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 887,
+        "cacheReadInputTokens": 15186,
+        "cacheCreationInputTokens": 10548,
+        "webSearchRequests": 0,
+        "costUSD": 0.095723,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "bee4a0e4-3310-4a06-b339-0bf0f1085d80"
+  }
+}

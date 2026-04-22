@@ -1,0 +1,102 @@
+{
+  "track": "T1a",
+  "arm": "terse",
+  "prompt_id": "debounce-search",
+  "run_index": 1,
+  "arm_order_index": 1,
+  "arm_order_full": [
+    "baseline",
+    "terse",
+    "caveman_full"
+  ],
+  "digest_hex": "37dcfc04f7f9bb03f94bf4fe2a87d8ed70cc588f0bfaceb0e1c634e40f418a20",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-21T23:37:08.149582+00:00",
+  "output_tokens_tiktoken": 137,
+  "output_tokens_anthropic": 209,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 20297,
+  "total_input_tokens": 20303,
+  "cache_state": "warm",
+  "wallclock_ms": 10451.613551005721,
+  "duration_ms": 5004,
+  "duration_api_ms": 6259,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "5fcd048e-f0be-4352-9252-6eddb4998f1b",
+  "total_cost_usd": 0.0158365,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "A debouncer delays running the search until the user stops typing for a set interval (e.g., 300ms). Without it, every keystroke fires a request.\n\nBenefits:\n- **Fewer API calls** — one request per pause instead of per character\n- **Less server load** and lower cost\n- **Avoids race conditions** where a slow earlier response overwrites a newer one\n- **Smoother UI** — no flicker from rapid result swaps\n- **Battery/bandwidth savings** on mobile\n\nThrottle vs debounce: throttle fires at a max rate during typing; debounce waits for silence. For search, debounce is usually the right choice.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 5004,
+    "duration_api_ms": 6259,
+    "num_turns": 1,
+    "result": "A debouncer delays running the search until the user stops typing for a set interval (e.g., 300ms). Without it, every keystroke fires a request.\n\nBenefits:\n- **Fewer API calls** — one request per pause instead of per character\n- **Less server load** and lower cost\n- **Avoids race conditions** where a slow earlier response overwrites a newer one\n- **Smoother UI** — no flicker from rapid result swaps\n- **Battery/bandwidth savings** on mobile\n\nThrottle vs debounce: throttle fires at a max rate during typing; debounce waits for silence. For search, debounce is usually the right choice.",
+    "stop_reason": "end_turn",
+    "session_id": "5fcd048e-f0be-4352-9252-6eddb4998f1b",
+    "total_cost_usd": 0.0158365,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 20297,
+      "output_tokens": 209,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 0,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 209,
+          "cache_read_input_tokens": 20297,
+          "cache_creation_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 353,
+        "outputTokens": 16,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.000433,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 209,
+        "cacheReadInputTokens": 20297,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.0154035,
+        "contextWindow": 200000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "1d7271f3-6db0-4537-a197-27251e579801"
+  }
+}

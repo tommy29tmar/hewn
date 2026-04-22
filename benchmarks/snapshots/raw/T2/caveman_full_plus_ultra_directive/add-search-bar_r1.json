@@ -1,0 +1,105 @@
+{
+  "track": "T2",
+  "arm": "caveman_full_plus_ultra_directive",
+  "prompt_id": "add-search-bar",
+  "run_index": 1,
+  "arm_order_index": 5,
+  "arm_order_full": [
+    "hewn_prompt_only",
+    "terse",
+    "caveman_full",
+    "baseline",
+    "hewn_full",
+    "caveman_full_plus_ultra_directive"
+  ],
+  "digest_hex": "87154785cda4737305ac6142704bf42d817426f83c953447d3e28835e0246410",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T00:16:11.223213+00:00",
+  "output_tokens_tiktoken": 129,
+  "output_tokens_anthropic": 211,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 10491,
+  "cache_read_input_tokens": 15201,
+  "total_input_tokens": 25698,
+  "cache_state": "warm",
+  "wallclock_ms": 9464.859119994799,
+  "duration_ms": 6090,
+  "duration_api_ms": 7079,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "c60bc365-1318-44a0-8475-2df8ac848b67",
+  "total_cost_usd": 0.07889125000000001,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "Need more info. Quick qs:\n\n1. Stack? (React/Vue/Svelte/plain? backend?)\n2. Search what? (local list, DB, API, docs)\n3. Fuzzy or exact? Instant or on-submit?\n\nFast path if React + local list:\n1. `<input>` + `useState` for query\n2. Filter array: `items.filter(i => i.name.toLowerCase().includes(q.toLowerCase()))`\n3. Debounce if big list (`useDeferredValue` or 200ms timeout)\n\nDB/API: add endpoint `/search?q=`, index column, debounce client.\n\nWhich stack?",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 6090,
+    "duration_api_ms": 7079,
+    "num_turns": 1,
+    "result": "Need more info. Quick qs:\n\n1. Stack? (React/Vue/Svelte/plain? backend?)\n2. Search what? (local list, DB, API, docs)\n3. Fuzzy or exact? Instant or on-submit?\n\nFast path if React + local list:\n1. `<input>` + `useState` for query\n2. Filter array: `items.filter(i => i.name.toLowerCase().includes(q.toLowerCase()))`\n3. Debounce if big list (`useDeferredValue` or 200ms timeout)\n\nDB/API: add endpoint `/search?q=`, index column, debounce client.\n\nWhich stack?",
+    "stop_reason": "end_turn",
+    "session_id": "c60bc365-1318-44a0-8475-2df8ac848b67",
+    "total_cost_usd": 0.07889125000000001,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 10491,
+      "cache_read_input_tokens": 15201,
+      "output_tokens": 211,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 10491,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 211,
+          "cache_read_input_tokens": 15201,
+          "cache_creation_input_tokens": 10491,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 10491
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 352,
+        "outputTokens": 13,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.000417,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 211,
+        "cacheReadInputTokens": 15201,
+        "cacheCreationInputTokens": 10491,
+        "webSearchRequests": 0,
+        "costUSD": 0.07847425000000001,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "d11ec5a9-ef6d-4c61-a83a-37db929db133"
+  }
+}

@@ -1,0 +1,105 @@
+{
+  "track": "T1b",
+  "arm": "caveman_full",
+  "prompt_id": "hash-table-collisions",
+  "run_index": 1,
+  "arm_order_index": 0,
+  "arm_order_full": [
+    "caveman_full",
+    "hewn_prompt_only",
+    "hewn_full",
+    "caveman_full_plus_ultra_directive",
+    "baseline",
+    "terse"
+  ],
+  "digest_hex": "2a54ba54e1f7192ed7b81622a0de8bb31264ddae15be620c57cd7c027de6901e",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-21T23:45:34.469587+00:00",
+  "output_tokens_tiktoken": 93,
+  "output_tokens_anthropic": 138,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 21738,
+  "total_input_tokens": 21744,
+  "cache_state": "warm",
+  "wallclock_ms": 9785.212379996665,
+  "duration_ms": 4724,
+  "duration_api_ms": 5834,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "628e1460-645a-427b-867c-eff7410c0447",
+  "total_cost_usd": 0.014761,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "Two main ways:\n\n**Chaining** — each bucket hold linked list. Collision → append to list. Lookup = hash + walk list.\n\n**Open addressing** — collision → probe next slot. Variants:\n- Linear probe: `i+1, i+2...`\n- Quadratic: `i+1², i+2²...`\n- Double hash: step = `hash2(key)`\n\nLoad factor high → resize + rehash.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 4724,
+    "duration_api_ms": 5834,
+    "num_turns": 1,
+    "result": "Two main ways:\n\n**Chaining** — each bucket hold linked list. Collision → append to list. Lookup = hash + walk list.\n\n**Open addressing** — collision → probe next slot. Variants:\n- Linear probe: `i+1, i+2...`\n- Quadratic: `i+1², i+2²...`\n- Double hash: step = `hash2(key)`\n\nLoad factor high → resize + rehash.",
+    "stop_reason": "end_turn",
+    "session_id": "628e1460-645a-427b-867c-eff7410c0447",
+    "total_cost_usd": 0.014761,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 21738,
+      "output_tokens": 138,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 0,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 138,
+          "cache_read_input_tokens": 21738,
+          "cache_creation_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 347,
+        "outputTokens": 13,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.000412,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 138,
+        "cacheReadInputTokens": 21738,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.014349,
+        "contextWindow": 200000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "4642c7fc-ce15-4946-9a31-78d5c74be2ec"
+  }
+}

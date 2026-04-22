@@ -1,0 +1,105 @@
+{
+  "track": "T1b",
+  "arm": "baseline",
+  "prompt_id": "cors-errors",
+  "run_index": 2,
+  "arm_order_index": 1,
+  "arm_order_full": [
+    "terse",
+    "baseline",
+    "caveman_full_plus_ultra_directive",
+    "hewn_prompt_only",
+    "hewn_full",
+    "caveman_full"
+  ],
+  "digest_hex": "258887ceb8366586f3dea59b17c1ef6a12bb3fbc92c09a2a53837c2cc3a1ccbf",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-21T23:58:58.566109+00:00",
+  "output_tokens_tiktoken": 276,
+  "output_tokens_anthropic": 436,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 11730,
+  "cache_read_input_tokens": 16796,
+  "total_input_tokens": 28532,
+  "cache_state": "warm",
+  "wallclock_ms": 13750.805538002169,
+  "duration_ms": 8118,
+  "duration_api_ms": 10076,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "6a141f39-ea02-4bc5-a3af-e36ff63d3ef9",
+  "total_cost_usd": 0.0930655,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "CORS errors come from the browser blocking a cross-origin request because the server's response didn't include the headers the browser requires. Common causes:\n\n1. **Missing `Access-Control-Allow-Origin`** — server doesn't send it, or sends a value that doesn't match your page's origin.\n2. **Preflight (`OPTIONS`) failing** — for non-simple requests (custom headers, `PUT`/`DELETE`, JSON bodies), the browser sends an `OPTIONS` first. If the server doesn't handle it or omits `Access-Control-Allow-Methods`/`-Headers`, the real request never fires.\n3. **Credentials mismatch** — if you use `credentials: 'include'`, the server must send `Access-Control-Allow-Credentials: true` *and* a specific origin (not `*`).\n4. **Protocol/port mismatch** — `http://localhost:3000` and `http://localhost:5173` are different origins.\n5. **Redirects** — a redirect to another origin drops CORS headers unless the target also sets them.\n\nTo diagnose: open DevTools → Network, find the failing request, check the response headers and whether there's a preceding `OPTIONS` call. The exact error message in the console usually names the missing header.\n\nIf you share the error text or the request/response headers, I can pinpoint it.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 8118,
+    "duration_api_ms": 10076,
+    "num_turns": 1,
+    "result": "CORS errors come from the browser blocking a cross-origin request because the server's response didn't include the headers the browser requires. Common causes:\n\n1. **Missing `Access-Control-Allow-Origin`** — server doesn't send it, or sends a value that doesn't match your page's origin.\n2. **Preflight (`OPTIONS`) failing** — for non-simple requests (custom headers, `PUT`/`DELETE`, JSON bodies), the browser sends an `OPTIONS` first. If the server doesn't handle it or omits `Access-Control-Allow-Methods`/`-Headers`, the real request never fires.\n3. **Credentials mismatch** — if you use `credentials: 'include'`, the server must send `Access-Control-Allow-Credentials: true` *and* a specific origin (not `*`).\n4. **Protocol/port mismatch** — `http://localhost:3000` and `http://localhost:5173` are different origins.\n5. **Redirects** — a redirect to another origin drops CORS headers unless the target also sets them.\n\nTo diagnose: open DevTools → Network, find the failing request, check the response headers and whether there's a preceding `OPTIONS` call. The exact error message in the console usually names the missing header.\n\nIf you share the error text or the request/response headers, I can pinpoint it.",
+    "stop_reason": "end_turn",
+    "session_id": "6a141f39-ea02-4bc5-a3af-e36ff63d3ef9",
+    "total_cost_usd": 0.0930655,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 11730,
+      "cache_read_input_tokens": 16796,
+      "output_tokens": 436,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 11730,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 436,
+          "cache_read_input_tokens": 16796,
+          "cache_creation_input_tokens": 11730,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 11730
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 350,
+        "outputTokens": 15,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.00042500000000000003,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 436,
+        "cacheReadInputTokens": 16796,
+        "cacheCreationInputTokens": 11730,
+        "webSearchRequests": 0,
+        "costUSD": 0.0926405,
+        "contextWindow": 200000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "419d4f46-3998-4cd3-a59f-0dc2aa7823aa"
+  }
+}

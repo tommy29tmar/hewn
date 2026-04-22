@@ -1,0 +1,13 @@
+{
+  "final": {
+    "suggests_chunked_or_concurrency_limited_approach_e_g_p_limit_or_batched_promise_all": true,
+    "preserves_fast_path_for_typical_3_sku_case": true
+  },
+  "history": [
+    {
+      "attempt": 0,
+      "raw": "{\"suggests_chunked_or_concurrency_limited_approach_e_g_p_limit_or_batched_promise_all\": true, \"preserves_fast_path_for_typical_3_sku_case\": true}"
+    }
+  ],
+  "ts": "2026-04-22T02:04:02.012168+00:00"
+}

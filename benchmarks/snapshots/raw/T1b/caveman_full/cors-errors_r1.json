@@ -1,0 +1,105 @@
+{
+  "track": "T1b",
+  "arm": "caveman_full",
+  "prompt_id": "cors-errors",
+  "run_index": 1,
+  "arm_order_index": 2,
+  "arm_order_full": [
+    "terse",
+    "caveman_full_plus_ultra_directive",
+    "caveman_full",
+    "hewn_prompt_only",
+    "baseline",
+    "hewn_full"
+  ],
+  "digest_hex": "884a34005020aaa2decf7247298a83a400cb843e18bc330b080d55c1b5324fb3",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-21T23:47:20.127627+00:00",
+  "output_tokens_tiktoken": 133,
+  "output_tokens_anthropic": 248,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 6557,
+  "cache_read_input_tokens": 15186,
+  "total_input_tokens": 21749,
+  "cache_state": "warm",
+  "wallclock_ms": 11541.738100990187,
+  "duration_ms": 5632,
+  "duration_api_ms": 6567,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "79dee36b-46f5-4733-adbf-fd90e71b334b",
+  "total_cost_usd": 0.055234250000000006,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "Server no send `Access-Control-Allow-Origin` header for your origin. Browser block cross-origin fetch.\n\nFix options:\n- Add header on server: `Access-Control-Allow-Origin: <your-origin>` (or `*` if public, no credentials)\n- Preflight (`OPTIONS`): also need `Access-Control-Allow-Methods`, `Access-Control-Allow-Headers`\n- Credentials (`fetch` with `credentials: 'include'`): header must be exact origin, not `*`, plus `Access-Control-Allow-Credentials: true`\n- Dev hack: proxy via same-origin (Vite/Next rewrite) or browser extension\n\nPaste exact error msg → pinpoint cause.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 5632,
+    "duration_api_ms": 6567,
+    "num_turns": 1,
+    "result": "Server no send `Access-Control-Allow-Origin` header for your origin. Browser block cross-origin fetch.\n\nFix options:\n- Add header on server: `Access-Control-Allow-Origin: <your-origin>` (or `*` if public, no credentials)\n- Preflight (`OPTIONS`): also need `Access-Control-Allow-Methods`, `Access-Control-Allow-Headers`\n- Credentials (`fetch` with `credentials: 'include'`): header must be exact origin, not `*`, plus `Access-Control-Allow-Credentials: true`\n- Dev hack: proxy via same-origin (Vite/Next rewrite) or browser extension\n\nPaste exact error msg → pinpoint cause.",
+    "stop_reason": "end_turn",
+    "session_id": "79dee36b-46f5-4733-adbf-fd90e71b334b",
+    "total_cost_usd": 0.055234250000000006,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 6557,
+      "cache_read_input_tokens": 15186,
+      "output_tokens": 248,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 6557,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 248,
+          "cache_read_input_tokens": 15186,
+          "cache_creation_input_tokens": 6557,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 6557
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 350,
+        "outputTokens": 16,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.00043,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 248,
+        "cacheReadInputTokens": 15186,
+        "cacheCreationInputTokens": 6557,
+        "webSearchRequests": 0,
+        "costUSD": 0.054804250000000006,
+        "contextWindow": 200000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "12810c53-247f-469e-ba4e-884d064b8bf2"
+  }
+}

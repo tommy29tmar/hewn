@@ -1,0 +1,105 @@
+{
+  "track": "T1b",
+  "arm": "caveman_full_plus_ultra_directive",
+  "prompt_id": "hash-table-collisions",
+  "run_index": 1,
+  "arm_order_index": 3,
+  "arm_order_full": [
+    "caveman_full",
+    "hewn_prompt_only",
+    "hewn_full",
+    "caveman_full_plus_ultra_directive",
+    "baseline",
+    "terse"
+  ],
+  "digest_hex": "2a54ba54e1f7192ed7b81622a0de8bb31264ddae15be620c57cd7c027de6901e",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-21T23:46:14.772974+00:00",
+  "output_tokens_tiktoken": 117,
+  "output_tokens_anthropic": 178,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 6551,
+  "cache_read_input_tokens": 15201,
+  "total_input_tokens": 21758,
+  "cache_state": "warm",
+  "wallclock_ms": 10794.43615101627,
+  "duration_ms": 4931,
+  "duration_api_ms": 5926,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "4638167d-f543-49f3-aa6d-5d087487c428",
+  "total_cost_usd": 0.053436250000000005,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "Two main ways:\n\n**Chaining** — each bucket = linked list. Collide → append. Simple, handles high load. Cost: pointer chase.\n\n**Open addressing** — probe next slot. Variants:\n- Linear: i+1, i+2...\n- Quadratic: i+1², i+2²...\n- Double hash: i + k·h2(key)\n\nNeeds load factor < ~0.7, resize when full.\n\nAlso: Robin Hood (swap on probe distance), Cuckoo (2 tables, evict), Hopscoth.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 4931,
+    "duration_api_ms": 5926,
+    "num_turns": 1,
+    "result": "Two main ways:\n\n**Chaining** — each bucket = linked list. Collide → append. Simple, handles high load. Cost: pointer chase.\n\n**Open addressing** — probe next slot. Variants:\n- Linear: i+1, i+2...\n- Quadratic: i+1², i+2²...\n- Double hash: i + k·h2(key)\n\nNeeds load factor < ~0.7, resize when full.\n\nAlso: Robin Hood (swap on probe distance), Cuckoo (2 tables, evict), Hopscoth.",
+    "stop_reason": "end_turn",
+    "session_id": "4638167d-f543-49f3-aa6d-5d087487c428",
+    "total_cost_usd": 0.053436250000000005,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 6551,
+      "cache_read_input_tokens": 15201,
+      "output_tokens": 178,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 6551,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 178,
+          "cache_read_input_tokens": 15201,
+          "cache_creation_input_tokens": 6551,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 6551
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 347,
+        "outputTokens": 13,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.000412,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 178,
+        "cacheReadInputTokens": 15201,
+        "cacheCreationInputTokens": 6551,
+        "webSearchRequests": 0,
+        "costUSD": 0.05302425,
+        "contextWindow": 200000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "06059516-b7b4-46fa-b344-67a8d60aa1d5"
+  }
+}

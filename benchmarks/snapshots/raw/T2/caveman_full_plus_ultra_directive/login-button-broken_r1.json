@@ -1,0 +1,105 @@
+{
+  "track": "T2",
+  "arm": "caveman_full_plus_ultra_directive",
+  "prompt_id": "login-button-broken",
+  "run_index": 1,
+  "arm_order_index": 5,
+  "arm_order_full": [
+    "hewn_prompt_only",
+    "terse",
+    "baseline",
+    "hewn_full",
+    "caveman_full",
+    "caveman_full_plus_ultra_directive"
+  ],
+  "digest_hex": "2a516f124e7c3f36519661dd85a98f48aa78e74bb3ea51fb090afd928de500ea",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T00:15:20.240798+00:00",
+  "output_tokens_tiktoken": 67,
+  "output_tokens_anthropic": 106,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 10490,
+  "cache_read_input_tokens": 15201,
+  "total_input_tokens": 25697,
+  "cache_state": "warm",
+  "wallclock_ms": 8803.344502986874,
+  "duration_ms": 4063,
+  "duration_api_ms": 4945,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "f8b04a2a-b59c-4bfa-b803-bb4fcab2ea84",
+  "total_cost_usd": 0.076252,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "Need info. Which app? Repo path? Error msg/console log? Reproducible URL?\n\nFastest path: run `/gstack-investigate` — root cause loop. Or paste:\n- Repo/dir\n- Login page URL\n- Console + network tab errors\n- Recent commits touching auth\n\nThen me debug.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 4063,
+    "duration_api_ms": 4945,
+    "num_turns": 1,
+    "result": "Need info. Which app? Repo path? Error msg/console log? Reproducible URL?\n\nFastest path: run `/gstack-investigate` — root cause loop. Or paste:\n- Repo/dir\n- Login page URL\n- Console + network tab errors\n- Recent commits touching auth\n\nThen me debug.",
+    "stop_reason": "end_turn",
+    "session_id": "f8b04a2a-b59c-4bfa-b803-bb4fcab2ea84",
+    "total_cost_usd": 0.076252,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 10490,
+      "cache_read_input_tokens": 15201,
+      "output_tokens": 106,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 10490,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 106,
+          "cache_read_input_tokens": 15201,
+          "cache_creation_input_tokens": 10490,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 10490
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 349,
+        "outputTokens": 12,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.000409,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 106,
+        "cacheReadInputTokens": 15201,
+        "cacheCreationInputTokens": 10490,
+        "webSearchRequests": 0,
+        "costUSD": 0.075843,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "a466a300-88f1-4100-add8-51a8d8bdfd3b"
+  }
+}

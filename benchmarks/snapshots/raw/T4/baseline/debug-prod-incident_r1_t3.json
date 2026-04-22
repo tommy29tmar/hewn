@@ -1,0 +1,96 @@
+{
+  "track": "T4",
+  "arm": "baseline",
+  "sequence_id": "debug-prod-incident",
+  "run_index": 1,
+  "turn": 3,
+  "arm_order_index": 0,
+  "arm_order_full": [
+    "baseline",
+    "hewn_full",
+    "hewn_prompt_only",
+    "caveman_full",
+    "terse"
+  ],
+  "digest_hex": "c436155c1e87e76d88e6f2c66d47c90c16ae78237b0a8de1b93824cf92fb5c9b",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T00:57:12.446469+00:00",
+  "session_id_used_for_resume": "b095a9ed-419c-4efc-bd31-af55f6a295e0",
+  "output_tokens_tiktoken": 343,
+  "output_tokens_anthropic": 746,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 267,
+  "cache_read_input_tokens": 33431,
+  "total_input_tokens": 33704,
+  "cache_state": "warm",
+  "wallclock_ms": 16091.0303510027,
+  "duration_ms": 12837,
+  "duration_api_ms": 12807,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "b095a9ed-419c-4efc-bd31-af55f6a295e0",
+  "total_cost_usd": 0.03706424999999999,
+  "model_used": "claude-opus-4-7",
+  "result": "Two tests, different layers:\n\n**1. Contract test on `buildCart`** — pins the return shape so dropping a field fails loudly:\n\n```js\ntest('buildCart returns id, items, and total', () => {\n  const cart = { id: 'c1', items: [{ price: 10, qty: 2 }, { price: 5, qty: 1 }] };\n  expect(buildCart(cart)).toEqual({\n    id: 'c1',\n    items: cart.items,\n    total: 25,\n  });\n});\n```\n\nUse `toEqual` (not `toMatchObject`) so extra or missing fields both fail. This is the test that would have caught the regression.\n\n**2. Integration test on `createOrder`** — exercises the actual failure path:\n\n```js\ntest('createOrder succeeds for a valid cart', async () => {\n  const res = await createOrder({ cart: { id: 'c1', items: [{ price: 10, qty: 1 }] }, userId: 'u1' });\n  expect(res.status).toBe(201);\n  expect(res.body.items).toHaveLength(1);\n});\n```\n\nThis catches the *class* of bug (handler crashes on a realistic payload), not just this specific field drop.\n\nSkip snapshot tests here — they encourage rubber-stamping when the shape changes intentionally. Explicit `toEqual` forces a real decision.\n\nIf `buildCart` has multiple consumers, also worth a quick `expect(typeof buildCart(cart).items).toBe('object')`-style smoke check at each callsite, but the contract test above is the load-bearing one.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 12837,
+    "duration_api_ms": 12807,
+    "num_turns": 1,
+    "result": "Two tests, different layers:\n\n**1. Contract test on `buildCart`** — pins the return shape so dropping a field fails loudly:\n\n```js\ntest('buildCart returns id, items, and total', () => {\n  const cart = { id: 'c1', items: [{ price: 10, qty: 2 }, { price: 5, qty: 1 }] };\n  expect(buildCart(cart)).toEqual({\n    id: 'c1',\n    items: cart.items,\n    total: 25,\n  });\n});\n```\n\nUse `toEqual` (not `toMatchObject`) so extra or missing fields both fail. This is the test that would have caught the regression.\n\n**2. Integration test on `createOrder`** — exercises the actual failure path:\n\n```js\ntest('createOrder succeeds for a valid cart', async () => {\n  const res = await createOrder({ cart: { id: 'c1', items: [{ price: 10, qty: 1 }] }, userId: 'u1' });\n  expect(res.status).toBe(201);\n  expect(res.body.items).toHaveLength(1);\n});\n```\n\nThis catches the *class* of bug (handler crashes on a realistic payload), not just this specific field drop.\n\nSkip snapshot tests here — they encourage rubber-stamping when the shape changes intentionally. Explicit `toEqual` forces a real decision.\n\nIf `buildCart` has multiple consumers, also worth a quick `expect(typeof buildCart(cart).items).toBe('object')`-style smoke check at each callsite, but the contract test above is the load-bearing one.",
+    "stop_reason": "end_turn",
+    "session_id": "b095a9ed-419c-4efc-bd31-af55f6a295e0",
+    "total_cost_usd": 0.03706424999999999,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 267,
+      "cache_read_input_tokens": 33431,
+      "output_tokens": 746,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 267,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 746,
+          "cache_read_input_tokens": 33431,
+          "cache_creation_input_tokens": 267,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 267
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 746,
+        "cacheReadInputTokens": 33431,
+        "cacheCreationInputTokens": 267,
+        "webSearchRequests": 0,
+        "costUSD": 0.03706424999999999,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "b839471c-bb05-4b12-a9cd-41a6afe92d97"
+  }
+}

@@ -1,0 +1,105 @@
+{
+  "track": "T1b",
+  "arm": "caveman_full_plus_ultra_directive",
+  "prompt_id": "react-rerender-parent",
+  "run_index": 2,
+  "arm_order_index": 4,
+  "arm_order_full": [
+    "terse",
+    "hewn_prompt_only",
+    "hewn_full",
+    "baseline",
+    "caveman_full_plus_ultra_directive",
+    "caveman_full"
+  ],
+  "digest_hex": "5c7062d59c99ec93d8648382caa16140c672b41605bcf28c536ff4956e9b7125",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-21T23:52:04.268068+00:00",
+  "output_tokens_tiktoken": 82,
+  "output_tokens_anthropic": 131,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 6556,
+  "cache_read_input_tokens": 15201,
+  "total_input_tokens": 21763,
+  "cache_state": "warm",
+  "wallclock_ms": 9197.796363005182,
+  "duration_ms": 4189,
+  "duration_api_ms": 5250,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "68ac7ad3-8426-4042-be7e-80b7edc9067f",
+  "total_cost_usd": 0.0523075,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "Parent re-render → child re-render default. Props new ref each time even if \"same\".\n\nFix:\n- Wrap child: `React.memo(Child)`\n- Stable props: `useMemo` objects/arrays, `useCallback` fns\n- Avoid inline `{}`/`[]`/`() =>` in JSX\n\n`memo` + stable props → skip re-render when props shallow-equal.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 4189,
+    "duration_api_ms": 5250,
+    "num_turns": 1,
+    "result": "Parent re-render → child re-render default. Props new ref each time even if \"same\".\n\nFix:\n- Wrap child: `React.memo(Child)`\n- Stable props: `useMemo` objects/arrays, `useCallback` fns\n- Avoid inline `{}`/`[]`/`() =>` in JSX\n\n`memo` + stable props → skip re-render when props shallow-equal.",
+    "stop_reason": "end_turn",
+    "session_id": "68ac7ad3-8426-4042-be7e-80b7edc9067f",
+    "total_cost_usd": 0.0523075,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 6556,
+      "cache_read_input_tokens": 15201,
+      "output_tokens": 131,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 6556,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 131,
+          "cache_read_input_tokens": 15201,
+          "cache_creation_input_tokens": 6556,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 6556
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 352,
+        "outputTokens": 15,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.00042699999999999997,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 131,
+        "cacheReadInputTokens": 15201,
+        "cacheCreationInputTokens": 6556,
+        "webSearchRequests": 0,
+        "costUSD": 0.0518805,
+        "contextWindow": 200000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "18fa0c79-8998-43d9-a22d-461590d23e56"
+  }
+}

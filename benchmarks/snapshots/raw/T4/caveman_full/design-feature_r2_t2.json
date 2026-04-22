@@ -1,0 +1,96 @@
+{
+  "track": "T4",
+  "arm": "caveman_full",
+  "sequence_id": "design-feature",
+  "run_index": 2,
+  "turn": 2,
+  "arm_order_index": 1,
+  "arm_order_full": [
+    "baseline",
+    "caveman_full",
+    "hewn_prompt_only",
+    "terse",
+    "hewn_full"
+  ],
+  "digest_hex": "3191b019d37f08f3d5b68d9000f1aeb1e1a3524225f9daa893803df1e240ffd1",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T01:26:36.129787+00:00",
+  "session_id_used_for_resume": "8e132c32-35f8-4ed4-abb5-c4a26e5c9a79",
+  "output_tokens_tiktoken": 541,
+  "output_tokens_anthropic": 1045,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 788,
+  "cache_read_input_tokens": 25734,
+  "total_input_tokens": 26528,
+  "cache_state": "warm",
+  "wallclock_ms": 23968.468887003837,
+  "duration_ms": 20747,
+  "duration_api_ms": 20726,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "8e132c32-35f8-4ed4-abb5-c4a26e5c9a79",
+  "total_cost_usd": 0.043947,
+  "model_used": "claude-opus-4-7",
+  "result": "**Mutable row** (`current_balance` field, UPDATE on redeem):\n\nPros:\n- Consistent w/ existing wallet code. Reuse patterns, ops mental model.\n- Read = single row, no aggregation. Fast balance check.\n- Simple schema.\n- Row lock on update = trivial concurrency story.\n\nCons:\n- No history. \"Why is balance $3.47?\" → unanswerable without separate audit log.\n- Refund/reversal hard. Must reconstruct intent.\n- Bugs destroy money silently. Off-by-one in UPDATE = gone.\n- Regulatory: gift cards = liability on books. Auditors want ledger. Many jurisdictions legally require transaction history for stored value.\n- Disputes (\"I had $50, now $20\") = no proof either way.\n\n**Event-sourced ledger** (append-only `gift_card_transactions`, balance = SUM):\n\nPros:\n- Full history free. Every debit/credit traceable to order_id, refund_id, reason.\n- Append-only = harder to corrupt. No UPDATE = no lost-update class of bugs.\n- Refunds = insert compensating entry. Natural model.\n- Accounting reconciliation trivial (deferred revenue ↔ ledger sum).\n- Fraud investigation, customer support, legal disputes all solvable.\n- Matches double-entry accounting if you go full ledger (debit cash, credit gift card liability).\n\nCons:\n- Balance read = SUM(amount) WHERE card_id=X. Slower at scale. Mitigation: cached balance column updated in same tx, or balance snapshot every N events.\n- More schema, more code.\n- Concurrency: still need serialization for \"do I have enough?\" check. Usually solved via SELECT ... FOR UPDATE on card row, or insert-with-check-constraint pattern.\n- Diverges from wallet pattern. Two mental models in codebase.\n\n**Recommendation for gift cards specifically: ledger.**\n\nReasons gift cards ≠ wallets:\n- Gift cards = bearer instrument, regulated stored value. Wallets often = internal credit, less scrutiny.\n- Gift cards = deferred revenue liability on balance sheet. Accounting wants ledger.\n- Gift cards bought as gifts → high dispute rate (\"recipient says zero balance\"). Need proof.\n- Compliance (CARD Act, state escheatment laws) wants transaction record.\n\nHybrid pattern (best of both):\n- `gift_cards.current_balance` = denormalized cached column, updated in same tx as ledger insert.\n- `gift_card_ledger` = append-only source of truth.\n- Reads use cached column. Audits/reconciliation use ledger. Periodic job verifies `cached == SUM(ledger)`, alerts on drift.\n\nThis gives wallet-like read perf + full auditability. Worth the divergence from wallet pattern.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 20747,
+    "duration_api_ms": 20726,
+    "num_turns": 1,
+    "result": "**Mutable row** (`current_balance` field, UPDATE on redeem):\n\nPros:\n- Consistent w/ existing wallet code. Reuse patterns, ops mental model.\n- Read = single row, no aggregation. Fast balance check.\n- Simple schema.\n- Row lock on update = trivial concurrency story.\n\nCons:\n- No history. \"Why is balance $3.47?\" → unanswerable without separate audit log.\n- Refund/reversal hard. Must reconstruct intent.\n- Bugs destroy money silently. Off-by-one in UPDATE = gone.\n- Regulatory: gift cards = liability on books. Auditors want ledger. Many jurisdictions legally require transaction history for stored value.\n- Disputes (\"I had $50, now $20\") = no proof either way.\n\n**Event-sourced ledger** (append-only `gift_card_transactions`, balance = SUM):\n\nPros:\n- Full history free. Every debit/credit traceable to order_id, refund_id, reason.\n- Append-only = harder to corrupt. No UPDATE = no lost-update class of bugs.\n- Refunds = insert compensating entry. Natural model.\n- Accounting reconciliation trivial (deferred revenue ↔ ledger sum).\n- Fraud investigation, customer support, legal disputes all solvable.\n- Matches double-entry accounting if you go full ledger (debit cash, credit gift card liability).\n\nCons:\n- Balance read = SUM(amount) WHERE card_id=X. Slower at scale. Mitigation: cached balance column updated in same tx, or balance snapshot every N events.\n- More schema, more code.\n- Concurrency: still need serialization for \"do I have enough?\" check. Usually solved via SELECT ... FOR UPDATE on card row, or insert-with-check-constraint pattern.\n- Diverges from wallet pattern. Two mental models in codebase.\n\n**Recommendation for gift cards specifically: ledger.**\n\nReasons gift cards ≠ wallets:\n- Gift cards = bearer instrument, regulated stored value. Wallets often = internal credit, less scrutiny.\n- Gift cards = deferred revenue liability on balance sheet. Accounting wants ledger.\n- Gift cards bought as gifts → high dispute rate (\"recipient says zero balance\"). Need proof.\n- Compliance (CARD Act, state escheatment laws) wants transaction record.\n\nHybrid pattern (best of both):\n- `gift_cards.current_balance` = denormalized cached column, updated in same tx as ledger insert.\n- `gift_card_ledger` = append-only source of truth.\n- Reads use cached column. Audits/reconciliation use ledger. Periodic job verifies `cached == SUM(ledger)`, alerts on drift.\n\nThis gives wallet-like read perf + full auditability. Worth the divergence from wallet pattern.",
+    "stop_reason": "end_turn",
+    "session_id": "8e132c32-35f8-4ed4-abb5-c4a26e5c9a79",
+    "total_cost_usd": 0.043947,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 788,
+      "cache_read_input_tokens": 25734,
+      "output_tokens": 1045,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 788,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 1045,
+          "cache_read_input_tokens": 25734,
+          "cache_creation_input_tokens": 788,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 788
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 1045,
+        "cacheReadInputTokens": 25734,
+        "cacheCreationInputTokens": 788,
+        "webSearchRequests": 0,
+        "costUSD": 0.043947,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "c50ca73a-7e7d-4aa5-920e-b6ddee88518b"
+  }
+}

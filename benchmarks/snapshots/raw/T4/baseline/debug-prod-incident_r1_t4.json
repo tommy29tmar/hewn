@@ -1,0 +1,96 @@
+{
+  "track": "T4",
+  "arm": "baseline",
+  "sequence_id": "debug-prod-incident",
+  "run_index": 1,
+  "turn": 4,
+  "arm_order_index": 0,
+  "arm_order_full": [
+    "baseline",
+    "hewn_full",
+    "hewn_prompt_only",
+    "caveman_full",
+    "terse"
+  ],
+  "digest_hex": "c436155c1e87e76d88e6f2c66d47c90c16ae78237b0a8de1b93824cf92fb5c9b",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T00:57:32.269589+00:00",
+  "session_id_used_for_resume": "b095a9ed-419c-4efc-bd31-af55f6a295e0",
+  "output_tokens_tiktoken": 325,
+  "output_tokens_anthropic": 908,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 833,
+  "cache_read_input_tokens": 33698,
+  "total_input_tokens": 34537,
+  "cache_state": "warm",
+  "wallclock_ms": 19822.184922988527,
+  "duration_ms": 16525,
+  "duration_api_ms": 16499,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "b095a9ed-419c-4efc-bd31-af55f6a295e0",
+  "total_cost_usd": 0.04478525,
+  "model_used": "claude-opus-4-7",
+  "result": "Unbounded `Promise.all` against a shared pool is a load-time footgun, not a correctness bug. Here's the math:\n\n- Sequential: 1 connection per request, regardless of cart size.\n- `Promise.all`: up to N connections per request, where N = items in cart.\n\nPool of 20: a single 30-item cart queues 10 of its own queries. Five concurrent orders with 10 items each = 50 queries fighting for 20 slots, **plus** every other endpoint (reads, health checks, auth lookups) gets queued behind them. P50 likely drops, P99 and tail latency get worse under load, and you can cascade into request timeouts that look unrelated.\n\nThree options, in order of preference:\n\n1. **Batch into one query.** `SELECT * FROM inventory WHERE sku IN (...)`. One connection, one round trip, strictly better than both the loop and `Promise.all`. This is almost always the right answer for \"N lookups by ID.\"\n\n2. **Bounded concurrency** if batching isn't possible (different tables, different shards, etc.). Use `p-limit` with a cap of ~5:\n   ```js\n   const limit = pLimit(5);\n   await Promise.all(skus.map(sku => limit(() => lookup(sku))));\n   ```\n\n3. **Keep the sequential loop** if cart sizes are small (<5) and latency isn't a concern. Boring and safe.\n\nWhat I'd ask the PR author: what's the P99 cart size? If it's >10, ship option 1 before this hits production again.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 16525,
+    "duration_api_ms": 16499,
+    "num_turns": 1,
+    "result": "Unbounded `Promise.all` against a shared pool is a load-time footgun, not a correctness bug. Here's the math:\n\n- Sequential: 1 connection per request, regardless of cart size.\n- `Promise.all`: up to N connections per request, where N = items in cart.\n\nPool of 20: a single 30-item cart queues 10 of its own queries. Five concurrent orders with 10 items each = 50 queries fighting for 20 slots, **plus** every other endpoint (reads, health checks, auth lookups) gets queued behind them. P50 likely drops, P99 and tail latency get worse under load, and you can cascade into request timeouts that look unrelated.\n\nThree options, in order of preference:\n\n1. **Batch into one query.** `SELECT * FROM inventory WHERE sku IN (...)`. One connection, one round trip, strictly better than both the loop and `Promise.all`. This is almost always the right answer for \"N lookups by ID.\"\n\n2. **Bounded concurrency** if batching isn't possible (different tables, different shards, etc.). Use `p-limit` with a cap of ~5:\n   ```js\n   const limit = pLimit(5);\n   await Promise.all(skus.map(sku => limit(() => lookup(sku))));\n   ```\n\n3. **Keep the sequential loop** if cart sizes are small (<5) and latency isn't a concern. Boring and safe.\n\nWhat I'd ask the PR author: what's the P99 cart size? If it's >10, ship option 1 before this hits production again.",
+    "stop_reason": "end_turn",
+    "session_id": "b095a9ed-419c-4efc-bd31-af55f6a295e0",
+    "total_cost_usd": 0.04478525,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 833,
+      "cache_read_input_tokens": 33698,
+      "output_tokens": 908,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 833,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 908,
+          "cache_read_input_tokens": 33698,
+          "cache_creation_input_tokens": 833,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 833
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 908,
+        "cacheReadInputTokens": 33698,
+        "cacheCreationInputTokens": 833,
+        "webSearchRequests": 0,
+        "costUSD": 0.04478525,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "67dcdbfc-95c3-49da-9980-46a089cb9677"
+  }
+}

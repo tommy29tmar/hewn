@@ -1,0 +1,103 @@
+{
+  "track": "T0",
+  "arm": "terse_appended",
+  "prompt_id": "cors-errors",
+  "run_index": 1,
+  "arm_order_index": 1,
+  "arm_order_full": [
+    "terse",
+    "terse_appended",
+    "caveman_full",
+    "caveman_full_appended"
+  ],
+  "digest_hex": "884a34005020aaa2decf7247298a83a400cb843e18bc330b080d55c1b5324fb3",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-21T23:29:25.399613+00:00",
+  "output_tokens_tiktoken": 267,
+  "output_tokens_anthropic": 500,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 11738,
+  "cache_read_input_tokens": 16805,
+  "total_input_tokens": 28549,
+  "cache_state": "warm",
+  "wallclock_ms": 14540.30993199558,
+  "duration_ms": 8609,
+  "duration_api_ms": 9424,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "43c8d58d-babf-406a-8177-18d9c3c96202",
+  "total_cost_usd": 0.09471999999999998,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "CORS errors happen when your frontend (origin A) makes a request to a server (origin B) that doesn't explicitly allow origin A. The browser blocks the response — the request usually *does* reach the server, but JS can't read it.\n\nCommon causes:\n\n1. **Server missing `Access-Control-Allow-Origin`** — add it, matching your frontend's origin (not `*` if you send credentials).\n2. **Preflight (OPTIONS) failing** — triggered by non-simple methods (PUT/DELETE), custom headers (e.g. `Authorization`, `Content-Type: application/json`). Server must respond 2xx to OPTIONS with `Access-Control-Allow-Methods` and `Access-Control-Allow-Headers`.\n3. **Credentials mismatch** — if you use `fetch(..., { credentials: 'include' })`, server needs `Access-Control-Allow-Credentials: true` *and* a specific origin (not `*`).\n4. **Wrong protocol/port/subdomain** — `http://localhost:3000` ≠ `http://localhost:3001` ≠ `https://localhost:3000`.\n5. **Redirects** — CORS headers must be present on every hop.\n\nPaste the exact error message and the request (URL, method, headers) and I can pinpoint which one.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 8609,
+    "duration_api_ms": 9424,
+    "num_turns": 1,
+    "result": "CORS errors happen when your frontend (origin A) makes a request to a server (origin B) that doesn't explicitly allow origin A. The browser blocks the response — the request usually *does* reach the server, but JS can't read it.\n\nCommon causes:\n\n1. **Server missing `Access-Control-Allow-Origin`** — add it, matching your frontend's origin (not `*` if you send credentials).\n2. **Preflight (OPTIONS) failing** — triggered by non-simple methods (PUT/DELETE), custom headers (e.g. `Authorization`, `Content-Type: application/json`). Server must respond 2xx to OPTIONS with `Access-Control-Allow-Methods` and `Access-Control-Allow-Headers`.\n3. **Credentials mismatch** — if you use `fetch(..., { credentials: 'include' })`, server needs `Access-Control-Allow-Credentials: true` *and* a specific origin (not `*`).\n4. **Wrong protocol/port/subdomain** — `http://localhost:3000` ≠ `http://localhost:3001` ≠ `https://localhost:3000`.\n5. **Redirects** — CORS headers must be present on every hop.\n\nPaste the exact error message and the request (URL, method, headers) and I can pinpoint which one.",
+    "stop_reason": "end_turn",
+    "session_id": "43c8d58d-babf-406a-8177-18d9c3c96202",
+    "total_cost_usd": 0.09471999999999998,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 11738,
+      "cache_read_input_tokens": 16805,
+      "output_tokens": 500,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 11738,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 500,
+          "cache_read_input_tokens": 16805,
+          "cache_creation_input_tokens": 11738,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 11738
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 350,
+        "outputTokens": 15,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.00042500000000000003,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 500,
+        "cacheReadInputTokens": 16805,
+        "cacheCreationInputTokens": 11738,
+        "webSearchRequests": 0,
+        "costUSD": 0.09429499999999999,
+        "contextWindow": 200000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "979bc6f7-7a42-4a03-a8cc-aee72ecbd958"
+  }
+}

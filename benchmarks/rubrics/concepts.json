@@ -1,0 +1,164 @@
+{
+  "version": 1,
+  "_comment": "Hardcoded rubric: per prompt_id, list the required concepts the response must cover. Judge returns binary present/absent per concept. Concept names must be precise enough that the judge can verify presence without subjective scoring.",
+  "short_en": {
+    "react-rerender-parent": [
+      "parent_re_render_triggers_child_re_render_by_default",
+      "react_memo_can_skip_re_render_if_props_unchanged",
+      "object_or_function_props_create_new_reference_each_render",
+      "useMemo_or_useCallback_to_stabilize_references"
+    ],
+    "explain-db-pool": [
+      "pool_reuses_open_connections",
+      "avoids_per_request_connection_handshake_cost",
+      "max_pool_size_is_bounded",
+      "idle_or_acquire_timeout_relevant"
+    ],
+    "tcp-vs-udp": [
+      "tcp_is_connection_oriented",
+      "udp_is_connectionless",
+      "tcp_guarantees_ordered_delivery",
+      "udp_does_not_guarantee_delivery_or_order",
+      "tcp_higher_overhead_lower_throughput",
+      "use_case_examples_for_each"
+    ],
+    "fix-node-memory-leak": [
+      "use_heap_snapshot_or_profiler",
+      "look_for_growing_object_retainers",
+      "common_culprits_event_listeners_or_closures_or_caches",
+      "tools_like_node_inspect_or_clinic_or_chrome_devtools"
+    ],
+    "sql-explain": [
+      "shows_query_execution_plan",
+      "indicates_index_usage_or_scan_type",
+      "estimated_row_counts_or_costs",
+      "helps_diagnose_slow_queries"
+    ],
+    "hash-table-collisions": [
+      "chaining_with_linked_list",
+      "open_addressing_with_probing",
+      "load_factor_relevance",
+      "hash_function_quality_matters"
+    ],
+    "cors-errors": [
+      "browser_enforces_same_origin_policy",
+      "server_must_send_access_control_allow_origin_header",
+      "preflight_options_request_for_non_simple_methods",
+      "credentials_require_explicit_allow_credentials"
+    ],
+    "debounce-search": [
+      "limits_request_rate_during_typing",
+      "fires_only_after_user_pauses",
+      "saves_server_load_or_api_quota",
+      "improves_user_experience_or_avoids_stale_results"
+    ],
+    "git-rebase-vs-merge": [
+      "rebase_rewrites_history_replays_commits",
+      "merge_creates_a_merge_commit",
+      "rebase_produces_linear_history",
+      "merge_preserves_branch_topology",
+      "rebase_should_not_be_used_on_shared_public_branches"
+    ],
+    "queue-vs-topic": [
+      "queue_is_one_to_one_or_competing_consumers",
+      "topic_is_one_to_many_publish_subscribe",
+      "queue_message_consumed_once",
+      "topic_message_delivered_to_each_subscriber",
+      "use_case_examples_for_each"
+    ]
+  },
+  "vibe_en": {
+    "make-website-faster": [
+      "asks_for_or_assumes_what_kind_of_slow",
+      "mentions_measurement_first_e_g_lighthouse_or_devtools",
+      "suggests_concrete_levers_e_g_image_optimization_or_bundle_size_or_caching",
+      "asks_clarifying_question_or_offers_a_starting_point"
+    ],
+    "login-button-broken": [
+      "asks_for_more_info_e_g_browser_console_error_or_network_tab",
+      "suggests_checking_recent_deploys_or_changes",
+      "mentions_a_diagnostic_step_user_can_run",
+      "stays_calm_and_actionable_not_panicky"
+    ],
+    "add-search-bar": [
+      "explains_two_main_pieces_input_field_and_search_logic",
+      "mentions_filtering_or_querying_data_source",
+      "explains_starting_simple_then_iterating",
+      "mentions_debouncing_or_performance_consideration_eventually"
+    ],
+    "typeerror-undefined-map": [
+      "explains_what_the_error_means",
+      "names_the_likely_cause_data_is_undefined_when_map_is_called",
+      "suggests_defensive_check_e_g_optional_chaining_or_default_array",
+      "suggests_finding_root_cause_why_data_is_undefined"
+    ],
+    "spaghetti-code": [
+      "names_a_pattern_for_organizing_code_e_g_modules_or_separation_of_concerns",
+      "suggests_naming_things_well",
+      "suggests_writing_smaller_functions_with_one_responsibility",
+      "mentions_tests_or_documentation_as_complementary_aid"
+    ]
+  },
+  "long_en": {
+    "rate-limit-xff-review": [
+      "identifies_xff_spoof_risk",
+      "names_redis_unbounded_key_risk_no_expire",
+      "suggests_using_validated_or_socket_ip_not_raw_xff",
+      "suggests_atomic_incr_plus_expire",
+      "preserves_literal_X_Forwarded_For",
+      "preserves_literal_Redis"
+    ],
+    "transfer-handler-review": [
+      "flags_trusting_x_user_id_header_from_client",
+      "flags_no_authorization_check_user_belongs_to_org",
+      "flags_no_input_validation_amount_or_account_ids",
+      "flags_no_authentication_or_jwt_verification_visible",
+      "flags_no_idempotency_key_for_money_movement",
+      "preserves_literal_X_User_Id_or_X_Internal_User_Id"
+    ],
+    "body-size-rollout-plan": [
+      "code_change_in_body_size_guard_or_route_specific_override",
+      "config_change_in_rate_limits_or_route_config_file",
+      "tests_added_for_size_limit_at_412_or_413_or_correct_status",
+      "observability_metric_or_alert_for_413_increase",
+      "rollout_via_canary_or_blue_green_per_handbook",
+      "rollback_plan_via_argo_or_per_region_revert",
+      "communication_to_affected_route_users_or_partners"
+    ]
+  },
+  "expansive_en": {
+    "smart-drafts-release-note": [
+      "warm_professional_tone_present",
+      "approximately_three_paragraphs",
+      "explains_why_we_built_it_blank_page_problem",
+      "explains_how_it_works_one_click_outline_from_title_and_context",
+      "mentions_what_is_next_custom_voice_training",
+      "addressed_to_existing_users_not_new_audience"
+    ],
+    "outage-apology-email": [
+      "serious_accountable_tone_not_defensive",
+      "approximately_four_short_paragraphs",
+      "acknowledges_failed_transactions_specifically",
+      "explains_root_cause_misconfigured_cache_invalidation",
+      "describes_fix_and_prevention_canary_and_chaos_testing",
+      "offers_goodwill_credit_to_impacted_users"
+    ]
+  },
+  "multiturn_en": {
+    "_per_turn": "concepts checked per turn separately; see judge.py for join logic",
+    "debug-prod-incident": {
+      "turn_1": ["asks_for_or_describes_immediate_diagnosis_steps", "mentions_correlating_with_recent_deploy", "suggests_rollback_or_isolate_consideration"],
+      "turn_2": ["identifies_items_field_was_removed_from_returned_object", "names_downstream_consumer_expects_items"],
+      "turn_3": ["proposes_jest_test_shape", "test_asserts_items_field_present_in_buildCart_output"],
+      "turn_4": ["identifies_pool_exhaustion_risk_with_promise_all_for_47_skus", "considers_average_vs_max_case"],
+      "turn_5": ["suggests_chunked_or_concurrency_limited_approach_e_g_p_limit_or_batched_promise_all", "preserves_fast_path_for_typical_3_sku_case"]
+    },
+    "design-feature": {
+      "turn_1": ["lists_design_decisions_e_g_storage_model_or_concurrency_or_expiry_or_refunds", "covers_at_least_three_distinct_areas"],
+      "turn_2": ["pros_of_event_sourced", "cons_of_event_sourced", "pros_of_mutable_row", "cons_of_mutable_row"],
+      "turn_3": ["names_select_for_update_or_advisory_lock_or_serializable_isolation", "explains_why_simple_select_then_update_is_unsafe"],
+      "turn_4": ["expiry_check_in_consumption_path", "expiry_check_in_batch_job", "explains_why_both"],
+      "turn_5": ["proportional_refund_to_each_payment_method_or_a_clear_policy", "describes_code_path_or_function_locations"]
+    }
+  }
+}

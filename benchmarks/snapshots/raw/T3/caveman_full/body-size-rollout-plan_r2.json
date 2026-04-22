@@ -1,0 +1,105 @@
+{
+  "track": "T3",
+  "arm": "caveman_full",
+  "prompt_id": "body-size-rollout-plan",
+  "run_index": 2,
+  "arm_order_index": 2,
+  "arm_order_full": [
+    "hewn_prompt_only",
+    "baseline",
+    "caveman_full",
+    "hewn_full",
+    "terse",
+    "caveman_full_plus_ultra_directive"
+  ],
+  "digest_hex": "1bd4b0373727fd4210ef8de0e1bbabf2ae481acfbad8df43e44c0380c5d0b4d2",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T00:43:24.724634+00:00",
+  "output_tokens_tiktoken": 762,
+  "output_tokens_anthropic": 1170,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 17892,
+  "cache_read_input_tokens": 15186,
+  "total_input_tokens": 33084,
+  "cache_state": "warm",
+  "wallclock_ms": 25571.250576002058,
+  "duration_ms": 22519,
+  "duration_api_ms": 27841,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "b0ceb5e1-5be8-400c-9429-63e13b519049",
+  "total_cost_usd": 0.154436,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "# Review: `POST /v1/orgs/:org_id/transfer`\n\n## P0 — Security\n\n**1. Trusts client-supplied `X-User-Id` header.** §2 rule 1, §5. Client can impersonate any user.\nFix: drop `req.headers['x-user-id']`. Use `req.user.sub` set by `auth_jwt` middleware. Confirm `X-User-Id` stripped in `header_sanitize`.\n\n**2. No auth on handler.** Not registered via pipeline in `src/edge/pipeline.ts` — bypasses `auth_jwt`. `auth-bypass-detector` will fire.\nFix: route through edge pipeline. Never `app.post` direct; go through `route_dispatcher`.\n\n**3. No org authorization.** User's JWT `org` claim not checked against `:org_id`. Cross-org transfer possible.\nFix: assert `req.user.org === req.params.org_id` (or roles permit), else `403`.\n\n## P1 — Correctness / Input Validation\n\n**4. No body validation.** `from`, `to`, `amount` untyped. Negative amount = theft. Missing fields crash.\nFix: schema validate (zod/ajv). `amount` positive int, currency-scaled. `from`/`to` UUID. `from !== to`.\n\n**5. No `body_size_guard` / content-type check.** Relies on pipeline; see issue 2.\n\n**6. No idempotency key.** Double-submit = double transfer. Money-moving endpoints require `Idempotency-Key` header + dedup in `tx-svc`.\n\n## P2 — Operational\n\n**7. No error handling.** `txSvc.transfer` rejection → unhandled, leaks stacktrace. §2 rule 6, §11.\nFix: `try/catch` → `next(err)`. Central handler emits RFC 7807 `problem+json` with `request_id`, no internals.\n\n**8. Response not RFC 7807 on error; success shape undocumented.** `{ok: true}` gives caller nothing — no `transfer_id`, no `request_id`.\n\n**9. No audit log entry.** Money movement must hit `audit_log` middleware (§3 step 9) → 365-day S3 bucket (§9).\n\n**10. No rate limit tier.** Default `POST` = 30/min/IP generic. Transfer needs stricter per-user + per-org limit in `config/rate_limits.json`. Key must include region (§4, 2025-12 SEV2) and user, not just IP.\n\n**11. mTLS egress path.** Direct `txSvc.transfer(...)` call bypasses Envoy sidecar pattern (§3 step 7). Confirm client goes through mTLS egress, not raw HTTP.\n\n## P3 — Style\n\n**12. `console.log`-style debugging absent but no `logger` either.** §11. Add structured log with `request_id`, `user_id`, `org_id`, amount — **not** PII, not full body.\n\n**13. CODEOWNERS.** Touches auth-adjacent trust logic → needs human approval per §6.\n\n## Verification\n\n- Unit test: spoofed `X-User-Id` ignored, `req.user.sub` used.\n- Unit test: cross-org request → `403`.\n- Unit test: negative/zero/missing `amount` → `400`.\n- Integration test (real Redis/PG per §11): duplicate `Idempotency-Key` → one transfer.\n- Lint: no `req.headers[...]` identity reads outside sanctioned helpers.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 22519,
+    "duration_api_ms": 27841,
+    "num_turns": 1,
+    "result": "# Review: `POST /v1/orgs/:org_id/transfer`\n\n## P0 — Security\n\n**1. Trusts client-supplied `X-User-Id` header.** §2 rule 1, §5. Client can impersonate any user.\nFix: drop `req.headers['x-user-id']`. Use `req.user.sub` set by `auth_jwt` middleware. Confirm `X-User-Id` stripped in `header_sanitize`.\n\n**2. No auth on handler.** Not registered via pipeline in `src/edge/pipeline.ts` — bypasses `auth_jwt`. `auth-bypass-detector` will fire.\nFix: route through edge pipeline. Never `app.post` direct; go through `route_dispatcher`.\n\n**3. No org authorization.** User's JWT `org` claim not checked against `:org_id`. Cross-org transfer possible.\nFix: assert `req.user.org === req.params.org_id` (or roles permit), else `403`.\n\n## P1 — Correctness / Input Validation\n\n**4. No body validation.** `from`, `to`, `amount` untyped. Negative amount = theft. Missing fields crash.\nFix: schema validate (zod/ajv). `amount` positive int, currency-scaled. `from`/`to` UUID. `from !== to`.\n\n**5. No `body_size_guard` / content-type check.** Relies on pipeline; see issue 2.\n\n**6. No idempotency key.** Double-submit = double transfer. Money-moving endpoints require `Idempotency-Key` header + dedup in `tx-svc`.\n\n## P2 — Operational\n\n**7. No error handling.** `txSvc.transfer` rejection → unhandled, leaks stacktrace. §2 rule 6, §11.\nFix: `try/catch` → `next(err)`. Central handler emits RFC 7807 `problem+json` with `request_id`, no internals.\n\n**8. Response not RFC 7807 on error; success shape undocumented.** `{ok: true}` gives caller nothing — no `transfer_id`, no `request_id`.\n\n**9. No audit log entry.** Money movement must hit `audit_log` middleware (§3 step 9) → 365-day S3 bucket (§9).\n\n**10. No rate limit tier.** Default `POST` = 30/min/IP generic. Transfer needs stricter per-user + per-org limit in `config/rate_limits.json`. Key must include region (§4, 2025-12 SEV2) and user, not just IP.\n\n**11. mTLS egress path.** Direct `txSvc.transfer(...)` call bypasses Envoy sidecar pattern (§3 step 7). Confirm client goes through mTLS egress, not raw HTTP.\n\n## P3 — Style\n\n**12. `console.log`-style debugging absent but no `logger` either.** §11. Add structured log with `request_id`, `user_id`, `org_id`, amount — **not** PII, not full body.\n\n**13. CODEOWNERS.** Touches auth-adjacent trust logic → needs human approval per §6.\n\n## Verification\n\n- Unit test: spoofed `X-User-Id` ignored, `req.user.sub` used.\n- Unit test: cross-org request → `403`.\n- Unit test: negative/zero/missing `amount` → `400`.\n- Integration test (real Redis/PG per §11): duplicate `Idempotency-Key` → one transfer.\n- Lint: no `req.headers[...]` identity reads outside sanctioned helpers.",
+    "stop_reason": "end_turn",
+    "session_id": "b0ceb5e1-5be8-400c-9429-63e13b519049",
+    "total_cost_usd": 0.154436,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 17892,
+      "cache_read_input_tokens": 15186,
+      "output_tokens": 1170,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 17892,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 1170,
+          "cache_read_input_tokens": 15186,
+          "cache_creation_input_tokens": 17892,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 17892
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 5668,
+        "outputTokens": 14,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.005738,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 1170,
+        "cacheReadInputTokens": 15186,
+        "cacheCreationInputTokens": 17892,
+        "webSearchRequests": 0,
+        "costUSD": 0.148698,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "b4c2bb7b-2ae8-4219-862a-4089d0260945"
+  }
+}

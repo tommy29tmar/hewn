@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "sequences": [
+    {
+      "id": "debug-prod-incident",
+      "category": "debugging",
+      "turns": [
+        "Production is throwing 500s on POST /api/orders since 14:23 UTC. Logs show 'TypeError: Cannot read properties of undefined (reading items)' in createOrder handler. Last deploy was 14:18 UTC. What do I check first?",
+        "Rolled back to previous deploy and 500s stopped. Now I need to find what changed. The PR that shipped at 14:18 was a refactor of cart serialization. Here's the diff for the suspected file: function buildCart(cart) { return { id: cart.id, total: cart.items.reduce((s, i) => s + i.price * i.qty, 0) }; }. Original was: function buildCart(cart) { return { id: cart.id, items: cart.items, total: cart.items.reduce((s, i) => s + i.price * i.qty, 0) }; }. What broke?",
+        "Right, items field was dropped. Downstream order service expects items. Fix: re-add items in buildCart. But I want to add a regression test so this can't happen again. What's the right test shape? We use Jest.",
+        "Test added and passes. Now reviewing the rest of that PR. There's also a change to the inventory check: it now uses Promise.all over an array of SKU lookups instead of a sequential loop. Is that safe under our DB connection pool of 20 max?",
+        "OK so the parallel call could exhaust the pool if a single order has many SKUs. Average order has 3 SKUs, max we've seen is 47. Recommend a fix that's safer but doesn't slow down the common case."
+      ]
+    },
+    {
+      "id": "design-feature",
+      "category": "planning",
+      "turns": [
+        "I want to add a 'gift card' feature to our checkout. User enters a code at checkout, code applies a balance, balance is consumed up to its remaining value, leftover charged to card. What are the main design decisions I need to make?",
+        "Good list. Let's start with: should gift card balances be tracked as immutable transaction events (event-sourced) or as a mutable balance row that we update? We already use mutable rows for user wallets. Pros and cons of each for this case.",
+        "Mutable row it is, for consistency with wallets. Next: race conditions. Two concurrent checkouts could both read the same balance and try to consume it. How do we prevent double-spending the same gift card?",
+        "PostgreSQL row-level lock with SELECT FOR UPDATE inside the checkout transaction. Got it. Now: gift cards expire 12 months after issue. Where does the expiry check go - in the consumption code path, in a daily batch job, or both?",
+        "Both makes sense. One last thing: refunds. If the user gets a partial refund on an order that used a gift card + credit card, where does the refund go? Walk me through the policy and the code path."
+      ]
+    }
+  ]
+}

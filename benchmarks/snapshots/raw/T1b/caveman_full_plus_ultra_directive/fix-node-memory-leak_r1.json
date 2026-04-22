@@ -1,0 +1,105 @@
+{
+  "track": "T1b",
+  "arm": "caveman_full_plus_ultra_directive",
+  "prompt_id": "fix-node-memory-leak",
+  "run_index": 1,
+  "arm_order_index": 0,
+  "arm_order_full": [
+    "caveman_full_plus_ultra_directive",
+    "caveman_full",
+    "terse",
+    "hewn_full",
+    "baseline",
+    "hewn_prompt_only"
+  ],
+  "digest_hex": "edf96b08b6bf832e7f6141e2b1e51b0b7773d43c771414ddf25ddb62f5d6bccd",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-21T23:42:40.339323+00:00",
+  "output_tokens_tiktoken": 228,
+  "output_tokens_anthropic": 372,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 6560,
+  "cache_read_input_tokens": 15201,
+  "total_input_tokens": 21767,
+  "cache_state": "warm",
+  "wallclock_ms": 13634.343912010081,
+  "duration_ms": 7728,
+  "duration_api_ms": 8562,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "4d4eef7a-b44b-46ff-ac10-adda7719b3ee",
+  "total_cost_usd": 0.0583655,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "Find leak → fix.\n\n**Find:**\n- Run w/ `--inspect`, Chrome DevTools → Memory → heap snapshot\n- Take 2+ snapshots, compare \"Retained Size\", filter \"Objects allocated between\"\n- Or `clinic doctor` / `node --heap-prof`\n\n**Common causes:**\n- Unbounded cache/Map → use `LRU` or `WeakMap`\n- Event listeners not removed → `emitter.off()` on cleanup\n- Closures holding refs → null out after use\n- Global arrays growing → bound size\n- Timers (`setInterval`) not cleared → `clearInterval`\n- Promises never resolving → retain chain\n\n**Fix pattern:**\n```js\n// bad\nconst cache = new Map();           // grows forever\nemitter.on('data', handler);       // never removed\n\n// good\nconst cache = new LRUCache({ max: 1000 });\nemitter.on('data', handler);\n// on shutdown:\nemitter.off('data', handler);\n```\n\n**Verify:** load test, watch `process.memoryUsage().heapUsed` plateau not climb.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 7728,
+    "duration_api_ms": 8562,
+    "num_turns": 1,
+    "result": "Find leak → fix.\n\n**Find:**\n- Run w/ `--inspect`, Chrome DevTools → Memory → heap snapshot\n- Take 2+ snapshots, compare \"Retained Size\", filter \"Objects allocated between\"\n- Or `clinic doctor` / `node --heap-prof`\n\n**Common causes:**\n- Unbounded cache/Map → use `LRU` or `WeakMap`\n- Event listeners not removed → `emitter.off()` on cleanup\n- Closures holding refs → null out after use\n- Global arrays growing → bound size\n- Timers (`setInterval`) not cleared → `clearInterval`\n- Promises never resolving → retain chain\n\n**Fix pattern:**\n```js\n// bad\nconst cache = new Map();           // grows forever\nemitter.on('data', handler);       // never removed\n\n// good\nconst cache = new LRUCache({ max: 1000 });\nemitter.on('data', handler);\n// on shutdown:\nemitter.off('data', handler);\n```\n\n**Verify:** load test, watch `process.memoryUsage().heapUsed` plateau not climb.",
+    "stop_reason": "end_turn",
+    "session_id": "4d4eef7a-b44b-46ff-ac10-adda7719b3ee",
+    "total_cost_usd": 0.0583655,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 6560,
+      "cache_read_input_tokens": 15201,
+      "output_tokens": 372,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 6560,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 372,
+          "cache_read_input_tokens": 15201,
+          "cache_creation_input_tokens": 6560,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 6560
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 355,
+        "outputTokens": 16,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.000435,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 372,
+        "cacheReadInputTokens": 15201,
+        "cacheCreationInputTokens": 6560,
+        "webSearchRequests": 0,
+        "costUSD": 0.0579305,
+        "contextWindow": 200000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "dd09f41c-9454-4204-859e-ec657df4f4d1"
+  }
+}

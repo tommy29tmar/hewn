@@ -1,0 +1,103 @@
+{
+  "track": "T0",
+  "arm": "terse_appended",
+  "prompt_id": "react-rerender-parent",
+  "run_index": 1,
+  "arm_order_index": 1,
+  "arm_order_full": [
+    "terse",
+    "terse_appended",
+    "caveman_full",
+    "caveman_full_appended"
+  ],
+  "digest_hex": "99b7ab7ba17a8ba246c01cb3b86810b0fa1d28957b03d5604a74b257ab3da763",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-21T23:24:07.295366+00:00",
+  "output_tokens_tiktoken": 217,
+  "output_tokens_anthropic": 356,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 11717,
+  "cache_read_input_tokens": 16805,
+  "total_input_tokens": 28528,
+  "cache_state": "warm",
+  "wallclock_ms": 14104.818980005803,
+  "duration_ms": 7706,
+  "duration_api_ms": 8664,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "1b988234-762b-4c4b-88cb-e9c5a9588087",
+  "total_cost_usd": 0.09099075,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "By default, React re-renders every child when the parent re-renders — props don't need to change. Common fixes:\n\n1. **`React.memo`** — wrap the child; it skips re-renders when props are shallow-equal.\n   ```jsx\n   export default React.memo(Child)\n   ```\n\n2. **Stabilize props** — `memo` only helps if props are referentially stable. Inline objects/arrays/functions break it:\n   ```jsx\n   <Child onClick={() => doX()} config={{ a: 1 }} />  // new refs every render\n   ```\n   Wrap with `useCallback` / `useMemo` in the parent.\n\n3. **Move state down** — if only part of the tree needs the state, colocate it there so the parent doesn't re-render.\n\n4. **Split context** — a context consumer re-renders on every provider value change; split or memoize the value.\n\nUse React DevTools' Profiler (\"Why did this render?\") to see which prop changed.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 7706,
+    "duration_api_ms": 8664,
+    "num_turns": 1,
+    "result": "By default, React re-renders every child when the parent re-renders — props don't need to change. Common fixes:\n\n1. **`React.memo`** — wrap the child; it skips re-renders when props are shallow-equal.\n   ```jsx\n   export default React.memo(Child)\n   ```\n\n2. **Stabilize props** — `memo` only helps if props are referentially stable. Inline objects/arrays/functions break it:\n   ```jsx\n   <Child onClick={() => doX()} config={{ a: 1 }} />  // new refs every render\n   ```\n   Wrap with `useCallback` / `useMemo` in the parent.\n\n3. **Move state down** — if only part of the tree needs the state, colocate it there so the parent doesn't re-render.\n\n4. **Split context** — a context consumer re-renders on every provider value change; split or memoize the value.\n\nUse React DevTools' Profiler (\"Why did this render?\") to see which prop changed.",
+    "stop_reason": "end_turn",
+    "session_id": "1b988234-762b-4c4b-88cb-e9c5a9588087",
+    "total_cost_usd": 0.09099075,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 11717,
+      "cache_read_input_tokens": 16805,
+      "output_tokens": 356,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 11717,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 356,
+          "cache_read_input_tokens": 16805,
+          "cache_creation_input_tokens": 11717,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 11717
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 352,
+        "outputTokens": 15,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.00042699999999999997,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 356,
+        "cacheReadInputTokens": 16805,
+        "cacheCreationInputTokens": 11717,
+        "webSearchRequests": 0,
+        "costUSD": 0.09056375,
+        "contextWindow": 200000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "d2ddb2ee-0d30-483d-a1c9-dc0c3dff5e69"
+  }
+}

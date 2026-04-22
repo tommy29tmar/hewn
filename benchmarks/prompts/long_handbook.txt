@@ -1,0 +1,389 @@
+PROJECT HANDBOOK — Atlas API Service
+Version 4.2.1 (internal). Last updated: 2026-03-11. Owner: Platform team.
+
+================================================================================
+SECTION 1 — SYSTEM OVERVIEW
+================================================================================
+
+Atlas API is the public-facing edge service for our consumer product. It
+terminates TLS, performs request authentication and rate limiting, then
+forwards verified requests to one of seven internal microservices over a
+mutually-authenticated mTLS mesh. The edge runs in three regions
+(us-east-1, eu-west-1, ap-southeast-1) behind a global Anycast load
+balancer. Total p50 request latency at the edge is currently 24ms.
+
+The seven downstream services are: identity (`auth-svc`), accounts
+(`accounts-svc`), transactions (`tx-svc`), search (`search-svc`),
+notifications (`notify-svc`), media (`media-svc`), and analytics
+(`analytics-svc`). Atlas itself is stateless except for the rate-limit
+counters in Redis and a per-region session cache.
+
+Stack: Node.js 22 LTS on Express 5, Redis 7.4 for rate-limit state,
+PostgreSQL 16 (read-replicas only — Atlas never writes to PG directly),
+HAProxy for TLS termination on bare metal in PoP edges, and Envoy as
+the mTLS sidecar between Atlas and downstream services. Telemetry via
+OpenTelemetry, exported to Prometheus and Tempo. Logs structured as
+JSON, shipped through Vector to Loki with 14-day retention.
+
+================================================================================
+SECTION 2 — SECURITY & TRUST BOUNDARIES
+================================================================================
+
+The Atlas edge is the only network boundary that talks to the
+untrusted internet. Everything inside is treated as semi-trusted but
+not fully trusted: each downstream service still validates its own
+input and authorizes its own callers via mTLS client certs.
+
+CRITICAL RULES (violating any of these is a P0 incident):
+
+1. The public edge MUST NEVER trust client-supplied identity headers.
+   Headers like `X-User-Id`, `X-Org-Id`, `X-Forwarded-For`,
+   `X-Real-IP`, or `X-Original-Authorization` arriving from outside
+   our trust zone must be stripped at the edge BEFORE any handler
+   runs. Only headers we add ourselves after authenticating the JWT
+   are trusted downstream.
+
+2. The IP that limiters use must come from the validated proxy chain
+   only. Specifically, `req.socket.remoteAddress` is authoritative; any
+   `X-Forwarded-For` in the request must be replaced or ignored unless
+   it arrived from a known cloudfront/cloudflare egress IP listed in
+   `config/trusted_proxies.json`. Direct read of
+   `req.headers['x-forwarded-for']` for rate-limit keying is FORBIDDEN.
+
+3. Rate limiter state in Redis MUST always have an `EXPIRE` set on
+   first `INCR`. Unbounded keys cause OOM eviction events that knock
+   the edge offline. Use `MULTI` to atomic-pair the `INCR` and
+   `EXPIRE`.
+
+4. JWT verification uses the JWKS published by `auth-svc` at
+   `/.well-known/jwks.json`, refreshed every 15 minutes. The cache
+   uses a 16-minute soft TTL with stale-while-revalidate. Never accept
+   a JWT signed with `alg: none`. Allowlist exactly: `RS256`, `ES256`.
+
+5. PII fields in logs (`email`, `phone`, `tax_id`, `card_pan`,
+   `passport`) must be redacted via the `pii_redact` middleware before
+   the log line is emitted. Verify with the staging
+   `pii-leak-detector` job that runs hourly.
+
+6. All `4xx` and `5xx` responses must include a `request_id` matching
+   the OTel trace ID, but MUST NOT include any internal stacktrace,
+   internal IP, internal hostname, or library version string. Error
+   bodies follow RFC 7807 (problem+json) with `type`, `title`,
+   `status`, `detail`, `instance`.
+
+================================================================================
+SECTION 3 — REQUEST PIPELINE
+================================================================================
+
+Per request, the Atlas pipeline runs:
+
+  HAProxy → Envoy ingress → Express middleware chain:
+    1. `request_id` middleware (generate or accept upstream-provided UUID)
+    2. `header_sanitize` middleware (strip dangerous client headers)
+    3. `rate_limit` middleware (Redis INCR + EXPIRE)
+    4. `body_size_guard` middleware (reject >2MB bodies with `413`)
+    5. `auth_jwt` middleware (verify JWT, set `req.user`)
+    6. `route_dispatcher` (select downstream service)
+    7. `mTLS_egress` (forward via Envoy sidecar)
+    8. `response_filter` (strip downstream-leaked internals)
+    9. `audit_log` (structured log line)
+
+Middleware is registered in `src/edge/pipeline.ts`. Order matters:
+authentication MUST come AFTER `header_sanitize` (so we don't trust a
+spoofed identity header before we strip it) and BEFORE `route_dispatcher`
+(so we know who the user is before we route).
+
+================================================================================
+SECTION 4 — RATE LIMITING DETAILS
+================================================================================
+
+We use a sliding-window approximation in Redis. Window size: 60 seconds.
+Limits per route are defined in `config/rate_limits.json`, keyed by
+route prefix, with a fallback default of 120 requests/min/IP for
+`GET`, 30 requests/min/IP for `POST`/`PUT`/`PATCH`/`DELETE`.
+
+Implementation lives in `src/edge/rate_limit.ts`. The key format is:
+`rl:{ip}:{route_prefix}:{minute_bucket}`. The minute bucket is
+`Math.floor(Date.now() / 60000)`. We INCR atomically with EXPIRE:
+
+  ```javascript
+  const key = `rl:${trustedClientIp(req)}:${routePrefix}:${minuteBucket}`;
+  const multi = redis.multi();
+  multi.incr(key);
+  multi.expire(key, 90); // 60s window + 30s grace
+  const [count] = await multi.exec();
+  if (count > limit) {
+    return res.status(429).json({
+      type: '/errors/rate-limited',
+      title: 'Too Many Requests',
+      status: 429,
+      detail: `Limit ${limit}/min exceeded`,
+      retry_after: secondsUntilNextBucket(),
+    });
+  }
+  ```
+
+Common pitfalls observed in past incidents:
+- Computing the IP from `req.headers['x-forwarded-for']` directly: see
+  Section 2 rule 2 above. SEV1 in 2025-09 caused by this.
+- Forgetting to `EXPIRE`: SEV2 in 2025-11 (Redis OOM).
+- Key collision between regions due to dropping region prefix: SEV2 in
+  2025-12 (one busy user limited globally instead of per-region).
+
+================================================================================
+SECTION 5 — AUTHENTICATION DETAILS
+================================================================================
+
+We accept two authentication methods at the edge:
+
+(A) Bearer JWT in the `Authorization` header (preferred, used by all
+    first-party clients including web and mobile apps).
+(B) API key in the `X-Api-Key` header (legacy, used by partner
+    integrations being migrated). API keys are looked up in PostgreSQL
+    via `auth-svc`, with a 30-second LRU cache of last-100k keys to
+    keep latency under 5ms p99.
+
+JWT verification specifics:
+- Algorithms accepted: `RS256`, `ES256` only. `HS256` and `none` are
+  REJECTED with `401`.
+- Issuer must be `https://auth.example.com`.
+- Audience must contain `atlas-edge`.
+- Token expiry (`exp` claim) checked against `Date.now() + skewMs`
+  with `skewMs = 30000` to allow for clock drift between auth-svc and
+  edge fleet. Tokens whose `exp` is before `Date.now() - skewMs` are
+  rejected with `401`.
+- Token `nbf` (not-before) similarly checked with the same skew window.
+- The `jti` claim is recorded in the audit log but not deduplicated;
+  replay detection is the responsibility of downstream services that
+  care.
+
+After successful JWT verification, the edge sets internal headers
+(forwarded over mTLS only):
+- `X-Internal-User-Id`: the validated `sub` claim
+- `X-Internal-Org-Id`: the validated `org` claim
+- `X-Internal-Roles`: comma-separated `roles` claim
+- `X-Internal-Auth-Method`: `jwt` or `apikey`
+
+These headers are STRIPPED on every incoming request before the
+pipeline runs, so a client cannot impersonate by injecting them.
+
+================================================================================
+SECTION 6 — DEPLOYMENT & ROLLOUT
+================================================================================
+
+Atlas deploys via GitOps. The repo `atlas-edge` has `main` as the
+production branch. Merges to `main` automatically trigger a build that
+produces a container image tagged with the commit SHA. Argo CD watches
+the `infra/argo/atlas-edge` repo, which holds the per-environment
+Kustomize overlays.
+
+Rollout strategy: blue/green per region, with a 10-minute soak between
+regions. Order: `us-east-1` (canary, 5% traffic for 30 min before full
+shift) → `eu-west-1` (full) → `ap-southeast-1` (full). A SEV1 ANY
+HOUR triggers automatic rollback to the previous green per region.
+
+Pre-merge checks (required, blocking):
+- Unit tests pass (Jest, 1200+ tests, ~45s)
+- Integration tests pass against a real Redis 7.4 + Postgres 16 dev
+  cluster (not mocks; we got burned by mocked tests in 2025-Q3)
+- Lint pass (eslint + custom rule for "no `req.headers['x-forwarded-for']`
+  outside `trustedClientIp` helper")
+- Bundle size delta < 5%
+- A human approval (CODEOWNERS-enforced) on any change to `src/edge/auth_jwt.ts`,
+  `src/edge/rate_limit.ts`, `src/edge/header_sanitize.ts`,
+  or `config/trusted_proxies.json`
+
+================================================================================
+SECTION 7 — OBSERVABILITY
+================================================================================
+
+Three pillars: traces, metrics, logs.
+
+Traces: every request gets an OTel trace, sampled at 5% normally, 100%
+for `5xx` responses or routes flagged in `config/always_trace_routes.json`.
+Trace IDs are propagated as `traceparent` header into downstream services.
+
+Key metrics (Prometheus, scrape interval 15s):
+- `atlas_edge_requests_total{route, method, status_class}` — counter
+- `atlas_edge_request_duration_seconds{route, method}` — histogram with
+  buckets at 5ms, 10ms, 25ms, 50ms, 100ms, 250ms, 500ms, 1s, 2.5s, 5s, 10s
+- `atlas_edge_rate_limit_total{route, action}` — counter, action ∈
+  {allowed, throttled, errored}
+- `atlas_edge_jwt_verifications_total{result}` — result ∈ {ok, expired,
+  bad_signature, bad_issuer, bad_audience, bad_algorithm, malformed}
+- `atlas_edge_redis_command_duration_seconds{command}` — histogram
+
+SLOs (defined in `slos/atlas-edge.yml`):
+- p99 edge latency < 200ms over 30 days, 99.9% target
+- 5xx rate < 0.1% over 30 days, 99.9% target
+- JWT verification latency p99 < 10ms (cache should hit ~99% of the
+  time)
+
+Alert routing: `#oncall-platform-paging` for SEV1, `#oncall-platform`
+for SEV2-3. Alertmanager config in `infra/alerting/alertmanager.yml`.
+Page on-call only for SEV1; SEV2-3 are Slack-only and reviewed in the
+weekly ops review.
+
+================================================================================
+SECTION 8 — ON-CALL RUNBOOK SUMMARY
+================================================================================
+
+If the global p99 latency alert fires:
+1. Check the regional latency dashboard at
+   `grafana.internal/d/atlas-regional-latency`
+2. If one region is hot, consider failover via the global LB
+   (procedure in `runbooks/regional-failover.md`)
+3. If all regions are hot, check Redis health: `kubectl -n edge get
+   pods -l app=redis-edge` and `redis-cli --latency-history -h
+   <pod-ip>` for each
+4. If Redis is healthy, check downstream service latency in their own
+   dashboards (linked from main Atlas dashboard sidebar)
+5. If downstream is healthy, suspect a recent deploy: `argocd app list
+   atlas-edge` and look for recent sync events
+
+If a `5xx` spike alert fires:
+1. Check the error breakdown dashboard for the dominant error type
+2. If it is `JsonWebTokenError`, check `auth-svc` JWKS endpoint health
+3. If it is `EnvoyConnectionRefused`, check the Envoy sidecar logs
+4. If it is `RedisConnectionError`, see Redis runbook
+5. If it is `429`, check whether legitimate traffic is being limited
+   incorrectly
+
+If a security alert fires (`pii-leak-detector` finds a leak,
+`spoofed-header-detector` finds spoofed identity, `auth-bypass-detector`
+finds a non-JWT verified path):
+1. Page security on-call IMMEDIATELY (`@security-oncall` in Slack)
+2. DO NOT roll back without coordination — security may want to
+   capture forensic state first
+3. Begin incident timeline doc in the
+   `incidents/2026/sec-NNN.md` template
+
+================================================================================
+SECTION 9 — DATA RETENTION & PRIVACY
+================================================================================
+
+Edge logs: retained 14 days in Loki. Then aggregated to daily
+counters in `analytics-svc` for 90 days, then deleted. PII is redacted
+at log-emission time per Section 2 rule 5.
+
+Audit logs (security-relevant subset): retained 365 days in a separate
+S3 bucket (`atlas-audit-logs-us-east-1`) with object-lock for
+compliance. Tamper-evident via daily hash chain stored in our
+compliance vault.
+
+Rate-limit counters in Redis: ephemeral, max TTL 90 seconds (see
+Section 4). Not backed up.
+
+Session cache (per-region): in-memory Redis, TTL 30 minutes from last
+use. Not backed up.
+
+User-uploaded content (handled by `media-svc`, not Atlas): retained
+per the user's plan tier. Atlas only proxies media URLs; Atlas itself
+stores no user content.
+
+================================================================================
+SECTION 10 — INCIDENT HISTORY (LAST 12 MONTHS)
+================================================================================
+
+- 2025-04 SEV2: Argo CD failed to sync after a Kubernetes upgrade in
+  ap-southeast-1; detected by alert `atlas_edge_pods_pending`. Mitigation:
+  manual `kubectl rollout` + Argo unstuck after 40 min. RCA action
+  items: improved Argo health probes, alerts on Argo sync staleness.
+
+- 2025-06 SEV1: JWT verification cache poisoned by a misconfigured
+  `auth-svc` JWKS rotation that briefly served a wrong-public-key set.
+  All authenticated requests failed with `401` for ~9 minutes.
+  Mitigation: cache flush via `kubectl exec` on each edge pod. RCA
+  action items: JWKS sanity-check on every refresh, alert on
+  jwt_verification_total{result=~"bad_.*"} delta.
+
+- 2025-09 SEV1: rate limiter spoof bypass via `X-Forwarded-For`. An
+  attacker rotated XFF per request to defeat per-IP limits and brute-
+  forced one user's password. Mitigation: emergency hotfix to use
+  `req.socket.remoteAddress` for keying, banned the abusive IP at the
+  global LB. RCA action items: lint rule against
+  `req.headers['x-forwarded-for']` outside `trustedClientIp` helper,
+  added Section 2 rule 2 to this handbook.
+
+- 2025-11 SEV2: Redis OOM during a traffic spike because new rate-
+  limit code path forgot `EXPIRE`. ~7 minutes of degraded edge before
+  Redis evicted enough keys to recover. RCA action items: integration
+  test that asserts `EXPIRE` on every `INCR`-created key, code review
+  guideline added.
+
+- 2025-12 SEV2: Per-region rate-limit key didn't include region
+  prefix; one busy user got limited globally rather than per-region.
+  ~6k user-visible `429`s before the fix shipped. RCA action items:
+  region prefix in key, regression test added.
+
+- 2026-01 SEV3: Bundle size regression (8% increase) shipped to
+  production undetected because the pre-merge check threshold was 10%
+  not 5%. No user impact, but CI signal degraded. Tightened threshold.
+
+- 2026-03 SEV3: HAProxy cert renewal automation missed an expiry by 2
+  hours due to a cron timezone bug; one PoP region briefly served
+  expired certs to clients that pin our cert. Manual cert install
+  resolved it. RCA: cron switched to UTC, alarms added on cert
+  expiry < 7 days.
+
+================================================================================
+SECTION 11 — CODING STANDARDS
+================================================================================
+
+TypeScript strict mode, `noImplicitAny`, `strictNullChecks`,
+`strictFunctionTypes`, `strictBindCallApply`, `strictPropertyInitialization`.
+Prettier with 100-column line width, single quotes, no semicolons (yes
+really, the team voted).
+
+Test framework: Jest. Tests live next to source files as
+`*.test.ts`. Integration tests live in `tests/integration/` and are
+allowed to import `pg`, `redis`, real `nock`-recorded HTTP fixtures.
+NEVER mock the database in integration tests — see incident history.
+
+Linter: eslint with `@typescript-eslint`, plus custom rules in
+`tools/eslint-plugin-atlas/`:
+- `no-direct-xff-read`: forbids `req.headers['x-forwarded-for']`
+  outside `src/edge/util/trustedClientIp.ts`
+- `no-jwt-none-allowed`: forbids `algorithms: ['none']` literally
+- `no-unbounded-redis-key`: requires every `redis.*set` /  `redis.incr`
+  /  `redis.lpush` call site to be in the same async function as a
+  matching `redis.expire` call
+
+Comments: minimal. Code should be self-explanatory. Comments only when
+the reason is non-obvious (e.g., a workaround for an upstream library
+bug, or a security invariant that isn't visible from the code alone).
+Avoid restating what the code does.
+
+Logging: never use `console.log` in production code; always use the
+`logger` from `src/util/logger.ts` which goes through the structured-
+logging pipeline. Never log full request bodies. Never log
+`Authorization`, `Cookie`, or `X-Api-Key` headers.
+
+Error handling: use `next(err)` in Express middleware to delegate to
+the central error handler in `src/edge/errorHandler.ts`. Never
+swallow errors silently. Specific known-recoverable errors (e.g.
+Redis transient connection error) may be retried up to 3 times with
+exponential backoff via `src/util/retry.ts`.
+
+================================================================================
+SECTION 12 — REVIEW EXPECTATIONS
+================================================================================
+
+Code review priorities, in order:
+1. Security: any change to auth, rate limiting, header sanitization,
+   trust boundary, or input validation gets the deepest scrutiny.
+2. Correctness: does it do what the description says? Are tests
+   covering both happy and edge paths? Are error paths handled?
+3. Operational impact: does it change deploy time, memory, latency,
+   or cost? Is the SLO at risk?
+4. Readability: will the next on-call person understand this in 6
+   months?
+
+Review findings should be short but concrete: state the finding, the
+exploit path or failure mode, the mitigation suggestion, the
+verification step the author can run to confirm the fix, and any main
+risks remaining.
+
+Preserve exact literals when quoting code or constants in review
+comments — do not paraphrase identifiers, error messages, header names,
+or status codes.

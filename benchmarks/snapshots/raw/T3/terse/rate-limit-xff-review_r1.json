@@ -1,0 +1,105 @@
+{
+  "track": "T3",
+  "arm": "terse",
+  "prompt_id": "rate-limit-xff-review",
+  "run_index": 1,
+  "arm_order_index": 4,
+  "arm_order_full": [
+    "caveman_full_plus_ultra_directive",
+    "hewn_prompt_only",
+    "caveman_full",
+    "baseline",
+    "terse",
+    "hewn_full"
+  ],
+  "digest_hex": "150affe2992c9d3e327b5311fcd06bb30c21d46606c27a5d4b2a456ecbc0ba71",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T00:30:46.176222+00:00",
+  "output_tokens_tiktoken": 17,
+  "output_tokens_anthropic": 87,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 17681,
+  "cache_read_input_tokens": 13741,
+  "total_input_tokens": 31428,
+  "cache_state": "warm",
+  "wallclock_ms": 6313.673035008833,
+  "duration_ms": 2433,
+  "duration_api_ms": 3789,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "28a46af3-16d8-4e35-9072-bb9078b858fe",
+  "total_cost_usd": 0.12515674999999998,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "No task specified. What would you like me to do with the Atlas API handbook?",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 2433,
+    "duration_api_ms": 3789,
+    "num_turns": 1,
+    "result": "No task specified. What would you like me to do with the Atlas API handbook?",
+    "stop_reason": "end_turn",
+    "session_id": "28a46af3-16d8-4e35-9072-bb9078b858fe",
+    "total_cost_usd": 0.12515674999999998,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 17681,
+      "cache_read_input_tokens": 13741,
+      "output_tokens": 87,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 17681,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 87,
+          "cache_read_input_tokens": 13741,
+          "cache_creation_input_tokens": 17681,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 17681
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 5505,
+        "outputTokens": 14,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.005575,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 87,
+        "cacheReadInputTokens": 13741,
+        "cacheCreationInputTokens": 17681,
+        "webSearchRequests": 0,
+        "costUSD": 0.11958174999999999,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "ff90c22b-5ad9-46da-a107-b8da3420a533"
+  }
+}

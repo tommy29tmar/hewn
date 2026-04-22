@@ -1,0 +1,105 @@
+{
+  "track": "T2",
+  "arm": "terse",
+  "prompt_id": "typeerror-undefined-map",
+  "run_index": 3,
+  "arm_order_index": 4,
+  "arm_order_full": [
+    "hewn_full",
+    "baseline",
+    "caveman_full",
+    "caveman_full_plus_ultra_directive",
+    "terse",
+    "hewn_prompt_only"
+  ],
+  "digest_hex": "b411d91d6824cb5d90e319244d1f8afae2ac980e8f9071346ea0937437d8e0db",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T00:28:22.773431+00:00",
+  "output_tokens_tiktoken": 131,
+  "output_tokens_anthropic": 208,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 24257,
+  "total_input_tokens": 24263,
+  "cache_state": "warm",
+  "wallclock_ms": 8691.473529994255,
+  "duration_ms": 4853,
+  "duration_api_ms": 5681,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "ef69e1a8-5f32-4bfb-a785-460690cac06a",
+  "total_cost_usd": 0.0177925,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "That error means you're calling `.map()` on something that's `undefined`. Common causes:\n\n1. **API data not loaded yet** — component renders before fetch resolves. Fix: default to `[]` or guard with `data?.map(...)`.\n2. **Wrong property path** — e.g. `response.map(...)` when it's actually `response.data.map(...)`.\n3. **Destructured prop missing** — parent didn't pass the array prop.\n\nTo diagnose, share:\n- The stack trace (file + line)\n- The code around the `.map()` call\n\nQuick fix pattern:\n```js\n{(items ?? []).map(...)}\n```",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 4853,
+    "duration_api_ms": 5681,
+    "num_turns": 1,
+    "result": "That error means you're calling `.map()` on something that's `undefined`. Common causes:\n\n1. **API data not loaded yet** — component renders before fetch resolves. Fix: default to `[]` or guard with `data?.map(...)`.\n2. **Wrong property path** — e.g. `response.map(...)` when it's actually `response.data.map(...)`.\n3. **Destructured prop missing** — parent didn't pass the array prop.\n\nTo diagnose, share:\n- The stack trace (file + line)\n- The code around the `.map()` call\n\nQuick fix pattern:\n```js\n{(items ?? []).map(...)}\n```",
+    "stop_reason": "end_turn",
+    "session_id": "ef69e1a8-5f32-4bfb-a785-460690cac06a",
+    "total_cost_usd": 0.0177925,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 24257,
+      "output_tokens": 208,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 0,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 208,
+          "cache_read_input_tokens": 24257,
+          "cache_creation_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 364,
+        "outputTokens": 14,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.00043400000000000003,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 208,
+        "cacheReadInputTokens": 24257,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.0173585,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "6fc41af2-e5ee-4de5-97e5-cb6d74532b5b"
+  }
+}

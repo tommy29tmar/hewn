@@ -1,0 +1,105 @@
+{
+  "track": "T1b",
+  "arm": "terse",
+  "prompt_id": "sql-explain",
+  "run_index": 3,
+  "arm_order_index": 5,
+  "arm_order_full": [
+    "caveman_full_plus_ultra_directive",
+    "hewn_prompt_only",
+    "baseline",
+    "caveman_full",
+    "hewn_full",
+    "terse"
+  ],
+  "digest_hex": "3aa90e0ce3bf73b84f09778e7aa8f88c3b89ffe3948e8877446a0e78f751df25",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T00:08:57.643480+00:00",
+  "output_tokens_tiktoken": 192,
+  "output_tokens_anthropic": 309,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 10495,
+  "cache_read_input_tokens": 13741,
+  "total_input_tokens": 24242,
+  "cache_state": "warm",
+  "wallclock_ms": 12080.137217999436,
+  "duration_ms": 7141,
+  "duration_api_ms": 8050,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "95938984-97c9-4685-bb15-508aa2241119",
+  "total_cost_usd": 0.08063225,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "SQL `EXPLAIN` shows the query planner's execution strategy for a statement — how the database intends to run it, not the results.\n\nTypical output includes:\n- **Scan type** — sequential scan, index scan, index-only scan, bitmap scan\n- **Join strategy** — nested loop, hash join, merge join\n- **Estimated cost** — startup cost, total cost (in planner units)\n- **Row estimates** — predicted rows per step\n- **Width** — estimated bytes per row\n- **Order of operations** — tree of steps, children feed parents\n\nUse `EXPLAIN ANALYZE` to actually execute the query and get real timings and row counts alongside estimates — the gap between estimated and actual rows is the main signal for bad plans (stale stats, missing indexes, bad selectivity guesses).\n\nCommon uses: spotting full table scans, missing indexes, bad join orders, or mis-estimated cardinalities.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 7141,
+    "duration_api_ms": 8050,
+    "num_turns": 1,
+    "result": "SQL `EXPLAIN` shows the query planner's execution strategy for a statement — how the database intends to run it, not the results.\n\nTypical output includes:\n- **Scan type** — sequential scan, index scan, index-only scan, bitmap scan\n- **Join strategy** — nested loop, hash join, merge join\n- **Estimated cost** — startup cost, total cost (in planner units)\n- **Row estimates** — predicted rows per step\n- **Width** — estimated bytes per row\n- **Order of operations** — tree of steps, children feed parents\n\nUse `EXPLAIN ANALYZE` to actually execute the query and get real timings and row counts alongside estimates — the gap between estimated and actual rows is the main signal for bad plans (stale stats, missing indexes, bad selectivity guesses).\n\nCommon uses: spotting full table scans, missing indexes, bad join orders, or mis-estimated cardinalities.",
+    "stop_reason": "end_turn",
+    "session_id": "95938984-97c9-4685-bb15-508aa2241119",
+    "total_cost_usd": 0.08063225,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 10495,
+      "cache_read_input_tokens": 13741,
+      "output_tokens": 309,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 10495,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 309,
+          "cache_read_input_tokens": 13741,
+          "cache_creation_input_tokens": 10495,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 10495
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 348,
+        "outputTokens": 13,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.000413,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 309,
+        "cacheReadInputTokens": 13741,
+        "cacheCreationInputTokens": 10495,
+        "webSearchRequests": 0,
+        "costUSD": 0.08021925,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "31812f72-9704-43cd-893b-485e964cb801"
+  }
+}

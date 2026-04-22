@@ -1,0 +1,15 @@
+{
+  "final": {
+    "pros_of_event_sourced": true,
+    "cons_of_event_sourced": true,
+    "pros_of_mutable_row": true,
+    "cons_of_mutable_row": true
+  },
+  "history": [
+    {
+      "attempt": 0,
+      "raw": "{\"pros_of_event_sourced\":true,\"cons_of_event_sourced\":true,\"pros_of_mutable_row\":true,\"cons_of_mutable_row\":true}"
+    }
+  ],
+  "ts": "2026-04-22T02:12:00.133101+00:00"
+}

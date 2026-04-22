@@ -1,0 +1,96 @@
+{
+  "track": "T4",
+  "arm": "hewn_prompt_only",
+  "sequence_id": "debug-prod-incident",
+  "run_index": 1,
+  "turn": 4,
+  "arm_order_index": 2,
+  "arm_order_full": [
+    "baseline",
+    "hewn_full",
+    "hewn_prompt_only",
+    "caveman_full",
+    "terse"
+  ],
+  "digest_hex": "c436155c1e87e76d88e6f2c66d47c90c16ae78237b0a8de1b93824cf92fb5c9b",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T01:00:00.321923+00:00",
+  "session_id_used_for_resume": "0e7e4bdc-736c-4be7-9b1e-03208a6201c8",
+  "output_tokens_tiktoken": 579,
+  "output_tokens_anthropic": 1526,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 876,
+  "cache_read_input_tokens": 34117,
+  "total_input_tokens": 34999,
+  "cache_state": "warm",
+  "wallclock_ms": 30867.131124978187,
+  "duration_ms": 27741,
+  "duration_api_ms": 27716,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "0e7e4bdc-736c-4be7-9b1e-03208a6201c8",
+  "total_cost_usd": 0.06071350000000001,
+  "model_used": "claude-opus-4-7",
+  "result": "Not obviously safe. The pool size isn't the only variable — you need to think about worst case, not typical case.\n\n**The math that matters:**\n\n- Sequential loop: 1 connection per in-flight request, for the duration of the request. Pool usage scales with *request concurrency*.\n- `Promise.all`: up to N connections per in-flight request (N = SKUs in cart). Pool usage scales with *request concurrency × cart size*.\n\nSo: pool=20, pre-refactor you could handle ~20 concurrent order checks. Post-refactor, a single 20-SKU cart consumes the entire pool. Two concurrent 15-SKU carts (30 connections demanded) queue on the pool and can hit `acquire timeout`, and — worse — starve *every other query in the app* that shares the pool: health checks, auth, unrelated endpoints.\n\n**What to check before concluding:**\n\n1. **Max SKUs per cart** — is there a cap? Typical P99? If P99 is 3 and max is 8, the risk is smaller than if carts can have 100 items. If there's no hard cap, assume adversarial input.\n2. **Pool is shared or dedicated?** — if the same pool serves the whole app, exhaustion cascades. If it's dedicated to order flow, blast radius is limited to orders.\n3. **Pool `acquireTimeout` / `waitForConnections`** — what happens when exhausted? Queue silently (latency spike)? Throw (500s)? You probably want to know which before shipping.\n4. **What else was in the pool's budget** — if the app was already running near pool capacity under load, this change pushes it over.\n\n**The better fix, probably:**\n\nThe refactor is solving the wrong problem. If you're doing N SKU lookups, replace them with one query:\n\n```sql\nSELECT * FROM inventory WHERE sku IN (:skus)\n```\n\nOne connection, one round trip, faster than either sequential or `Promise.all`, and pool-safe regardless of cart size. This is almost always the right answer for \"fan out N lookups by ID.\"\n\nIf a batch query genuinely isn't possible (e.g., each lookup hits a different service), cap concurrency with `p-limit` or similar:\n\n```js\nconst limit = pLimit(5);\nawait Promise.all(skus.map(sku => limit(() => lookup(sku))));\n```\n\nPick the cap based on: `(pool_size − headroom_for_other_queries) / expected_concurrent_requests`. With pool=20, something like 3–5 is a reasonable starting point; measure under load.\n\n**Short answer:** don't ship as-is unless cart size is bounded small and you've confirmed the pool has headroom. Push for the batch query first, fall back to bounded concurrency if you must.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 27741,
+    "duration_api_ms": 27716,
+    "num_turns": 1,
+    "result": "Not obviously safe. The pool size isn't the only variable — you need to think about worst case, not typical case.\n\n**The math that matters:**\n\n- Sequential loop: 1 connection per in-flight request, for the duration of the request. Pool usage scales with *request concurrency*.\n- `Promise.all`: up to N connections per in-flight request (N = SKUs in cart). Pool usage scales with *request concurrency × cart size*.\n\nSo: pool=20, pre-refactor you could handle ~20 concurrent order checks. Post-refactor, a single 20-SKU cart consumes the entire pool. Two concurrent 15-SKU carts (30 connections demanded) queue on the pool and can hit `acquire timeout`, and — worse — starve *every other query in the app* that shares the pool: health checks, auth, unrelated endpoints.\n\n**What to check before concluding:**\n\n1. **Max SKUs per cart** — is there a cap? Typical P99? If P99 is 3 and max is 8, the risk is smaller than if carts can have 100 items. If there's no hard cap, assume adversarial input.\n2. **Pool is shared or dedicated?** — if the same pool serves the whole app, exhaustion cascades. If it's dedicated to order flow, blast radius is limited to orders.\n3. **Pool `acquireTimeout` / `waitForConnections`** — what happens when exhausted? Queue silently (latency spike)? Throw (500s)? You probably want to know which before shipping.\n4. **What else was in the pool's budget** — if the app was already running near pool capacity under load, this change pushes it over.\n\n**The better fix, probably:**\n\nThe refactor is solving the wrong problem. If you're doing N SKU lookups, replace them with one query:\n\n```sql\nSELECT * FROM inventory WHERE sku IN (:skus)\n```\n\nOne connection, one round trip, faster than either sequential or `Promise.all`, and pool-safe regardless of cart size. This is almost always the right answer for \"fan out N lookups by ID.\"\n\nIf a batch query genuinely isn't possible (e.g., each lookup hits a different service), cap concurrency with `p-limit` or similar:\n\n```js\nconst limit = pLimit(5);\nawait Promise.all(skus.map(sku => limit(() => lookup(sku))));\n```\n\nPick the cap based on: `(pool_size − headroom_for_other_queries) / expected_concurrent_requests`. With pool=20, something like 3–5 is a reasonable starting point; measure under load.\n\n**Short answer:** don't ship as-is unless cart size is bounded small and you've confirmed the pool has headroom. Push for the batch query first, fall back to bounded concurrency if you must.",
+    "stop_reason": "end_turn",
+    "session_id": "0e7e4bdc-736c-4be7-9b1e-03208a6201c8",
+    "total_cost_usd": 0.06071350000000001,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 876,
+      "cache_read_input_tokens": 34117,
+      "output_tokens": 1526,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 876,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 1526,
+          "cache_read_input_tokens": 34117,
+          "cache_creation_input_tokens": 876,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 876
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 1526,
+        "cacheReadInputTokens": 34117,
+        "cacheCreationInputTokens": 876,
+        "webSearchRequests": 0,
+        "costUSD": 0.06071350000000001,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "c9b24411-ae07-4c8d-8089-49bcf5e26264"
+  }
+}

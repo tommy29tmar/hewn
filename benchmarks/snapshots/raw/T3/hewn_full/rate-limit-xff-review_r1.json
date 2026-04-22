@@ -1,0 +1,105 @@
+{
+  "track": "T3",
+  "arm": "hewn_full",
+  "prompt_id": "rate-limit-xff-review",
+  "run_index": 1,
+  "arm_order_index": 5,
+  "arm_order_full": [
+    "caveman_full_plus_ultra_directive",
+    "hewn_prompt_only",
+    "caveman_full",
+    "baseline",
+    "terse",
+    "hewn_full"
+  ],
+  "digest_hex": "150affe2992c9d3e327b5311fcd06bb30c21d46606c27a5d4b2a456ecbc0ba71",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T00:30:52.490885+00:00",
+  "output_tokens_tiktoken": 1095,
+  "output_tokens_anthropic": 6012,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 24429,
+  "cache_read_input_tokens": 16805,
+  "total_input_tokens": 41240,
+  "cache_state": "warm",
+  "wallclock_ms": 107917.15290100547,
+  "duration_ms": 103901,
+  "duration_api_ms": 104881,
+  "wrapper_overhead_ms": 3036.1529010054655,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "1f16501d-fed2-4d1a-98fe-c36496e94c76",
+  "total_cost_usd": 0.31698375,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "1. socket.remoteAddress not client IP behind HAProxy — §2 rule 2 + §4 key fn. Without PROXY protocol from HAProxy/Envoy, `req.socket.remoteAddress` resolves to HAProxy pod IP identical for all clients → per-IP limiter collapses to global limiter, auth-svc brute-force bypass again. Fix: require PROXY protocol on HAProxy→Node socket, assert in boot that remoteAddress is not the known proxy CIDR, cover in integration tests with real HAProxy.\n\n2. multi.exec() destructure wrong — §4 code sample. ioredis returns `[[err,result],...]`; `const [count] = await multi.exec()` binds `count` to `[null, N]` (tuple), so `count > limit` compares object coercion → limiter silently never trips, or always trips depending on Node version. Fix: `const res = await multi.exec(); const count = res[0][1];` + unit test asserting numeric comparison.\n\n3. region prefix still missing in handbook example — §4 code after 2025-12 RCA. Key `rl:${ip}:${routePrefix}:${minuteBucket}` has no region segment; if this sample reflects current code the SEV2 is unfixed; if not, handbook is drifted and will re-seed the bug on next refactor. Fix: `rl:${region}:${ip}:${routePrefix}:${minuteBucket}` in sample + regression test on key shape.\n\n4. fixed-window masquerading as sliding-window — §4. `Math.floor(Date.now()/60000)` is fixed bucket; attacker bursts `2×limit` across boundary (last 500ms of bucket N + first 500ms of N+1). Fix: true sliding via sorted-set ZADD+ZREMRANGEBYSCORE, or dual-bucket weighted formula; update §4 prose to match impl.\n\n5. JWKS poisoning window ≈16min — §2 rule 4 + §5 + 2025-06 incident. 16min soft TTL + SWR means revoked/compromised signing key is honored for ~16min post-rotation; no hard kill-switch, no kid pinning to auth-svc-published active set. Fix: hard TTL ≤2min on negative verification deltas, explicit `kid` allowlist fetched atomically, synchronous refresh on first `bad_signature` delta spike.\n\n6. pipeline.ts not in CODEOWNERS — §3 + §6 pre-merge. Auth files require human approval but `src/edge/pipeline.ts` (the file defining middleware order) does not; contributor can move `auth_jwt` before `header_sanitize` and let a spoofed `X-Internal-User-Id` reach downstream. Fix: add `src/edge/pipeline.ts` to CODEOWNERS + test asserting ordered middleware chain hash.\n\n7. no JWT replay defense at edge — §5. `jti` logged not deduped; stolen/leaked token usable until `exp` (+30s skew). Fix: per-edge Redis `SETNX jti EX ttl` for sensitive routes flagged in `config/always_trace_routes.json`, 401 on collision, document tradeoff.\n\n8. JWT skew spec contradicts itself — §5. \"exp checked against `Date.now() + skewMs`\" (stricter, expires early) vs \"rejected if exp before `Date.now() - skewMs`\" (lenient, grace). Two implementations satisfy the doc, one rejects valid tokens, other accepts expired. Fix: pin to the lenient form (`exp + skewMs >= Date.now()`), add test matrix around boundary, strike the other sentence.\n\n9. aud claim shape not normalized — §5 \"Audience must contain `atlas-edge`\". If jsonwebtoken lib receives `aud` as string vs array inconsistently, `.includes` vs `===` check diverges → either overly strict (legitimate 401) or overly loose. Fix: normalize to array before check, assert in tests with both `aud: \"atlas-edge\"` and `aud: [\"atlas-edge\", \"other\"]`.\n\n10. body_size_guard after rate_limit — §3. >2MB flood still performs Redis `INCR+EXPIRE` + burns rate slot before 413; HAProxy doesn't cap body either. Fix: move `body_size_guard` before `rate_limit`, or enforce `maxrequestbody` in HAProxy frontend.\n\n11. per-IP fallback defaults hurt shared-egress — §4 120 GET/min/IP, 30 write/min/IP. Corporate NAT / CGNAT / mobile carrier share one IP across thousands → legitimate 429 storms, already cited in 2025-12 RCA but not generalized. Fix: after `auth_jwt`, add per-`sub` limiter with higher ceiling; keep IP limiter as anti-abuse floor only.\n\n12. 429 body leaks policy + wrong header — §4. `detail: \"Limit ${limit}/min exceeded\"` discloses exact tuning for probing; `retry_after` as JSON field is not RFC-compliant, should be `Retry-After` response header per HTTP spec alongside RFC 7807 body. Fix: `detail: \"Too Many Requests\"`, set `Retry-After` header with `secondsUntilNextBucket()`, drop body field.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 103901,
+    "duration_api_ms": 104881,
+    "num_turns": 1,
+    "result": "1. socket.remoteAddress not client IP behind HAProxy — §2 rule 2 + §4 key fn. Without PROXY protocol from HAProxy/Envoy, `req.socket.remoteAddress` resolves to HAProxy pod IP identical for all clients → per-IP limiter collapses to global limiter, auth-svc brute-force bypass again. Fix: require PROXY protocol on HAProxy→Node socket, assert in boot that remoteAddress is not the known proxy CIDR, cover in integration tests with real HAProxy.\n\n2. multi.exec() destructure wrong — §4 code sample. ioredis returns `[[err,result],...]`; `const [count] = await multi.exec()` binds `count` to `[null, N]` (tuple), so `count > limit` compares object coercion → limiter silently never trips, or always trips depending on Node version. Fix: `const res = await multi.exec(); const count = res[0][1];` + unit test asserting numeric comparison.\n\n3. region prefix still missing in handbook example — §4 code after 2025-12 RCA. Key `rl:${ip}:${routePrefix}:${minuteBucket}` has no region segment; if this sample reflects current code the SEV2 is unfixed; if not, handbook is drifted and will re-seed the bug on next refactor. Fix: `rl:${region}:${ip}:${routePrefix}:${minuteBucket}` in sample + regression test on key shape.\n\n4. fixed-window masquerading as sliding-window — §4. `Math.floor(Date.now()/60000)` is fixed bucket; attacker bursts `2×limit` across boundary (last 500ms of bucket N + first 500ms of N+1). Fix: true sliding via sorted-set ZADD+ZREMRANGEBYSCORE, or dual-bucket weighted formula; update §4 prose to match impl.\n\n5. JWKS poisoning window ≈16min — §2 rule 4 + §5 + 2025-06 incident. 16min soft TTL + SWR means revoked/compromised signing key is honored for ~16min post-rotation; no hard kill-switch, no kid pinning to auth-svc-published active set. Fix: hard TTL ≤2min on negative verification deltas, explicit `kid` allowlist fetched atomically, synchronous refresh on first `bad_signature` delta spike.\n\n6. pipeline.ts not in CODEOWNERS — §3 + §6 pre-merge. Auth files require human approval but `src/edge/pipeline.ts` (the file defining middleware order) does not; contributor can move `auth_jwt` before `header_sanitize` and let a spoofed `X-Internal-User-Id` reach downstream. Fix: add `src/edge/pipeline.ts` to CODEOWNERS + test asserting ordered middleware chain hash.\n\n7. no JWT replay defense at edge — §5. `jti` logged not deduped; stolen/leaked token usable until `exp` (+30s skew). Fix: per-edge Redis `SETNX jti EX ttl` for sensitive routes flagged in `config/always_trace_routes.json`, 401 on collision, document tradeoff.\n\n8. JWT skew spec contradicts itself — §5. \"exp checked against `Date.now() + skewMs`\" (stricter, expires early) vs \"rejected if exp before `Date.now() - skewMs`\" (lenient, grace). Two implementations satisfy the doc, one rejects valid tokens, other accepts expired. Fix: pin to the lenient form (`exp + skewMs >= Date.now()`), add test matrix around boundary, strike the other sentence.\n\n9. aud claim shape not normalized — §5 \"Audience must contain `atlas-edge`\". If jsonwebtoken lib receives `aud` as string vs array inconsistently, `.includes` vs `===` check diverges → either overly strict (legitimate 401) or overly loose. Fix: normalize to array before check, assert in tests with both `aud: \"atlas-edge\"` and `aud: [\"atlas-edge\", \"other\"]`.\n\n10. body_size_guard after rate_limit — §3. >2MB flood still performs Redis `INCR+EXPIRE` + burns rate slot before 413; HAProxy doesn't cap body either. Fix: move `body_size_guard` before `rate_limit`, or enforce `maxrequestbody` in HAProxy frontend.\n\n11. per-IP fallback defaults hurt shared-egress — §4 120 GET/min/IP, 30 write/min/IP. Corporate NAT / CGNAT / mobile carrier share one IP across thousands → legitimate 429 storms, already cited in 2025-12 RCA but not generalized. Fix: after `auth_jwt`, add per-`sub` limiter with higher ceiling; keep IP limiter as anti-abuse floor only.\n\n12. 429 body leaks policy + wrong header — §4. `detail: \"Limit ${limit}/min exceeded\"` discloses exact tuning for probing; `retry_after` as JSON field is not RFC-compliant, should be `Retry-After` response header per HTTP spec alongside RFC 7807 body. Fix: `detail: \"Too Many Requests\"`, set `Retry-After` header with `secondsUntilNextBucket()`, drop body field.",
+    "stop_reason": "end_turn",
+    "session_id": "1f16501d-fed2-4d1a-98fe-c36496e94c76",
+    "total_cost_usd": 0.31698375,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 24429,
+      "cache_read_input_tokens": 16805,
+      "output_tokens": 6012,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 24429,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 6012,
+          "cache_read_input_tokens": 16805,
+          "cache_creation_input_tokens": 24429,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 24429
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 5505,
+        "outputTokens": 13,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.00557,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 6012,
+        "cacheReadInputTokens": 16805,
+        "cacheCreationInputTokens": 24429,
+        "webSearchRequests": 0,
+        "costUSD": 0.31141375,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "72ad5652-e42a-4c91-bfa6-b8ff2ef1b4c7"
+  }
+}

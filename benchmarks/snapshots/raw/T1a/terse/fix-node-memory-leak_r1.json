@@ -1,0 +1,102 @@
+{
+  "track": "T1a",
+  "arm": "terse",
+  "prompt_id": "fix-node-memory-leak",
+  "run_index": 1,
+  "arm_order_index": 1,
+  "arm_order_full": [
+    "baseline",
+    "terse",
+    "caveman_full"
+  ],
+  "digest_hex": "edf96b08b6bf832e7f6141e2b1e51b0b7773d43c771414ddf25ddb62f5d6bccd",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-21T23:34:32.370893+00:00",
+  "output_tokens_tiktoken": 307,
+  "output_tokens_anthropic": 489,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 6561,
+  "cache_read_input_tokens": 13741,
+  "total_input_tokens": 20308,
+  "cache_state": "warm",
+  "wallclock_ms": 15167.99102301593,
+  "duration_ms": 10259,
+  "duration_api_ms": 11169,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "8c92222c-b32e-4cc1-8a2b-528350947bd4",
+  "total_cost_usd": 0.060566749999999996,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "Common fixes:\n\n1. **Profile first** — `node --inspect` + Chrome DevTools Memory tab, or `clinic heapprofiler`. Take two heap snapshots under load, diff them.\n\n2. **Usual culprits**:\n   - Unbounded caches/Maps → use `lru-cache` or `WeakMap`\n   - Event listeners not removed → `emitter.off()` on cleanup, check `getMaxListeners()`\n   - Closures holding large scopes → null out refs after use\n   - Timers (`setInterval`) never cleared → store handle, `clearInterval` on shutdown\n   - Global arrays that only grow → add eviction\n   - Promises never settling → keeps chain alive\n\n3. **Quick diagnostics**:\n   ```js\n   setInterval(() => console.log(process.memoryUsage()), 10000);\n   ```\n   Watch `heapUsed` trend over hours, not minutes.\n\n4. **Raise heap temporarily** while debugging: `node --max-old-space-size=4096`. Not a fix, just buys time.\n\n5. **Force GC in tests**: run with `--expose-gc`, call `global.gc()` between snapshots to rule out uncollected garbage.\n\n6. **Check native leaks** (Buffers, native modules) with `--track-heap-objects` or `heapdump` — V8 heap snapshots miss off-heap memory.\n\nStart with two heap diffs under real load. That almost always points at the retainer.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 10259,
+    "duration_api_ms": 11169,
+    "num_turns": 1,
+    "result": "Common fixes:\n\n1. **Profile first** — `node --inspect` + Chrome DevTools Memory tab, or `clinic heapprofiler`. Take two heap snapshots under load, diff them.\n\n2. **Usual culprits**:\n   - Unbounded caches/Maps → use `lru-cache` or `WeakMap`\n   - Event listeners not removed → `emitter.off()` on cleanup, check `getMaxListeners()`\n   - Closures holding large scopes → null out refs after use\n   - Timers (`setInterval`) never cleared → store handle, `clearInterval` on shutdown\n   - Global arrays that only grow → add eviction\n   - Promises never settling → keeps chain alive\n\n3. **Quick diagnostics**:\n   ```js\n   setInterval(() => console.log(process.memoryUsage()), 10000);\n   ```\n   Watch `heapUsed` trend over hours, not minutes.\n\n4. **Raise heap temporarily** while debugging: `node --max-old-space-size=4096`. Not a fix, just buys time.\n\n5. **Force GC in tests**: run with `--expose-gc`, call `global.gc()` between snapshots to rule out uncollected garbage.\n\n6. **Check native leaks** (Buffers, native modules) with `--track-heap-objects` or `heapdump` — V8 heap snapshots miss off-heap memory.\n\nStart with two heap diffs under real load. That almost always points at the retainer.",
+    "stop_reason": "end_turn",
+    "session_id": "8c92222c-b32e-4cc1-8a2b-528350947bd4",
+    "total_cost_usd": 0.060566749999999996,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 6561,
+      "cache_read_input_tokens": 13741,
+      "output_tokens": 489,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 6561,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 489,
+          "cache_read_input_tokens": 13741,
+          "cache_creation_input_tokens": 6561,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 6561
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 355,
+        "outputTokens": 16,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.000435,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 489,
+        "cacheReadInputTokens": 13741,
+        "cacheCreationInputTokens": 6561,
+        "webSearchRequests": 0,
+        "costUSD": 0.06013175,
+        "contextWindow": 200000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "47064182-fe4d-4c14-a557-9cce097a010d"
+  }
+}

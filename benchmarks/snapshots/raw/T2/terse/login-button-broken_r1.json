@@ -1,0 +1,105 @@
+{
+  "track": "T2",
+  "arm": "terse",
+  "prompt_id": "login-button-broken",
+  "run_index": 1,
+  "arm_order_index": 1,
+  "arm_order_full": [
+    "hewn_prompt_only",
+    "terse",
+    "baseline",
+    "hewn_full",
+    "caveman_full",
+    "caveman_full_plus_ultra_directive"
+  ],
+  "digest_hex": "2a516f124e7c3f36519661dd85a98f48aa78e74bb3ea51fb090afd928de500ea",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T00:14:42.606682+00:00",
+  "output_tokens_tiktoken": 59,
+  "output_tokens_anthropic": 93,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 10491,
+  "cache_read_input_tokens": 13741,
+  "total_input_tokens": 24238,
+  "cache_state": "warm",
+  "wallclock_ms": 6866.730544978054,
+  "duration_ms": 3396,
+  "duration_api_ms": 4457,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "b03cbf2c-6f4f-4975-8e49-488631f8ba80",
+  "total_cost_usd": 0.07520325000000001,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "Need more info to help:\n\n1. Which repo/app? (path or URL)\n2. What happens when clicking — nothing, error, redirect loop, 500?\n3. Browser console / network errors?\n4. Recent changes to auth code?\n\nPoint me at the code and I'll investigate.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 3396,
+    "duration_api_ms": 4457,
+    "num_turns": 1,
+    "result": "Need more info to help:\n\n1. Which repo/app? (path or URL)\n2. What happens when clicking — nothing, error, redirect loop, 500?\n3. Browser console / network errors?\n4. Recent changes to auth code?\n\nPoint me at the code and I'll investigate.",
+    "stop_reason": "end_turn",
+    "session_id": "b03cbf2c-6f4f-4975-8e49-488631f8ba80",
+    "total_cost_usd": 0.07520325000000001,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 10491,
+      "cache_read_input_tokens": 13741,
+      "output_tokens": 93,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 10491,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 93,
+          "cache_read_input_tokens": 13741,
+          "cache_creation_input_tokens": 10491,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 10491
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 349,
+        "outputTokens": 12,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.000409,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 93,
+        "cacheReadInputTokens": 13741,
+        "cacheCreationInputTokens": 10491,
+        "webSearchRequests": 0,
+        "costUSD": 0.07479425,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "300e0e97-5bae-4b4e-8a1f-f96ad4498c16"
+  }
+}

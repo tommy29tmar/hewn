@@ -1,0 +1,96 @@
+{
+  "track": "T4",
+  "arm": "hewn_full",
+  "sequence_id": "debug-prod-incident",
+  "run_index": 2,
+  "turn": 4,
+  "arm_order_index": 2,
+  "arm_order_full": [
+    "caveman_full",
+    "terse",
+    "hewn_full",
+    "hewn_prompt_only",
+    "baseline"
+  ],
+  "digest_hex": "522341918a5177210ef438fa55486ec5b622aaa576febbd731536d82595ec31b",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T01:18:47.265269+00:00",
+  "session_id_used_for_resume": "3e4c6f56-3671-4661-a0c7-27d8396e46e9",
+  "output_tokens_tiktoken": 170,
+  "output_tokens_anthropic": 320,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 755,
+  "cache_read_input_tokens": 35391,
+  "total_input_tokens": 36152,
+  "cache_state": "warm",
+  "wallclock_ms": 11562.692184001207,
+  "duration_ms": 8087,
+  "duration_api_ms": 7990,
+  "wrapper_overhead_ms": 3572.6921840012074,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "3e4c6f56-3671-4661-a0c7-27d8396e46e9",
+  "total_cost_usd": 0.03044425,
+  "model_used": "claude-opus-4-7",
+  "result": "depends on cart size and pool contention from other requests\nPromise.all fans out N queries simultaneously — if cart has 50 SKUs, one request eats 20 connections and queues rest\nunder load, concurrent orders compete for same 20 slots, tail latency spikes, timeouts cascade\nsequential loop was slow but bounded: 1 connection per request\nsafer middle ground: bounded concurrency (p-limit or similar) at ~5 parallel per request\nalso check if SKU lookup is batchable into single query (WHERE sku IN (...)) — kills N+1 entirely, one connection, fastest\ncheck current traffic: if p99 cart size is small (<5 SKUs) and RPS is low, Promise.all probably fine short-term\nadd a pool saturation metric before shipping if you keep Promise.all — you want to see it before customers do",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 8087,
+    "duration_api_ms": 7990,
+    "num_turns": 1,
+    "result": "depends on cart size and pool contention from other requests\nPromise.all fans out N queries simultaneously — if cart has 50 SKUs, one request eats 20 connections and queues rest\nunder load, concurrent orders compete for same 20 slots, tail latency spikes, timeouts cascade\nsequential loop was slow but bounded: 1 connection per request\nsafer middle ground: bounded concurrency (p-limit or similar) at ~5 parallel per request\nalso check if SKU lookup is batchable into single query (WHERE sku IN (...)) — kills N+1 entirely, one connection, fastest\ncheck current traffic: if p99 cart size is small (<5 SKUs) and RPS is low, Promise.all probably fine short-term\nadd a pool saturation metric before shipping if you keep Promise.all — you want to see it before customers do",
+    "stop_reason": "end_turn",
+    "session_id": "3e4c6f56-3671-4661-a0c7-27d8396e46e9",
+    "total_cost_usd": 0.03044425,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 755,
+      "cache_read_input_tokens": 35391,
+      "output_tokens": 320,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 755,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 320,
+          "cache_read_input_tokens": 35391,
+          "cache_creation_input_tokens": 755,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 755
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 320,
+        "cacheReadInputTokens": 35391,
+        "cacheCreationInputTokens": 755,
+        "webSearchRequests": 0,
+        "costUSD": 0.03044425,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "ce0c9806-9730-4d22-8401-db78b5b8628c"
+  }
+}

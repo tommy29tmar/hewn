@@ -1,0 +1,105 @@
+{
+  "track": "T1b",
+  "arm": "baseline",
+  "prompt_id": "hash-table-collisions",
+  "run_index": 1,
+  "arm_order_index": 4,
+  "arm_order_full": [
+    "caveman_full",
+    "hewn_prompt_only",
+    "hewn_full",
+    "caveman_full_plus_ultra_directive",
+    "baseline",
+    "terse"
+  ],
+  "digest_hex": "2a54ba54e1f7192ed7b81622a0de8bb31264ddae15be620c57cd7c027de6901e",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-21T23:46:25.569789+00:00",
+  "output_tokens_tiktoken": 204,
+  "output_tokens_anthropic": 316,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 11725,
+  "cache_read_input_tokens": 16796,
+  "total_input_tokens": 28527,
+  "cache_state": "warm",
+  "wallclock_ms": 12510.00912100426,
+  "duration_ms": 7214,
+  "duration_api_ms": 8293,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "c431fef2-30be-4751-8eaa-e146415890df",
+  "total_cost_usd": 0.09002124999999998,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "Hash tables handle collisions with two main strategies:\n\n**1. Separate chaining** — each bucket holds a linked list (or tree) of entries. On collision, append to the list. Lookup walks the list comparing keys. Java's `HashMap` uses this (switches list → red-black tree at 8+ entries).\n\n**2. Open addressing** — all entries live in the array itself. On collision, probe for another slot:\n- *Linear probing*: try `i+1`, `i+2`, … (cache-friendly, suffers clustering)\n- *Quadratic probing*: try `i+1`, `i+4`, `i+9`, …\n- *Double hashing*: step size from a second hash function\n\nOpen addressing needs tombstones on delete and a lower load factor (~0.7) to stay fast; chaining tolerates higher loads but costs a pointer indirection. Python `dict` and Go `map` use open addressing variants; most JVM/C# maps use chaining.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 7214,
+    "duration_api_ms": 8293,
+    "num_turns": 1,
+    "result": "Hash tables handle collisions with two main strategies:\n\n**1. Separate chaining** — each bucket holds a linked list (or tree) of entries. On collision, append to the list. Lookup walks the list comparing keys. Java's `HashMap` uses this (switches list → red-black tree at 8+ entries).\n\n**2. Open addressing** — all entries live in the array itself. On collision, probe for another slot:\n- *Linear probing*: try `i+1`, `i+2`, … (cache-friendly, suffers clustering)\n- *Quadratic probing*: try `i+1`, `i+4`, `i+9`, …\n- *Double hashing*: step size from a second hash function\n\nOpen addressing needs tombstones on delete and a lower load factor (~0.7) to stay fast; chaining tolerates higher loads but costs a pointer indirection. Python `dict` and Go `map` use open addressing variants; most JVM/C# maps use chaining.",
+    "stop_reason": "end_turn",
+    "session_id": "c431fef2-30be-4751-8eaa-e146415890df",
+    "total_cost_usd": 0.09002124999999998,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 11725,
+      "cache_read_input_tokens": 16796,
+      "output_tokens": 316,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 11725,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 316,
+          "cache_read_input_tokens": 16796,
+          "cache_creation_input_tokens": 11725,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 11725
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 347,
+        "outputTokens": 13,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.000412,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 316,
+        "cacheReadInputTokens": 16796,
+        "cacheCreationInputTokens": 11725,
+        "webSearchRequests": 0,
+        "costUSD": 0.08960924999999999,
+        "contextWindow": 200000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "fd8e1366-c9d4-4a8f-9519-5b9e2a8ee531"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "final": {
+    "uses_plain_language": false,
+    "actionable": true,
+    "starts_helpfully": true,
+    "respects_user_level": false
+  },
+  "history": [
+    {
+      "attempt": 0,
+      "raw": "{\"uses_plain_language\": false, \"actionable\": true, \"starts_helpfully\": true, \"respects_user_level\": false}"
+    }
+  ],
+  "ts": "2026-04-22T01:49:44.246101+00:00"
+}

@@ -1,0 +1,96 @@
+{
+  "track": "T4",
+  "arm": "terse",
+  "sequence_id": "design-feature",
+  "run_index": 2,
+  "turn": 4,
+  "arm_order_index": 3,
+  "arm_order_full": [
+    "baseline",
+    "caveman_full",
+    "hewn_prompt_only",
+    "terse",
+    "hewn_full"
+  ],
+  "digest_hex": "3191b019d37f08f3d5b68d9000f1aeb1e1a3524225f9daa893803df1e240ffd1",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T01:33:04.215372+00:00",
+  "session_id_used_for_resume": "4845fc16-a5df-4b09-9b18-5e011308b766",
+  "output_tokens_tiktoken": 416,
+  "output_tokens_anthropic": 642,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 1048,
+  "cache_read_input_tokens": 26102,
+  "total_input_tokens": 27156,
+  "cache_state": "warm",
+  "wallclock_ms": 17096.51550700073,
+  "duration_ms": 13777,
+  "duration_api_ms": 13753,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "4845fc16-a5df-4b09-9b18-5e011308b766",
+  "total_cost_usd": 0.035681,
+  "model_used": "claude-opus-4-7",
+  "result": "**Both. They do different jobs.**\n\n**Consumption path (synchronous check)**\nNon-negotiable. At redemption time:\n```sql\nSELECT balance, expires_at FROM gift_cards\nWHERE id = :id FOR UPDATE\n```\nThen reject if `expires_at <= now()`. This is the only check that actually prevents spending expired balance. A batch job that runs at 3am cannot stop a 2:59am redemption of a card that expired at midnight.\n\nPut the check inside the locked transaction, not before it — otherwise a card can expire between check and decrement (unlikely but free to get right).\n\n**Batch job (state transition + side effects)**\nAlso needed, for things the hot path shouldn't do:\n- Flip `status` from `active` to `expired` so admin UIs, balance-check endpoints, and reports agree.\n- Move expired balance to a breakage/revenue account (accounting wants this recognized, not left as a dangling liability).\n- Fire \"your card expires in 30 days\" emails.\n- Produce the daily liability report.\n\n**Why both, not either:**\n- Hot path only: liability sits on the books forever, admin tools show \"active\" cards that can't be used, no notifications, no breakage recognition.\n- Batch only: race window where expired cards still spend. Unacceptable.\n\n**Design notes:**\n- `expires_at` is the source of truth. `status = 'expired'` is a derived cache the batch maintains. Hot path trusts `expires_at`, not `status`.\n- Check legal constraints before shipping a 12-month expiry. Several US states ban expiration on gift cards outright, others require 5+ years. This is usually a legal/compliance decision, not an engineering one.\n- Idempotent batch: re-running it should be a no-op. Key on `expires_at < now() AND status = 'active'`.\n- Log every auto-expiry to your side-table with reason `'expired'` so support can explain \"where did my balance go.\"",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 13777,
+    "duration_api_ms": 13753,
+    "num_turns": 1,
+    "result": "**Both. They do different jobs.**\n\n**Consumption path (synchronous check)**\nNon-negotiable. At redemption time:\n```sql\nSELECT balance, expires_at FROM gift_cards\nWHERE id = :id FOR UPDATE\n```\nThen reject if `expires_at <= now()`. This is the only check that actually prevents spending expired balance. A batch job that runs at 3am cannot stop a 2:59am redemption of a card that expired at midnight.\n\nPut the check inside the locked transaction, not before it — otherwise a card can expire between check and decrement (unlikely but free to get right).\n\n**Batch job (state transition + side effects)**\nAlso needed, for things the hot path shouldn't do:\n- Flip `status` from `active` to `expired` so admin UIs, balance-check endpoints, and reports agree.\n- Move expired balance to a breakage/revenue account (accounting wants this recognized, not left as a dangling liability).\n- Fire \"your card expires in 30 days\" emails.\n- Produce the daily liability report.\n\n**Why both, not either:**\n- Hot path only: liability sits on the books forever, admin tools show \"active\" cards that can't be used, no notifications, no breakage recognition.\n- Batch only: race window where expired cards still spend. Unacceptable.\n\n**Design notes:**\n- `expires_at` is the source of truth. `status = 'expired'` is a derived cache the batch maintains. Hot path trusts `expires_at`, not `status`.\n- Check legal constraints before shipping a 12-month expiry. Several US states ban expiration on gift cards outright, others require 5+ years. This is usually a legal/compliance decision, not an engineering one.\n- Idempotent batch: re-running it should be a no-op. Key on `expires_at < now() AND status = 'active'`.\n- Log every auto-expiry to your side-table with reason `'expired'` so support can explain \"where did my balance go.\"",
+    "stop_reason": "end_turn",
+    "session_id": "4845fc16-a5df-4b09-9b18-5e011308b766",
+    "total_cost_usd": 0.035681,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 1048,
+      "cache_read_input_tokens": 26102,
+      "output_tokens": 642,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 1048,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 642,
+          "cache_read_input_tokens": 26102,
+          "cache_creation_input_tokens": 1048,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 1048
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 642,
+        "cacheReadInputTokens": 26102,
+        "cacheCreationInputTokens": 1048,
+        "webSearchRequests": 0,
+        "costUSD": 0.035681,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "a7739510-60ec-4121-806a-fc548900a052"
+  }
+}

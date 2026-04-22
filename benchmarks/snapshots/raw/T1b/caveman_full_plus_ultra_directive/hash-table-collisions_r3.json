@@ -1,0 +1,105 @@
+{
+  "track": "T1b",
+  "arm": "caveman_full_plus_ultra_directive",
+  "prompt_id": "hash-table-collisions",
+  "run_index": 3,
+  "arm_order_index": 5,
+  "arm_order_full": [
+    "hewn_full",
+    "hewn_prompt_only",
+    "terse",
+    "baseline",
+    "caveman_full",
+    "caveman_full_plus_ultra_directive"
+  ],
+  "digest_hex": "dd0de5b36562eee233e96607f6b16004e23554c44ac346d467b78d873739dd7b",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T00:10:05.782707+00:00",
+  "output_tokens_tiktoken": 120,
+  "output_tokens_anthropic": 180,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 10488,
+  "cache_read_input_tokens": 15201,
+  "total_input_tokens": 25695,
+  "cache_state": "warm",
+  "wallclock_ms": 10698.326001001988,
+  "duration_ms": 5904,
+  "duration_api_ms": 7328,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "4a6a030e-eb8c-4d2a-b82e-fb9b397c7ab8",
+  "total_cost_usd": 0.07809750000000001,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "Two main ways:\n\n**Chaining** — bucket hold linked list. Collide → append. Simple, handle high load. Cache-unfriendly, pointer overhead.\n\n**Open addressing** — probe other slots in array:\n- Linear: `h+1, h+2...` — fast, cluster bad\n- Quadratic: `h+1², h+2²...` — less cluster\n- Double hash: `h+i·h2(k)` — best spread\n\nOpen addr need load factor < ~0.7, resize when full. Chaining tolerate > 1.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 5904,
+    "duration_api_ms": 7328,
+    "num_turns": 1,
+    "result": "Two main ways:\n\n**Chaining** — bucket hold linked list. Collide → append. Simple, handle high load. Cache-unfriendly, pointer overhead.\n\n**Open addressing** — probe other slots in array:\n- Linear: `h+1, h+2...` — fast, cluster bad\n- Quadratic: `h+1², h+2²...` — less cluster\n- Double hash: `h+i·h2(k)` — best spread\n\nOpen addr need load factor < ~0.7, resize when full. Chaining tolerate > 1.",
+    "stop_reason": "end_turn",
+    "session_id": "4a6a030e-eb8c-4d2a-b82e-fb9b397c7ab8",
+    "total_cost_usd": 0.07809750000000001,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 10488,
+      "cache_read_input_tokens": 15201,
+      "output_tokens": 180,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 10488,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 180,
+          "cache_read_input_tokens": 15201,
+          "cache_creation_input_tokens": 10488,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 10488
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 347,
+        "outputTokens": 14,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.00041699999999999994,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 180,
+        "cacheReadInputTokens": 15201,
+        "cacheCreationInputTokens": 10488,
+        "webSearchRequests": 0,
+        "costUSD": 0.07768050000000001,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "64811b76-8745-438d-80fd-1f87c11f0bf3"
+  }
+}

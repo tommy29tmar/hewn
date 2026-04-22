@@ -1,0 +1,105 @@
+{
+  "track": "T1b",
+  "arm": "hewn_full",
+  "prompt_id": "sql-explain",
+  "run_index": 1,
+  "arm_order_index": 1,
+  "arm_order_full": [
+    "caveman_full",
+    "hewn_full",
+    "terse",
+    "hewn_prompt_only",
+    "baseline",
+    "caveman_full_plus_ultra_directive"
+  ],
+  "digest_hex": "e9b043a6109acd8755235ab57ea2087212a5d2fe093212bffca1c20b840c04e8",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-21T23:44:33.665656+00:00",
+  "output_tokens_tiktoken": 161,
+  "output_tokens_anthropic": 255,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 13205,
+  "cache_read_input_tokens": 16805,
+  "total_input_tokens": 30016,
+  "cache_state": "warm",
+  "wallclock_ms": 12386.089926993009,
+  "duration_ms": 7034,
+  "duration_api_ms": 7661,
+  "wrapper_overhead_ms": 4725.089926993009,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "8cdf5f5f-c1a7-47e3-9fd6-26f1bdc4954c",
+  "total_cost_usd": 0.09775175,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "EXPLAIN shows query plan — how DB will execute SQL without running it.\n\nTells you:\n- access method per table (seq scan, index scan, index-only scan)\n- join order and join algorithm (nested loop, hash, merge)\n- estimated row counts and cost per step\n- filter and sort operations, whether sort spills to disk\n- index usage — or lack of it\n\nEXPLAIN ANALYZE actually runs query, adds real timings and actual row counts next to estimates. Gap between estimated and actual rows = stale stats or bad selectivity guess.\n\nUse it to spot: seq scans on big tables, nested loops over huge row counts, sorts without supporting index, estimates off by 10x+.\n\nPostgres and MySQL differ in output format but concept is same.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 7034,
+    "duration_api_ms": 7661,
+    "num_turns": 1,
+    "result": "EXPLAIN shows query plan — how DB will execute SQL without running it.\n\nTells you:\n- access method per table (seq scan, index scan, index-only scan)\n- join order and join algorithm (nested loop, hash, merge)\n- estimated row counts and cost per step\n- filter and sort operations, whether sort spills to disk\n- index usage — or lack of it\n\nEXPLAIN ANALYZE actually runs query, adds real timings and actual row counts next to estimates. Gap between estimated and actual rows = stale stats or bad selectivity guess.\n\nUse it to spot: seq scans on big tables, nested loops over huge row counts, sorts without supporting index, estimates off by 10x+.\n\nPostgres and MySQL differ in output format but concept is same.",
+    "stop_reason": "end_turn",
+    "session_id": "8cdf5f5f-c1a7-47e3-9fd6-26f1bdc4954c",
+    "total_cost_usd": 0.09775175,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 13205,
+      "cache_read_input_tokens": 16805,
+      "output_tokens": 255,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 13205,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 255,
+          "cache_read_input_tokens": 16805,
+          "cache_creation_input_tokens": 13205,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 13205
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 348,
+        "outputTokens": 13,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.000413,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 255,
+        "cacheReadInputTokens": 16805,
+        "cacheCreationInputTokens": 13205,
+        "webSearchRequests": 0,
+        "costUSD": 0.09733875,
+        "contextWindow": 200000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "7b399777-9696-4db6-bd5c-10f34633137b"
+  }
+}

@@ -1,0 +1,96 @@
+{
+  "track": "T4",
+  "arm": "baseline",
+  "sequence_id": "design-feature",
+  "run_index": 2,
+  "turn": 4,
+  "arm_order_index": 0,
+  "arm_order_full": [
+    "baseline",
+    "caveman_full",
+    "hewn_prompt_only",
+    "terse",
+    "hewn_full"
+  ],
+  "digest_hex": "3191b019d37f08f3d5b68d9000f1aeb1e1a3524225f9daa893803df1e240ffd1",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T01:25:02.138927+00:00",
+  "session_id_used_for_resume": "754c5314-d205-4a0d-9e19-5a1e53b97a74",
+  "output_tokens_tiktoken": 481,
+  "output_tokens_anthropic": 1316,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 1107,
+  "cache_read_input_tokens": 34469,
+  "total_input_tokens": 35582,
+  "cache_state": "warm",
+  "wallclock_ms": 26586.978898994857,
+  "duration_ms": 23018,
+  "duration_api_ms": 22991,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "754c5314-d205-4a0d-9e19-5a1e53b97a74",
+  "total_cost_usd": 0.05708325,
+  "model_used": "claude-opus-4-7",
+  "result": "Quick flag on the previous step: `SELECT FOR UPDATE` is fine *if* your payment gateway call happens **outside** the DB transaction (debit first, commit, then charge card with compensation on failure). If Stripe is called inside the same transaction, you're holding a row lock for seconds per checkout and will serialize redemptions of popular cards. Atomic conditional UPDATE avoids that entirely. Just make sure you know which shape you have.\n\nOn expiry: **both, but they do different jobs.**\n\n**Consumption path (non-negotiable)**\nCheck `expires_at > now()` in the same atomic UPDATE:\n```sql\nUPDATE gift_cards SET balance = balance - :amount\nWHERE code_hash = :hash AND balance >= :amount AND expires_at > now()\nRETURNING balance;\n```\nThis is the authoritative check. A batch job that runs nightly leaves a race window where an expired card could be redeemed between expiry and the next job run. The consumption path is the only place that *has* to be correct.\n\n**Batch job (accounting & UX)**\nUseful for things the consumption path can't do:\n- Finance: total unexpired liability on the books at month-end close\n- Transitioning state (`active` → `expired`) so admin UIs and reports are clean\n- \"Your card expires in 30 days\" emails (runs daily, looks ahead)\n- Recognizing breakage revenue when legally permitted\n- Escheatment reporting in jurisdictions that require it\n\nThe batch job is for reporting and side effects — it's never the gate for whether redemption succeeds.\n\n**Legal flag worth raising before you commit to 12 months**\nGift card expiry is heavily regulated and the rules aren't intuitive:\n- US federal (CARD Act): minimum 5-year expiry on funds, and you generally can't charge inactivity fees in the first year\n- Several US states (CA, CT, FL, others) ban expiry on most gift cards outright\n- EU: varies by country — some prohibit expiry, many require minimum 1–5 years\n- Promotional/free cards are often treated differently from purchased ones\n\n\"12 months\" would be illegal in a lot of places. Get this in front of legal/finance before wiring it in — the answer often comes back as \"no expiry on purchased cards, different rule for promo credits,\" which means you need two card types, not one.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 23018,
+    "duration_api_ms": 22991,
+    "num_turns": 1,
+    "result": "Quick flag on the previous step: `SELECT FOR UPDATE` is fine *if* your payment gateway call happens **outside** the DB transaction (debit first, commit, then charge card with compensation on failure). If Stripe is called inside the same transaction, you're holding a row lock for seconds per checkout and will serialize redemptions of popular cards. Atomic conditional UPDATE avoids that entirely. Just make sure you know which shape you have.\n\nOn expiry: **both, but they do different jobs.**\n\n**Consumption path (non-negotiable)**\nCheck `expires_at > now()` in the same atomic UPDATE:\n```sql\nUPDATE gift_cards SET balance = balance - :amount\nWHERE code_hash = :hash AND balance >= :amount AND expires_at > now()\nRETURNING balance;\n```\nThis is the authoritative check. A batch job that runs nightly leaves a race window where an expired card could be redeemed between expiry and the next job run. The consumption path is the only place that *has* to be correct.\n\n**Batch job (accounting & UX)**\nUseful for things the consumption path can't do:\n- Finance: total unexpired liability on the books at month-end close\n- Transitioning state (`active` → `expired`) so admin UIs and reports are clean\n- \"Your card expires in 30 days\" emails (runs daily, looks ahead)\n- Recognizing breakage revenue when legally permitted\n- Escheatment reporting in jurisdictions that require it\n\nThe batch job is for reporting and side effects — it's never the gate for whether redemption succeeds.\n\n**Legal flag worth raising before you commit to 12 months**\nGift card expiry is heavily regulated and the rules aren't intuitive:\n- US federal (CARD Act): minimum 5-year expiry on funds, and you generally can't charge inactivity fees in the first year\n- Several US states (CA, CT, FL, others) ban expiry on most gift cards outright\n- EU: varies by country — some prohibit expiry, many require minimum 1–5 years\n- Promotional/free cards are often treated differently from purchased ones\n\n\"12 months\" would be illegal in a lot of places. Get this in front of legal/finance before wiring it in — the answer often comes back as \"no expiry on purchased cards, different rule for promo credits,\" which means you need two card types, not one.",
+    "stop_reason": "end_turn",
+    "session_id": "754c5314-d205-4a0d-9e19-5a1e53b97a74",
+    "total_cost_usd": 0.05708325,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 1107,
+      "cache_read_input_tokens": 34469,
+      "output_tokens": 1316,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 1107,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 1316,
+          "cache_read_input_tokens": 34469,
+          "cache_creation_input_tokens": 1107,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 1107
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 1316,
+        "cacheReadInputTokens": 34469,
+        "cacheCreationInputTokens": 1107,
+        "webSearchRequests": 0,
+        "costUSD": 0.05708325,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "218d0a9e-f794-4b7c-84a3-a2bd53645caf"
+  }
+}

@@ -1,0 +1,105 @@
+{
+  "track": "T1b",
+  "arm": "hewn_full",
+  "prompt_id": "cors-errors",
+  "run_index": 1,
+  "arm_order_index": 5,
+  "arm_order_full": [
+    "terse",
+    "caveman_full_plus_ultra_directive",
+    "caveman_full",
+    "hewn_prompt_only",
+    "baseline",
+    "hewn_full"
+  ],
+  "digest_hex": "884a34005020aaa2decf7247298a83a400cb843e18bc330b080d55c1b5324fb3",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-21T23:47:56.241348+00:00",
+  "output_tokens_tiktoken": 194,
+  "output_tokens_anthropic": 333,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 13204,
+  "cache_read_input_tokens": 16805,
+  "total_input_tokens": 30015,
+  "cache_state": "warm",
+  "wallclock_ms": 13410.361721005756,
+  "duration_ms": 7514,
+  "duration_api_ms": 8367,
+  "wrapper_overhead_ms": 5043.361721005756,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "d0c99a88-9ea9-415f-8c63-b052460bf137",
+  "total_cost_usd": 0.09970749999999999,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "CORS errors mean browser blocked cross-origin request because server did not send right headers.\n\nCommon causes:\n- server missing Access-Control-Allow-Origin header\n- origin mismatch (http vs https, www vs apex, port diff)\n- preflight OPTIONS request failing (wrong Allow-Methods or Allow-Headers)\n- sending credentials but server returns Access-Control-Allow-Origin: * instead of exact origin\n- custom header (Authorization, X-*) not listed in Allow-Headers\n\nQuick diagnosis:\n- read exact error text — it names which rule failed\n- check Network tab for OPTIONS preflight, look at response headers\n- compare request Origin header to server's Allow-Origin response\n\nFix side:\n- CORS must be fixed on server, not client\n- if dev only, use proxy (vite/webpack dev proxy) to sidestep\n- never \"fix\" by disabling browser security flags — masks real bug\n\nPaste exact error + request/response headers if want specific answer.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 7514,
+    "duration_api_ms": 8367,
+    "num_turns": 1,
+    "result": "CORS errors mean browser blocked cross-origin request because server did not send right headers.\n\nCommon causes:\n- server missing Access-Control-Allow-Origin header\n- origin mismatch (http vs https, www vs apex, port diff)\n- preflight OPTIONS request failing (wrong Allow-Methods or Allow-Headers)\n- sending credentials but server returns Access-Control-Allow-Origin: * instead of exact origin\n- custom header (Authorization, X-*) not listed in Allow-Headers\n\nQuick diagnosis:\n- read exact error text — it names which rule failed\n- check Network tab for OPTIONS preflight, look at response headers\n- compare request Origin header to server's Allow-Origin response\n\nFix side:\n- CORS must be fixed on server, not client\n- if dev only, use proxy (vite/webpack dev proxy) to sidestep\n- never \"fix\" by disabling browser security flags — masks real bug\n\nPaste exact error + request/response headers if want specific answer.",
+    "stop_reason": "end_turn",
+    "session_id": "d0c99a88-9ea9-415f-8c63-b052460bf137",
+    "total_cost_usd": 0.09970749999999999,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 13204,
+      "cache_read_input_tokens": 16805,
+      "output_tokens": 333,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 13204,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 333,
+          "cache_read_input_tokens": 16805,
+          "cache_creation_input_tokens": 13204,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 13204
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 350,
+        "outputTokens": 15,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.00042500000000000003,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 333,
+        "cacheReadInputTokens": 16805,
+        "cacheCreationInputTokens": 13204,
+        "webSearchRequests": 0,
+        "costUSD": 0.0992825,
+        "contextWindow": 200000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "0da77ba2-3247-437f-8942-7a0942597acb"
+  }
+}

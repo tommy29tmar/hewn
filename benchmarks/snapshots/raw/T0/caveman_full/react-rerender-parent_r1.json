@@ -1,0 +1,103 @@
+{
+  "track": "T0",
+  "arm": "caveman_full",
+  "prompt_id": "react-rerender-parent",
+  "run_index": 1,
+  "arm_order_index": 2,
+  "arm_order_full": [
+    "terse",
+    "terse_appended",
+    "caveman_full",
+    "caveman_full_appended"
+  ],
+  "digest_hex": "99b7ab7ba17a8ba246c01cb3b86810b0fa1d28957b03d5604a74b257ab3da763",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-21T23:24:21.401694+00:00",
+  "output_tokens_tiktoken": 139,
+  "output_tokens_anthropic": 209,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 7988,
+  "cache_read_input_tokens": 13734,
+  "total_input_tokens": 21728,
+  "cache_state": "warm",
+  "wallclock_ms": 11857.841457007453,
+  "duration_ms": 5586,
+  "duration_api_ms": 6404,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "3bc7b343-04f8-43ca-a1e0-1ab672651da9",
+  "total_cost_usd": 0.062474,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "Parent re-render → child re-render by default. Props change or not, no matter.\n\nFix:\n- Wrap child in `React.memo` → skip re-render if props shallow-equal.\n- Object/array/fn props: new ref each parent render → memo useless. Stabilize with `useMemo`/`useCallback`.\n- Context consumer: re-renders on any context value change. Split context or memoize value.\n\nCommon trap:\n```jsx\n<Child data={{id: 1}} />  // new obj every render\n```\nFix:\n```jsx\nconst data = useMemo(() => ({id: 1}), []);\n<Child data={data} />\n```",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 5586,
+    "duration_api_ms": 6404,
+    "num_turns": 1,
+    "result": "Parent re-render → child re-render by default. Props change or not, no matter.\n\nFix:\n- Wrap child in `React.memo` → skip re-render if props shallow-equal.\n- Object/array/fn props: new ref each parent render → memo useless. Stabilize with `useMemo`/`useCallback`.\n- Context consumer: re-renders on any context value change. Split context or memoize value.\n\nCommon trap:\n```jsx\n<Child data={{id: 1}} />  // new obj every render\n```\nFix:\n```jsx\nconst data = useMemo(() => ({id: 1}), []);\n<Child data={data} />\n```",
+    "stop_reason": "end_turn",
+    "session_id": "3bc7b343-04f8-43ca-a1e0-1ab672651da9",
+    "total_cost_usd": 0.062474,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 7988,
+      "cache_read_input_tokens": 13734,
+      "output_tokens": 209,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 7988,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 209,
+          "cache_read_input_tokens": 13734,
+          "cache_creation_input_tokens": 7988,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 7988
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 352,
+        "outputTokens": 15,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.00042699999999999997,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 209,
+        "cacheReadInputTokens": 13734,
+        "cacheCreationInputTokens": 7988,
+        "webSearchRequests": 0,
+        "costUSD": 0.062047000000000005,
+        "contextWindow": 200000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "c1ad0909-1c89-4e5e-8a6d-6b064cfe598c"
+  }
+}

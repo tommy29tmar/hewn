@@ -1,0 +1,106 @@
+{
+  "track": "T4",
+  "arm": "hewn_full",
+  "sequence_id": "debug-prod-incident",
+  "run_index": 2,
+  "turn": 1,
+  "arm_order_index": 2,
+  "arm_order_full": [
+    "caveman_full",
+    "terse",
+    "hewn_full",
+    "hewn_prompt_only",
+    "baseline"
+  ],
+  "digest_hex": "522341918a5177210ef438fa55486ec5b622aaa576febbd731536d82595ec31b",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T01:18:12.352433+00:00",
+  "session_id_used_for_resume": null,
+  "output_tokens_tiktoken": 108,
+  "output_tokens_anthropic": 182,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 17362,
+  "cache_read_input_tokens": 16805,
+  "total_input_tokens": 34173,
+  "cache_state": "warm",
+  "wallclock_ms": 9468.750311993062,
+  "duration_ms": 6047,
+  "duration_api_ms": 7180,
+  "wrapper_overhead_ms": 2288.7503119930625,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "3e4c6f56-3671-4661-a0c7-27d8396e46e9",
+  "total_cost_usd": 0.12198099999999999,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "rollback deploy first — 5 min gap between deploy and errors = prime suspect\nwhile rolling back, grep diff for createOrder handler and anything touching req.body.items shape\ncheck if request validation/middleware changed — undefined items means payload shape shifted or guard got removed\ncheck if client contract changed in same deploy (frontend sending different body)\npull one failing request payload from logs, compare to handler's expected shape\nif rollback fixes it → bisect diff; if not → look upstream (gateway, auth middleware stripping body, content-type parsing)",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 6047,
+    "duration_api_ms": 7180,
+    "num_turns": 1,
+    "result": "rollback deploy first — 5 min gap between deploy and errors = prime suspect\nwhile rolling back, grep diff for createOrder handler and anything touching req.body.items shape\ncheck if request validation/middleware changed — undefined items means payload shape shifted or guard got removed\ncheck if client contract changed in same deploy (frontend sending different body)\npull one failing request payload from logs, compare to handler's expected shape\nif rollback fixes it → bisect diff; if not → look upstream (gateway, auth middleware stripping body, content-type parsing)",
+    "stop_reason": "end_turn",
+    "session_id": "3e4c6f56-3671-4661-a0c7-27d8396e46e9",
+    "total_cost_usd": 0.12198099999999999,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 17362,
+      "cache_read_input_tokens": 16805,
+      "output_tokens": 182,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 17362,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 182,
+          "cache_read_input_tokens": 16805,
+          "cache_creation_input_tokens": 17362,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 17362
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 396,
+        "outputTokens": 18,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.000486,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 182,
+        "cacheReadInputTokens": 16805,
+        "cacheCreationInputTokens": 17362,
+        "webSearchRequests": 0,
+        "costUSD": 0.12149499999999999,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "cddbf2d2-1375-419c-8579-e6b0e50b0015"
+  }
+}

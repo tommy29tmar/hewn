@@ -1,0 +1,105 @@
+{
+  "track": "T1b",
+  "arm": "terse",
+  "prompt_id": "cors-errors",
+  "run_index": 2,
+  "arm_order_index": 0,
+  "arm_order_full": [
+    "terse",
+    "baseline",
+    "caveman_full_plus_ultra_directive",
+    "hewn_prompt_only",
+    "hewn_full",
+    "caveman_full"
+  ],
+  "digest_hex": "258887ceb8366586f3dea59b17c1ef6a12bb3fbc92c09a2a53837c2cc3a1ccbf",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-21T23:58:45.122785+00:00",
+  "output_tokens_tiktoken": 265,
+  "output_tokens_anthropic": 432,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 20298,
+  "total_input_tokens": 20304,
+  "cache_state": "warm",
+  "wallclock_ms": 13442.138598999009,
+  "duration_ms": 8173,
+  "duration_api_ms": 9132,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "3771d8e7-4a4b-4ebd-ba19-f72b47a2abc2",
+  "total_cost_usd": 0.021398999999999998,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "CORS errors happen when a webpage makes a cross-origin request (different protocol, domain, or port) and the server doesn't return the headers the browser requires to allow it.\n\nCommon causes:\n\n1. **Missing `Access-Control-Allow-Origin` header** on the server response. Fix: configure the server to return it (either `*` or the specific origin).\n2. **Credentialed request** (`credentials: 'include'` or cookies) with `Allow-Origin: *`. Browsers reject that combo — the server must echo the exact origin and also send `Access-Control-Allow-Credentials: true`.\n3. **Preflight (OPTIONS) failing.** Triggered by non-simple methods (PUT, DELETE), custom headers (e.g. `Authorization`, `Content-Type: application/json`). Server must respond 2xx to OPTIONS with `Access-Control-Allow-Methods` and `Access-Control-Allow-Headers`.\n4. **Redirects during preflight** — not allowed.\n5. **Calling `http://` from an `https://` page** — mixed content, not strictly CORS but often confused with it.\n\nTo diagnose, share:\n- The exact error text from the console\n- The request (method, URL, origin)\n- Response headers from the Network tab (especially the OPTIONS request if present)",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 8173,
+    "duration_api_ms": 9132,
+    "num_turns": 1,
+    "result": "CORS errors happen when a webpage makes a cross-origin request (different protocol, domain, or port) and the server doesn't return the headers the browser requires to allow it.\n\nCommon causes:\n\n1. **Missing `Access-Control-Allow-Origin` header** on the server response. Fix: configure the server to return it (either `*` or the specific origin).\n2. **Credentialed request** (`credentials: 'include'` or cookies) with `Allow-Origin: *`. Browsers reject that combo — the server must echo the exact origin and also send `Access-Control-Allow-Credentials: true`.\n3. **Preflight (OPTIONS) failing.** Triggered by non-simple methods (PUT, DELETE), custom headers (e.g. `Authorization`, `Content-Type: application/json`). Server must respond 2xx to OPTIONS with `Access-Control-Allow-Methods` and `Access-Control-Allow-Headers`.\n4. **Redirects during preflight** — not allowed.\n5. **Calling `http://` from an `https://` page** — mixed content, not strictly CORS but often confused with it.\n\nTo diagnose, share:\n- The exact error text from the console\n- The request (method, URL, origin)\n- Response headers from the Network tab (especially the OPTIONS request if present)",
+    "stop_reason": "end_turn",
+    "session_id": "3771d8e7-4a4b-4ebd-ba19-f72b47a2abc2",
+    "total_cost_usd": 0.021398999999999998,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 20298,
+      "output_tokens": 432,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 0,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 432,
+          "cache_read_input_tokens": 20298,
+          "cache_creation_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 350,
+        "outputTokens": 14,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.00042,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 432,
+        "cacheReadInputTokens": 20298,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.020978999999999998,
+        "contextWindow": 200000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "2eea183a-2766-4629-a20d-2507772f1242"
+  }
+}

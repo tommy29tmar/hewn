@@ -1,0 +1,103 @@
+{
+  "track": "T0",
+  "arm": "terse_appended",
+  "prompt_id": "explain-db-pool",
+  "run_index": 1,
+  "arm_order_index": 1,
+  "arm_order_full": [
+    "terse",
+    "terse_appended",
+    "caveman_full",
+    "caveman_full_appended"
+  ],
+  "digest_hex": "2b21fc020c9f9514ecfb89de5292bc8e27d0913b3aa966344ba89e05bc88db91",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-21T23:25:02.230222+00:00",
+  "output_tokens_tiktoken": 351,
+  "output_tokens_anthropic": 546,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 11710,
+  "cache_read_input_tokens": 16805,
+  "total_input_tokens": 28521,
+  "cache_state": "warm",
+  "wallclock_ms": 17222.65687098843,
+  "duration_ms": 10819,
+  "duration_api_ms": 11508,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "318f5c40-26f0-465f-a8a6-000cb25c17b4",
+  "total_cost_usd": 0.095685,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "Database connection pooling is a technique where a pool of reusable database connections is maintained in memory, rather than opening a new connection for every query.\n\n**Why it matters:** Opening a TCP + auth handshake to a database is expensive (often 10–100ms). Under load, doing this per-request exhausts DB `max_connections` and adds latency.\n\n**How it works:**\n1. On startup, the pool opens N connections and keeps them idle.\n2. When app code needs a connection, it *borrows* one from the pool.\n3. On release, the connection is returned to the pool (not closed).\n4. If all are busy, callers wait or the pool opens more up to a max.\n\n**Key knobs:**\n- `min`/`max` size — floor and ceiling on connections.\n- `idle timeout` — close connections unused for too long.\n- `max lifetime` — recycle connections to avoid stale TCP/DNS state.\n- `acquire timeout` — how long a caller waits before erroring.\n\n**Two layers:**\n- **In-process pool** (HikariCP, pgx, SQLAlchemy, node-postgres) — lives inside your app.\n- **External pooler** (PgBouncer, RDS Proxy) — a separate process sitting between apps and DB. Needed when you have many app instances, since each app's pool multiplies against DB limits.\n\n**Gotchas:**\n- Transaction-scoped state (temp tables, `SET LOCAL`, prepared statements) can leak across borrows unless the pool resets.\n- PgBouncer in `transaction` mode breaks session features (`LISTEN`, session-level `SET`).\n- Long-held connections block others — keep transactions short.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 10819,
+    "duration_api_ms": 11508,
+    "num_turns": 1,
+    "result": "Database connection pooling is a technique where a pool of reusable database connections is maintained in memory, rather than opening a new connection for every query.\n\n**Why it matters:** Opening a TCP + auth handshake to a database is expensive (often 10–100ms). Under load, doing this per-request exhausts DB `max_connections` and adds latency.\n\n**How it works:**\n1. On startup, the pool opens N connections and keeps them idle.\n2. When app code needs a connection, it *borrows* one from the pool.\n3. On release, the connection is returned to the pool (not closed).\n4. If all are busy, callers wait or the pool opens more up to a max.\n\n**Key knobs:**\n- `min`/`max` size — floor and ceiling on connections.\n- `idle timeout` — close connections unused for too long.\n- `max lifetime` — recycle connections to avoid stale TCP/DNS state.\n- `acquire timeout` — how long a caller waits before erroring.\n\n**Two layers:**\n- **In-process pool** (HikariCP, pgx, SQLAlchemy, node-postgres) — lives inside your app.\n- **External pooler** (PgBouncer, RDS Proxy) — a separate process sitting between apps and DB. Needed when you have many app instances, since each app's pool multiplies against DB limits.\n\n**Gotchas:**\n- Transaction-scoped state (temp tables, `SET LOCAL`, prepared statements) can leak across borrows unless the pool resets.\n- PgBouncer in `transaction` mode breaks session features (`LISTEN`, session-level `SET`).\n- Long-held connections block others — keep transactions short.",
+    "stop_reason": "end_turn",
+    "session_id": "318f5c40-26f0-465f-a8a6-000cb25c17b4",
+    "total_cost_usd": 0.095685,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 11710,
+      "cache_read_input_tokens": 16805,
+      "output_tokens": 546,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 11710,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 546,
+          "cache_read_input_tokens": 16805,
+          "cache_creation_input_tokens": 11710,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 11710
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 345,
+        "outputTokens": 14,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.000415,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 546,
+        "cacheReadInputTokens": 16805,
+        "cacheCreationInputTokens": 11710,
+        "webSearchRequests": 0,
+        "costUSD": 0.09527000000000001,
+        "contextWindow": 200000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "b003abfe-f46b-4caf-a407-c369516eb10f"
+  }
+}

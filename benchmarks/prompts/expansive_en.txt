@@ -1,0 +1,7 @@
+# expansive_en.txt — 2 prompts asking for polished prose (T5)
+# Honesty track: where Hewn should NOT compress (and we report if it does).
+# Format: each prompt is a multi-line block, separated by lines containing only "---PROMPT---"
+---PROMPT---
+Write a polished release note for our team blog announcing a new feature called "Smart Drafts" that lets users start any document with an AI-suggested outline. Tone: warm, professional, ~3 paragraphs. Include why we built it (people stare at blank pages), how it works (one-click outline based on doc title and recent context), and what's next (custom voice training). Audience: existing users who already use the product.
+---PROMPT---
+Draft an empathetic customer-facing email apologizing for a 4-hour outage in our payments service yesterday. Acknowledge specifically that some users had failed transactions, explain root cause (a misconfigured cache invalidation rule under traffic spike), describe the fix and what we're doing to prevent recurrence (canary rollouts + chaos testing in staging), and offer impacted users a goodwill credit. Tone: serious, accountable, not defensive. ~4 short paragraphs.

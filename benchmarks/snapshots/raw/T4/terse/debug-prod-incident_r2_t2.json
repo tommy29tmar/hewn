@@ -1,0 +1,96 @@
+{
+  "track": "T4",
+  "arm": "terse",
+  "sequence_id": "debug-prod-incident",
+  "run_index": 2,
+  "turn": 2,
+  "arm_order_index": 1,
+  "arm_order_full": [
+    "caveman_full",
+    "terse",
+    "hewn_full",
+    "hewn_prompt_only",
+    "baseline"
+  ],
+  "digest_hex": "522341918a5177210ef438fa55486ec5b622aaa576febbd731536d82595ec31b",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T01:17:18.261261+00:00",
+  "session_id_used_for_resume": "4cade8ee-c938-4bc2-a7f1-ed60dadb42fb",
+  "output_tokens_tiktoken": 106,
+  "output_tokens_anthropic": 148,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 604,
+  "cache_read_input_tokens": 24302,
+  "total_input_tokens": 24912,
+  "cache_state": "warm",
+  "wallclock_ms": 8125.101973011624,
+  "duration_ms": 4600,
+  "duration_api_ms": 4581,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "4cade8ee-c938-4bc2-a7f1-ed60dadb42fb",
+  "total_cost_usd": 0.019656,
+  "model_used": "claude-opus-4-7",
+  "result": "The refactor dropped `items` from the returned cart object.\n\nDownstream code calls `buildCart(cart).items` (or destructures `items` from it) and now gets `undefined`, then `.items` on that undefined explodes — matching your stack trace exactly.\n\nFix: either put `items` back in the return, or update every caller to read `items` from the original `cart` instead of the built one. Grep for `buildCart(` and any `.items` access on its result.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 4600,
+    "duration_api_ms": 4581,
+    "num_turns": 1,
+    "result": "The refactor dropped `items` from the returned cart object.\n\nDownstream code calls `buildCart(cart).items` (or destructures `items` from it) and now gets `undefined`, then `.items` on that undefined explodes — matching your stack trace exactly.\n\nFix: either put `items` back in the return, or update every caller to read `items` from the original `cart` instead of the built one. Grep for `buildCart(` and any `.items` access on its result.",
+    "stop_reason": "end_turn",
+    "session_id": "4cade8ee-c938-4bc2-a7f1-ed60dadb42fb",
+    "total_cost_usd": 0.019656,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 604,
+      "cache_read_input_tokens": 24302,
+      "output_tokens": 148,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 604,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 148,
+          "cache_read_input_tokens": 24302,
+          "cache_creation_input_tokens": 604,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 604
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 148,
+        "cacheReadInputTokens": 24302,
+        "cacheCreationInputTokens": 604,
+        "webSearchRequests": 0,
+        "costUSD": 0.019656,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "38e731a1-872e-4dce-8105-538678f8763e"
+  }
+}

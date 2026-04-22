@@ -1,0 +1,105 @@
+{
+  "track": "T1b",
+  "arm": "caveman_full",
+  "prompt_id": "fix-node-memory-leak",
+  "run_index": 2,
+  "arm_order_index": 0,
+  "arm_order_full": [
+    "caveman_full",
+    "hewn_full",
+    "hewn_prompt_only",
+    "caveman_full_plus_ultra_directive",
+    "baseline",
+    "terse"
+  ],
+  "digest_hex": "7d425b5467d57aae182ad8e9c94b0501514aa39b8cfa8d933e096ea5f14e6554",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-21T23:54:54.966839+00:00",
+  "output_tokens_tiktoken": 260,
+  "output_tokens_anthropic": 442,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 21747,
+  "total_input_tokens": 21753,
+  "cache_state": "warm",
+  "wallclock_ms": 15286.134809983196,
+  "duration_ms": 9314,
+  "duration_api_ms": 10488,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "fd41d66e-1c12-467e-917e-35ab4c53aba1",
+  "total_cost_usd": 0.022388500000000002,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "Find leak first. Profile:\n\n```bash\nnode --inspect app.js\n```\n\nChrome DevTools → Memory tab → Heap snapshot. Take 2-3 snapshots over time. Compare. Objects growing = leak.\n\nCommon causes + fixes:\n\n- **Global vars**: accidental globals accumulate. Use `\"use strict\"`.\n- **Closures holding refs**: inner fn keep outer scope alive. Null out refs when done.\n- **Event listeners**: `emitter.on()` without `off()`. Always remove. Check `emitter.listenerCount()`.\n- **Timers**: `setInterval` never cleared. Store handle, `clearInterval` on shutdown.\n- **Caches unbounded**: use `lru-cache` with max size, not plain `Map`/`Object`.\n- **Promises**: unresolved promises hold closures. Add timeouts.\n- **Buffers**: large `Buffer` refs pinned. Stream instead of buffer whole thing.\n\nTools:\n- `clinic doctor` → auto-diagnose\n- `heapdump` → dump on signal, analyze offline\n- `--max-old-space-size=N` → raise limit (bandaid, not fix)\n\nWorkflow: reproduce under load → snapshot → diff retained objects → trace retainer path → fix root cause.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 9314,
+    "duration_api_ms": 10488,
+    "num_turns": 1,
+    "result": "Find leak first. Profile:\n\n```bash\nnode --inspect app.js\n```\n\nChrome DevTools → Memory tab → Heap snapshot. Take 2-3 snapshots over time. Compare. Objects growing = leak.\n\nCommon causes + fixes:\n\n- **Global vars**: accidental globals accumulate. Use `\"use strict\"`.\n- **Closures holding refs**: inner fn keep outer scope alive. Null out refs when done.\n- **Event listeners**: `emitter.on()` without `off()`. Always remove. Check `emitter.listenerCount()`.\n- **Timers**: `setInterval` never cleared. Store handle, `clearInterval` on shutdown.\n- **Caches unbounded**: use `lru-cache` with max size, not plain `Map`/`Object`.\n- **Promises**: unresolved promises hold closures. Add timeouts.\n- **Buffers**: large `Buffer` refs pinned. Stream instead of buffer whole thing.\n\nTools:\n- `clinic doctor` → auto-diagnose\n- `heapdump` → dump on signal, analyze offline\n- `--max-old-space-size=N` → raise limit (bandaid, not fix)\n\nWorkflow: reproduce under load → snapshot → diff retained objects → trace retainer path → fix root cause.",
+    "stop_reason": "end_turn",
+    "session_id": "fd41d66e-1c12-467e-917e-35ab4c53aba1",
+    "total_cost_usd": 0.022388500000000002,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 21747,
+      "output_tokens": 442,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 0,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 442,
+          "cache_read_input_tokens": 21747,
+          "cache_creation_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 355,
+        "outputTokens": 16,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.000435,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 442,
+        "cacheReadInputTokens": 21747,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.0219535,
+        "contextWindow": 200000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "2827e107-700f-4667-b962-de5050963a54"
+  }
+}

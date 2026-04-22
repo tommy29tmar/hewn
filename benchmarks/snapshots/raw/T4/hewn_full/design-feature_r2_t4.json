@@ -1,0 +1,96 @@
+{
+  "track": "T4",
+  "arm": "hewn_full",
+  "sequence_id": "design-feature",
+  "run_index": 2,
+  "turn": 4,
+  "arm_order_index": 4,
+  "arm_order_full": [
+    "baseline",
+    "caveman_full",
+    "hewn_prompt_only",
+    "terse",
+    "hewn_full"
+  ],
+  "digest_hex": "3191b019d37f08f3d5b68d9000f1aeb1e1a3524225f9daa893803df1e240ffd1",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T01:35:22.951443+00:00",
+  "session_id_used_for_resume": "6e1e9b6f-4231-446d-bb78-7ccf3f2e0132",
+  "output_tokens_tiktoken": 683,
+  "output_tokens_anthropic": 1121,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 1623,
+  "cache_read_input_tokens": 36845,
+  "total_input_tokens": 38474,
+  "cache_state": "warm",
+  "wallclock_ms": 28108.100256999023,
+  "duration_ms": 24746,
+  "duration_api_ms": 24648,
+  "wrapper_overhead_ms": 3460.1002569990233,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "6e1e9b6f-4231-446d-bb78-7ccf3f2e0132",
+  "total_cost_usd": 0.056621250000000005,
+  "model_used": "claude-opus-4-7",
+  "result": "Both, and they do different jobs.\n\nConsumption path — authoritative gate. Inside the same transaction that locks the card, check expires_at > now() in the WHERE or as an explicit condition after SELECT FOR UPDATE. If expired, return expired error, don't decrement. This is the only check that actually prevents spending an expired card.\n\nDo NOT rely on a nightly job to zero out balances and assume consumption is safe. Between midnight and the job run at 2am, someone redeems. Real-time check is non-negotiable.\n\nBatch job — housekeeping, not enforcement. Runs daily, finds cards where expires_at < now() AND balance > 0 AND status = 'active'. For each, sets status = 'expired', writes an audit row, optionally fires a \"breakage\" revenue-recognition event to accounting (expired balance = recognized revenue in most GAAP setups).\n\nWhy both — consumption path stops spending. Batch job updates state so reports, customer-facing balance displays, and finance exports show the right thing without every reader re-deriving \"is now() past expires_at\". Also gives finance a single timestamp of when the card flipped to expired, useful for revenue recognition cutoffs.\n\nRead paths — \"show my gift cards\" UI should also respect expires_at live, not trust the status column alone, until the batch has caught up. Cheap check, saves support tickets like \"it says active but won't redeem\".\n\nNotifications — separate job, runs before expiry job. Find cards expiring in 30 / 7 / 1 days with balance > 0, email the owner (if account-bound). Keep it separate from the expiry flip so a notification bug can't cause incorrect expiry.\n\nTimezone — store expires_at in UTC, compute at issuance as issued_at + interval '12 months'. Do not use \"12 months\" in customer-facing copy without specifying the timezone convention or customers in UTC-12 will file tickets. Show the date, not the duration, in their account.\n\nLegal caveat — re-check per jurisdiction. US: federal law says no expiry under 5 years from last load, some states (CA, ME) ban expiry entirely on retail gift cards. EU: 3-year minimum in many states, PSD2 rules for certain card types. 12 months may be unenforceable depending on where the card was sold. Product might want one expiry policy, legal will want per-jurisdiction. Design the column to hold a date, not \"12 months from issue\", so you can vary it later without schema change.\n\nGrace period — consider expires_at vs hard_closed_at. Card unusable after expires_at but not purged / revenue-recognized until hard_closed_at = expires_at + 30 days. Gives customer support room to reinstate if someone yells. Two columns, one batch job handles both phases.\n\nIdempotency in the batch — job must be safe to re-run. WHERE status = 'active' AND expires_at < now() already gives you that; a second run finds no rows. Don't key off a timestamp like \"cards not touched since last run\" — fragile.\n\nMonitoring — alert if the batch flips an unusually large number of cards in one run (e.g. >3σ over trailing average). Either a real incident (cohort all issued same day) or a bug (expires_at wrongly populated). Cheap to add, saves a finance fire drill.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 24746,
+    "duration_api_ms": 24648,
+    "num_turns": 1,
+    "result": "Both, and they do different jobs.\n\nConsumption path — authoritative gate. Inside the same transaction that locks the card, check expires_at > now() in the WHERE or as an explicit condition after SELECT FOR UPDATE. If expired, return expired error, don't decrement. This is the only check that actually prevents spending an expired card.\n\nDo NOT rely on a nightly job to zero out balances and assume consumption is safe. Between midnight and the job run at 2am, someone redeems. Real-time check is non-negotiable.\n\nBatch job — housekeeping, not enforcement. Runs daily, finds cards where expires_at < now() AND balance > 0 AND status = 'active'. For each, sets status = 'expired', writes an audit row, optionally fires a \"breakage\" revenue-recognition event to accounting (expired balance = recognized revenue in most GAAP setups).\n\nWhy both — consumption path stops spending. Batch job updates state so reports, customer-facing balance displays, and finance exports show the right thing without every reader re-deriving \"is now() past expires_at\". Also gives finance a single timestamp of when the card flipped to expired, useful for revenue recognition cutoffs.\n\nRead paths — \"show my gift cards\" UI should also respect expires_at live, not trust the status column alone, until the batch has caught up. Cheap check, saves support tickets like \"it says active but won't redeem\".\n\nNotifications — separate job, runs before expiry job. Find cards expiring in 30 / 7 / 1 days with balance > 0, email the owner (if account-bound). Keep it separate from the expiry flip so a notification bug can't cause incorrect expiry.\n\nTimezone — store expires_at in UTC, compute at issuance as issued_at + interval '12 months'. Do not use \"12 months\" in customer-facing copy without specifying the timezone convention or customers in UTC-12 will file tickets. Show the date, not the duration, in their account.\n\nLegal caveat — re-check per jurisdiction. US: federal law says no expiry under 5 years from last load, some states (CA, ME) ban expiry entirely on retail gift cards. EU: 3-year minimum in many states, PSD2 rules for certain card types. 12 months may be unenforceable depending on where the card was sold. Product might want one expiry policy, legal will want per-jurisdiction. Design the column to hold a date, not \"12 months from issue\", so you can vary it later without schema change.\n\nGrace period — consider expires_at vs hard_closed_at. Card unusable after expires_at but not purged / revenue-recognized until hard_closed_at = expires_at + 30 days. Gives customer support room to reinstate if someone yells. Two columns, one batch job handles both phases.\n\nIdempotency in the batch — job must be safe to re-run. WHERE status = 'active' AND expires_at < now() already gives you that; a second run finds no rows. Don't key off a timestamp like \"cards not touched since last run\" — fragile.\n\nMonitoring — alert if the batch flips an unusually large number of cards in one run (e.g. >3σ over trailing average). Either a real incident (cohort all issued same day) or a bug (expires_at wrongly populated). Cheap to add, saves a finance fire drill.",
+    "stop_reason": "end_turn",
+    "session_id": "6e1e9b6f-4231-446d-bb78-7ccf3f2e0132",
+    "total_cost_usd": 0.056621250000000005,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 1623,
+      "cache_read_input_tokens": 36845,
+      "output_tokens": 1121,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 1623,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 1121,
+          "cache_read_input_tokens": 36845,
+          "cache_creation_input_tokens": 1623,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 1623
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 1121,
+        "cacheReadInputTokens": 36845,
+        "cacheCreationInputTokens": 1623,
+        "webSearchRequests": 0,
+        "costUSD": 0.056621250000000005,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "443bf21f-4d19-46ee-b420-763f400592aa"
+  }
+}

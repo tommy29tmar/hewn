@@ -1,0 +1,96 @@
+{
+  "track": "T4",
+  "arm": "baseline",
+  "sequence_id": "design-feature",
+  "run_index": 2,
+  "turn": 2,
+  "arm_order_index": 0,
+  "arm_order_full": [
+    "baseline",
+    "caveman_full",
+    "hewn_prompt_only",
+    "terse",
+    "hewn_full"
+  ],
+  "digest_hex": "3191b019d37f08f3d5b68d9000f1aeb1e1a3524225f9daa893803df1e240ffd1",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T01:24:14.482954+00:00",
+  "session_id_used_for_resume": "754c5314-d205-4a0d-9e19-5a1e53b97a74",
+  "output_tokens_tiktoken": 426,
+  "output_tokens_anthropic": 871,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 856,
+  "cache_read_input_tokens": 32671,
+  "total_input_tokens": 33533,
+  "cache_state": "warm",
+  "wallclock_ms": 24185.287597007118,
+  "duration_ms": 21027,
+  "duration_api_ms": 21003,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "754c5314-d205-4a0d-9e19-5a1e53b97a74",
+  "total_cost_usd": 0.043490499999999994,
+  "model_used": "claude-opus-4-7",
+  "result": "**Mutable balance row (what you do today)**\n- Pros: consistent with wallets, one row read to check balance, simple refund = `balance += amount`, cheap indexing.\n- Cons: no native audit trail — if a balance is wrong you can't answer \"why.\" You end up bolting on a side log anyway for disputes, fraud review, and finance reconciliation. Concurrent redemptions need explicit locking (`SELECT ... FOR UPDATE`) or you'll double-spend.\n\n**Event-sourced ledger (append-only credits/debits, balance = sum)**\n- Pros: every state change is explainable and immutable — critical for gift cards because they're a **liability on your balance sheet** (finance/accounting will want this) and a common fraud target. Refunds, partial redemptions, reversals, and chargebacks are all just new rows. Idempotency is natural (unique key on `(checkout_id, card_id)`). Concurrency handled by insert-only semantics + a check constraint or a materialized balance.\n- Cons: balance check is `SUM()` — need a cached/materialized balance or a running-total column to keep reads fast. More code than a wallet. Schema migration if you want to retrofit wallets later.\n\n**The key difference from wallets**: wallets are typically internal store credit you issued and control end-to-end. Gift cards are often externally purchased (sometimes resold), subject to escheatment laws, and show up in financial audits. The \"why was this balance $X on date Y\" question gets asked for real.\n\n**Recommendation**: ledger for gift cards, even though it diverges from wallets. The audit/finance requirements alone usually justify it, and the concurrency story is cleaner. If divergence bothers you, the longer-term play is migrating wallets to the same model — but don't let that block shipping gift cards correctly.\n\nOne tradeoff worth naming: if your finance team doesn't actually care about per-card audit trails (small scale, low fraud, no gift-card-specific accounting), the mutable row + a simple audit log table is fine and ships faster. Ask them before deciding.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 21027,
+    "duration_api_ms": 21003,
+    "num_turns": 1,
+    "result": "**Mutable balance row (what you do today)**\n- Pros: consistent with wallets, one row read to check balance, simple refund = `balance += amount`, cheap indexing.\n- Cons: no native audit trail — if a balance is wrong you can't answer \"why.\" You end up bolting on a side log anyway for disputes, fraud review, and finance reconciliation. Concurrent redemptions need explicit locking (`SELECT ... FOR UPDATE`) or you'll double-spend.\n\n**Event-sourced ledger (append-only credits/debits, balance = sum)**\n- Pros: every state change is explainable and immutable — critical for gift cards because they're a **liability on your balance sheet** (finance/accounting will want this) and a common fraud target. Refunds, partial redemptions, reversals, and chargebacks are all just new rows. Idempotency is natural (unique key on `(checkout_id, card_id)`). Concurrency handled by insert-only semantics + a check constraint or a materialized balance.\n- Cons: balance check is `SUM()` — need a cached/materialized balance or a running-total column to keep reads fast. More code than a wallet. Schema migration if you want to retrofit wallets later.\n\n**The key difference from wallets**: wallets are typically internal store credit you issued and control end-to-end. Gift cards are often externally purchased (sometimes resold), subject to escheatment laws, and show up in financial audits. The \"why was this balance $X on date Y\" question gets asked for real.\n\n**Recommendation**: ledger for gift cards, even though it diverges from wallets. The audit/finance requirements alone usually justify it, and the concurrency story is cleaner. If divergence bothers you, the longer-term play is migrating wallets to the same model — but don't let that block shipping gift cards correctly.\n\nOne tradeoff worth naming: if your finance team doesn't actually care about per-card audit trails (small scale, low fraud, no gift-card-specific accounting), the mutable row + a simple audit log table is fine and ships faster. Ask them before deciding.",
+    "stop_reason": "end_turn",
+    "session_id": "754c5314-d205-4a0d-9e19-5a1e53b97a74",
+    "total_cost_usd": 0.043490499999999994,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 856,
+      "cache_read_input_tokens": 32671,
+      "output_tokens": 871,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 856,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 871,
+          "cache_read_input_tokens": 32671,
+          "cache_creation_input_tokens": 856,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 856
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 871,
+        "cacheReadInputTokens": 32671,
+        "cacheCreationInputTokens": 856,
+        "webSearchRequests": 0,
+        "costUSD": 0.043490499999999994,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "a0b75e40-e9cb-4fc2-9d9a-a1f5082c1729"
+  }
+}

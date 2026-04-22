@@ -1,0 +1,105 @@
+{
+  "track": "T2",
+  "arm": "hewn_prompt_only",
+  "prompt_id": "spaghetti-code",
+  "run_index": 1,
+  "arm_order_index": 5,
+  "arm_order_full": [
+    "hewn_full",
+    "caveman_full",
+    "caveman_full_plus_ultra_directive",
+    "terse",
+    "baseline",
+    "hewn_prompt_only"
+  ],
+  "digest_hex": "4b03fc8be3949c05b432d9b1384c3888f2497445b9d83c4262c2a2a4a9712965",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T00:18:40.670006+00:00",
+  "output_tokens_tiktoken": 278,
+  "output_tokens_anthropic": 520,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 32624,
+  "total_input_tokens": 32630,
+  "cache_state": "warm",
+  "wallclock_ms": 14551.936167001259,
+  "duration_ms": 10668,
+  "duration_api_ms": 11716,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "d92185a5-940d-48ab-ac37-bef030c9967d",
+  "total_cost_usd": 0.029781,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "Spaghetti comes from functions that do too many things and names that don't tell you what they do. Fix those two and most of it evaporates.\n\nPractical moves, in order of payoff:\n\n1. **One function, one job.** If you need \"and\" to describe what it does, split it. Aim for functions that fit on a screen.\n2. **Name things for what they mean, not what they are.** `users` is noise. `activeUsersThisWeek` tells you. Variables that lie or stay vague are the main reason you lose the thread.\n3. **Separate layers.** Keep I/O (HTTP, DB, files) at the edges. Keep pure logic in the middle. When they mix, nothing is testable and every change ripples.\n4. **Kill hidden state.** Globals, long-lived mutable objects, and \"this function secretly changes that thing\" are the spaghetti generators. Pass data in, return data out.\n5. **Delete dead branches.** Code you \"might need later\" is lying to you. Remove it; git remembers.\n6. **Read your own code 24 hours later.** Anything you have to re-figure-out is a rename or a split waiting to happen.\n\nIf you want, point me at a file that feels tangled and I'll show you the specific cuts on that code.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 10668,
+    "duration_api_ms": 11716,
+    "num_turns": 1,
+    "result": "Spaghetti comes from functions that do too many things and names that don't tell you what they do. Fix those two and most of it evaporates.\n\nPractical moves, in order of payoff:\n\n1. **One function, one job.** If you need \"and\" to describe what it does, split it. Aim for functions that fit on a screen.\n2. **Name things for what they mean, not what they are.** `users` is noise. `activeUsersThisWeek` tells you. Variables that lie or stay vague are the main reason you lose the thread.\n3. **Separate layers.** Keep I/O (HTTP, DB, files) at the edges. Keep pure logic in the middle. When they mix, nothing is testable and every change ripples.\n4. **Kill hidden state.** Globals, long-lived mutable objects, and \"this function secretly changes that thing\" are the spaghetti generators. Pass data in, return data out.\n5. **Delete dead branches.** Code you \"might need later\" is lying to you. Remove it; git remembers.\n6. **Read your own code 24 hours later.** Anything you have to re-figure-out is a rename or a split waiting to happen.\n\nIf you want, point me at a file that feels tangled and I'll show you the specific cuts on that code.",
+    "stop_reason": "end_turn",
+    "session_id": "d92185a5-940d-48ab-ac37-bef030c9967d",
+    "total_cost_usd": 0.029781,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 32624,
+      "output_tokens": 520,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 0,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 520,
+          "cache_read_input_tokens": 32624,
+          "cache_creation_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 359,
+        "outputTokens": 16,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.000439,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 520,
+        "cacheReadInputTokens": 32624,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.029342,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "ecfb91f9-6956-4a6b-846f-8ba3ab89bf15"
+  }
+}

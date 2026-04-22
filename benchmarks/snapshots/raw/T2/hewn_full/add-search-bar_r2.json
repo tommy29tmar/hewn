@@ -1,0 +1,105 @@
+{
+  "track": "T2",
+  "arm": "hewn_full",
+  "prompt_id": "add-search-bar",
+  "run_index": 2,
+  "arm_order_index": 2,
+  "arm_order_full": [
+    "caveman_full",
+    "baseline",
+    "hewn_full",
+    "terse",
+    "hewn_prompt_only",
+    "caveman_full_plus_ultra_directive"
+  ],
+  "digest_hex": "e4d553ad3e355ccffc56234ee1f9b935b3963f152f24e81c5cb452140df74b94",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T00:21:01.174636+00:00",
+  "output_tokens_tiktoken": 90,
+  "output_tokens_anthropic": 131,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 17293,
+  "cache_read_input_tokens": 16805,
+  "total_input_tokens": 34104,
+  "cache_state": "warm",
+  "wallclock_ms": 10867.147626995575,
+  "duration_ms": 6060,
+  "duration_api_ms": 6686,
+  "wrapper_overhead_ms": 4181.147626995575,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "a57596c5-8eb5-42fc-8344-c32343e88c4a",
+  "total_cost_usd": 0.12020574999999999,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "depends on stack — what app? web/mobile/desktop, framework?\n\nalso: search over what? local list in memory, database, API, full-text index?\n\ncheapest start: filter existing list client-side with input onChange → array.filter on substring match. ship that, see if users need more (fuzzy, ranking, server-side, debounce, highlights).\n\ntell me stack + data source and I point you at exact file to edit.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 6060,
+    "duration_api_ms": 6686,
+    "num_turns": 1,
+    "result": "depends on stack — what app? web/mobile/desktop, framework?\n\nalso: search over what? local list in memory, database, API, full-text index?\n\ncheapest start: filter existing list client-side with input onChange → array.filter on substring match. ship that, see if users need more (fuzzy, ranking, server-side, debounce, highlights).\n\ntell me stack + data source and I point you at exact file to edit.",
+    "stop_reason": "end_turn",
+    "session_id": "a57596c5-8eb5-42fc-8344-c32343e88c4a",
+    "total_cost_usd": 0.12020574999999999,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 17293,
+      "cache_read_input_tokens": 16805,
+      "output_tokens": 131,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 17293,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 131,
+          "cache_read_input_tokens": 16805,
+          "cache_creation_input_tokens": 17293,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 17293
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 352,
+        "outputTokens": 13,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.000417,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 131,
+        "cacheReadInputTokens": 16805,
+        "cacheCreationInputTokens": 17293,
+        "webSearchRequests": 0,
+        "costUSD": 0.11978874999999999,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "6ce9547e-37cb-4f24-9b8d-eed5e67ca382"
+  }
+}

@@ -1,0 +1,103 @@
+{
+  "track": "T0",
+  "arm": "caveman_full_appended",
+  "prompt_id": "fix-node-memory-leak",
+  "run_index": 1,
+  "arm_order_index": 3,
+  "arm_order_full": [
+    "terse",
+    "terse_appended",
+    "caveman_full",
+    "caveman_full_appended"
+  ],
+  "digest_hex": "edf96b08b6bf832e7f6141e2b1e51b0b7773d43c771414ddf25ddb62f5d6bccd",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-21T23:27:15.493247+00:00",
+  "output_tokens_tiktoken": 294,
+  "output_tokens_anthropic": 492,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 13187,
+  "cache_read_input_tokens": 16805,
+  "total_input_tokens": 29998,
+  "cache_state": "warm",
+  "wallclock_ms": 16358.827381016454,
+  "duration_ms": 11758,
+  "duration_api_ms": 12831,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "2ffbd923-4a95-4369-8063-56aeffcb9bdf",
+  "total_cost_usd": 0.10358625,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "Find leak first. Guess waste time.\n\n**Detect:**\n- Run with `--inspect`. Chrome DevTools → Memory → heap snapshot. Take 3 snapshots over time. Compare retained size.\n- Or `node --heap-prof` → load `.heapprofile` in DevTools.\n- Watch `process.memoryUsage().heapUsed` grow in prod.\n\n**Common causes:**\n- Unbounded `Map`/`Set`/array as cache → use `LRUCache` or `WeakMap`.\n- Listeners not removed. `emitter.on` w/o `off` → `MaxListenersExceededWarning`. Use `once` or explicit `off`.\n- Closures hold big objects. Callback captures req/res → lives til callback dies.\n- Timers (`setInterval`) never cleared.\n- Global vars accumulating.\n- Streams not consumed → buffer grows.\n\n**Fix loop:**\n1. Snapshot at steady state.\n2. Do suspect work 100x.\n3. Force GC (`global.gc()` w/ `--expose-gc`), snapshot again.\n4. Compare. Constructor w/ growing count = leak source.\n5. Find retainer path in DevTools. Cut the reference.\n\n**Guardrail:**\n- `--max-old-space-size=N` bound heap, crash early not slow death.\n- Restart on threshold (PM2/k8s) = bandage, not fix.\n\nWhat code you got? Point to leak faster.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 11758,
+    "duration_api_ms": 12831,
+    "num_turns": 1,
+    "result": "Find leak first. Guess waste time.\n\n**Detect:**\n- Run with `--inspect`. Chrome DevTools → Memory → heap snapshot. Take 3 snapshots over time. Compare retained size.\n- Or `node --heap-prof` → load `.heapprofile` in DevTools.\n- Watch `process.memoryUsage().heapUsed` grow in prod.\n\n**Common causes:**\n- Unbounded `Map`/`Set`/array as cache → use `LRUCache` or `WeakMap`.\n- Listeners not removed. `emitter.on` w/o `off` → `MaxListenersExceededWarning`. Use `once` or explicit `off`.\n- Closures hold big objects. Callback captures req/res → lives til callback dies.\n- Timers (`setInterval`) never cleared.\n- Global vars accumulating.\n- Streams not consumed → buffer grows.\n\n**Fix loop:**\n1. Snapshot at steady state.\n2. Do suspect work 100x.\n3. Force GC (`global.gc()` w/ `--expose-gc`), snapshot again.\n4. Compare. Constructor w/ growing count = leak source.\n5. Find retainer path in DevTools. Cut the reference.\n\n**Guardrail:**\n- `--max-old-space-size=N` bound heap, crash early not slow death.\n- Restart on threshold (PM2/k8s) = bandage, not fix.\n\nWhat code you got? Point to leak faster.",
+    "stop_reason": "end_turn",
+    "session_id": "2ffbd923-4a95-4369-8063-56aeffcb9bdf",
+    "total_cost_usd": 0.10358625,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 13187,
+      "cache_read_input_tokens": 16805,
+      "output_tokens": 492,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 13187,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 492,
+          "cache_read_input_tokens": 16805,
+          "cache_creation_input_tokens": 13187,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 13187
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 355,
+        "outputTokens": 16,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.000435,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 492,
+        "cacheReadInputTokens": 16805,
+        "cacheCreationInputTokens": 13187,
+        "webSearchRequests": 0,
+        "costUSD": 0.10315125,
+        "contextWindow": 200000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "c9faccd5-b823-4ab1-8c46-05c4fe820220"
+  }
+}

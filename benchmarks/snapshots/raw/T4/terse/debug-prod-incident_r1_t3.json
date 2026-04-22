@@ -1,0 +1,96 @@
+{
+  "track": "T4",
+  "arm": "terse",
+  "sequence_id": "debug-prod-incident",
+  "run_index": 1,
+  "turn": 3,
+  "arm_order_index": 4,
+  "arm_order_full": [
+    "baseline",
+    "hewn_full",
+    "hewn_prompt_only",
+    "caveman_full",
+    "terse"
+  ],
+  "digest_hex": "c436155c1e87e76d88e6f2c66d47c90c16ae78237b0a8de1b93824cf92fb5c9b",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T01:01:51.806836+00:00",
+  "session_id_used_for_resume": "d88d12d9-978e-4128-8624-4abb35c63ae5",
+  "output_tokens_tiktoken": 324,
+  "output_tokens_anthropic": 477,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 261,
+  "cache_read_input_tokens": 24897,
+  "total_input_tokens": 25164,
+  "cache_state": "warm",
+  "wallclock_ms": 12425.297569978284,
+  "duration_ms": 8987,
+  "duration_api_ms": 8958,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "d88d12d9-978e-4128-8624-4abb35c63ae5",
+  "total_cost_usd": 0.026034750000000002,
+  "model_used": "claude-opus-4-7",
+  "result": "Test the contract, not the implementation.\n\n```js\ndescribe('buildCart', () => {\n  const cart = {\n    id: 'c1',\n    items: [{ id: 'i1', price: 10, qty: 2 }, { id: 'i2', price: 5, qty: 1 }],\n  };\n\n  it('returns id, items, and total', () => {\n    expect(buildCart(cart)).toEqual({\n      id: 'c1',\n      items: cart.items,\n      total: 25,\n    });\n  });\n\n  it('preserves items for downstream consumers', () => {\n    expect(buildCart(cart).items).toBe(cart.items);\n  });\n});\n```\n\nKey choices:\n\n- **`toEqual` on the whole object** — locks the shape. Any future drop of a field fails loudly. This is the one that would have caught your bug.\n- **Separate `items` assertion** — documents intent (\"downstream depends on this\") so a future refactorer sees *why* it's there, not just *that* it's there.\n- **`.toBe(cart.items)`** (reference equality) if you want to assert no copy; use `.toEqual` if a copy is acceptable. Pick based on whether downstream mutates.\n\nOptional: add an integration test at the `createOrder` boundary with a minimal cart → asserts 200 + order persisted. That catches contract drift between `buildCart` and its consumers, which is the actual class of bug. Unit test alone won't catch a rename if both sides change together.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 8987,
+    "duration_api_ms": 8958,
+    "num_turns": 1,
+    "result": "Test the contract, not the implementation.\n\n```js\ndescribe('buildCart', () => {\n  const cart = {\n    id: 'c1',\n    items: [{ id: 'i1', price: 10, qty: 2 }, { id: 'i2', price: 5, qty: 1 }],\n  };\n\n  it('returns id, items, and total', () => {\n    expect(buildCart(cart)).toEqual({\n      id: 'c1',\n      items: cart.items,\n      total: 25,\n    });\n  });\n\n  it('preserves items for downstream consumers', () => {\n    expect(buildCart(cart).items).toBe(cart.items);\n  });\n});\n```\n\nKey choices:\n\n- **`toEqual` on the whole object** — locks the shape. Any future drop of a field fails loudly. This is the one that would have caught your bug.\n- **Separate `items` assertion** — documents intent (\"downstream depends on this\") so a future refactorer sees *why* it's there, not just *that* it's there.\n- **`.toBe(cart.items)`** (reference equality) if you want to assert no copy; use `.toEqual` if a copy is acceptable. Pick based on whether downstream mutates.\n\nOptional: add an integration test at the `createOrder` boundary with a minimal cart → asserts 200 + order persisted. That catches contract drift between `buildCart` and its consumers, which is the actual class of bug. Unit test alone won't catch a rename if both sides change together.",
+    "stop_reason": "end_turn",
+    "session_id": "d88d12d9-978e-4128-8624-4abb35c63ae5",
+    "total_cost_usd": 0.026034750000000002,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 261,
+      "cache_read_input_tokens": 24897,
+      "output_tokens": 477,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 261,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 477,
+          "cache_read_input_tokens": 24897,
+          "cache_creation_input_tokens": 261,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 261
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 477,
+        "cacheReadInputTokens": 24897,
+        "cacheCreationInputTokens": 261,
+        "webSearchRequests": 0,
+        "costUSD": 0.026034750000000002,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "c3bb8a3f-75c1-494a-80b2-8652eaae4540"
+  }
+}

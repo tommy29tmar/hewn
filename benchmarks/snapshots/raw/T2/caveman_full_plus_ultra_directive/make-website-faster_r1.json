@@ -1,0 +1,105 @@
+{
+  "track": "T2",
+  "arm": "caveman_full_plus_ultra_directive",
+  "prompt_id": "make-website-faster",
+  "run_index": 1,
+  "arm_order_index": 5,
+  "arm_order_full": [
+    "hewn_full",
+    "hewn_prompt_only",
+    "terse",
+    "caveman_full",
+    "baseline",
+    "caveman_full_plus_ultra_directive"
+  ],
+  "digest_hex": "7f50b87761132f5aa42b93557a015fe57f3c5214edc0baf0cfc53704c3da3593",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T00:14:25.764585+00:00",
+  "output_tokens_tiktoken": 54,
+  "output_tokens_anthropic": 136,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 10487,
+  "cache_read_input_tokens": 15201,
+  "total_input_tokens": 25694,
+  "cache_state": "warm",
+  "wallclock_ms": 8612.29504799121,
+  "duration_ms": 4960,
+  "duration_api_ms": 5664,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "8d56b13a-6989-4f3c-bda9-00e5fb0bac36",
+  "total_cost_usd": 0.07698125,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "Need info:\n- URL?\n- Stack (React/Next/static/WP)?\n- Slow where — load, nav, specific page?\n- Measured (Lighthouse/WebVitals) or feel?\n\nOr run `/gstack-benchmark` on URL → baseline + fixes.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 4960,
+    "duration_api_ms": 5664,
+    "num_turns": 1,
+    "result": "Need info:\n- URL?\n- Stack (React/Next/static/WP)?\n- Slow where — load, nav, specific page?\n- Measured (Lighthouse/WebVitals) or feel?\n\nOr run `/gstack-benchmark` on URL → baseline + fixes.",
+    "stop_reason": "end_turn",
+    "session_id": "8d56b13a-6989-4f3c-bda9-00e5fb0bac36",
+    "total_cost_usd": 0.07698125,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 10487,
+      "cache_read_input_tokens": 15201,
+      "output_tokens": 136,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 10487,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 136,
+          "cache_read_input_tokens": 15201,
+          "cache_creation_input_tokens": 10487,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 10487
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 347,
+        "outputTokens": 12,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.00040699999999999997,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 136,
+        "cacheReadInputTokens": 15201,
+        "cacheCreationInputTokens": 10487,
+        "webSearchRequests": 0,
+        "costUSD": 0.07657425,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "623ae46a-e7bc-440b-805e-3f31f5d77eeb"
+  }
+}

@@ -1,0 +1,105 @@
+{
+  "track": "T2",
+  "arm": "caveman_full_plus_ultra_directive",
+  "prompt_id": "spaghetti-code",
+  "run_index": 1,
+  "arm_order_index": 2,
+  "arm_order_full": [
+    "hewn_full",
+    "caveman_full",
+    "caveman_full_plus_ultra_directive",
+    "terse",
+    "baseline",
+    "hewn_prompt_only"
+  ],
+  "digest_hex": "4b03fc8be3949c05b432d9b1384c3888f2497445b9d83c4262c2a2a4a9712965",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T00:17:52.835100+00:00",
+  "output_tokens_tiktoken": 312,
+  "output_tokens_anthropic": 471,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 10500,
+  "cache_read_input_tokens": 15201,
+  "total_input_tokens": 25707,
+  "cache_state": "warm",
+  "wallclock_ms": 16660.822684993036,
+  "duration_ms": 12322,
+  "duration_api_ms": 13100,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "2cd0fd17-6b07-433d-b33f-e624c8c7dbe5",
+  "total_cost_usd": 0.08546450000000001,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "Spaghetti = no boundaries. Fix:\n\n**1. Name things like intent, not mechanics.** `fetchUserThenFilterThenRender` = bad. `showActiveUsers` = good.\n\n**2. One fn = one job.** If you write \"and\" describing it → split.\n\n**3. Flat > nested.** Early return. Kill `else` after `return`.\n```js\nif (!user) return null;\nif (!user.active) return null;\n// happy path here\n```\n\n**4. Group by feature, not by type.** `/user/{api,ui,types}` beats `/api,/ui,/types` all split.\n\n**5. Pure core, dirty edges.** I/O (DB/fetch/fs) at boundary. Logic in middle = pure fns. Easy trace.\n\n**6. Kill hidden state.** Globals, mutable singletons, \"just one more flag\" → spaghetti fuel.\n\n**7. Max ~20 lines per fn, ~200 per file.** Not law, smell check. Past that → extract.\n\n**8. Write the call site first.** If `doThing(a,b,c,d,e,opts)` feels gross to call → design wrong.\n\n**9. Types/interfaces as contracts.** Data shape at boundary = map of code.\n\n**10. Delete dead code now.** Commented-out \"just in case\" = fog.\n\nRule of thumb: can stranger read one fn, guess what it do, no scroll? Yes → clean. No → split.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 12322,
+    "duration_api_ms": 13100,
+    "num_turns": 1,
+    "result": "Spaghetti = no boundaries. Fix:\n\n**1. Name things like intent, not mechanics.** `fetchUserThenFilterThenRender` = bad. `showActiveUsers` = good.\n\n**2. One fn = one job.** If you write \"and\" describing it → split.\n\n**3. Flat > nested.** Early return. Kill `else` after `return`.\n```js\nif (!user) return null;\nif (!user.active) return null;\n// happy path here\n```\n\n**4. Group by feature, not by type.** `/user/{api,ui,types}` beats `/api,/ui,/types` all split.\n\n**5. Pure core, dirty edges.** I/O (DB/fetch/fs) at boundary. Logic in middle = pure fns. Easy trace.\n\n**6. Kill hidden state.** Globals, mutable singletons, \"just one more flag\" → spaghetti fuel.\n\n**7. Max ~20 lines per fn, ~200 per file.** Not law, smell check. Past that → extract.\n\n**8. Write the call site first.** If `doThing(a,b,c,d,e,opts)` feels gross to call → design wrong.\n\n**9. Types/interfaces as contracts.** Data shape at boundary = map of code.\n\n**10. Delete dead code now.** Commented-out \"just in case\" = fog.\n\nRule of thumb: can stranger read one fn, guess what it do, no scroll? Yes → clean. No → split.",
+    "stop_reason": "end_turn",
+    "session_id": "2cd0fd17-6b07-433d-b33f-e624c8c7dbe5",
+    "total_cost_usd": 0.08546450000000001,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 10500,
+      "cache_read_input_tokens": 15201,
+      "output_tokens": 471,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 10500,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 471,
+          "cache_read_input_tokens": 15201,
+          "cache_creation_input_tokens": 10500,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 10500
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 359,
+        "outputTokens": 15,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.00043400000000000003,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 471,
+        "cacheReadInputTokens": 15201,
+        "cacheCreationInputTokens": 10500,
+        "webSearchRequests": 0,
+        "costUSD": 0.08503050000000001,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "5329c7fc-b21c-4a5a-bd2e-87b9a2dbff68"
+  }
+}

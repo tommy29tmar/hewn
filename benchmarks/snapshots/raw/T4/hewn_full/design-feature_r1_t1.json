@@ -1,0 +1,106 @@
+{
+  "track": "T4",
+  "arm": "hewn_full",
+  "sequence_id": "design-feature",
+  "run_index": 1,
+  "turn": 1,
+  "arm_order_index": 0,
+  "arm_order_full": [
+    "hewn_full",
+    "hewn_prompt_only",
+    "terse",
+    "baseline",
+    "caveman_full"
+  ],
+  "digest_hex": "30a2f9a62df0d790c0598917c3ab42509bbadd672a0a484741ea201d2da3b44f",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T01:02:42.687237+00:00",
+  "session_id_used_for_resume": null,
+  "output_tokens_tiktoken": 443,
+  "output_tokens_anthropic": 749,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 17349,
+  "cache_read_input_tokens": 16805,
+  "total_input_tokens": 34160,
+  "cache_state": "warm",
+  "wallclock_ms": 20032.41284302203,
+  "duration_ms": 16952,
+  "duration_api_ms": 17998,
+  "wrapper_overhead_ms": 2034.4128430220298,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "b3f40e90-02ea-4c6b-a1d6-396c50dde0bb",
+  "total_cost_usd": 0.13604475,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "main decisions, in order of impact:\n\nstorage & lifecycle\n- one balance per code, or ledger of transactions? ledger wins long-term (refunds, partial reversals, audit) but costs more upfront\n- expiration policy (never / fixed date / inactivity) — legal varies by jurisdiction\n- transferable, or bound to user account on first use?\n\ncode format & generation\n- length, charset, checksum (Luhn-style) to reject typos before DB lookup\n- one-time vs reusable (multi-redeem until depleted)\n- printed/physical vs digital-only (affects whether you need PIN + code)\n\nconcurrency & double-spend\n- two checkouts redeem same code simultaneously — need row lock or atomic decrement\n- idempotency key on redeem so retries don't double-debit\n- reserve-then-commit (hold balance during checkout) vs charge-on-capture only\n\nmoney math\n- which currency, and what if cart currency differs (FX at redeem time?)\n- tax: does gift card cover tax+shipping or just subtotal? jurisdiction-dependent\n- rounding rules when split with card payment\n- order of operations: gift card before or after promo codes / loyalty points?\n\npartial payment flow\n- if card auth fails after gift card debited, do you reverse or hold?\n- pre-auth full amount on card then settle remainder, vs split-tender at capture\n- refunds: back to gift card, back to card, or proportional?\n\nabuse & security\n- rate-limit redemption attempts per IP/user (codes are guessable if short)\n- don't leak \"valid code, zero balance\" vs \"invalid code\" in same response\n- fraud: stolen cards used to buy gift cards then resold — flag high-value purchases\n\nops\n- how is balance issued? purchase, promo, refund, manual admin grant — each is a separate code path\n- CS tooling: lookup by code, adjust balance, reissue, void\n- reporting: outstanding liability on balance sheet (real accounting concern)\n\nbiggest trap people hit: treating gift card as a discount instead of a tender. it's money, not a coupon — model it as a payment method from day one.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 16952,
+    "duration_api_ms": 17998,
+    "num_turns": 1,
+    "result": "main decisions, in order of impact:\n\nstorage & lifecycle\n- one balance per code, or ledger of transactions? ledger wins long-term (refunds, partial reversals, audit) but costs more upfront\n- expiration policy (never / fixed date / inactivity) — legal varies by jurisdiction\n- transferable, or bound to user account on first use?\n\ncode format & generation\n- length, charset, checksum (Luhn-style) to reject typos before DB lookup\n- one-time vs reusable (multi-redeem until depleted)\n- printed/physical vs digital-only (affects whether you need PIN + code)\n\nconcurrency & double-spend\n- two checkouts redeem same code simultaneously — need row lock or atomic decrement\n- idempotency key on redeem so retries don't double-debit\n- reserve-then-commit (hold balance during checkout) vs charge-on-capture only\n\nmoney math\n- which currency, and what if cart currency differs (FX at redeem time?)\n- tax: does gift card cover tax+shipping or just subtotal? jurisdiction-dependent\n- rounding rules when split with card payment\n- order of operations: gift card before or after promo codes / loyalty points?\n\npartial payment flow\n- if card auth fails after gift card debited, do you reverse or hold?\n- pre-auth full amount on card then settle remainder, vs split-tender at capture\n- refunds: back to gift card, back to card, or proportional?\n\nabuse & security\n- rate-limit redemption attempts per IP/user (codes are guessable if short)\n- don't leak \"valid code, zero balance\" vs \"invalid code\" in same response\n- fraud: stolen cards used to buy gift cards then resold — flag high-value purchases\n\nops\n- how is balance issued? purchase, promo, refund, manual admin grant — each is a separate code path\n- CS tooling: lookup by code, adjust balance, reissue, void\n- reporting: outstanding liability on balance sheet (real accounting concern)\n\nbiggest trap people hit: treating gift card as a discount instead of a tender. it's money, not a coupon — model it as a payment method from day one.",
+    "stop_reason": "end_turn",
+    "session_id": "b3f40e90-02ea-4c6b-a1d6-396c50dde0bb",
+    "total_cost_usd": 0.13604475,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 17349,
+      "cache_read_input_tokens": 16805,
+      "output_tokens": 749,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 17349,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 749,
+          "cache_read_input_tokens": 16805,
+          "cache_creation_input_tokens": 17349,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 17349
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 391,
+        "outputTokens": 13,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.000456,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 749,
+        "cacheReadInputTokens": 16805,
+        "cacheCreationInputTokens": 17349,
+        "webSearchRequests": 0,
+        "costUSD": 0.13558874999999998,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "500360c6-8799-4418-b3f2-28e257c31073"
+  }
+}

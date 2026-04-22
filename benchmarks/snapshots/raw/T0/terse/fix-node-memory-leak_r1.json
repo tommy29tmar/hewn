@@ -1,0 +1,103 @@
+{
+  "track": "T0",
+  "arm": "terse",
+  "prompt_id": "fix-node-memory-leak",
+  "run_index": 1,
+  "arm_order_index": 0,
+  "arm_order_full": [
+    "terse",
+    "terse_appended",
+    "caveman_full",
+    "caveman_full_appended"
+  ],
+  "digest_hex": "edf96b08b6bf832e7f6141e2b1e51b0b7773d43c771414ddf25ddb62f5d6bccd",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-21T23:26:28.007202+00:00",
+  "output_tokens_tiktoken": 278,
+  "output_tokens_anthropic": 469,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 6561,
+  "cache_read_input_tokens": 13741,
+  "total_input_tokens": 20308,
+  "cache_state": "warm",
+  "wallclock_ms": 15406.036736996612,
+  "duration_ms": 9923,
+  "duration_api_ms": 11228,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "3997d00a-6078-438e-a24b-938ec0b28381",
+  "total_cost_usd": 0.06006675,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "Common fixes:\n\n1. **Find it first** — `node --inspect` + Chrome DevTools Memory tab. Take heap snapshots at intervals, compare retained size. Or `clinic heapprofiler`.\n\n2. **Usual culprits**:\n   - Listeners not removed → `emitter.removeListener` on cleanup; watch for `MaxListenersExceededWarning`.\n   - Closures holding large objects → avoid capturing big scopes in long-lived callbacks.\n   - Module-level caches/Maps growing unbounded → use `LRUCache` or `WeakMap`/`WeakRef`.\n   - Timers (`setInterval`) never cleared → track and `clearInterval` on shutdown.\n   - Global arrays accumulating (logs, metrics buffers) → cap size or flush.\n   - Promises chained forever holding references → break chains, null out refs.\n\n3. **Guardrails**:\n   - Run with `--max-old-space-size` sized to expected working set, not higher.\n   - Expose `/debug/heap` endpoint using `v8.writeHeapSnapshot()` to grab snapshots from prod.\n   - Monitor `process.memoryUsage().heapUsed` over time — steady climb = leak.\n\n4. **If you can't find it**: restart on a schedule (PM2/systemd) as a stopgap while you keep investigating.\n\nWant me to look at specific code?",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 9923,
+    "duration_api_ms": 11228,
+    "num_turns": 1,
+    "result": "Common fixes:\n\n1. **Find it first** — `node --inspect` + Chrome DevTools Memory tab. Take heap snapshots at intervals, compare retained size. Or `clinic heapprofiler`.\n\n2. **Usual culprits**:\n   - Listeners not removed → `emitter.removeListener` on cleanup; watch for `MaxListenersExceededWarning`.\n   - Closures holding large objects → avoid capturing big scopes in long-lived callbacks.\n   - Module-level caches/Maps growing unbounded → use `LRUCache` or `WeakMap`/`WeakRef`.\n   - Timers (`setInterval`) never cleared → track and `clearInterval` on shutdown.\n   - Global arrays accumulating (logs, metrics buffers) → cap size or flush.\n   - Promises chained forever holding references → break chains, null out refs.\n\n3. **Guardrails**:\n   - Run with `--max-old-space-size` sized to expected working set, not higher.\n   - Expose `/debug/heap` endpoint using `v8.writeHeapSnapshot()` to grab snapshots from prod.\n   - Monitor `process.memoryUsage().heapUsed` over time — steady climb = leak.\n\n4. **If you can't find it**: restart on a schedule (PM2/systemd) as a stopgap while you keep investigating.\n\nWant me to look at specific code?",
+    "stop_reason": "end_turn",
+    "session_id": "3997d00a-6078-438e-a24b-938ec0b28381",
+    "total_cost_usd": 0.06006675,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 6561,
+      "cache_read_input_tokens": 13741,
+      "output_tokens": 469,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 6561,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 469,
+          "cache_read_input_tokens": 13741,
+          "cache_creation_input_tokens": 6561,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 6561
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 355,
+        "outputTokens": 16,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.000435,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 469,
+        "cacheReadInputTokens": 13741,
+        "cacheCreationInputTokens": 6561,
+        "webSearchRequests": 0,
+        "costUSD": 0.059631750000000004,
+        "contextWindow": 200000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "61815343-5a1e-4bd4-ab3e-13f21393214c"
+  }
+}

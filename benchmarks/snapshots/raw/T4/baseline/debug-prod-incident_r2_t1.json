@@ -1,0 +1,106 @@
+{
+  "track": "T4",
+  "arm": "baseline",
+  "sequence_id": "debug-prod-incident",
+  "run_index": 2,
+  "turn": 1,
+  "arm_order_index": 4,
+  "arm_order_full": [
+    "caveman_full",
+    "terse",
+    "hewn_full",
+    "hewn_prompt_only",
+    "baseline"
+  ],
+  "digest_hex": "522341918a5177210ef438fa55486ec5b622aaa576febbd731536d82595ec31b",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T01:21:23.864805+00:00",
+  "session_id_used_for_resume": null,
+  "output_tokens_tiktoken": 299,
+  "output_tokens_anthropic": 707,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 32684,
+  "total_input_tokens": 32690,
+  "cache_state": "warm",
+  "wallclock_ms": 16720.915963000152,
+  "duration_ms": 13252,
+  "duration_api_ms": 14111,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "f21b92b7-d679-4b3a-93e7-d3a4590143e5",
+  "total_cost_usd": 0.034527999999999996,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "Deploy at 14:18, errors at 14:23 — almost certainly the deploy. Start there.\n\n1. **Diff the deploy**: `git log --oneline <prev-sha>..<deployed-sha> -- <path to createOrder>` and anything it imports. Read the diff for the createOrder handler specifically.\n2. **Find the `.items` access**: grep the handler for `.items`. The undefined is one level up — likely `req.body.items`, `cart.items`, or `order.items`. Figure out which object is undefined, then trace where it should have been set.\n3. **Check the request shape**: pull one failing request from logs (body + headers). Compare to a passing request from before 14:18. If the client shape didn't change, the handler changed its expectations (renamed field, removed default, moved validation).\n4. **Rollback decision**: if you can't identify the cause in ~5 minutes, roll back the deploy first, then debug. 500s on checkout is revenue loss — don't debug live.\n\nMost likely culprits, in order: (a) a field was renamed/restructured in the request schema without a migration, (b) a middleware that populated `req.body` or `req.cart` was removed or reordered, (c) validation was loosened so a malformed body now reaches the handler instead of being rejected at 400.\n\nWhat does the stack trace line number point to?",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 13252,
+    "duration_api_ms": 14111,
+    "num_turns": 1,
+    "result": "Deploy at 14:18, errors at 14:23 — almost certainly the deploy. Start there.\n\n1. **Diff the deploy**: `git log --oneline <prev-sha>..<deployed-sha> -- <path to createOrder>` and anything it imports. Read the diff for the createOrder handler specifically.\n2. **Find the `.items` access**: grep the handler for `.items`. The undefined is one level up — likely `req.body.items`, `cart.items`, or `order.items`. Figure out which object is undefined, then trace where it should have been set.\n3. **Check the request shape**: pull one failing request from logs (body + headers). Compare to a passing request from before 14:18. If the client shape didn't change, the handler changed its expectations (renamed field, removed default, moved validation).\n4. **Rollback decision**: if you can't identify the cause in ~5 minutes, roll back the deploy first, then debug. 500s on checkout is revenue loss — don't debug live.\n\nMost likely culprits, in order: (a) a field was renamed/restructured in the request schema without a migration, (b) a middleware that populated `req.body` or `req.cart` was removed or reordered, (c) validation was loosened so a malformed body now reaches the handler instead of being rejected at 400.\n\nWhat does the stack trace line number point to?",
+    "stop_reason": "end_turn",
+    "session_id": "f21b92b7-d679-4b3a-93e7-d3a4590143e5",
+    "total_cost_usd": 0.034527999999999996,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 32684,
+      "output_tokens": 707,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 0,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 707,
+          "cache_read_input_tokens": 32684,
+          "cache_creation_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 396,
+        "outputTokens": 17,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.000481,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 707,
+        "cacheReadInputTokens": 32684,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.034046999999999994,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "9d159426-088b-41e7-b7bc-b0b864862a38"
+  }
+}

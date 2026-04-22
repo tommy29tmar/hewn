@@ -1,0 +1,96 @@
+{
+  "track": "T4",
+  "arm": "terse",
+  "sequence_id": "design-feature",
+  "run_index": 1,
+  "turn": 4,
+  "arm_order_index": 2,
+  "arm_order_full": [
+    "hewn_full",
+    "hewn_prompt_only",
+    "terse",
+    "baseline",
+    "caveman_full"
+  ],
+  "digest_hex": "30a2f9a62df0d790c0598917c3ab42509bbadd672a0a484741ea201d2da3b44f",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T01:09:28.176807+00:00",
+  "session_id_used_for_resume": "4793f245-7c29-4b32-91fe-683724713458",
+  "output_tokens_tiktoken": 605,
+  "output_tokens_anthropic": 967,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 1327,
+  "cache_read_input_tokens": 26237,
+  "total_input_tokens": 27570,
+  "cache_state": "warm",
+  "wallclock_ms": 22854.13694899762,
+  "duration_ms": 19612,
+  "duration_api_ms": 19580,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "4793f245-7c29-4b32-91fe-683724713458",
+  "total_cost_usd": 0.04561725,
+  "model_used": "claude-opus-4-7",
+  "result": "# Where to Put the Expiry Check\n\n**Both. They do different jobs.**\n\n## Consumption-path check (required)\n\nAt redemption time, inside the same transaction as the `SELECT FOR UPDATE`:\n\n```sql\nSELECT balance, expires_at, status\nFROM gift_cards\nWHERE id = $id\nFOR UPDATE;\n\n-- reject if expires_at <= now() or status != 'active'\n```\n\n**Why it's non-negotiable:**\n- Batch jobs run daily; a card expiring at 00:00:01 is redeemable for ~24h without this check.\n- Defense in depth: if the batch job fails, crashes, or is paused during an incident, expired cards don't leak value.\n- Authoritative answer at the moment it matters. No clock-skew debates.\n- Cheap — you're already reading the row under lock.\n\n## Batch job (also required, different purpose)\n\nNightly sweep flips `status` from `active` to `expired` for cards where `expires_at <= now()`.\n\n**Why you still want it:**\n- Accounting / breakage recognition: finance needs to know *when* a card became unredeemable to move the liability off the books. A card that's \"expired in effect but still marked active\" is a reporting lie.\n- Customer-facing state: \"check my balance\" endpoint, admin UI, emails (\"your card expired\") need a queryable truth, not a computed-on-read truth.\n- Indexes and reports: `WHERE status = 'expired'` is cheaper and clearer than `WHERE expires_at <= now()` scattered across every query.\n- Triggers downstream work: expiry notifications, GL journal entries, analytics.\n\n## Rules to keep them consistent\n\n1. **Consumption check uses `expires_at`, not `status`.** The batch job may lag; the timestamp is truth.\n2. **Batch job is idempotent.** `UPDATE ... WHERE status = 'active' AND expires_at <= now()`. Safe to rerun, safe to miss a day.\n3. **Never rely solely on the batch job for correctness** — only for state hygiene and reporting.\n4. Consider a pre-expiry notification job (e.g. 30/7/1 days out) — separate from the expiry sweep.\n\n## Optional: lazy expiry on read\n\nSome systems skip the batch job and flip status on any read of an expired card. Don't — it makes reads mutating, breaks read replicas, and leaves untouched cards permanently `active` in the DB, poisoning reports.\n\n## One gotcha\n\nTime zones. `expires_at` should be `TIMESTAMPTZ`, and \"12 months after issue\" needs a defined moment — issue time UTC + interval '12 months' is fine, but be explicit. Jurisdictions sometimes mandate minimum durations (CARD Act: 5 years in the US for cards sold to consumers) — check before shipping 12 months.\n\nWant to move on to refunds, or stacking with promos?",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 19612,
+    "duration_api_ms": 19580,
+    "num_turns": 1,
+    "result": "# Where to Put the Expiry Check\n\n**Both. They do different jobs.**\n\n## Consumption-path check (required)\n\nAt redemption time, inside the same transaction as the `SELECT FOR UPDATE`:\n\n```sql\nSELECT balance, expires_at, status\nFROM gift_cards\nWHERE id = $id\nFOR UPDATE;\n\n-- reject if expires_at <= now() or status != 'active'\n```\n\n**Why it's non-negotiable:**\n- Batch jobs run daily; a card expiring at 00:00:01 is redeemable for ~24h without this check.\n- Defense in depth: if the batch job fails, crashes, or is paused during an incident, expired cards don't leak value.\n- Authoritative answer at the moment it matters. No clock-skew debates.\n- Cheap — you're already reading the row under lock.\n\n## Batch job (also required, different purpose)\n\nNightly sweep flips `status` from `active` to `expired` for cards where `expires_at <= now()`.\n\n**Why you still want it:**\n- Accounting / breakage recognition: finance needs to know *when* a card became unredeemable to move the liability off the books. A card that's \"expired in effect but still marked active\" is a reporting lie.\n- Customer-facing state: \"check my balance\" endpoint, admin UI, emails (\"your card expired\") need a queryable truth, not a computed-on-read truth.\n- Indexes and reports: `WHERE status = 'expired'` is cheaper and clearer than `WHERE expires_at <= now()` scattered across every query.\n- Triggers downstream work: expiry notifications, GL journal entries, analytics.\n\n## Rules to keep them consistent\n\n1. **Consumption check uses `expires_at`, not `status`.** The batch job may lag; the timestamp is truth.\n2. **Batch job is idempotent.** `UPDATE ... WHERE status = 'active' AND expires_at <= now()`. Safe to rerun, safe to miss a day.\n3. **Never rely solely on the batch job for correctness** — only for state hygiene and reporting.\n4. Consider a pre-expiry notification job (e.g. 30/7/1 days out) — separate from the expiry sweep.\n\n## Optional: lazy expiry on read\n\nSome systems skip the batch job and flip status on any read of an expired card. Don't — it makes reads mutating, breaks read replicas, and leaves untouched cards permanently `active` in the DB, poisoning reports.\n\n## One gotcha\n\nTime zones. `expires_at` should be `TIMESTAMPTZ`, and \"12 months after issue\" needs a defined moment — issue time UTC + interval '12 months' is fine, but be explicit. Jurisdictions sometimes mandate minimum durations (CARD Act: 5 years in the US for cards sold to consumers) — check before shipping 12 months.\n\nWant to move on to refunds, or stacking with promos?",
+    "stop_reason": "end_turn",
+    "session_id": "4793f245-7c29-4b32-91fe-683724713458",
+    "total_cost_usd": 0.04561725,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 1327,
+      "cache_read_input_tokens": 26237,
+      "output_tokens": 967,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 1327,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 967,
+          "cache_read_input_tokens": 26237,
+          "cache_creation_input_tokens": 1327,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 1327
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 967,
+        "cacheReadInputTokens": 26237,
+        "cacheCreationInputTokens": 1327,
+        "webSearchRequests": 0,
+        "costUSD": 0.04561725,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "364cf34d-a115-4710-9512-4722745a3003"
+  }
+}

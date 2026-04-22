@@ -1,0 +1,96 @@
+{
+  "track": "T4",
+  "arm": "baseline",
+  "sequence_id": "debug-prod-incident",
+  "run_index": 1,
+  "turn": 2,
+  "arm_order_index": 0,
+  "arm_order_full": [
+    "baseline",
+    "hewn_full",
+    "hewn_prompt_only",
+    "caveman_full",
+    "terse"
+  ],
+  "digest_hex": "c436155c1e87e76d88e6f2c66d47c90c16ae78237b0a8de1b93824cf92fb5c9b",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T00:56:56.354469+00:00",
+  "session_id_used_for_resume": "b095a9ed-419c-4efc-bd31-af55f6a295e0",
+  "output_tokens_tiktoken": 133,
+  "output_tokens_anthropic": 196,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 747,
+  "cache_read_input_tokens": 32684,
+  "total_input_tokens": 33437,
+  "cache_state": "warm",
+  "wallclock_ms": 7345.0906299985945,
+  "duration_ms": 3943,
+  "duration_api_ms": 3909,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "b095a9ed-419c-4efc-bd31-af55f6a295e0",
+  "total_cost_usd": 0.02594075,
+  "model_used": "claude-opus-4-7",
+  "result": "The refactor dropped `items` from `buildCart`'s return value. Downstream `createOrder` still does `builtCart.items.reduce(...)` or `builtCart.items.map(...)` — and now `builtCart.items` is `undefined`, hence the TypeError.\n\nFix: either add `items: cart.items` back to the return, or update `createOrder` (and any other consumer of `buildCart`) to read items from the source `cart` instead of the built object.\n\nBefore re-deploying, grep for `.items` on every `buildCart(...)` callsite — there may be more than one consumer affected.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 3943,
+    "duration_api_ms": 3909,
+    "num_turns": 1,
+    "result": "The refactor dropped `items` from `buildCart`'s return value. Downstream `createOrder` still does `builtCart.items.reduce(...)` or `builtCart.items.map(...)` — and now `builtCart.items` is `undefined`, hence the TypeError.\n\nFix: either add `items: cart.items` back to the return, or update `createOrder` (and any other consumer of `buildCart`) to read items from the source `cart` instead of the built object.\n\nBefore re-deploying, grep for `.items` on every `buildCart(...)` callsite — there may be more than one consumer affected.",
+    "stop_reason": "end_turn",
+    "session_id": "b095a9ed-419c-4efc-bd31-af55f6a295e0",
+    "total_cost_usd": 0.02594075,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 747,
+      "cache_read_input_tokens": 32684,
+      "output_tokens": 196,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 747,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 196,
+          "cache_read_input_tokens": 32684,
+          "cache_creation_input_tokens": 747,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 747
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 196,
+        "cacheReadInputTokens": 32684,
+        "cacheCreationInputTokens": 747,
+        "webSearchRequests": 0,
+        "costUSD": 0.02594075,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "632f73da-99af-4316-9932-3fe6421db8ec"
+  }
+}

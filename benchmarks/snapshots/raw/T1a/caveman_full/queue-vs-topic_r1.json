@@ -1,0 +1,102 @@
+{
+  "track": "T1a",
+  "arm": "caveman_full",
+  "prompt_id": "queue-vs-topic",
+  "run_index": 1,
+  "arm_order_index": 2,
+  "arm_order_full": [
+    "baseline",
+    "terse",
+    "caveman_full"
+  ],
+  "digest_hex": "5d6d15de966d2de1a01243f9e0d98a5b8908442798145efdf692af7bd3cb36a9",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-21T23:38:21.246859+00:00",
+  "output_tokens_tiktoken": 60,
+  "output_tokens_anthropic": 104,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 6559,
+  "cache_read_input_tokens": 15186,
+  "total_input_tokens": 21751,
+  "cache_state": "warm",
+  "wallclock_ms": 9033.1280779792,
+  "duration_ms": 3898,
+  "duration_api_ms": 4712,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "765e3dc4-063f-48db-9f51-52dc441e99e3",
+  "total_cost_usd": 0.05163774999999999,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "Queue: point-to-point. One msg → one consumer. Work distribution, task processing.\n\nTopic: pub/sub. One msg → many subscribers. Event broadcast, fan-out.\n\nPick queue: load balance work across workers, each job run once.\nPick topic: multiple services react to same event independently.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 3898,
+    "duration_api_ms": 4712,
+    "num_turns": 1,
+    "result": "Queue: point-to-point. One msg → one consumer. Work distribution, task processing.\n\nTopic: pub/sub. One msg → many subscribers. Event broadcast, fan-out.\n\nPick queue: load balance work across workers, each job run once.\nPick topic: multiple services react to same event independently.",
+    "stop_reason": "end_turn",
+    "session_id": "765e3dc4-063f-48db-9f51-52dc441e99e3",
+    "total_cost_usd": 0.05163774999999999,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 6559,
+      "cache_read_input_tokens": 15186,
+      "output_tokens": 104,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 6559,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 104,
+          "cache_read_input_tokens": 15186,
+          "cache_creation_input_tokens": 6559,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 6559
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 351,
+        "outputTokens": 14,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.00042100000000000004,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 104,
+        "cacheReadInputTokens": 15186,
+        "cacheCreationInputTokens": 6559,
+        "webSearchRequests": 0,
+        "costUSD": 0.05121674999999999,
+        "contextWindow": 200000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "827aba09-8629-4f89-881e-423dbc078cef"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "final": {
+    "proportional_refund_to_each_payment_method_or_a_clear_policy": true,
+    "describes_code_path_or_function_locations": true
+  },
+  "history": [
+    {
+      "attempt": 0,
+      "raw": "{\"proportional_refund_to_each_payment_method_or_a_clear_policy\": true, \"describes_code_path_or_function_locations\": true}"
+    }
+  ],
+  "ts": "2026-04-22T02:12:44.586133+00:00"
+}

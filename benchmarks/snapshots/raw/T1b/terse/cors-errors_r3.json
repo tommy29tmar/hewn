@@ -1,0 +1,105 @@
+{
+  "track": "T1b",
+  "arm": "terse",
+  "prompt_id": "cors-errors",
+  "run_index": 3,
+  "arm_order_index": 3,
+  "arm_order_full": [
+    "caveman_full_plus_ultra_directive",
+    "baseline",
+    "hewn_prompt_only",
+    "terse",
+    "hewn_full",
+    "caveman_full"
+  ],
+  "digest_hex": "322754c2ebc09f71e86e46b9ab4501d055dac72445f2e52e0e5526e87eaf7857",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T00:10:50.939884+00:00",
+  "output_tokens_tiktoken": 380,
+  "output_tokens_anthropic": 622,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 10494,
+  "cache_read_input_tokens": 13741,
+  "total_input_tokens": 24241,
+  "cache_state": "warm",
+  "wallclock_ms": 13347.978942998452,
+  "duration_ms": 10392,
+  "duration_api_ms": 11209,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "caf5d7b6-c60d-4f1a-b224-d9bea1bc0105",
+  "total_cost_usd": 0.088458,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "CORS errors happen when your frontend (origin A) makes a request to a backend (origin B) and the backend doesn't return the headers the browser needs to allow it.\n\nCommon causes:\n\n1. **Missing `Access-Control-Allow-Origin`** on the response. Server must send it matching your origin (e.g. `http://localhost:3000`), or `*` for public APIs.\n2. **Preflight (OPTIONS) not handled.** Non-simple requests (custom headers, `PUT`/`DELETE`, JSON body with `Content-Type: application/json`) trigger an OPTIONS preflight. Your server must respond 2xx with `Access-Control-Allow-Methods` and `Access-Control-Allow-Headers`.\n3. **Credentials mismatch.** If you send `credentials: 'include'` / `withCredentials`, the server must return `Access-Control-Allow-Credentials: true` **and** a specific origin (not `*`).\n4. **Wrong port/protocol.** `http://localhost:3000` ≠ `http://localhost:8080` ≠ `https://localhost:3000`. All count as different origins.\n5. **Redirects.** Server redirects during preflight break CORS.\n6. **Error response missing headers.** A 500 without CORS headers shows as a CORS error, masking the real bug.\n\nQuick fixes:\n\n- **Express:** `app.use(cors({ origin: 'http://localhost:3000', credentials: true }))`\n- **FastAPI:** `CORSMiddleware(allow_origins=[...], allow_credentials=True, allow_methods=[\"*\"], allow_headers=[\"*\"])`\n- **Dev only:** proxy through your dev server (Vite `server.proxy`, CRA `proxy`) so the browser sees same-origin.\n\nPaste the exact console error + request/response headers and I'll pinpoint it.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 10392,
+    "duration_api_ms": 11209,
+    "num_turns": 1,
+    "result": "CORS errors happen when your frontend (origin A) makes a request to a backend (origin B) and the backend doesn't return the headers the browser needs to allow it.\n\nCommon causes:\n\n1. **Missing `Access-Control-Allow-Origin`** on the response. Server must send it matching your origin (e.g. `http://localhost:3000`), or `*` for public APIs.\n2. **Preflight (OPTIONS) not handled.** Non-simple requests (custom headers, `PUT`/`DELETE`, JSON body with `Content-Type: application/json`) trigger an OPTIONS preflight. Your server must respond 2xx with `Access-Control-Allow-Methods` and `Access-Control-Allow-Headers`.\n3. **Credentials mismatch.** If you send `credentials: 'include'` / `withCredentials`, the server must return `Access-Control-Allow-Credentials: true` **and** a specific origin (not `*`).\n4. **Wrong port/protocol.** `http://localhost:3000` ≠ `http://localhost:8080` ≠ `https://localhost:3000`. All count as different origins.\n5. **Redirects.** Server redirects during preflight break CORS.\n6. **Error response missing headers.** A 500 without CORS headers shows as a CORS error, masking the real bug.\n\nQuick fixes:\n\n- **Express:** `app.use(cors({ origin: 'http://localhost:3000', credentials: true }))`\n- **FastAPI:** `CORSMiddleware(allow_origins=[...], allow_credentials=True, allow_methods=[\"*\"], allow_headers=[\"*\"])`\n- **Dev only:** proxy through your dev server (Vite `server.proxy`, CRA `proxy`) so the browser sees same-origin.\n\nPaste the exact console error + request/response headers and I'll pinpoint it.",
+    "stop_reason": "end_turn",
+    "session_id": "caf5d7b6-c60d-4f1a-b224-d9bea1bc0105",
+    "total_cost_usd": 0.088458,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 10494,
+      "cache_read_input_tokens": 13741,
+      "output_tokens": 622,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 10494,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 622,
+          "cache_read_input_tokens": 13741,
+          "cache_creation_input_tokens": 10494,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 10494
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 350,
+        "outputTokens": 14,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.00042,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 622,
+        "cacheReadInputTokens": 13741,
+        "cacheCreationInputTokens": 10494,
+        "webSearchRequests": 0,
+        "costUSD": 0.08803799999999999,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "6202efab-a766-40f8-8e50-7e0cd44e7078"
+  }
+}

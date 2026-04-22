@@ -1,0 +1,105 @@
+{
+  "track": "T1b",
+  "arm": "baseline",
+  "prompt_id": "react-rerender-parent",
+  "run_index": 2,
+  "arm_order_index": 3,
+  "arm_order_full": [
+    "terse",
+    "hewn_prompt_only",
+    "hewn_full",
+    "baseline",
+    "caveman_full_plus_ultra_directive",
+    "caveman_full"
+  ],
+  "digest_hex": "5c7062d59c99ec93d8648382caa16140c672b41605bcf28c536ff4956e9b7125",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-21T23:51:51.435525+00:00",
+  "output_tokens_tiktoken": 194,
+  "output_tokens_anthropic": 336,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 28526,
+  "total_input_tokens": 28532,
+  "cache_state": "warm",
+  "wallclock_ms": 12831.414879998192,
+  "duration_ms": 8049,
+  "duration_api_ms": 8789,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "7dd043b4-55cf-428f-a526-01bfb0dadfb4",
+  "total_cost_usd": 0.023119999999999998,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "By default, a child re-renders whenever its parent renders — React doesn't compare props to decide. Common causes and fixes:\n\n1. **No memoization** — wrap the child in `React.memo(Child)` so it only re-renders when props change by shallow comparison.\n2. **New object/array/function props each render** — even with `memo`, `<Child onClick={() => ...} data={{x:1}} />` breaks it because the reference changes every render. Stabilize with `useCallback` / `useMemo`.\n3. **Context consumers** — any component reading a changed context value re-renders regardless of memo.\n4. **Children as props** — passing `children` from the parent usually produces new elements each render; lift expensive subtrees or memoize them.\n\nQuick diagnostic: add `console.log` in the child and use React DevTools Profiler's \"Why did this render?\" to see which prop changed.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 8049,
+    "duration_api_ms": 8789,
+    "num_turns": 1,
+    "result": "By default, a child re-renders whenever its parent renders — React doesn't compare props to decide. Common causes and fixes:\n\n1. **No memoization** — wrap the child in `React.memo(Child)` so it only re-renders when props change by shallow comparison.\n2. **New object/array/function props each render** — even with `memo`, `<Child onClick={() => ...} data={{x:1}} />` breaks it because the reference changes every render. Stabilize with `useCallback` / `useMemo`.\n3. **Context consumers** — any component reading a changed context value re-renders regardless of memo.\n4. **Children as props** — passing `children` from the parent usually produces new elements each render; lift expensive subtrees or memoize them.\n\nQuick diagnostic: add `console.log` in the child and use React DevTools Profiler's \"Why did this render?\" to see which prop changed.",
+    "stop_reason": "end_turn",
+    "session_id": "7dd043b4-55cf-428f-a526-01bfb0dadfb4",
+    "total_cost_usd": 0.023119999999999998,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 28526,
+      "output_tokens": 336,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 0,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 336,
+          "cache_read_input_tokens": 28526,
+          "cache_creation_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 352,
+        "outputTokens": 15,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.00042699999999999997,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 336,
+        "cacheReadInputTokens": 28526,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.022692999999999998,
+        "contextWindow": 200000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "4286b9d2-0b87-4217-a6a2-4143c7912bf9"
+  }
+}

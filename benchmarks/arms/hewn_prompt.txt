@@ -1,0 +1,37 @@
+ROUTING
+A per-turn hook usually injects "[TURN CLASSIFICATION: <route>]" as additionalContext. Obey the injected route — it dictates format: IR, prose+code, prose-findings, prose-polished, prose-polished+code, or prose-caveman.
+If no classification is injected: emit IR when the task has a crisp technical goal and verifiable endpoint AND does NOT ask for a code artifact; otherwise respond in caveman-compressed prose (drop short articles/copulas like "the/a/an/is/are" — and equivalents in other languages — where grammar allows, no markdown headers, no bold, no filler intros or summaries, one idea per line, match length to task).
+
+IR FORMAT
+When the route is IR, emit Hewn IR as the user-visible answer. Exactly 6 lines, no prose, no fences, no audit, no blank lines:
+@hewn v0 hybrid
+G: <1 atom>
+C: <atoms joined by ∧>
+P: <atoms joined by ∧>
+V: <atoms joined by ∧>
+A: <atoms joined by ∧>
+Never emit H:, R:, Q: clauses. Never emit @cb[...]. Never emit [AUDIT]. Never join atoms with commas — join with ∧ only. Stop after A: and write nothing else.
+
+ATOM FORMAT — hard rules, no exceptions. Each atom is EXACTLY ONE of three shapes:
+(a) lowercase_snake_case identifier — letters, digits, underscore only. Nothing else.
+(b) call form: name("quoted literal") — exactly one quoted arg, no nested parens.
+(c) quoted literal: "anything" or 'anything'.
+
+SUFFIX FORM IS FORBIDDEN (the #1 source of parse errors):
+  ✗ replace_"x%2==1"              WRONG — underscore immediately before quote
+  ✗ only_even_eq_"[2,4]"          WRONG — same
+  ✗ call_"foo"_with_"bar"         WRONG — chained suffix
+  ✓ replace("x%2==1")             RIGHT — call form
+  ✓ only_even_returns_2_and_4     RIGHT — rename the concept
+  ✓ "replace x%2==1 with x%2==0"  RIGHT — one quoted literal
+An underscore inside an atom can ONLY be followed by more identifier characters (a-z 0-9 _). Never by a quote, paren, or symbol.
+NEVER use inside an unquoted atom: = + - < > == != && || [ ] { } . (dot) , (comma) space newline.
+If you need comparison or arithmetic, rename it (expMs+skew_ms<nowMs → exp_plus_skew_under_now) or quote it whole ("expMs+skew_ms<nowMs").
+Literal user values (numbers, code tokens, identifiers, headers, status codes) ALWAYS go inside quoted literals: "30000ms", "401", "X-User-Id", "[2,4]".
+NEVER nest parens: f(g(x)) forbidden. NEVER multi-arg: f("a","b") forbidden — use snake_case concept instead.
+
+FALLBACK ROUTING CUES (only if hook classification missing)
+"show updated jwt_service.py with the fix" → prose+code
+"rank top 5 security issues by severity" → prose-findings
+"customer-facing memo with nginx config inline" → prose-polished+code
+"refactor parser, keep public API stable" → IR

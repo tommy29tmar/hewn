@@ -1,0 +1,14 @@
+{
+  "final": {
+    "asks_for_or_describes_immediate_diagnosis_steps": true,
+    "mentions_correlating_with_recent_deploy": true,
+    "suggests_rollback_or_isolate_consideration": true
+  },
+  "history": [
+    {
+      "attempt": 0,
+      "raw": "{\"asks_for_or_describes_immediate_diagnosis_steps\": true, \"mentions_correlating_with_recent_deploy\": true, \"suggests_rollback_or_isolate_consideration\": true}"
+    }
+  ],
+  "ts": "2026-04-22T02:05:04.813026+00:00"
+}

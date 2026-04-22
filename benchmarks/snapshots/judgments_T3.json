@@ -1,0 +1,1532 @@
+{
+  "baseline/body-size-rollout-plan_r1": {
+    "arm": "baseline",
+    "prompt_id": "body-size-rollout-plan",
+    "run_index": 1,
+    "literals_present": {
+      "POST /v1/media/upload-meta": false,
+      "512KB": false
+    },
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 668,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "code_change_in_body_size_guard_or_route_specific_override": false,
+      "config_change_in_rate_limits_or_route_config_file": true,
+      "tests_added_for_size_limit_at_412_or_413_or_correct_status": false,
+      "observability_metric_or_alert_for_413_increase": false,
+      "rollout_via_canary_or_blue_green_per_handbook": false,
+      "rollback_plan_via_argo_or_per_region_revert": false,
+      "communication_to_affected_route_users_or_partners": false
+    },
+    "concepts_count_present": 1,
+    "concepts_count_total": 7
+  },
+  "baseline/body-size-rollout-plan_r2": {
+    "arm": "baseline",
+    "prompt_id": "body-size-rollout-plan",
+    "run_index": 2,
+    "literals_present": {
+      "POST /v1/media/upload-meta": false,
+      "512KB": false
+    },
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 659,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "code_change_in_body_size_guard_or_route_specific_override": false,
+      "config_change_in_rate_limits_or_route_config_file": true,
+      "tests_added_for_size_limit_at_412_or_413_or_correct_status": false,
+      "observability_metric_or_alert_for_413_increase": false,
+      "rollout_via_canary_or_blue_green_per_handbook": false,
+      "rollback_plan_via_argo_or_per_region_revert": false,
+      "communication_to_affected_route_users_or_partners": false
+    },
+    "concepts_count_present": 1,
+    "concepts_count_total": 7
+  },
+  "baseline/body-size-rollout-plan_r3": {
+    "arm": "baseline",
+    "prompt_id": "body-size-rollout-plan",
+    "run_index": 3,
+    "literals_present": {
+      "POST /v1/media/upload-meta": false,
+      "512KB": false
+    },
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 1,
+        "words": 633,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.16
+      }
+    },
+    "concepts": {
+      "code_change_in_body_size_guard_or_route_specific_override": false,
+      "config_change_in_rate_limits_or_route_config_file": true,
+      "tests_added_for_size_limit_at_412_or_413_or_correct_status": false,
+      "observability_metric_or_alert_for_413_increase": false,
+      "rollout_via_canary_or_blue_green_per_handbook": false,
+      "rollback_plan_via_argo_or_per_region_revert": false,
+      "communication_to_affected_route_users_or_partners": false
+    },
+    "concepts_count_present": 1,
+    "concepts_count_total": 7
+  },
+  "baseline/rate-limit-xff-review_r1": {
+    "arm": "baseline",
+    "prompt_id": "rate-limit-xff-review",
+    "run_index": 1,
+    "literals_present": {
+      "X-Forwarded-For": false,
+      "Redis": false
+    },
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 1,
+        "leading_article_count": 1,
+        "words": 23,
+        "filler_per_100w": 4.35,
+        "leading_article_per_100w": 4.35
+      }
+    },
+    "concepts": {
+      "identifies_xff_spoof_risk": false,
+      "names_redis_unbounded_key_risk_no_expire": false,
+      "suggests_using_validated_or_socket_ip_not_raw_xff": false,
+      "suggests_atomic_incr_plus_expire": false,
+      "preserves_literal_X_Forwarded_For": false,
+      "preserves_literal_Redis": false
+    },
+    "concepts_count_present": 0,
+    "concepts_count_total": 6
+  },
+  "baseline/rate-limit-xff-review_r2": {
+    "arm": "baseline",
+    "prompt_id": "rate-limit-xff-review",
+    "run_index": 2,
+    "literals_present": {
+      "X-Forwarded-For": false,
+      "Redis": false
+    },
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 1,
+        "words": 37,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 2.7
+      }
+    },
+    "concepts": {
+      "identifies_xff_spoof_risk": false,
+      "names_redis_unbounded_key_risk_no_expire": false,
+      "suggests_using_validated_or_socket_ip_not_raw_xff": false,
+      "suggests_atomic_incr_plus_expire": false,
+      "preserves_literal_X_Forwarded_For": false,
+      "preserves_literal_Redis": false
+    },
+    "concepts_count_present": 0,
+    "concepts_count_total": 6
+  },
+  "baseline/rate-limit-xff-review_r3": {
+    "arm": "baseline",
+    "prompt_id": "rate-limit-xff-review",
+    "run_index": 3,
+    "literals_present": {
+      "X-Forwarded-For": false,
+      "Redis": false
+    },
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 1,
+        "words": 46,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 2.17
+      }
+    },
+    "concepts": {
+      "identifies_xff_spoof_risk": false,
+      "names_redis_unbounded_key_risk_no_expire": false,
+      "suggests_using_validated_or_socket_ip_not_raw_xff": false,
+      "suggests_atomic_incr_plus_expire": false,
+      "preserves_literal_X_Forwarded_For": false,
+      "preserves_literal_Redis": false
+    },
+    "concepts_count_present": 0,
+    "concepts_count_total": 6
+  },
+  "baseline/transfer-handler-review_r1": {
+    "arm": "baseline",
+    "prompt_id": "transfer-handler-review",
+    "run_index": 1,
+    "literals_present": {},
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 160,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "flags_trusting_x_user_id_header_from_client": false,
+      "flags_no_authorization_check_user_belongs_to_org": false,
+      "flags_no_input_validation_amount_or_account_ids": false,
+      "flags_no_authentication_or_jwt_verification_visible": false,
+      "flags_no_idempotency_key_for_money_movement": false,
+      "preserves_literal_X_User_Id_or_X_Internal_User_Id": false
+    },
+    "concepts_count_present": 0,
+    "concepts_count_total": 6
+  },
+  "baseline/transfer-handler-review_r2": {
+    "arm": "baseline",
+    "prompt_id": "transfer-handler-review",
+    "run_index": 2,
+    "literals_present": {},
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 130,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "flags_trusting_x_user_id_header_from_client": false,
+      "flags_no_authorization_check_user_belongs_to_org": false,
+      "flags_no_input_validation_amount_or_account_ids": false,
+      "flags_no_authentication_or_jwt_verification_visible": false,
+      "flags_no_idempotency_key_for_money_movement": false,
+      "preserves_literal_X_User_Id_or_X_Internal_User_Id": false
+    },
+    "concepts_count_present": 0,
+    "concepts_count_total": 6
+  },
+  "baseline/transfer-handler-review_r3": {
+    "arm": "baseline",
+    "prompt_id": "transfer-handler-review",
+    "run_index": 3,
+    "literals_present": {},
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 239,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "flags_trusting_x_user_id_header_from_client": false,
+      "flags_no_authorization_check_user_belongs_to_org": false,
+      "flags_no_input_validation_amount_or_account_ids": false,
+      "flags_no_authentication_or_jwt_verification_visible": false,
+      "flags_no_idempotency_key_for_money_movement": false,
+      "preserves_literal_X_User_Id_or_X_Internal_User_Id": false
+    },
+    "concepts_count_present": 0,
+    "concepts_count_total": 6
+  },
+  "caveman_full/body-size-rollout-plan_r1": {
+    "arm": "caveman_full",
+    "prompt_id": "body-size-rollout-plan",
+    "run_index": 1,
+    "literals_present": {
+      "POST /v1/media/upload-meta": false,
+      "512KB": false
+    },
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 467,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "code_change_in_body_size_guard_or_route_specific_override": false,
+      "config_change_in_rate_limits_or_route_config_file": true,
+      "tests_added_for_size_limit_at_412_or_413_or_correct_status": false,
+      "observability_metric_or_alert_for_413_increase": false,
+      "rollout_via_canary_or_blue_green_per_handbook": false,
+      "rollback_plan_via_argo_or_per_region_revert": false,
+      "communication_to_affected_route_users_or_partners": false
+    },
+    "concepts_count_present": 1,
+    "concepts_count_total": 7
+  },
+  "caveman_full/body-size-rollout-plan_r2": {
+    "arm": "caveman_full",
+    "prompt_id": "body-size-rollout-plan",
+    "run_index": 2,
+    "literals_present": {
+      "POST /v1/media/upload-meta": false,
+      "512KB": false
+    },
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 1,
+        "leading_article_count": 0,
+        "words": 362,
+        "filler_per_100w": 0.28,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "code_change_in_body_size_guard_or_route_specific_override": false,
+      "config_change_in_rate_limits_or_route_config_file": true,
+      "tests_added_for_size_limit_at_412_or_413_or_correct_status": false,
+      "observability_metric_or_alert_for_413_increase": false,
+      "rollout_via_canary_or_blue_green_per_handbook": false,
+      "rollback_plan_via_argo_or_per_region_revert": false,
+      "communication_to_affected_route_users_or_partners": false
+    },
+    "concepts_count_present": 1,
+    "concepts_count_total": 7
+  },
+  "caveman_full/body-size-rollout-plan_r3": {
+    "arm": "caveman_full",
+    "prompt_id": "body-size-rollout-plan",
+    "run_index": 3,
+    "literals_present": {
+      "POST /v1/media/upload-meta": false,
+      "512KB": false
+    },
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 455,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "code_change_in_body_size_guard_or_route_specific_override": false,
+      "config_change_in_rate_limits_or_route_config_file": true,
+      "tests_added_for_size_limit_at_412_or_413_or_correct_status": false,
+      "observability_metric_or_alert_for_413_increase": false,
+      "rollout_via_canary_or_blue_green_per_handbook": false,
+      "rollback_plan_via_argo_or_per_region_revert": false,
+      "communication_to_affected_route_users_or_partners": false
+    },
+    "concepts_count_present": 1,
+    "concepts_count_total": 7
+  },
+  "caveman_full/rate-limit-xff-review_r1": {
+    "arm": "caveman_full",
+    "prompt_id": "rate-limit-xff-review",
+    "run_index": 1,
+    "literals_present": {
+      "X-Forwarded-For": false,
+      "Redis": false
+    },
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 11,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "identifies_xff_spoof_risk": false,
+      "names_redis_unbounded_key_risk_no_expire": false,
+      "suggests_using_validated_or_socket_ip_not_raw_xff": false,
+      "suggests_atomic_incr_plus_expire": false,
+      "preserves_literal_X_Forwarded_For": false,
+      "preserves_literal_Redis": false
+    },
+    "concepts_count_present": 0,
+    "concepts_count_total": 6
+  },
+  "caveman_full/rate-limit-xff-review_r2": {
+    "arm": "caveman_full",
+    "prompt_id": "rate-limit-xff-review",
+    "run_index": 2,
+    "literals_present": {
+      "X-Forwarded-For": false,
+      "Redis": false
+    },
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 8,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "identifies_xff_spoof_risk": false,
+      "names_redis_unbounded_key_risk_no_expire": false,
+      "suggests_using_validated_or_socket_ip_not_raw_xff": false,
+      "suggests_atomic_incr_plus_expire": false,
+      "preserves_literal_X_Forwarded_For": false,
+      "preserves_literal_Redis": false
+    },
+    "concepts_count_present": 0,
+    "concepts_count_total": 6
+  },
+  "caveman_full/rate-limit-xff-review_r3": {
+    "arm": "caveman_full",
+    "prompt_id": "rate-limit-xff-review",
+    "run_index": 3,
+    "literals_present": {
+      "X-Forwarded-For": false,
+      "Redis": false
+    },
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 4,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "identifies_xff_spoof_risk": false,
+      "names_redis_unbounded_key_risk_no_expire": false,
+      "suggests_using_validated_or_socket_ip_not_raw_xff": false,
+      "suggests_atomic_incr_plus_expire": false,
+      "preserves_literal_X_Forwarded_For": false,
+      "preserves_literal_Redis": false
+    },
+    "concepts_count_present": 0,
+    "concepts_count_total": 6
+  },
+  "caveman_full/transfer-handler-review_r1": {
+    "arm": "caveman_full",
+    "prompt_id": "transfer-handler-review",
+    "run_index": 1,
+    "literals_present": {},
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 137,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "flags_trusting_x_user_id_header_from_client": false,
+      "flags_no_authorization_check_user_belongs_to_org": false,
+      "flags_no_input_validation_amount_or_account_ids": false,
+      "flags_no_authentication_or_jwt_verification_visible": false,
+      "flags_no_idempotency_key_for_money_movement": false,
+      "preserves_literal_X_User_Id_or_X_Internal_User_Id": false
+    },
+    "concepts_count_present": 0,
+    "concepts_count_total": 6
+  },
+  "caveman_full/transfer-handler-review_r2": {
+    "arm": "caveman_full",
+    "prompt_id": "transfer-handler-review",
+    "run_index": 2,
+    "literals_present": {},
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 51,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "flags_trusting_x_user_id_header_from_client": false,
+      "flags_no_authorization_check_user_belongs_to_org": false,
+      "flags_no_input_validation_amount_or_account_ids": false,
+      "flags_no_authentication_or_jwt_verification_visible": false,
+      "flags_no_idempotency_key_for_money_movement": false,
+      "preserves_literal_X_User_Id_or_X_Internal_User_Id": false
+    },
+    "concepts_count_present": 0,
+    "concepts_count_total": 6
+  },
+  "caveman_full/transfer-handler-review_r3": {
+    "arm": "caveman_full",
+    "prompt_id": "transfer-handler-review",
+    "run_index": 3,
+    "literals_present": {},
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 126,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "flags_trusting_x_user_id_header_from_client": false,
+      "flags_no_authorization_check_user_belongs_to_org": false,
+      "flags_no_input_validation_amount_or_account_ids": false,
+      "flags_no_authentication_or_jwt_verification_visible": false,
+      "flags_no_idempotency_key_for_money_movement": false,
+      "preserves_literal_X_User_Id_or_X_Internal_User_Id": false
+    },
+    "concepts_count_present": 0,
+    "concepts_count_total": 6
+  },
+  "caveman_full_plus_ultra_directive/body-size-rollout-plan_r1": {
+    "arm": "caveman_full_plus_ultra_directive",
+    "prompt_id": "body-size-rollout-plan",
+    "run_index": 1,
+    "literals_present": {
+      "POST /v1/media/upload-meta": false,
+      "512KB": false
+    },
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 544,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "code_change_in_body_size_guard_or_route_specific_override": false,
+      "config_change_in_rate_limits_or_route_config_file": true,
+      "tests_added_for_size_limit_at_412_or_413_or_correct_status": false,
+      "observability_metric_or_alert_for_413_increase": false,
+      "rollout_via_canary_or_blue_green_per_handbook": false,
+      "rollback_plan_via_argo_or_per_region_revert": false,
+      "communication_to_affected_route_users_or_partners": false
+    },
+    "concepts_count_present": 1,
+    "concepts_count_total": 7
+  },
+  "caveman_full_plus_ultra_directive/body-size-rollout-plan_r2": {
+    "arm": "caveman_full_plus_ultra_directive",
+    "prompt_id": "body-size-rollout-plan",
+    "run_index": 2,
+    "literals_present": {
+      "POST /v1/media/upload-meta": false,
+      "512KB": false
+    },
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 441,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "code_change_in_body_size_guard_or_route_specific_override": false,
+      "config_change_in_rate_limits_or_route_config_file": true,
+      "tests_added_for_size_limit_at_412_or_413_or_correct_status": false,
+      "observability_metric_or_alert_for_413_increase": false,
+      "rollout_via_canary_or_blue_green_per_handbook": false,
+      "rollback_plan_via_argo_or_per_region_revert": false,
+      "communication_to_affected_route_users_or_partners": false
+    },
+    "concepts_count_present": 1,
+    "concepts_count_total": 7
+  },
+  "caveman_full_plus_ultra_directive/body-size-rollout-plan_r3": {
+    "arm": "caveman_full_plus_ultra_directive",
+    "prompt_id": "body-size-rollout-plan",
+    "run_index": 3,
+    "literals_present": {
+      "POST /v1/media/upload-meta": false,
+      "512KB": false
+    },
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 1,
+        "leading_article_count": 0,
+        "words": 539,
+        "filler_per_100w": 0.19,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "code_change_in_body_size_guard_or_route_specific_override": false,
+      "config_change_in_rate_limits_or_route_config_file": true,
+      "tests_added_for_size_limit_at_412_or_413_or_correct_status": false,
+      "observability_metric_or_alert_for_413_increase": false,
+      "rollout_via_canary_or_blue_green_per_handbook": false,
+      "rollback_plan_via_argo_or_per_region_revert": false,
+      "communication_to_affected_route_users_or_partners": false
+    },
+    "concepts_count_present": 1,
+    "concepts_count_total": 7
+  },
+  "caveman_full_plus_ultra_directive/rate-limit-xff-review_r1": {
+    "arm": "caveman_full_plus_ultra_directive",
+    "prompt_id": "rate-limit-xff-review",
+    "run_index": 1,
+    "literals_present": {
+      "X-Forwarded-For": false,
+      "Redis": false
+    },
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 5,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "identifies_xff_spoof_risk": false,
+      "names_redis_unbounded_key_risk_no_expire": false,
+      "suggests_using_validated_or_socket_ip_not_raw_xff": false,
+      "suggests_atomic_incr_plus_expire": false,
+      "preserves_literal_X_Forwarded_For": false,
+      "preserves_literal_Redis": false
+    },
+    "concepts_count_present": 0,
+    "concepts_count_total": 6
+  },
+  "caveman_full_plus_ultra_directive/rate-limit-xff-review_r2": {
+    "arm": "caveman_full_plus_ultra_directive",
+    "prompt_id": "rate-limit-xff-review",
+    "run_index": 2,
+    "literals_present": {
+      "X-Forwarded-For": false,
+      "Redis": false
+    },
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 6,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "identifies_xff_spoof_risk": false,
+      "names_redis_unbounded_key_risk_no_expire": false,
+      "suggests_using_validated_or_socket_ip_not_raw_xff": false,
+      "suggests_atomic_incr_plus_expire": false,
+      "preserves_literal_X_Forwarded_For": false,
+      "preserves_literal_Redis": false
+    },
+    "concepts_count_present": 0,
+    "concepts_count_total": 6
+  },
+  "caveman_full_plus_ultra_directive/rate-limit-xff-review_r3": {
+    "arm": "caveman_full_plus_ultra_directive",
+    "prompt_id": "rate-limit-xff-review",
+    "run_index": 3,
+    "literals_present": {
+      "X-Forwarded-For": false,
+      "Redis": false
+    },
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 5,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "identifies_xff_spoof_risk": false,
+      "names_redis_unbounded_key_risk_no_expire": false,
+      "suggests_using_validated_or_socket_ip_not_raw_xff": false,
+      "suggests_atomic_incr_plus_expire": false,
+      "preserves_literal_X_Forwarded_For": false,
+      "preserves_literal_Redis": false
+    },
+    "concepts_count_present": 0,
+    "concepts_count_total": 6
+  },
+  "caveman_full_plus_ultra_directive/transfer-handler-review_r1": {
+    "arm": "caveman_full_plus_ultra_directive",
+    "prompt_id": "transfer-handler-review",
+    "run_index": 1,
+    "literals_present": {},
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 96,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "flags_trusting_x_user_id_header_from_client": false,
+      "flags_no_authorization_check_user_belongs_to_org": false,
+      "flags_no_input_validation_amount_or_account_ids": false,
+      "flags_no_authentication_or_jwt_verification_visible": false,
+      "flags_no_idempotency_key_for_money_movement": false,
+      "preserves_literal_X_User_Id_or_X_Internal_User_Id": false
+    },
+    "concepts_count_present": 0,
+    "concepts_count_total": 6
+  },
+  "caveman_full_plus_ultra_directive/transfer-handler-review_r2": {
+    "arm": "caveman_full_plus_ultra_directive",
+    "prompt_id": "transfer-handler-review",
+    "run_index": 2,
+    "literals_present": {},
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 123,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "flags_trusting_x_user_id_header_from_client": false,
+      "flags_no_authorization_check_user_belongs_to_org": false,
+      "flags_no_input_validation_amount_or_account_ids": false,
+      "flags_no_authentication_or_jwt_verification_visible": false,
+      "flags_no_idempotency_key_for_money_movement": false,
+      "preserves_literal_X_User_Id_or_X_Internal_User_Id": false
+    },
+    "concepts_count_present": 0,
+    "concepts_count_total": 6
+  },
+  "caveman_full_plus_ultra_directive/transfer-handler-review_r3": {
+    "arm": "caveman_full_plus_ultra_directive",
+    "prompt_id": "transfer-handler-review",
+    "run_index": 3,
+    "literals_present": {},
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 164,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "flags_trusting_x_user_id_header_from_client": false,
+      "flags_no_authorization_check_user_belongs_to_org": false,
+      "flags_no_input_validation_amount_or_account_ids": false,
+      "flags_no_authentication_or_jwt_verification_visible": false,
+      "flags_no_idempotency_key_for_money_movement": false,
+      "preserves_literal_X_User_Id_or_X_Internal_User_Id": false
+    },
+    "concepts_count_present": 0,
+    "concepts_count_total": 6
+  },
+  "hewn_full/body-size-rollout-plan_r1": {
+    "arm": "hewn_full",
+    "prompt_id": "body-size-rollout-plan",
+    "run_index": 1,
+    "literals_present": {
+      "POST /v1/media/upload-meta": false,
+      "512KB": false
+    },
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 536,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "code_change_in_body_size_guard_or_route_specific_override": false,
+      "config_change_in_rate_limits_or_route_config_file": true,
+      "tests_added_for_size_limit_at_412_or_413_or_correct_status": false,
+      "observability_metric_or_alert_for_413_increase": false,
+      "rollout_via_canary_or_blue_green_per_handbook": false,
+      "rollback_plan_via_argo_or_per_region_revert": false,
+      "communication_to_affected_route_users_or_partners": false
+    },
+    "concepts_count_present": 1,
+    "concepts_count_total": 7
+  },
+  "hewn_full/body-size-rollout-plan_r2": {
+    "arm": "hewn_full",
+    "prompt_id": "body-size-rollout-plan",
+    "run_index": 2,
+    "literals_present": {
+      "POST /v1/media/upload-meta": false,
+      "512KB": false
+    },
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 697,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "code_change_in_body_size_guard_or_route_specific_override": false,
+      "config_change_in_rate_limits_or_route_config_file": true,
+      "tests_added_for_size_limit_at_412_or_413_or_correct_status": false,
+      "observability_metric_or_alert_for_413_increase": false,
+      "rollout_via_canary_or_blue_green_per_handbook": false,
+      "rollback_plan_via_argo_or_per_region_revert": false,
+      "communication_to_affected_route_users_or_partners": false
+    },
+    "concepts_count_present": 1,
+    "concepts_count_total": 7
+  },
+  "hewn_full/body-size-rollout-plan_r3": {
+    "arm": "hewn_full",
+    "prompt_id": "body-size-rollout-plan",
+    "run_index": 3,
+    "literals_present": {
+      "POST /v1/media/upload-meta": false,
+      "512KB": false
+    },
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 1,
+        "leading_article_count": 0,
+        "words": 485,
+        "filler_per_100w": 0.21,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "code_change_in_body_size_guard_or_route_specific_override": false,
+      "config_change_in_rate_limits_or_route_config_file": true,
+      "tests_added_for_size_limit_at_412_or_413_or_correct_status": false,
+      "observability_metric_or_alert_for_413_increase": false,
+      "rollout_via_canary_or_blue_green_per_handbook": false,
+      "rollback_plan_via_argo_or_per_region_revert": false,
+      "communication_to_affected_route_users_or_partners": false
+    },
+    "concepts_count_present": 1,
+    "concepts_count_total": 7
+  },
+  "hewn_full/rate-limit-xff-review_r1": {
+    "arm": "hewn_full",
+    "prompt_id": "rate-limit-xff-review",
+    "run_index": 1,
+    "literals_present": {
+      "X-Forwarded-For": false,
+      "Redis": true
+    },
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 612,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "identifies_xff_spoof_risk": true,
+      "names_redis_unbounded_key_risk_no_expire": false,
+      "suggests_using_validated_or_socket_ip_not_raw_xff": true,
+      "suggests_atomic_incr_plus_expire": false,
+      "preserves_literal_X_Forwarded_For": true,
+      "preserves_literal_Redis": true
+    },
+    "concepts_count_present": 4,
+    "concepts_count_total": 6
+  },
+  "hewn_full/rate-limit-xff-review_r2": {
+    "arm": "hewn_full",
+    "prompt_id": "rate-limit-xff-review",
+    "run_index": 2,
+    "literals_present": {
+      "X-Forwarded-For": true,
+      "Redis": true
+    },
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 1,
+        "leading_article_count": 0,
+        "words": 708,
+        "filler_per_100w": 0.14,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "identifies_xff_spoof_risk": true,
+      "names_redis_unbounded_key_risk_no_expire": true,
+      "suggests_using_validated_or_socket_ip_not_raw_xff": true,
+      "suggests_atomic_incr_plus_expire": true,
+      "preserves_literal_X_Forwarded_For": true,
+      "preserves_literal_Redis": true
+    },
+    "concepts_count_present": 6,
+    "concepts_count_total": 6
+  },
+  "hewn_full/rate-limit-xff-review_r3": {
+    "arm": "hewn_full",
+    "prompt_id": "rate-limit-xff-review",
+    "run_index": 3,
+    "literals_present": {
+      "X-Forwarded-For": true,
+      "Redis": true
+    },
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 686,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "identifies_xff_spoof_risk": false,
+      "names_redis_unbounded_key_risk_no_expire": false,
+      "suggests_using_validated_or_socket_ip_not_raw_xff": false,
+      "suggests_atomic_incr_plus_expire": false,
+      "preserves_literal_X_Forwarded_For": true,
+      "preserves_literal_Redis": true
+    },
+    "concepts_count_present": 2,
+    "concepts_count_total": 6
+  },
+  "hewn_full/transfer-handler-review_r1": {
+    "arm": "hewn_full",
+    "prompt_id": "transfer-handler-review",
+    "run_index": 1,
+    "literals_present": {},
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 1,
+        "leading_article_count": 0,
+        "words": 338,
+        "filler_per_100w": 0.3,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "flags_trusting_x_user_id_header_from_client": false,
+      "flags_no_authorization_check_user_belongs_to_org": false,
+      "flags_no_input_validation_amount_or_account_ids": false,
+      "flags_no_authentication_or_jwt_verification_visible": false,
+      "flags_no_idempotency_key_for_money_movement": false,
+      "preserves_literal_X_User_Id_or_X_Internal_User_Id": false
+    },
+    "concepts_count_present": 0,
+    "concepts_count_total": 6
+  },
+  "hewn_full/transfer-handler-review_r2": {
+    "arm": "hewn_full",
+    "prompt_id": "transfer-handler-review",
+    "run_index": 2,
+    "literals_present": {},
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 360,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "flags_trusting_x_user_id_header_from_client": false,
+      "flags_no_authorization_check_user_belongs_to_org": false,
+      "flags_no_input_validation_amount_or_account_ids": false,
+      "flags_no_authentication_or_jwt_verification_visible": false,
+      "flags_no_idempotency_key_for_money_movement": false,
+      "preserves_literal_X_User_Id_or_X_Internal_User_Id": false
+    },
+    "concepts_count_present": 0,
+    "concepts_count_total": 6
+  },
+  "hewn_full/transfer-handler-review_r3": {
+    "arm": "hewn_full",
+    "prompt_id": "transfer-handler-review",
+    "run_index": 3,
+    "literals_present": {},
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 405,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "flags_trusting_x_user_id_header_from_client": false,
+      "flags_no_authorization_check_user_belongs_to_org": false,
+      "flags_no_input_validation_amount_or_account_ids": false,
+      "flags_no_authentication_or_jwt_verification_visible": false,
+      "flags_no_idempotency_key_for_money_movement": false,
+      "preserves_literal_X_User_Id_or_X_Internal_User_Id": false
+    },
+    "concepts_count_present": 0,
+    "concepts_count_total": 6
+  },
+  "hewn_prompt_only/body-size-rollout-plan_r1": {
+    "arm": "hewn_prompt_only",
+    "prompt_id": "body-size-rollout-plan",
+    "run_index": 1,
+    "literals_present": {
+      "POST /v1/media/upload-meta": false,
+      "512KB": false
+    },
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 667,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "code_change_in_body_size_guard_or_route_specific_override": false,
+      "config_change_in_rate_limits_or_route_config_file": true,
+      "tests_added_for_size_limit_at_412_or_413_or_correct_status": false,
+      "observability_metric_or_alert_for_413_increase": false,
+      "rollout_via_canary_or_blue_green_per_handbook": false,
+      "rollback_plan_via_argo_or_per_region_revert": false,
+      "communication_to_affected_route_users_or_partners": false
+    },
+    "concepts_count_present": 1,
+    "concepts_count_total": 7
+  },
+  "hewn_prompt_only/body-size-rollout-plan_r2": {
+    "arm": "hewn_prompt_only",
+    "prompt_id": "body-size-rollout-plan",
+    "run_index": 2,
+    "literals_present": {
+      "POST /v1/media/upload-meta": false,
+      "512KB": false
+    },
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 948,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "code_change_in_body_size_guard_or_route_specific_override": false,
+      "config_change_in_rate_limits_or_route_config_file": true,
+      "tests_added_for_size_limit_at_412_or_413_or_correct_status": false,
+      "observability_metric_or_alert_for_413_increase": false,
+      "rollout_via_canary_or_blue_green_per_handbook": false,
+      "rollback_plan_via_argo_or_per_region_revert": false,
+      "communication_to_affected_route_users_or_partners": false
+    },
+    "concepts_count_present": 1,
+    "concepts_count_total": 7
+  },
+  "hewn_prompt_only/body-size-rollout-plan_r3": {
+    "arm": "hewn_prompt_only",
+    "prompt_id": "body-size-rollout-plan",
+    "run_index": 3,
+    "literals_present": {
+      "POST /v1/media/upload-meta": false,
+      "512KB": false
+    },
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 775,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "code_change_in_body_size_guard_or_route_specific_override": false,
+      "config_change_in_rate_limits_or_route_config_file": true,
+      "tests_added_for_size_limit_at_412_or_413_or_correct_status": false,
+      "observability_metric_or_alert_for_413_increase": false,
+      "rollout_via_canary_or_blue_green_per_handbook": false,
+      "rollback_plan_via_argo_or_per_region_revert": false,
+      "communication_to_affected_route_users_or_partners": false
+    },
+    "concepts_count_present": 1,
+    "concepts_count_total": 7
+  },
+  "hewn_prompt_only/rate-limit-xff-review_r1": {
+    "arm": "hewn_prompt_only",
+    "prompt_id": "rate-limit-xff-review",
+    "run_index": 1,
+    "literals_present": {
+      "X-Forwarded-For": false,
+      "Redis": false
+    },
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 1,
+        "words": 58,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 1.72
+      }
+    },
+    "concepts": {
+      "identifies_xff_spoof_risk": false,
+      "names_redis_unbounded_key_risk_no_expire": false,
+      "suggests_using_validated_or_socket_ip_not_raw_xff": false,
+      "suggests_atomic_incr_plus_expire": false,
+      "preserves_literal_X_Forwarded_For": false,
+      "preserves_literal_Redis": false
+    },
+    "concepts_count_present": 0,
+    "concepts_count_total": 6
+  },
+  "hewn_prompt_only/rate-limit-xff-review_r2": {
+    "arm": "hewn_prompt_only",
+    "prompt_id": "rate-limit-xff-review",
+    "run_index": 2,
+    "literals_present": {
+      "X-Forwarded-For": false,
+      "Redis": false
+    },
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 1,
+        "words": 41,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 2.44
+      }
+    },
+    "concepts": {
+      "identifies_xff_spoof_risk": false,
+      "names_redis_unbounded_key_risk_no_expire": false,
+      "suggests_using_validated_or_socket_ip_not_raw_xff": false,
+      "suggests_atomic_incr_plus_expire": false,
+      "preserves_literal_X_Forwarded_For": false,
+      "preserves_literal_Redis": false
+    },
+    "concepts_count_present": 0,
+    "concepts_count_total": 6
+  },
+  "hewn_prompt_only/rate-limit-xff-review_r3": {
+    "arm": "hewn_prompt_only",
+    "prompt_id": "rate-limit-xff-review",
+    "run_index": 3,
+    "literals_present": {
+      "X-Forwarded-For": false,
+      "Redis": false
+    },
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 1,
+        "words": 33,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 3.03
+      }
+    },
+    "concepts": {
+      "identifies_xff_spoof_risk": false,
+      "names_redis_unbounded_key_risk_no_expire": false,
+      "suggests_using_validated_or_socket_ip_not_raw_xff": false,
+      "suggests_atomic_incr_plus_expire": false,
+      "preserves_literal_X_Forwarded_For": false,
+      "preserves_literal_Redis": false
+    },
+    "concepts_count_present": 0,
+    "concepts_count_total": 6
+  },
+  "hewn_prompt_only/transfer-handler-review_r1": {
+    "arm": "hewn_prompt_only",
+    "prompt_id": "transfer-handler-review",
+    "run_index": 1,
+    "literals_present": {},
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 222,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "flags_trusting_x_user_id_header_from_client": false,
+      "flags_no_authorization_check_user_belongs_to_org": false,
+      "flags_no_input_validation_amount_or_account_ids": false,
+      "flags_no_authentication_or_jwt_verification_visible": false,
+      "flags_no_idempotency_key_for_money_movement": false,
+      "preserves_literal_X_User_Id_or_X_Internal_User_Id": false
+    },
+    "concepts_count_present": 0,
+    "concepts_count_total": 6
+  },
+  "hewn_prompt_only/transfer-handler-review_r2": {
+    "arm": "hewn_prompt_only",
+    "prompt_id": "transfer-handler-review",
+    "run_index": 2,
+    "literals_present": {},
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 206,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "flags_trusting_x_user_id_header_from_client": false,
+      "flags_no_authorization_check_user_belongs_to_org": false,
+      "flags_no_input_validation_amount_or_account_ids": false,
+      "flags_no_authentication_or_jwt_verification_visible": false,
+      "flags_no_idempotency_key_for_money_movement": false,
+      "preserves_literal_X_User_Id_or_X_Internal_User_Id": false
+    },
+    "concepts_count_present": 0,
+    "concepts_count_total": 6
+  },
+  "hewn_prompt_only/transfer-handler-review_r3": {
+    "arm": "hewn_prompt_only",
+    "prompt_id": "transfer-handler-review",
+    "run_index": 3,
+    "literals_present": {},
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 224,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "flags_trusting_x_user_id_header_from_client": false,
+      "flags_no_authorization_check_user_belongs_to_org": false,
+      "flags_no_input_validation_amount_or_account_ids": false,
+      "flags_no_authentication_or_jwt_verification_visible": false,
+      "flags_no_idempotency_key_for_money_movement": false,
+      "preserves_literal_X_User_Id_or_X_Internal_User_Id": false
+    },
+    "concepts_count_present": 0,
+    "concepts_count_total": 6
+  },
+  "terse/body-size-rollout-plan_r1": {
+    "arm": "terse",
+    "prompt_id": "body-size-rollout-plan",
+    "run_index": 1,
+    "literals_present": {
+      "POST /v1/media/upload-meta": false,
+      "512KB": false
+    },
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 587,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "code_change_in_body_size_guard_or_route_specific_override": false,
+      "config_change_in_rate_limits_or_route_config_file": true,
+      "tests_added_for_size_limit_at_412_or_413_or_correct_status": false,
+      "observability_metric_or_alert_for_413_increase": false,
+      "rollout_via_canary_or_blue_green_per_handbook": false,
+      "rollback_plan_via_argo_or_per_region_revert": false,
+      "communication_to_affected_route_users_or_partners": false
+    },
+    "concepts_count_present": 1,
+    "concepts_count_total": 7
+  },
+  "terse/body-size-rollout-plan_r2": {
+    "arm": "terse",
+    "prompt_id": "body-size-rollout-plan",
+    "run_index": 2,
+    "literals_present": {
+      "POST /v1/media/upload-meta": false,
+      "512KB": false
+    },
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 1,
+        "leading_article_count": 0,
+        "words": 496,
+        "filler_per_100w": 0.2,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "code_change_in_body_size_guard_or_route_specific_override": false,
+      "config_change_in_rate_limits_or_route_config_file": true,
+      "tests_added_for_size_limit_at_412_or_413_or_correct_status": false,
+      "observability_metric_or_alert_for_413_increase": false,
+      "rollout_via_canary_or_blue_green_per_handbook": false,
+      "rollback_plan_via_argo_or_per_region_revert": false,
+      "communication_to_affected_route_users_or_partners": false
+    },
+    "concepts_count_present": 1,
+    "concepts_count_total": 7
+  },
+  "terse/body-size-rollout-plan_r3": {
+    "arm": "terse",
+    "prompt_id": "body-size-rollout-plan",
+    "run_index": 3,
+    "literals_present": {
+      "POST /v1/media/upload-meta": false,
+      "512KB": false
+    },
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 491,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "code_change_in_body_size_guard_or_route_specific_override": false,
+      "config_change_in_rate_limits_or_route_config_file": true,
+      "tests_added_for_size_limit_at_412_or_413_or_correct_status": false,
+      "observability_metric_or_alert_for_413_increase": false,
+      "rollout_via_canary_or_blue_green_per_handbook": false,
+      "rollback_plan_via_argo_or_per_region_revert": false,
+      "communication_to_affected_route_users_or_partners": false
+    },
+    "concepts_count_present": 1,
+    "concepts_count_total": 7
+  },
+  "terse/rate-limit-xff-review_r1": {
+    "arm": "terse",
+    "prompt_id": "rate-limit-xff-review",
+    "run_index": 1,
+    "literals_present": {
+      "X-Forwarded-For": false,
+      "Redis": false
+    },
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 15,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "identifies_xff_spoof_risk": false,
+      "names_redis_unbounded_key_risk_no_expire": false,
+      "suggests_using_validated_or_socket_ip_not_raw_xff": false,
+      "suggests_atomic_incr_plus_expire": false,
+      "preserves_literal_X_Forwarded_For": false,
+      "preserves_literal_Redis": false
+    },
+    "concepts_count_present": 0,
+    "concepts_count_total": 6
+  },
+  "terse/rate-limit-xff-review_r2": {
+    "arm": "terse",
+    "prompt_id": "rate-limit-xff-review",
+    "run_index": 2,
+    "literals_present": {
+      "X-Forwarded-For": false,
+      "Redis": false
+    },
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 17,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "identifies_xff_spoof_risk": false,
+      "names_redis_unbounded_key_risk_no_expire": false,
+      "suggests_using_validated_or_socket_ip_not_raw_xff": false,
+      "suggests_atomic_incr_plus_expire": false,
+      "preserves_literal_X_Forwarded_For": false,
+      "preserves_literal_Redis": false
+    },
+    "concepts_count_present": 0,
+    "concepts_count_total": 6
+  },
+  "terse/rate-limit-xff-review_r3": {
+    "arm": "terse",
+    "prompt_id": "rate-limit-xff-review",
+    "run_index": 3,
+    "literals_present": {
+      "X-Forwarded-For": false,
+      "Redis": false
+    },
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 21,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "identifies_xff_spoof_risk": false,
+      "names_redis_unbounded_key_risk_no_expire": false,
+      "suggests_using_validated_or_socket_ip_not_raw_xff": false,
+      "suggests_atomic_incr_plus_expire": false,
+      "preserves_literal_X_Forwarded_For": false,
+      "preserves_literal_Redis": false
+    },
+    "concepts_count_present": 0,
+    "concepts_count_total": 6
+  },
+  "terse/transfer-handler-review_r1": {
+    "arm": "terse",
+    "prompt_id": "transfer-handler-review",
+    "run_index": 1,
+    "literals_present": {},
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 183,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "flags_trusting_x_user_id_header_from_client": false,
+      "flags_no_authorization_check_user_belongs_to_org": false,
+      "flags_no_input_validation_amount_or_account_ids": false,
+      "flags_no_authentication_or_jwt_verification_visible": false,
+      "flags_no_idempotency_key_for_money_movement": false,
+      "preserves_literal_X_User_Id_or_X_Internal_User_Id": false
+    },
+    "concepts_count_present": 0,
+    "concepts_count_total": 6
+  },
+  "terse/transfer-handler-review_r2": {
+    "arm": "terse",
+    "prompt_id": "transfer-handler-review",
+    "run_index": 2,
+    "literals_present": {},
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 162,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "flags_trusting_x_user_id_header_from_client": false,
+      "flags_no_authorization_check_user_belongs_to_org": false,
+      "flags_no_input_validation_amount_or_account_ids": false,
+      "flags_no_authentication_or_jwt_verification_visible": false,
+      "flags_no_idempotency_key_for_money_movement": false,
+      "preserves_literal_X_User_Id_or_X_Internal_User_Id": false
+    },
+    "concepts_count_present": 0,
+    "concepts_count_total": 6
+  },
+  "terse/transfer-handler-review_r3": {
+    "arm": "terse",
+    "prompt_id": "transfer-handler-review",
+    "run_index": 3,
+    "literals_present": {},
+    "format": {
+      "hewn_ir_valid": false,
+      "caveman_style": {
+        "filler_count": 0,
+        "leading_article_count": 0,
+        "words": 138,
+        "filler_per_100w": 0.0,
+        "leading_article_per_100w": 0.0
+      }
+    },
+    "concepts": {
+      "flags_trusting_x_user_id_header_from_client": false,
+      "flags_no_authorization_check_user_belongs_to_org": false,
+      "flags_no_input_validation_amount_or_account_ids": false,
+      "flags_no_authentication_or_jwt_verification_visible": false,
+      "flags_no_idempotency_key_for_money_movement": false,
+      "preserves_literal_X_User_Id_or_X_Internal_User_Id": false
+    },
+    "concepts_count_present": 0,
+    "concepts_count_total": 6
+  }
+}

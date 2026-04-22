@@ -1,0 +1,105 @@
+{
+  "track": "T1b",
+  "arm": "baseline",
+  "prompt_id": "tcp-vs-udp",
+  "run_index": 2,
+  "arm_order_index": 2,
+  "arm_order_full": [
+    "caveman_full",
+    "caveman_full_plus_ultra_directive",
+    "baseline",
+    "hewn_prompt_only",
+    "terse",
+    "hewn_full"
+  ],
+  "digest_hex": "f12180983420f4a94b3592c84a1684c904419bcb9246fe5b531e2451e68c7956",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-21T23:54:13.737936+00:00",
+  "output_tokens_tiktoken": 122,
+  "output_tokens_anthropic": 230,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 28523,
+  "total_input_tokens": 28529,
+  "cache_state": "warm",
+  "wallclock_ms": 9886.07806400978,
+  "duration_ms": 4344,
+  "duration_api_ms": 5168,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "6df77c7c-7302-467d-94cd-e0f627ce57f7",
+  "total_cost_usd": 0.0204585,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "**TCP** (Transmission Control Protocol):\n- Connection-oriented (handshake before data)\n- Reliable — guarantees delivery, order, and no duplicates\n- Flow control + congestion control\n- Higher overhead, slower\n- Use: HTTP(S), SSH, email, file transfer\n\n**UDP** (User Datagram Protocol):\n- Connectionless — just sends packets\n- No delivery, ordering, or duplicate guarantees\n- Minimal overhead, fast\n- Use: DNS, VoIP, video streaming, gaming, QUIC\n\nRule of thumb: TCP when correctness matters, UDP when latency matters and you can tolerate loss.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 4344,
+    "duration_api_ms": 5168,
+    "num_turns": 1,
+    "result": "**TCP** (Transmission Control Protocol):\n- Connection-oriented (handshake before data)\n- Reliable — guarantees delivery, order, and no duplicates\n- Flow control + congestion control\n- Higher overhead, slower\n- Use: HTTP(S), SSH, email, file transfer\n\n**UDP** (User Datagram Protocol):\n- Connectionless — just sends packets\n- No delivery, ordering, or duplicate guarantees\n- Minimal overhead, fast\n- Use: DNS, VoIP, video streaming, gaming, QUIC\n\nRule of thumb: TCP when correctness matters, UDP when latency matters and you can tolerate loss.",
+    "stop_reason": "end_turn",
+    "session_id": "6df77c7c-7302-467d-94cd-e0f627ce57f7",
+    "total_cost_usd": 0.0204585,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 28523,
+      "output_tokens": 230,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 0,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 230,
+          "cache_read_input_tokens": 28523,
+          "cache_creation_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 347,
+        "outputTokens": 14,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.00041699999999999994,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 230,
+        "cacheReadInputTokens": 28523,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.0200415,
+        "contextWindow": 200000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "32e2eee0-e6da-4ed2-86e4-e69e957fc45b"
+  }
+}

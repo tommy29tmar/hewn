@@ -1,0 +1,8 @@
+# vibe_en.txt — 5 non-technical / vibe-coding prompts (T2)
+# Crafted for Hewn benchmark to represent how non-tech users actually phrase requests.
+# One prompt per non-comment line.
+my website is slow can you make it faster
+the login button doesnt work people are complaining help
+i want to add a search bar to my app where do i start
+my app crashed and i dont know why this is the error: TypeError: Cannot read properties of undefined (reading 'map')
+how do i make my code not look like spaghetti i keep losing track of what does what

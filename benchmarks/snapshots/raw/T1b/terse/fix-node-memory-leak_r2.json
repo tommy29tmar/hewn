@@ -1,0 +1,105 @@
+{
+  "track": "T1b",
+  "arm": "terse",
+  "prompt_id": "fix-node-memory-leak",
+  "run_index": 2,
+  "arm_order_index": 5,
+  "arm_order_full": [
+    "caveman_full",
+    "hewn_full",
+    "hewn_prompt_only",
+    "caveman_full_plus_ultra_directive",
+    "baseline",
+    "terse"
+  ],
+  "digest_hex": "7d425b5467d57aae182ad8e9c94b0501514aa39b8cfa8d933e096ea5f14e6554",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-21T23:56:10.645832+00:00",
+  "output_tokens_tiktoken": 369,
+  "output_tokens_anthropic": 599,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 6561,
+  "cache_read_input_tokens": 13741,
+  "total_input_tokens": 20308,
+  "cache_state": "warm",
+  "wallclock_ms": 17240.1219230087,
+  "duration_ms": 12230,
+  "duration_api_ms": 13106,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "86441f4a-be42-46dc-b82d-fe28e8f71e06",
+  "total_cost_usd": 0.06331675,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "Common causes and fixes:\n\n**1. Find the leak**\n- Run with `node --inspect` and use Chrome DevTools → Memory → take heap snapshots over time, compare retained size.\n- Or `node --heapsnapshot-signal=SIGUSR2` then `kill -USR2 <pid>` to dump on demand.\n- `clinic doctor` / `clinic heapprofiler` for quick diagnosis.\n\n**2. Usual culprits**\n- **Unbounded caches / Maps** — use `LRUCache` or `WeakMap`/`WeakRef`.\n- **Event listeners not removed** — call `removeListener`, or use `once`. Watch for `MaxListenersExceededWarning`.\n- **Closures holding large objects** — null out references after use; avoid capturing big scopes in long-lived callbacks.\n- **Timers (`setInterval`) keeping refs alive** — clear them; use `.unref()` if appropriate.\n- **Global state growth** — arrays/objects on `global` or module scope that only grow.\n- **Promises never settling** — pending promises retain their chains.\n- **Streams not consumed/closed** — always `.destroy()` on error paths.\n\n**3. Fix pattern**\n- Snapshot → sort by \"Retained Size\" → find the constructor with abnormal growth → trace Retainers path → fix the root reference.\n\n**4. Mitigations**\n- Raise heap: `--max-old-space-size=4096`.\n- Use `--expose-gc` + manual `global.gc()` only for diagnosis, not production.\n- Run with a process manager (pm2, systemd) that restarts on RSS threshold as a safety net — not a cure.\n\nIf you share the symptom (RSS grows vs heap grows, crash signature, framework), I can narrow it down.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 12230,
+    "duration_api_ms": 13106,
+    "num_turns": 1,
+    "result": "Common causes and fixes:\n\n**1. Find the leak**\n- Run with `node --inspect` and use Chrome DevTools → Memory → take heap snapshots over time, compare retained size.\n- Or `node --heapsnapshot-signal=SIGUSR2` then `kill -USR2 <pid>` to dump on demand.\n- `clinic doctor` / `clinic heapprofiler` for quick diagnosis.\n\n**2. Usual culprits**\n- **Unbounded caches / Maps** — use `LRUCache` or `WeakMap`/`WeakRef`.\n- **Event listeners not removed** — call `removeListener`, or use `once`. Watch for `MaxListenersExceededWarning`.\n- **Closures holding large objects** — null out references after use; avoid capturing big scopes in long-lived callbacks.\n- **Timers (`setInterval`) keeping refs alive** — clear them; use `.unref()` if appropriate.\n- **Global state growth** — arrays/objects on `global` or module scope that only grow.\n- **Promises never settling** — pending promises retain their chains.\n- **Streams not consumed/closed** — always `.destroy()` on error paths.\n\n**3. Fix pattern**\n- Snapshot → sort by \"Retained Size\" → find the constructor with abnormal growth → trace Retainers path → fix the root reference.\n\n**4. Mitigations**\n- Raise heap: `--max-old-space-size=4096`.\n- Use `--expose-gc` + manual `global.gc()` only for diagnosis, not production.\n- Run with a process manager (pm2, systemd) that restarts on RSS threshold as a safety net — not a cure.\n\nIf you share the symptom (RSS grows vs heap grows, crash signature, framework), I can narrow it down.",
+    "stop_reason": "end_turn",
+    "session_id": "86441f4a-be42-46dc-b82d-fe28e8f71e06",
+    "total_cost_usd": 0.06331675,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 6561,
+      "cache_read_input_tokens": 13741,
+      "output_tokens": 599,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 6561,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 599,
+          "cache_read_input_tokens": 13741,
+          "cache_creation_input_tokens": 6561,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 6561
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 355,
+        "outputTokens": 16,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.000435,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 599,
+        "cacheReadInputTokens": 13741,
+        "cacheCreationInputTokens": 6561,
+        "webSearchRequests": 0,
+        "costUSD": 0.06288175,
+        "contextWindow": 200000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "a0b8aae0-16bf-453c-a3b2-8a894188a097"
+  }
+}

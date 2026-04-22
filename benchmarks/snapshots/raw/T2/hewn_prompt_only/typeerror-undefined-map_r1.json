@@ -1,0 +1,105 @@
+{
+  "track": "T2",
+  "arm": "hewn_prompt_only",
+  "prompt_id": "typeerror-undefined-map",
+  "run_index": 1,
+  "arm_order_index": 4,
+  "arm_order_full": [
+    "caveman_full_plus_ultra_directive",
+    "hewn_full",
+    "terse",
+    "caveman_full",
+    "hewn_prompt_only",
+    "baseline"
+  ],
+  "digest_hex": "5b724573e058540f92f1cf0a27ec02ab3ed51a957569e6eb2a6e04a27a1062f9",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T00:17:00.351697+00:00",
+  "output_tokens_tiktoken": 144,
+  "output_tokens_anthropic": 292,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 15843,
+  "cache_read_input_tokens": 16796,
+  "total_input_tokens": 32645,
+  "cache_state": "warm",
+  "wallclock_ms": 11527.276879001874,
+  "duration_ms": 7166,
+  "duration_api_ms": 8793,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "96377b0a-8bbc-40f7-a1e4-baaa1fbc6248",
+  "total_cost_usd": 0.11517575000000001,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "That error means you're calling `.map()` on something that's `undefined` — usually an array prop/state that hasn't loaded yet, or an API response shaped differently than expected.\n\nI don't have enough to point to the line. A few questions:\n\n1. Which file/app? This repo (SIGIL/Hewn) is a CLI wrapper — doesn't obviously match a `.map()` crash. Is the app in a different directory?\n2. Do you have a stack trace? The first frame after the error usually names the file and line.\n3. When does it crash — on load, after an action, after a fetch?\n\nIf you paste the stack trace (or the file path + line), I'll find the root cause.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 7166,
+    "duration_api_ms": 8793,
+    "num_turns": 1,
+    "result": "That error means you're calling `.map()` on something that's `undefined` — usually an array prop/state that hasn't loaded yet, or an API response shaped differently than expected.\n\nI don't have enough to point to the line. A few questions:\n\n1. Which file/app? This repo (SIGIL/Hewn) is a CLI wrapper — doesn't obviously match a `.map()` crash. Is the app in a different directory?\n2. Do you have a stack trace? The first frame after the error usually names the file and line.\n3. When does it crash — on load, after an action, after a fetch?\n\nIf you paste the stack trace (or the file path + line), I'll find the root cause.",
+    "stop_reason": "end_turn",
+    "session_id": "96377b0a-8bbc-40f7-a1e4-baaa1fbc6248",
+    "total_cost_usd": 0.11517575000000001,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 15843,
+      "cache_read_input_tokens": 16796,
+      "output_tokens": 292,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 15843,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 292,
+          "cache_read_input_tokens": 16796,
+          "cache_creation_input_tokens": 15843,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 15843
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 364,
+        "outputTokens": 13,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.000429,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 292,
+        "cacheReadInputTokens": 16796,
+        "cacheCreationInputTokens": 15843,
+        "webSearchRequests": 0,
+        "costUSD": 0.11474675000000001,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "7c6572b2-507a-4a22-b1a6-db1ae8e27e18"
+  }
+}

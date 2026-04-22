@@ -1,0 +1,17 @@
+{
+  "final": {
+    "warm_professional_tone_present": false,
+    "approximately_three_paragraphs": false,
+    "explains_why_we_built_it_blank_page_problem": false,
+    "explains_how_it_works_one_click_outline_from_title_and_context": false,
+    "mentions_what_is_next_custom_voice_training": false,
+    "addressed_to_existing_users_not_new_audience": false
+  },
+  "history": [
+    {
+      "attempt": 0,
+      "raw": "{\"warm_professional_tone_present\": false, \"approximately_three_paragraphs\": false, \"explains_why_we_built_it_blank_page_problem\": false, \"explains_how_it_works_one_click_outline_from_title_and_context\": false, \"mentions_what_is_next_custom_voice_training\": false, \"addressed_to_existing_users_not_new_audience\": false}"
+    }
+  ],
+  "ts": "2026-04-22T01:59:46.479091+00:00"
+}

@@ -1,0 +1,13 @@
+{
+  "final": {
+    "proposes_jest_test_shape": true,
+    "test_asserts_items_field_present_in_buildCart_output": true
+  },
+  "history": [
+    {
+      "attempt": 0,
+      "raw": "{\"proposes_jest_test_shape\": true, \"test_asserts_items_field_present_in_buildCart_output\": true}"
+    }
+  ],
+  "ts": "2026-04-22T02:05:15.050051+00:00"
+}

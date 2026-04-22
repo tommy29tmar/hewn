@@ -1,0 +1,15 @@
+{
+  "final": {
+    "browser_enforces_same_origin_policy": false,
+    "server_must_send_access_control_allow_origin_header": true,
+    "preflight_options_request_for_non_simple_methods": true,
+    "credentials_require_explicit_allow_credentials": true
+  },
+  "history": [
+    {
+      "attempt": 0,
+      "raw": "{\"browser_enforces_same_origin_policy\":false,\"server_must_send_access_control_allow_origin_header\":true,\"preflight_options_request_for_non_simple_methods\":true,\"credentials_require_explicit_allow_credentials\":true}"
+    }
+  ],
+  "ts": "2026-04-21T23:44:13.728533+00:00"
+}

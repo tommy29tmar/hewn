@@ -1,0 +1,105 @@
+{
+  "track": "T1b",
+  "arm": "hewn_full",
+  "prompt_id": "tcp-vs-udp",
+  "run_index": 2,
+  "arm_order_index": 5,
+  "arm_order_full": [
+    "caveman_full",
+    "caveman_full_plus_ultra_directive",
+    "baseline",
+    "hewn_prompt_only",
+    "terse",
+    "hewn_full"
+  ],
+  "digest_hex": "f12180983420f4a94b3592c84a1684c904419bcb9246fe5b531e2451e68c7956",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-21T23:54:42.884994+00:00",
+  "output_tokens_tiktoken": 98,
+  "output_tokens_anthropic": 173,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 13201,
+  "cache_read_input_tokens": 16805,
+  "total_input_tokens": 30012,
+  "cache_state": "warm",
+  "wallclock_ms": 12080.975684017176,
+  "duration_ms": 6055,
+  "duration_api_ms": 7204,
+  "wrapper_overhead_ms": 4876.975684017176,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "2d9283dc-b1e6-4042-9e09-dccd3d9c0988",
+  "total_cost_usd": 0.09568075,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "TCP connection-oriented, handshake first, reliable delivery, ordered bytes, retransmits lost packets, flow/congestion control. Heavier.\nUDP fire-and-forget, no handshake, no guarantees on delivery or order, no retransmit. Lighter, lower latency.\nUse TCP when you need correctness: web, SSH, file transfer, DB.\nUse UDP when you need speed and can tolerate loss: DNS, video/voice, games, QUIC (builds its own reliability on top).",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 6055,
+    "duration_api_ms": 7204,
+    "num_turns": 1,
+    "result": "TCP connection-oriented, handshake first, reliable delivery, ordered bytes, retransmits lost packets, flow/congestion control. Heavier.\nUDP fire-and-forget, no handshake, no guarantees on delivery or order, no retransmit. Lighter, lower latency.\nUse TCP when you need correctness: web, SSH, file transfer, DB.\nUse UDP when you need speed and can tolerate loss: DNS, video/voice, games, QUIC (builds its own reliability on top).",
+    "stop_reason": "end_turn",
+    "session_id": "2d9283dc-b1e6-4042-9e09-dccd3d9c0988",
+    "total_cost_usd": 0.09568075,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 13201,
+      "cache_read_input_tokens": 16805,
+      "output_tokens": 173,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 13201,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 173,
+          "cache_read_input_tokens": 16805,
+          "cache_creation_input_tokens": 13201,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 13201
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 347,
+        "outputTokens": 14,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.00041699999999999994,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 173,
+        "cacheReadInputTokens": 16805,
+        "cacheCreationInputTokens": 13201,
+        "webSearchRequests": 0,
+        "costUSD": 0.09526375,
+        "contextWindow": 200000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "afbac0bc-3993-486e-95f7-35562139e60a"
+  }
+}

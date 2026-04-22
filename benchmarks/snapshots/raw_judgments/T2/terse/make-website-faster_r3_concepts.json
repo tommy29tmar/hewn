@@ -1,0 +1,15 @@
+{
+  "final": {
+    "asks_for_or_assumes_what_kind_of_slow": true,
+    "mentions_measurement_first_e_g_lighthouse_or_devtools": true,
+    "suggests_concrete_levers_e_g_image_optimization_or_bundle_size_or_caching": false,
+    "asks_clarifying_question_or_offers_a_starting_point": true
+  },
+  "history": [
+    {
+      "attempt": 0,
+      "raw": "{\"asks_for_or_assumes_what_kind_of_slow\": true, \"mentions_measurement_first_e_g_lighthouse_or_devtools\": true, \"suggests_concrete_levers_e_g_image_optimization_or_bundle_size_or_caching\": false, \"asks_clarifying_question_or_offers_a_starting_point\": true}"
+    }
+  ],
+  "ts": "2026-04-22T01:48:58.655048+00:00"
+}

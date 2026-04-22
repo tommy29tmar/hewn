@@ -1,0 +1,105 @@
+{
+  "track": "T1b",
+  "arm": "baseline",
+  "prompt_id": "git-rebase-vs-merge",
+  "run_index": 1,
+  "arm_order_index": 4,
+  "arm_order_full": [
+    "hewn_prompt_only",
+    "terse",
+    "hewn_full",
+    "caveman_full",
+    "baseline",
+    "caveman_full_plus_ultra_directive"
+  ],
+  "digest_hex": "0db86ef9039b5089d2e722b87250da0e6caef801039c526c02d2b461a0eb6acc",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-21T23:49:56.427710+00:00",
+  "output_tokens_tiktoken": 134,
+  "output_tokens_anthropic": 218,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 28522,
+  "total_input_tokens": 28528,
+  "cache_state": "warm",
+  "wallclock_ms": 11484.279152995441,
+  "duration_ms": 6332,
+  "duration_api_ms": 7367,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "f7f0865c-080d-46b4-ba0f-bb0f9e8cb015",
+  "total_cost_usd": 0.020163999999999998,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "**Merge** preserves history as-is: it creates a new commit that ties two branch tips together, keeping both parent lineages visible.\n\n**Rebase** rewrites history: it takes your commits and replays them on top of another branch, producing new commits with new SHAs and a linear history.\n\nKey tradeoffs:\n- Merge is non-destructive and safe for shared branches. History shows exactly what happened, including the branch topology.\n- Rebase gives a cleaner, linear log but rewrites commits. Never rebase commits already pushed to a shared branch — it breaks other people's clones.\n\nRule of thumb: rebase local work before pushing, merge public branches.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 6332,
+    "duration_api_ms": 7367,
+    "num_turns": 1,
+    "result": "**Merge** preserves history as-is: it creates a new commit that ties two branch tips together, keeping both parent lineages visible.\n\n**Rebase** rewrites history: it takes your commits and replays them on top of another branch, producing new commits with new SHAs and a linear history.\n\nKey tradeoffs:\n- Merge is non-destructive and safe for shared branches. History shows exactly what happened, including the branch topology.\n- Rebase gives a cleaner, linear log but rewrites commits. Never rebase commits already pushed to a shared branch — it breaks other people's clones.\n\nRule of thumb: rebase local work before pushing, merge public branches.",
+    "stop_reason": "end_turn",
+    "session_id": "f7f0865c-080d-46b4-ba0f-bb0f9e8cb015",
+    "total_cost_usd": 0.020163999999999998,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 28522,
+      "output_tokens": 218,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 0,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 218,
+          "cache_read_input_tokens": 28522,
+          "cache_creation_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 348,
+        "outputTokens": 15,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.000423,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 218,
+        "cacheReadInputTokens": 28522,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.019740999999999998,
+        "contextWindow": 200000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "10f3ad37-71a6-41b8-b3d6-10708978c791"
+  }
+}

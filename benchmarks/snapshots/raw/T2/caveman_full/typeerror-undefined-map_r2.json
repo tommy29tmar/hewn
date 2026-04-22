@@ -1,0 +1,105 @@
+{
+  "track": "T2",
+  "arm": "caveman_full",
+  "prompt_id": "typeerror-undefined-map",
+  "run_index": 2,
+  "arm_order_index": 4,
+  "arm_order_full": [
+    "terse",
+    "caveman_full_plus_ultra_directive",
+    "hewn_prompt_only",
+    "hewn_full",
+    "caveman_full",
+    "baseline"
+  ],
+  "digest_hex": "14bddb51c1c5866706ff2e594385e235efce8e94983a8266c26c2b19b478fcc1",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T00:22:22.316858+00:00",
+  "output_tokens_tiktoken": 62,
+  "output_tokens_anthropic": 99,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 10516,
+  "cache_read_input_tokens": 15186,
+  "total_input_tokens": 25708,
+  "cache_state": "warm",
+  "wallclock_ms": 9555.392340989783,
+  "duration_ms": 3553,
+  "duration_api_ms": 4403,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "267334b8-d4d5-48ad-ad60-91bf2389b180",
+  "total_cost_usd": 0.07625199999999999,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "Bug: call `.map` on undef var.\n\nCause: data not yet loaded / API return undef / wrong prop name.\n\nFix:\n```js\n{(items ?? []).map(...)}\n```\nor guard:\n```js\n{items && items.map(...)}\n```\n\nShare code line → exact fix.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 3553,
+    "duration_api_ms": 4403,
+    "num_turns": 1,
+    "result": "Bug: call `.map` on undef var.\n\nCause: data not yet loaded / API return undef / wrong prop name.\n\nFix:\n```js\n{(items ?? []).map(...)}\n```\nor guard:\n```js\n{items && items.map(...)}\n```\n\nShare code line → exact fix.",
+    "stop_reason": "end_turn",
+    "session_id": "267334b8-d4d5-48ad-ad60-91bf2389b180",
+    "total_cost_usd": 0.07625199999999999,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 10516,
+      "cache_read_input_tokens": 15186,
+      "output_tokens": 99,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 10516,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 99,
+          "cache_read_input_tokens": 15186,
+          "cache_creation_input_tokens": 10516,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 10516
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 364,
+        "outputTokens": 13,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.000429,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 99,
+        "cacheReadInputTokens": 15186,
+        "cacheCreationInputTokens": 10516,
+        "webSearchRequests": 0,
+        "costUSD": 0.07582299999999999,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "1bc19bcf-e997-4b85-85d5-ab15f22a1ffb"
+  }
+}

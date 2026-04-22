@@ -1,0 +1,105 @@
+{
+  "track": "T1b",
+  "arm": "hewn_full",
+  "prompt_id": "fix-node-memory-leak",
+  "run_index": 1,
+  "arm_order_index": 3,
+  "arm_order_full": [
+    "caveman_full_plus_ultra_directive",
+    "caveman_full",
+    "terse",
+    "hewn_full",
+    "baseline",
+    "hewn_prompt_only"
+  ],
+  "digest_hex": "edf96b08b6bf832e7f6141e2b1e51b0b7773d43c771414ddf25ddb62f5d6bccd",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-21T23:43:27.569513+00:00",
+  "output_tokens_tiktoken": 199,
+  "output_tokens_anthropic": 374,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 13154,
+  "cache_read_input_tokens": 16805,
+  "total_input_tokens": 29965,
+  "cache_state": "warm",
+  "wallclock_ms": 14816.941807977855,
+  "duration_ms": 8475,
+  "duration_api_ms": 11388,
+  "wrapper_overhead_ms": 3428.941807977855,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "1f3d808c-a095-4e2b-a51b-b2ca250b355e",
+  "total_cost_usd": 0.10043,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "@hewn v0 hybrid\nG: fix_memory_leak_in_long_running_nodejs_process\nC: process_rss_grows_unbounded ∧ gc_not_reclaiming ∧ suspected_retained_references\nP: run_with(\"--inspect\") ∧ capture_heap_snapshots_at_intervals ∧ diff_snapshots_in_chrome_devtools ∧ identify_retainer_paths ∧ check_common_culprits(\"listeners,timers,closures,caches,globals\") ∧ remove_unbounded_growth ∧ bound_caches_with_lru ∧ call_off_on_emitters ∧ clear_intervals_on_shutdown\nV: rss_stable_over_time ∧ heap_used_plateaus_after_gc ∧ snapshot_diff_shows_no_growing_retainers ∧ load_test_sustains_without_oom\nA: use(\"clinic.js_or_heapdump\") ∧ set(\"--max-old-space-size\") ∧ enable(\"trace_warnings_for_maxlisteners\") ∧ monitor(\"process.memoryUsage\")",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 8475,
+    "duration_api_ms": 11388,
+    "num_turns": 1,
+    "result": "@hewn v0 hybrid\nG: fix_memory_leak_in_long_running_nodejs_process\nC: process_rss_grows_unbounded ∧ gc_not_reclaiming ∧ suspected_retained_references\nP: run_with(\"--inspect\") ∧ capture_heap_snapshots_at_intervals ∧ diff_snapshots_in_chrome_devtools ∧ identify_retainer_paths ∧ check_common_culprits(\"listeners,timers,closures,caches,globals\") ∧ remove_unbounded_growth ∧ bound_caches_with_lru ∧ call_off_on_emitters ∧ clear_intervals_on_shutdown\nV: rss_stable_over_time ∧ heap_used_plateaus_after_gc ∧ snapshot_diff_shows_no_growing_retainers ∧ load_test_sustains_without_oom\nA: use(\"clinic.js_or_heapdump\") ∧ set(\"--max-old-space-size\") ∧ enable(\"trace_warnings_for_maxlisteners\") ∧ monitor(\"process.memoryUsage\")",
+    "stop_reason": "end_turn",
+    "session_id": "1f3d808c-a095-4e2b-a51b-b2ca250b355e",
+    "total_cost_usd": 0.10043,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 13154,
+      "cache_read_input_tokens": 16805,
+      "output_tokens": 374,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 13154,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 374,
+          "cache_read_input_tokens": 16805,
+          "cache_creation_input_tokens": 13154,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 13154
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 355,
+        "outputTokens": 16,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.000435,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 374,
+        "cacheReadInputTokens": 16805,
+        "cacheCreationInputTokens": 13154,
+        "webSearchRequests": 0,
+        "costUSD": 0.099995,
+        "contextWindow": 200000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "edb4118a-2e2b-48a0-a687-455d1d929e21"
+  }
+}

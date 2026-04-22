@@ -1,0 +1,105 @@
+{
+  "track": "T1b",
+  "arm": "baseline",
+  "prompt_id": "react-rerender-parent",
+  "run_index": 1,
+  "arm_order_index": 5,
+  "arm_order_full": [
+    "hewn_full",
+    "hewn_prompt_only",
+    "terse",
+    "caveman_full_plus_ultra_directive",
+    "caveman_full",
+    "baseline"
+  ],
+  "digest_hex": "99b7ab7ba17a8ba246c01cb3b86810b0fa1d28957b03d5604a74b257ab3da763",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-21T23:39:51.119646+00:00",
+  "output_tokens_tiktoken": 213,
+  "output_tokens_anthropic": 315,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 28526,
+  "total_input_tokens": 28532,
+  "cache_state": "warm",
+  "wallclock_ms": 12900.267768010963,
+  "duration_ms": 7312,
+  "duration_api_ms": 8093,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "7e9aa658-4120-4e03-b09a-2885be051c87",
+  "total_cost_usd": 0.022595,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "React re-renders a child whenever the parent re-renders, unless the child is memoized. Common causes:\n\n1. **No memoization** — wrap the child in `React.memo(Child)` so it only re-renders when its props actually change.\n2. **New object/array/function props each render** — even with `memo`, `<Child onClick={() => ...} data={{x:1}} />` creates fresh references every parent render, defeating the shallow prop comparison. Stabilize with `useCallback` / `useMemo`.\n3. **Context consumers** — any component reading a changed context value re-renders regardless of `memo`.\n4. **Non-primitive children prop** — `<Child>{<Stuff/>}</Child>` passes a new element each render.\n\nQuick check: add `console.log` in the child, then inspect which prop changed reference with React DevTools' \"Highlight updates\" or the Profiler's \"Why did this render?\".\n\nIf you share the component, I can point at the specific culprit.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 7312,
+    "duration_api_ms": 8093,
+    "num_turns": 1,
+    "result": "React re-renders a child whenever the parent re-renders, unless the child is memoized. Common causes:\n\n1. **No memoization** — wrap the child in `React.memo(Child)` so it only re-renders when its props actually change.\n2. **New object/array/function props each render** — even with `memo`, `<Child onClick={() => ...} data={{x:1}} />` creates fresh references every parent render, defeating the shallow prop comparison. Stabilize with `useCallback` / `useMemo`.\n3. **Context consumers** — any component reading a changed context value re-renders regardless of `memo`.\n4. **Non-primitive children prop** — `<Child>{<Stuff/>}</Child>` passes a new element each render.\n\nQuick check: add `console.log` in the child, then inspect which prop changed reference with React DevTools' \"Highlight updates\" or the Profiler's \"Why did this render?\".\n\nIf you share the component, I can point at the specific culprit.",
+    "stop_reason": "end_turn",
+    "session_id": "7e9aa658-4120-4e03-b09a-2885be051c87",
+    "total_cost_usd": 0.022595,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 28526,
+      "output_tokens": 315,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 0,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 315,
+          "cache_read_input_tokens": 28526,
+          "cache_creation_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 352,
+        "outputTokens": 15,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.00042699999999999997,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 315,
+        "cacheReadInputTokens": 28526,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.022168,
+        "contextWindow": 200000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "0bc7f492-b992-4f87-a485-4e43323947a4"
+  }
+}

@@ -1,0 +1,106 @@
+{
+  "track": "T4",
+  "arm": "caveman_full",
+  "sequence_id": "debug-prod-incident",
+  "run_index": 2,
+  "turn": 1,
+  "arm_order_index": 0,
+  "arm_order_full": [
+    "caveman_full",
+    "terse",
+    "hewn_full",
+    "hewn_prompt_only",
+    "baseline"
+  ],
+  "digest_hex": "522341918a5177210ef438fa55486ec5b622aaa576febbd731536d82595ec31b",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T01:16:12.268851+00:00",
+  "session_id_used_for_resume": null,
+  "output_tokens_tiktoken": 219,
+  "output_tokens_anthropic": 345,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 10561,
+  "cache_read_input_tokens": 15186,
+  "total_input_tokens": 25753,
+  "cache_state": "warm",
+  "wallclock_ms": 11082.47743800166,
+  "duration_ms": 7784,
+  "duration_api_ms": 9239,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "33b3e2c0-fd51-423c-b5fa-d7d3d26030e2",
+  "total_cost_usd": 0.08274024999999999,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "Rollback first. Then diagnose.\n\n**Immediate:**\n1. Revert deploy 14:18 → restore service.\n2. Confirm 500s stop.\n\n**Diagnose (post-rollback):**\n1. `git diff <prev>..<14:18>` on `createOrder` handler + `/api/orders` route.\n2. Check req body parsing — `req.body` undefined = missing body-parser/JSON middleware, or `Content-Type` mismatch.\n3. Check destructure: `const { items } = req.body` with no guard. New code likely assume `req.body` always defined.\n4. Check schema/validation layer change (zod/joi/express-validator wired differently).\n5. Check client — new frontend send different payload shape? Field rename `items` → `lineItems`?\n6. Repro locally: POST with empty body + malformed body + valid body.\n\n**Fix:** guard `req.body?.items ?? []` + 400 on missing. Add test. Redeploy.\n\nLikely culprit: deploy change req parsing or destructure assumption.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 7784,
+    "duration_api_ms": 9239,
+    "num_turns": 1,
+    "result": "Rollback first. Then diagnose.\n\n**Immediate:**\n1. Revert deploy 14:18 → restore service.\n2. Confirm 500s stop.\n\n**Diagnose (post-rollback):**\n1. `git diff <prev>..<14:18>` on `createOrder` handler + `/api/orders` route.\n2. Check req body parsing — `req.body` undefined = missing body-parser/JSON middleware, or `Content-Type` mismatch.\n3. Check destructure: `const { items } = req.body` with no guard. New code likely assume `req.body` always defined.\n4. Check schema/validation layer change (zod/joi/express-validator wired differently).\n5. Check client — new frontend send different payload shape? Field rename `items` → `lineItems`?\n6. Repro locally: POST with empty body + malformed body + valid body.\n\n**Fix:** guard `req.body?.items ?? []` + 400 on missing. Add test. Redeploy.\n\nLikely culprit: deploy change req parsing or destructure assumption.",
+    "stop_reason": "end_turn",
+    "session_id": "33b3e2c0-fd51-423c-b5fa-d7d3d26030e2",
+    "total_cost_usd": 0.08274024999999999,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 10561,
+      "cache_read_input_tokens": 15186,
+      "output_tokens": 345,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 10561,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 345,
+          "cache_read_input_tokens": 15186,
+          "cache_creation_input_tokens": 10561,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 10561
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 396,
+        "outputTokens": 18,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.000486,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 345,
+        "cacheReadInputTokens": 15186,
+        "cacheCreationInputTokens": 10561,
+        "webSearchRequests": 0,
+        "costUSD": 0.08225424999999999,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "4fe9dbcf-bacf-4aff-a286-83fb942d852f"
+  }
+}

@@ -1,0 +1,105 @@
+{
+  "track": "T2",
+  "arm": "caveman_full",
+  "prompt_id": "make-website-faster",
+  "run_index": 3,
+  "arm_order_index": 0,
+  "arm_order_full": [
+    "caveman_full",
+    "hewn_full",
+    "caveman_full_plus_ultra_directive",
+    "hewn_prompt_only",
+    "terse",
+    "baseline"
+  ],
+  "digest_hex": "4f33654c9cc752fbb7c1e4089ae3ded5b955b191171e746f3041ab1e443aad4e",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T00:24:28.758990+00:00",
+  "output_tokens_tiktoken": 30,
+  "output_tokens_anthropic": 47,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 10488,
+  "cache_read_input_tokens": 15186,
+  "total_input_tokens": 25680,
+  "cache_state": "warm",
+  "wallclock_ms": 8153.050411026925,
+  "duration_ms": 3332,
+  "duration_api_ms": 4274,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "6a26a1ee-6326-4846-b5be-f2e6ce879caa",
+  "total_cost_usd": 0.07475500000000002,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "Need more info. Which site? URL? Stack (React/Next/static)? What slow — load, nav, specific page? Got repo path?",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 3332,
+    "duration_api_ms": 4274,
+    "num_turns": 1,
+    "result": "Need more info. Which site? URL? Stack (React/Next/static)? What slow — load, nav, specific page? Got repo path?",
+    "stop_reason": "end_turn",
+    "session_id": "6a26a1ee-6326-4846-b5be-f2e6ce879caa",
+    "total_cost_usd": 0.07475500000000002,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 10488,
+      "cache_read_input_tokens": 15186,
+      "output_tokens": 47,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 10488,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 47,
+          "cache_read_input_tokens": 15186,
+          "cache_creation_input_tokens": 10488,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 10488
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 347,
+        "outputTokens": 12,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.00040699999999999997,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 47,
+        "cacheReadInputTokens": 15186,
+        "cacheCreationInputTokens": 10488,
+        "webSearchRequests": 0,
+        "costUSD": 0.07434800000000001,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "be80d7c8-4acb-4515-8109-fbad6b7e3000"
+  }
+}

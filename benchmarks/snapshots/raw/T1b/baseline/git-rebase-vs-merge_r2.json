@@ -1,0 +1,105 @@
+{
+  "track": "T1b",
+  "arm": "baseline",
+  "prompt_id": "git-rebase-vs-merge",
+  "run_index": 2,
+  "arm_order_index": 1,
+  "arm_order_full": [
+    "terse",
+    "baseline",
+    "caveman_full_plus_ultra_directive",
+    "hewn_full",
+    "hewn_prompt_only",
+    "caveman_full"
+  ],
+  "digest_hex": "671ce9b36ae9fddc6f5df598e1ba671496437cd76d62e50562f443322938c317",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T00:01:12.477047+00:00",
+  "output_tokens_tiktoken": 117,
+  "output_tokens_anthropic": 188,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 28522,
+  "total_input_tokens": 28528,
+  "cache_state": "warm",
+  "wallclock_ms": 10614.981257996988,
+  "duration_ms": 5131,
+  "duration_api_ms": 6035,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "82a74c76-cc88-4727-b94c-fd7389e1b183",
+  "total_cost_usd": 0.019408999999999996,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "**Merge** creates a new commit that ties two branch histories together, preserving the original commits and the branching shape.\n\n**Rebase** replays your commits on top of another branch, producing new commits with new SHAs and a linear history — the original commits are discarded.\n\nTrade-offs:\n- Merge: non-destructive, keeps true history, but clutters the log with merge commits.\n- Rebase: clean linear history, but rewrites commits — never rebase branches others have pulled.\n\nRule of thumb: rebase local/private branches before sharing; merge when integrating shared branches.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 5131,
+    "duration_api_ms": 6035,
+    "num_turns": 1,
+    "result": "**Merge** creates a new commit that ties two branch histories together, preserving the original commits and the branching shape.\n\n**Rebase** replays your commits on top of another branch, producing new commits with new SHAs and a linear history — the original commits are discarded.\n\nTrade-offs:\n- Merge: non-destructive, keeps true history, but clutters the log with merge commits.\n- Rebase: clean linear history, but rewrites commits — never rebase branches others have pulled.\n\nRule of thumb: rebase local/private branches before sharing; merge when integrating shared branches.",
+    "stop_reason": "end_turn",
+    "session_id": "82a74c76-cc88-4727-b94c-fd7389e1b183",
+    "total_cost_usd": 0.019408999999999996,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 28522,
+      "output_tokens": 188,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 0,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 188,
+          "cache_read_input_tokens": 28522,
+          "cache_creation_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 348,
+        "outputTokens": 14,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.00041799999999999997,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 188,
+        "cacheReadInputTokens": 28522,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.018990999999999997,
+        "contextWindow": 200000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "7332cb9b-935a-49f7-8309-244dc45081e1"
+  }
+}

@@ -1,0 +1,105 @@
+{
+  "track": "T3",
+  "arm": "baseline",
+  "prompt_id": "transfer-handler-review",
+  "run_index": 2,
+  "arm_order_index": 5,
+  "arm_order_full": [
+    "caveman_full",
+    "caveman_full_plus_ultra_directive",
+    "hewn_prompt_only",
+    "terse",
+    "hewn_full",
+    "baseline"
+  ],
+  "digest_hex": "394d162344f9342c7b47283b28bfa130e4fb435382a1f0a8aa819239935b955a",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T00:41:44.664659+00:00",
+  "output_tokens_tiktoken": 294,
+  "output_tokens_anthropic": 479,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 23113,
+  "cache_read_input_tokens": 16796,
+  "total_input_tokens": 39915,
+  "cache_state": "warm",
+  "wallclock_ms": 12949.292668985436,
+  "duration_ms": 9135,
+  "duration_api_ms": 10514,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "ee38b4d2-93fb-47a5-ba86-b35b44653279",
+  "total_cost_usd": 0.17053825,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "**Risk:** `req.headers['x-forwarded-for']` is attacker-controlled at the public edge. Rotating XFF per request defeats per-IP limits (see 2025-09 SEV1). Also: no `EXPIRE` on the key → unbounded growth, Redis OOM (see 2025-11 SEV2). Also: no route prefix / minute bucket / region → cross-route collision and global limiting (2025-12 SEV2).\n\n**Mitigation:**\n```javascript\nconst key = `rl:${region}:${trustedClientIp(req)}:${routePrefix}:${minuteBucket}`\nconst multi = redis.multi()\nmulti.incr(key)\nmulti.expire(key, 90)\nconst [count] = await multi.exec()\n```\nUse `trustedClientIp(req)` from `src/edge/util/trustedClientIp.ts` (validates proxy chain against `config/trusted_proxies.json`). Bucket = `Math.floor(Date.now()/60000)`.\n\n**Verify:**\n- Send two requests with distinct forged `X-Forwarded-For` from the same socket → both count against the same limiter key.\n- `TTL <key>` in Redis returns a value in `[1,90]`, never `-1`.\n- Lint: `no-direct-xff-read` and `no-unbounded-redis-key` pass.\n\n**Residual risk:** shared-NAT users share a key; acceptable per current policy.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 9135,
+    "duration_api_ms": 10514,
+    "num_turns": 1,
+    "result": "**Risk:** `req.headers['x-forwarded-for']` is attacker-controlled at the public edge. Rotating XFF per request defeats per-IP limits (see 2025-09 SEV1). Also: no `EXPIRE` on the key → unbounded growth, Redis OOM (see 2025-11 SEV2). Also: no route prefix / minute bucket / region → cross-route collision and global limiting (2025-12 SEV2).\n\n**Mitigation:**\n```javascript\nconst key = `rl:${region}:${trustedClientIp(req)}:${routePrefix}:${minuteBucket}`\nconst multi = redis.multi()\nmulti.incr(key)\nmulti.expire(key, 90)\nconst [count] = await multi.exec()\n```\nUse `trustedClientIp(req)` from `src/edge/util/trustedClientIp.ts` (validates proxy chain against `config/trusted_proxies.json`). Bucket = `Math.floor(Date.now()/60000)`.\n\n**Verify:**\n- Send two requests with distinct forged `X-Forwarded-For` from the same socket → both count against the same limiter key.\n- `TTL <key>` in Redis returns a value in `[1,90]`, never `-1`.\n- Lint: `no-direct-xff-read` and `no-unbounded-redis-key` pass.\n\n**Residual risk:** shared-NAT users share a key; acceptable per current policy.",
+    "stop_reason": "end_turn",
+    "session_id": "ee38b4d2-93fb-47a5-ba86-b35b44653279",
+    "total_cost_usd": 0.17053825,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 23113,
+      "cache_read_input_tokens": 16796,
+      "output_tokens": 479,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 23113,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 479,
+          "cache_read_input_tokens": 16796,
+          "cache_creation_input_tokens": 23113,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 23113
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 5584,
+        "outputTokens": 19,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.005679,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 479,
+        "cacheReadInputTokens": 16796,
+        "cacheCreationInputTokens": 23113,
+        "webSearchRequests": 0,
+        "costUSD": 0.16485925,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "11a1309a-9701-494f-b342-8d1c54ac99e9"
+  }
+}

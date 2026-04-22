@@ -1,0 +1,105 @@
+{
+  "track": "T2",
+  "arm": "hewn_full",
+  "prompt_id": "login-button-broken",
+  "run_index": 2,
+  "arm_order_index": 4,
+  "arm_order_full": [
+    "caveman_full_plus_ultra_directive",
+    "baseline",
+    "hewn_prompt_only",
+    "terse",
+    "hewn_full",
+    "caveman_full"
+  ],
+  "digest_hex": "e1fff6cb5ce95b9c68e1704c12e3bb9788cf296894302e3a503c3240dcf37267",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T00:20:23.177876+00:00",
+  "output_tokens_tiktoken": 79,
+  "output_tokens_anthropic": 236,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 34097,
+  "total_input_tokens": 34103,
+  "cache_state": "warm",
+  "wallclock_ms": 10648.62472898676,
+  "duration_ms": 5775,
+  "duration_api_ms": 6539,
+  "wrapper_overhead_ms": 4109.624728986761,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "8cdee95f-3827-47b7-be09-2aafc0ddd4aa",
+  "total_cost_usd": 0.0233875,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "no login button in this repo\nSIGIL = Hewn, CLI wrapper for Claude Code\nno web UI, no auth, no users to complain\nsure you're in right project?\nif you meant different repo, point me at it\nor describe what \"login\" you mean here — maybe `hewn` auth to Claude API? that's just `ANTHROPIC_API_KEY` env",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 5775,
+    "duration_api_ms": 6539,
+    "num_turns": 1,
+    "result": "no login button in this repo\nSIGIL = Hewn, CLI wrapper for Claude Code\nno web UI, no auth, no users to complain\nsure you're in right project?\nif you meant different repo, point me at it\nor describe what \"login\" you mean here — maybe `hewn` auth to Claude API? that's just `ANTHROPIC_API_KEY` env",
+    "stop_reason": "end_turn",
+    "session_id": "8cdee95f-3827-47b7-be09-2aafc0ddd4aa",
+    "total_cost_usd": 0.0233875,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 34097,
+      "output_tokens": 236,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 0,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 236,
+          "cache_read_input_tokens": 34097,
+          "cache_creation_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 349,
+        "outputTokens": 12,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.000409,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 236,
+        "cacheReadInputTokens": 34097,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.0229785,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "808fd999-b352-49dd-8ca8-d36b80af43a0"
+  }
+}

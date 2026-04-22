@@ -1,0 +1,105 @@
+{
+  "track": "T1b",
+  "arm": "hewn_full",
+  "prompt_id": "tcp-vs-udp",
+  "run_index": 3,
+  "arm_order_index": 4,
+  "arm_order_full": [
+    "baseline",
+    "hewn_prompt_only",
+    "terse",
+    "caveman_full_plus_ultra_directive",
+    "hewn_full",
+    "caveman_full"
+  ],
+  "digest_hex": "8a5fe974231ca88c5efc1ce50a9c75f85d32ed1d99c9592b5ec854d1814a7202",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T00:06:11.412931+00:00",
+  "output_tokens_tiktoken": 178,
+  "output_tokens_anthropic": 318,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 17292,
+  "cache_read_input_tokens": 16805,
+  "total_input_tokens": 34103,
+  "cache_state": "warm",
+  "wallclock_ms": 11785.855241992977,
+  "duration_ms": 7830,
+  "duration_api_ms": 9247,
+  "wrapper_overhead_ms": 2538.8552419929765,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "89e7f5c2-ce48-4d8a-8289-0f4bf48a740a",
+  "total_cost_usd": 0.1248695,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "TCP connection-oriented, UDP fire-and-forget.\n\nTCP does handshake (SYN/SYN-ACK/ACK), guarantees delivery, orders packets, retransmits losses, flow control, congestion control. Stream abstraction.\n\nUDP just sends datagrams. No handshake, no ack, no ordering, no retransmit. Packet may arrive, may not, may arrive twice, may arrive out of order. You handle it.\n\nTCP for correctness: HTTP, SSH, file transfer, DB protocols.\nUDP for speed/latency tolerance of loss: DNS, video/voice, games, QUIC base, mDNS.\n\nTCP header ~20 bytes, UDP header 8 bytes. TCP has more state per connection on both ends; UDP stateless at transport layer.\n\nQUIC worth noting — runs over UDP but rebuilds TCP-like reliability in userspace with better multiplexing and 0-RTT.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 7830,
+    "duration_api_ms": 9247,
+    "num_turns": 1,
+    "result": "TCP connection-oriented, UDP fire-and-forget.\n\nTCP does handshake (SYN/SYN-ACK/ACK), guarantees delivery, orders packets, retransmits losses, flow control, congestion control. Stream abstraction.\n\nUDP just sends datagrams. No handshake, no ack, no ordering, no retransmit. Packet may arrive, may not, may arrive twice, may arrive out of order. You handle it.\n\nTCP for correctness: HTTP, SSH, file transfer, DB protocols.\nUDP for speed/latency tolerance of loss: DNS, video/voice, games, QUIC base, mDNS.\n\nTCP header ~20 bytes, UDP header 8 bytes. TCP has more state per connection on both ends; UDP stateless at transport layer.\n\nQUIC worth noting — runs over UDP but rebuilds TCP-like reliability in userspace with better multiplexing and 0-RTT.",
+    "stop_reason": "end_turn",
+    "session_id": "89e7f5c2-ce48-4d8a-8289-0f4bf48a740a",
+    "total_cost_usd": 0.1248695,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 17292,
+      "cache_read_input_tokens": 16805,
+      "output_tokens": 318,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 17292,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 318,
+          "cache_read_input_tokens": 16805,
+          "cache_creation_input_tokens": 17292,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 17292
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 347,
+        "outputTokens": 13,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.000412,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 318,
+        "cacheReadInputTokens": 16805,
+        "cacheCreationInputTokens": 17292,
+        "webSearchRequests": 0,
+        "costUSD": 0.1244575,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "c24829a6-f2f7-444f-8c8c-2c70a8fb0794"
+  }
+}

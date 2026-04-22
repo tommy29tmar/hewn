@@ -1,0 +1,106 @@
+{
+  "track": "T4",
+  "arm": "caveman_full",
+  "sequence_id": "design-feature",
+  "run_index": 2,
+  "turn": 1,
+  "arm_order_index": 1,
+  "arm_order_full": [
+    "baseline",
+    "caveman_full",
+    "hewn_prompt_only",
+    "terse",
+    "hewn_full"
+  ],
+  "digest_hex": "3191b019d37f08f3d5b68d9000f1aeb1e1a3524225f9daa893803df1e240ffd1",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T01:26:12.160026+00:00",
+  "session_id_used_for_resume": null,
+  "output_tokens_tiktoken": 413,
+  "output_tokens_anthropic": 708,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 25734,
+  "total_input_tokens": 25740,
+  "cache_state": "warm",
+  "wallclock_ms": 18864.788275997853,
+  "duration_ms": 15615,
+  "duration_api_ms": 16788,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "8e132c32-35f8-4ed4-abb5-c4a26e5c9a79",
+  "total_cost_usd": 0.031053,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "Main decisions:\n\n1. **Code format** — random opaque string vs human-readable. Length, charset, collision check. Single-use vs reusable balance.\n\n2. **Storage model** — `gift_cards` table: code (hashed?), initial_balance, current_balance, currency, status, expiry. Hash code at rest = secure, but no lookup by partial.\n\n3. **Currency + FX** — card currency must match cart? Or convert at redemption rate? Lock rate?\n\n4. **Atomicity** — race condition: two checkouts redeem same card. Need row lock or optimistic version. Decrement = transactional with order create.\n\n5. **Partial redemption flow** — apply card first, then charge card for remainder. What if card payment fails after gift card debited? Reserve vs commit pattern. Saga/compensation.\n\n6. **Refunds** — refund to gift card, original card, or split proportionally? Re-credit balance or issue new card?\n\n7. **Tax + discounts ordering** — gift card applied pre-tax or post-tax? (Usually post-tax, treated as tender not discount. Legal varies by jurisdiction.)\n\n8. **Multiple cards per order** — one or stack N? Cap?\n\n9. **Validation UX** — check balance before submit, show remainder live. Rate-limit code attempts (brute force).\n\n10. **Expiry + dormancy** — expire balance? Legal restrictions (US: CARD Act min 5yr).\n\n11. **Issuance** — how cards created: purchase flow, promo, refund. Funding source tracking for accounting (deferred revenue liability).\n\n12. **Auth** — code alone = bearer token. PIN? Tie to account?\n\n13. **Audit trail** — ledger of debits/credits per card, immutable.\n\n14. **Fraud** — velocity limits, geo checks, stolen card detection.\n\nBiggest landmines: #4 (race), #5 (partial failure), #7 (tax law), #11 (accounting = deferred revenue, not income until redeemed).",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 15615,
+    "duration_api_ms": 16788,
+    "num_turns": 1,
+    "result": "Main decisions:\n\n1. **Code format** — random opaque string vs human-readable. Length, charset, collision check. Single-use vs reusable balance.\n\n2. **Storage model** — `gift_cards` table: code (hashed?), initial_balance, current_balance, currency, status, expiry. Hash code at rest = secure, but no lookup by partial.\n\n3. **Currency + FX** — card currency must match cart? Or convert at redemption rate? Lock rate?\n\n4. **Atomicity** — race condition: two checkouts redeem same card. Need row lock or optimistic version. Decrement = transactional with order create.\n\n5. **Partial redemption flow** — apply card first, then charge card for remainder. What if card payment fails after gift card debited? Reserve vs commit pattern. Saga/compensation.\n\n6. **Refunds** — refund to gift card, original card, or split proportionally? Re-credit balance or issue new card?\n\n7. **Tax + discounts ordering** — gift card applied pre-tax or post-tax? (Usually post-tax, treated as tender not discount. Legal varies by jurisdiction.)\n\n8. **Multiple cards per order** — one or stack N? Cap?\n\n9. **Validation UX** — check balance before submit, show remainder live. Rate-limit code attempts (brute force).\n\n10. **Expiry + dormancy** — expire balance? Legal restrictions (US: CARD Act min 5yr).\n\n11. **Issuance** — how cards created: purchase flow, promo, refund. Funding source tracking for accounting (deferred revenue liability).\n\n12. **Auth** — code alone = bearer token. PIN? Tie to account?\n\n13. **Audit trail** — ledger of debits/credits per card, immutable.\n\n14. **Fraud** — velocity limits, geo checks, stolen card detection.\n\nBiggest landmines: #4 (race), #5 (partial failure), #7 (tax law), #11 (accounting = deferred revenue, not income until redeemed).",
+    "stop_reason": "end_turn",
+    "session_id": "8e132c32-35f8-4ed4-abb5-c4a26e5c9a79",
+    "total_cost_usd": 0.031053,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 25734,
+      "output_tokens": 708,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 0,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 708,
+          "cache_read_input_tokens": 25734,
+          "cache_creation_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 391,
+        "outputTokens": 13,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.000456,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 708,
+        "cacheReadInputTokens": 25734,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.030597,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "f7dd3941-3fc9-43f7-92bc-7eb76660e53f"
+  }
+}

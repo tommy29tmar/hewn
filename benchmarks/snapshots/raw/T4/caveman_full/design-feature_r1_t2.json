@@ -1,0 +1,96 @@
+{
+  "track": "T4",
+  "arm": "caveman_full",
+  "sequence_id": "design-feature",
+  "run_index": 1,
+  "turn": 2,
+  "arm_order_index": 4,
+  "arm_order_full": [
+    "hewn_full",
+    "hewn_prompt_only",
+    "terse",
+    "baseline",
+    "caveman_full"
+  ],
+  "digest_hex": "30a2f9a62df0d790c0598917c3ab42509bbadd672a0a484741ea201d2da3b44f",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T01:14:23.106750+00:00",
+  "session_id_used_for_resume": "76d6c2fd-4d09-4f39-a793-96e383321b32",
+  "output_tokens_tiktoken": 582,
+  "output_tokens_anthropic": 1067,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 967,
+  "cache_read_input_tokens": 25734,
+  "total_input_tokens": 26707,
+  "cache_state": "warm",
+  "wallclock_ms": 25377.546939998865,
+  "duration_ms": 22253,
+  "duration_api_ms": 22228,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "76d6c2fd-4d09-4f39-a793-96e383321b32",
+  "total_cost_usd": 0.04561575,
+  "model_used": "claude-opus-4-7",
+  "result": "**Mutable balance row**\nPros:\n- Matches existing wallet pattern → one mental model, shared tooling, team already knows pitfalls.\n- Read = single row lookup. Fast, trivial to index.\n- Simpler schema, simpler ORM, simpler admin UI.\n- Less storage.\n\nCons:\n- History lost unless you add a side audit log (now you have both — worst of both worlds if sloppy).\n- Reconstructing \"why is balance $7.32?\" requires joining audit log; if log drifts from row, truth ambiguous.\n- Concurrent updates need row locks / optimistic versioning. Easy to get wrong under partial-redeem + refund race.\n- Refund compensation harder to reason about — you mutate in place, no natural \"reverse this event.\"\n- Accounting reconciliation painful: finance wants immutable journal.\n\n**Event-sourced ledger** (append-only txns, balance = sum or cached projection)\nPros:\n- Immutable audit trail by construction. Regulators, finance, disputes all happy.\n- Natural fit for double-entry accounting (deferred revenue liability ↔ redemption).\n- Refunds = compensating entry, not mutation. Sagas clean.\n- Idempotency trivial: unique (card_id, idempotency_key) on insert.\n- Concurrency via insert + constraint (\"sum must stay ≥ 0\") instead of row lock. Scales better under contention.\n- Easy to replay/rebuild balance, add new projections later (e.g. per-order breakdown).\n\nCons:\n- Diverges from wallet pattern → two mental models in one codebase.\n- Read balance = sum or cached materialized view → extra machinery (trigger, cache, or `balance` column kept in sync).\n- More storage, more rows.\n- Sum-on-read gets slow without projection; projection = back to mutable row + events (hybrid).\n- Team unfamiliarity → bugs during ramp-up.\n\n**For gift cards specifically, tilt toward ledger because:**\n- Legal/accounting: gift cards are a *liability* on the balance sheet, not a user-owned wallet. Finance will ask for journal-grade history. Wallets often escape this scrutiny; gift cards don't (CARD Act, escheatment, breakage recognition).\n- Refund-to-gift-card flows are genuinely bidirectional → compensating-entry model is cleaner.\n- Dispute/chargeback path needs \"what did this card do, ever\" — ledger answers in one query.\n\n**Pragmatic middle ground**\nLedger as source of truth + cached `balance` column on the card row, updated in same txn as each event insert. Reads stay fast, audit stays clean. Rebuild job can verify `balance == SUM(events)` nightly — drift = alarm.\n\n**Recommendation:** ledger + cached balance. Deviates from wallet pattern, but gift cards have different legal/accounting requirements that justify it. Consider whether wallets should migrate later — don't block on that.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 22253,
+    "duration_api_ms": 22228,
+    "num_turns": 1,
+    "result": "**Mutable balance row**\nPros:\n- Matches existing wallet pattern → one mental model, shared tooling, team already knows pitfalls.\n- Read = single row lookup. Fast, trivial to index.\n- Simpler schema, simpler ORM, simpler admin UI.\n- Less storage.\n\nCons:\n- History lost unless you add a side audit log (now you have both — worst of both worlds if sloppy).\n- Reconstructing \"why is balance $7.32?\" requires joining audit log; if log drifts from row, truth ambiguous.\n- Concurrent updates need row locks / optimistic versioning. Easy to get wrong under partial-redeem + refund race.\n- Refund compensation harder to reason about — you mutate in place, no natural \"reverse this event.\"\n- Accounting reconciliation painful: finance wants immutable journal.\n\n**Event-sourced ledger** (append-only txns, balance = sum or cached projection)\nPros:\n- Immutable audit trail by construction. Regulators, finance, disputes all happy.\n- Natural fit for double-entry accounting (deferred revenue liability ↔ redemption).\n- Refunds = compensating entry, not mutation. Sagas clean.\n- Idempotency trivial: unique (card_id, idempotency_key) on insert.\n- Concurrency via insert + constraint (\"sum must stay ≥ 0\") instead of row lock. Scales better under contention.\n- Easy to replay/rebuild balance, add new projections later (e.g. per-order breakdown).\n\nCons:\n- Diverges from wallet pattern → two mental models in one codebase.\n- Read balance = sum or cached materialized view → extra machinery (trigger, cache, or `balance` column kept in sync).\n- More storage, more rows.\n- Sum-on-read gets slow without projection; projection = back to mutable row + events (hybrid).\n- Team unfamiliarity → bugs during ramp-up.\n\n**For gift cards specifically, tilt toward ledger because:**\n- Legal/accounting: gift cards are a *liability* on the balance sheet, not a user-owned wallet. Finance will ask for journal-grade history. Wallets often escape this scrutiny; gift cards don't (CARD Act, escheatment, breakage recognition).\n- Refund-to-gift-card flows are genuinely bidirectional → compensating-entry model is cleaner.\n- Dispute/chargeback path needs \"what did this card do, ever\" — ledger answers in one query.\n\n**Pragmatic middle ground**\nLedger as source of truth + cached `balance` column on the card row, updated in same txn as each event insert. Reads stay fast, audit stays clean. Rebuild job can verify `balance == SUM(events)` nightly — drift = alarm.\n\n**Recommendation:** ledger + cached balance. Deviates from wallet pattern, but gift cards have different legal/accounting requirements that justify it. Consider whether wallets should migrate later — don't block on that.",
+    "stop_reason": "end_turn",
+    "session_id": "76d6c2fd-4d09-4f39-a793-96e383321b32",
+    "total_cost_usd": 0.04561575,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 967,
+      "cache_read_input_tokens": 25734,
+      "output_tokens": 1067,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 967,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 1067,
+          "cache_read_input_tokens": 25734,
+          "cache_creation_input_tokens": 967,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 967
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 1067,
+        "cacheReadInputTokens": 25734,
+        "cacheCreationInputTokens": 967,
+        "webSearchRequests": 0,
+        "costUSD": 0.04561575,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "0261705d-4412-4a24-b148-938328ba66d3"
+  }
+}

@@ -1,0 +1,96 @@
+{
+  "track": "T4",
+  "arm": "terse",
+  "sequence_id": "debug-prod-incident",
+  "run_index": 2,
+  "turn": 3,
+  "arm_order_index": 1,
+  "arm_order_full": [
+    "caveman_full",
+    "terse",
+    "hewn_full",
+    "hewn_prompt_only",
+    "baseline"
+  ],
+  "digest_hex": "522341918a5177210ef438fa55486ec5b622aaa576febbd731536d82595ec31b",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T01:17:33.109552+00:00",
+  "session_id_used_for_resume": "4cade8ee-c938-4bc2-a7f1-ed60dadb42fb",
+  "output_tokens_tiktoken": 374,
+  "output_tokens_anthropic": 591,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 219,
+  "cache_read_input_tokens": 24906,
+  "total_input_tokens": 25131,
+  "cache_state": "warm",
+  "wallclock_ms": 14847.232347994577,
+  "duration_ms": 11557,
+  "duration_api_ms": 11534,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "4cade8ee-c938-4bc2-a7f1-ed60dadb42fb",
+  "total_cost_usd": 0.028626750000000006,
+  "model_used": "claude-opus-4-7",
+  "result": "Two layers — contract test on `buildCart`, integration test on the handler.\n\n**Contract test** (fast, pins the shape):\n```js\ndescribe('buildCart', () => {\n  const cart = { id: 'c1', items: [{ price: 10, qty: 2 }] };\n\n  it('returns id, items, and total', () => {\n    expect(buildCart(cart)).toEqual({\n      id: 'c1',\n      items: [{ price: 10, qty: 2 }],\n      total: 20,\n    });\n  });\n\n  it('preserves items reference for downstream consumers', () => {\n    expect(buildCart(cart).items).toBeDefined();\n    expect(buildCart(cart).items).toHaveLength(1);\n  });\n});\n```\n\n**Integration test** (catches the actual prod failure):\n```js\nit('POST /api/orders succeeds with a cart payload', async () => {\n  const res = await request(app)\n    .post('/api/orders')\n    .send({ cart: { id: 'c1', items: [{ price: 10, qty: 2 }] } });\n  expect(res.status).toBe(200);\n});\n```\n\nKey points:\n- Use `toEqual` with the full object, not `toMatchObject` — the latter would have passed the broken code since it only checks specified fields exist, not that others don't.\n- The \"preserves items\" assertion is the one that would have caught *this* bug specifically. Name it after the contract, not the bug.\n- The integration test is what actually reproduces the 500. Without it, a future refactor could re-break the handler in a different way that the unit test misses.\n\nSkip: snapshot tests (too brittle), tests that just re-assert the implementation.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 11557,
+    "duration_api_ms": 11534,
+    "num_turns": 1,
+    "result": "Two layers — contract test on `buildCart`, integration test on the handler.\n\n**Contract test** (fast, pins the shape):\n```js\ndescribe('buildCart', () => {\n  const cart = { id: 'c1', items: [{ price: 10, qty: 2 }] };\n\n  it('returns id, items, and total', () => {\n    expect(buildCart(cart)).toEqual({\n      id: 'c1',\n      items: [{ price: 10, qty: 2 }],\n      total: 20,\n    });\n  });\n\n  it('preserves items reference for downstream consumers', () => {\n    expect(buildCart(cart).items).toBeDefined();\n    expect(buildCart(cart).items).toHaveLength(1);\n  });\n});\n```\n\n**Integration test** (catches the actual prod failure):\n```js\nit('POST /api/orders succeeds with a cart payload', async () => {\n  const res = await request(app)\n    .post('/api/orders')\n    .send({ cart: { id: 'c1', items: [{ price: 10, qty: 2 }] } });\n  expect(res.status).toBe(200);\n});\n```\n\nKey points:\n- Use `toEqual` with the full object, not `toMatchObject` — the latter would have passed the broken code since it only checks specified fields exist, not that others don't.\n- The \"preserves items\" assertion is the one that would have caught *this* bug specifically. Name it after the contract, not the bug.\n- The integration test is what actually reproduces the 500. Without it, a future refactor could re-break the handler in a different way that the unit test misses.\n\nSkip: snapshot tests (too brittle), tests that just re-assert the implementation.",
+    "stop_reason": "end_turn",
+    "session_id": "4cade8ee-c938-4bc2-a7f1-ed60dadb42fb",
+    "total_cost_usd": 0.028626750000000006,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 219,
+      "cache_read_input_tokens": 24906,
+      "output_tokens": 591,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 219,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 591,
+          "cache_read_input_tokens": 24906,
+          "cache_creation_input_tokens": 219,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 219
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 591,
+        "cacheReadInputTokens": 24906,
+        "cacheCreationInputTokens": 219,
+        "webSearchRequests": 0,
+        "costUSD": 0.028626750000000006,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "9a82e6b4-3ee5-4e9a-8308-9c6f1938b79c"
+  }
+}

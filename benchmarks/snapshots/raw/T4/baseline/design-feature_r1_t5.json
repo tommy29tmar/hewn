@@ -1,0 +1,96 @@
+{
+  "track": "T4",
+  "arm": "baseline",
+  "sequence_id": "design-feature",
+  "run_index": 1,
+  "turn": 5,
+  "arm_order_index": 3,
+  "arm_order_full": [
+    "hewn_full",
+    "hewn_prompt_only",
+    "terse",
+    "baseline",
+    "caveman_full"
+  ],
+  "digest_hex": "30a2f9a62df0d790c0598917c3ab42509bbadd672a0a484741ea201d2da3b44f",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T01:13:35.915973+00:00",
+  "session_id_used_for_resume": "5632ca07-a42e-4f7d-9684-cf296062756c",
+  "output_tokens_tiktoken": 1119,
+  "output_tokens_anthropic": 3830,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 2407,
+  "cache_read_input_tokens": 37651,
+  "total_input_tokens": 40064,
+  "cache_state": "warm",
+  "wallclock_ms": 66850.35701701418,
+  "duration_ms": 63675,
+  "duration_api_ms": 63645,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "5632ca07-a42e-4f7d-9684-cf296062756c",
+  "total_cost_usd": 0.12964925,
+  "model_used": "claude-opus-4-7",
+  "result": "**Policy: proportional split.** It's the fair, defensible, and industry-standard choice, and it's the only one that can't be gamed.\n\nFor an order of $100 ($30 gift card + $70 card), a $40 refund becomes $12 to gift card + $28 to card (40% of each tender). Carry the ratio through every subsequent partial refund off the same order.\n\n**Why not the alternatives:**\n- **Card-first** (refund card until exhausted, then gift card) is customer-friendly but lets users pay mostly with a gift card + a small card charge, then refund to get cash out exceeding what they paid in cash. Fraud vector.\n- **Gift-card-first** is the opposite — customers hate it, and it inflates your outstanding gift-card liability for no good reason.\n- **Last-in-first-out** has no principled basis and gets weird across multiple partial refunds.\n\nProportional also lines up with what card networks and regulators expect, which matters when you get chargebacks — see below.\n\n**Edge cases to decide up front:**\n\n1. **Gift card expired between purchase and refund.** Don't resurrect a dead card; issue a *new* gift card (fresh 12-month clock) for the refund amount. Otherwise you're arguing with customers about expiry on money they didn't get to spend.\n2. **Chargeback on the card.** The card network forces the refund to the card — you don't get a choice. Your accounting must handle \"card got refunded more than its proportional share.\" Policy options: (a) claw back the gift-card portion to zero and eat the loss, or (b) accept the over-refund as fraud exposure. Pick one and document it.\n3. **Cumulative refunds must not exceed per-tender totals.** Three partial refunds summing to more than the original tender's share is a bug — enforce this as an invariant at write time.\n4. **Tax.** Refund tax proportionally to the refunded line items, not proportionally to tenders. Tax allocation is orthogonal — it splits across tenders only after the refundable amount is known.\n\n**Code path:**\n\nTwo external things happen (gift card debit reversal = internal, card refund = external API), and you can't hold a DB transaction across the gateway call. The pattern:\n\n```\nrefund(order_id, amount, reason) {\n  with tx:\n    # Phase 1: decide and record intent, all atomic\n    tenders = load_order_tenders(order_id)                 # [{gc_id, 30}, {card_txn, 70}]\n    already_refunded = load_prior_refunds(order_id)        # per-tender cumulative\n    allocation = proportional_split(amount, tenders, already_refunded)\n    assert_no_overrefund(allocation, tenders, already_refunded)\n\n    refund = insert_refund(\n      order_id, amount, allocation,\n      status='processing',\n      idempotency_key=uuid(),\n    )\n    # commit — we now have a durable record of what we're about to do\n\n  # Phase 2: card refund (external, idempotent via refund.idempotency_key)\n  try:\n    gateway.refund(\n      charge_id=card_tender.txn_id,\n      amount=allocation.card,\n      idempotency_key=refund.idempotency_key,\n    )\n  except GatewayError:\n    mark_refund_failed(refund.id)     # dead-letter for ops / retry\n    raise\n\n  # Phase 3: credit gift card + finalize, all atomic\n  with tx:\n    update gift_card\n       set balance = balance + :gc_amount,\n           updated_at = now()\n     where id = :gc_id;\n    # if card expired, instead: issue new gift card with :gc_amount, link to original\n    insert_gift_card_ledger(\n      gift_card_id=gc_id,\n      amount=+allocation.gc,\n      reason='refund',\n      refund_id=refund.id,          # unique constraint — idempotent on retry\n    )\n    mark_refund_completed(refund.id)\n}\n```\n\n**Why this ordering (card refund before gift-card credit):** the card call is the risky one. If it fails you've done nothing the user can see. If you credited the gift card first and the card refund then failed, the user has balance back *and* is waiting on cash that never comes — customer-support nightmare.\n\n**Crash recovery:** if the process dies between Phase 2 success and Phase 3 commit, you have a refund row stuck in `processing` with a card refund that went through at the gateway but no gift-card credit recorded. A reconciliation job scans for `processing` refunds older than N minutes, queries the gateway by `idempotency_key` to see if the card leg succeeded, and finishes Phase 3 if so. Same idempotency key on the ledger insert makes the retry safe.\n\n**Enforce the invariants in code, not docs:**\n- `assert_no_overrefund` — sum of allocations for this tender + prior refunds ≤ original tender amount.\n- Unique constraint on `(gift_card_id, refund_id)` in the ledger — can't double-credit on retry.\n- `refund.idempotency_key` unique — can't create two refund rows for the same operation.\n\nThat's the whole flow: proportional allocation, durable intent before external calls, card refund first, gift card credit after, idempotency keys on both legs so crashes and retries converge to the right state.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 63675,
+    "duration_api_ms": 63645,
+    "num_turns": 1,
+    "result": "**Policy: proportional split.** It's the fair, defensible, and industry-standard choice, and it's the only one that can't be gamed.\n\nFor an order of $100 ($30 gift card + $70 card), a $40 refund becomes $12 to gift card + $28 to card (40% of each tender). Carry the ratio through every subsequent partial refund off the same order.\n\n**Why not the alternatives:**\n- **Card-first** (refund card until exhausted, then gift card) is customer-friendly but lets users pay mostly with a gift card + a small card charge, then refund to get cash out exceeding what they paid in cash. Fraud vector.\n- **Gift-card-first** is the opposite — customers hate it, and it inflates your outstanding gift-card liability for no good reason.\n- **Last-in-first-out** has no principled basis and gets weird across multiple partial refunds.\n\nProportional also lines up with what card networks and regulators expect, which matters when you get chargebacks — see below.\n\n**Edge cases to decide up front:**\n\n1. **Gift card expired between purchase and refund.** Don't resurrect a dead card; issue a *new* gift card (fresh 12-month clock) for the refund amount. Otherwise you're arguing with customers about expiry on money they didn't get to spend.\n2. **Chargeback on the card.** The card network forces the refund to the card — you don't get a choice. Your accounting must handle \"card got refunded more than its proportional share.\" Policy options: (a) claw back the gift-card portion to zero and eat the loss, or (b) accept the over-refund as fraud exposure. Pick one and document it.\n3. **Cumulative refunds must not exceed per-tender totals.** Three partial refunds summing to more than the original tender's share is a bug — enforce this as an invariant at write time.\n4. **Tax.** Refund tax proportionally to the refunded line items, not proportionally to tenders. Tax allocation is orthogonal — it splits across tenders only after the refundable amount is known.\n\n**Code path:**\n\nTwo external things happen (gift card debit reversal = internal, card refund = external API), and you can't hold a DB transaction across the gateway call. The pattern:\n\n```\nrefund(order_id, amount, reason) {\n  with tx:\n    # Phase 1: decide and record intent, all atomic\n    tenders = load_order_tenders(order_id)                 # [{gc_id, 30}, {card_txn, 70}]\n    already_refunded = load_prior_refunds(order_id)        # per-tender cumulative\n    allocation = proportional_split(amount, tenders, already_refunded)\n    assert_no_overrefund(allocation, tenders, already_refunded)\n\n    refund = insert_refund(\n      order_id, amount, allocation,\n      status='processing',\n      idempotency_key=uuid(),\n    )\n    # commit — we now have a durable record of what we're about to do\n\n  # Phase 2: card refund (external, idempotent via refund.idempotency_key)\n  try:\n    gateway.refund(\n      charge_id=card_tender.txn_id,\n      amount=allocation.card,\n      idempotency_key=refund.idempotency_key,\n    )\n  except GatewayError:\n    mark_refund_failed(refund.id)     # dead-letter for ops / retry\n    raise\n\n  # Phase 3: credit gift card + finalize, all atomic\n  with tx:\n    update gift_card\n       set balance = balance + :gc_amount,\n           updated_at = now()\n     where id = :gc_id;\n    # if card expired, instead: issue new gift card with :gc_amount, link to original\n    insert_gift_card_ledger(\n      gift_card_id=gc_id,\n      amount=+allocation.gc,\n      reason='refund',\n      refund_id=refund.id,          # unique constraint — idempotent on retry\n    )\n    mark_refund_completed(refund.id)\n}\n```\n\n**Why this ordering (card refund before gift-card credit):** the card call is the risky one. If it fails you've done nothing the user can see. If you credited the gift card first and the card refund then failed, the user has balance back *and* is waiting on cash that never comes — customer-support nightmare.\n\n**Crash recovery:** if the process dies between Phase 2 success and Phase 3 commit, you have a refund row stuck in `processing` with a card refund that went through at the gateway but no gift-card credit recorded. A reconciliation job scans for `processing` refunds older than N minutes, queries the gateway by `idempotency_key` to see if the card leg succeeded, and finishes Phase 3 if so. Same idempotency key on the ledger insert makes the retry safe.\n\n**Enforce the invariants in code, not docs:**\n- `assert_no_overrefund` — sum of allocations for this tender + prior refunds ≤ original tender amount.\n- Unique constraint on `(gift_card_id, refund_id)` in the ledger — can't double-credit on retry.\n- `refund.idempotency_key` unique — can't create two refund rows for the same operation.\n\nThat's the whole flow: proportional allocation, durable intent before external calls, card refund first, gift card credit after, idempotency keys on both legs so crashes and retries converge to the right state.",
+    "stop_reason": "end_turn",
+    "session_id": "5632ca07-a42e-4f7d-9684-cf296062756c",
+    "total_cost_usd": 0.12964925,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 2407,
+      "cache_read_input_tokens": 37651,
+      "output_tokens": 3830,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 2407,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 3830,
+          "cache_read_input_tokens": 37651,
+          "cache_creation_input_tokens": 2407,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 2407
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 3830,
+        "cacheReadInputTokens": 37651,
+        "cacheCreationInputTokens": 2407,
+        "webSearchRequests": 0,
+        "costUSD": 0.12964925,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "94522c39-a78d-46ba-8e11-a4f2fc03732f"
+  }
+}

@@ -1,0 +1,102 @@
+{
+  "track": "T1a",
+  "arm": "caveman_full",
+  "prompt_id": "fix-node-memory-leak",
+  "run_index": 1,
+  "arm_order_index": 2,
+  "arm_order_full": [
+    "baseline",
+    "terse",
+    "caveman_full"
+  ],
+  "digest_hex": "edf96b08b6bf832e7f6141e2b1e51b0b7773d43c771414ddf25ddb62f5d6bccd",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-21T23:34:47.539878+00:00",
+  "output_tokens_tiktoken": 223,
+  "output_tokens_anthropic": 375,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 21747,
+  "total_input_tokens": 21753,
+  "cache_state": "warm",
+  "wallclock_ms": 12812.053933012066,
+  "duration_ms": 7797,
+  "duration_api_ms": 8503,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "6d59ce14-359a-4900-88dd-d28945149ec9",
+  "total_cost_usd": 0.0207135,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "Find leak first. Profile before fix.\n\n**Steps:**\n\n1. **Heap snapshot** — `node --inspect`, Chrome DevTools → Memory tab → take 3 snapshots over time. Compare. Growing objects = suspects.\n2. **Common culprits:**\n   - Unbounded caches/Maps → use `lru-cache` or `WeakMap`\n   - Event listeners not removed → `emitter.off()` on cleanup, check `getMaxListeners()`\n   - Closures holding big scope → null refs after use\n   - Timers (`setInterval`) never cleared → `clearInterval` on shutdown\n   - Global arrays growing forever → bound size or stream\n3. **Tools:**\n   - `clinic.js doctor` — fast diagnosis\n   - `heapdump` npm pkg — snapshot on signal\n   - `--max-old-space-size=N` — raise limit (bandaid, not fix)\n4. **Verify:** rerun load, watch `process.memoryUsage().heapUsed` flat over time.\n\nFix root cause, not symptom. Raising heap limit hides leak.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 7797,
+    "duration_api_ms": 8503,
+    "num_turns": 1,
+    "result": "Find leak first. Profile before fix.\n\n**Steps:**\n\n1. **Heap snapshot** — `node --inspect`, Chrome DevTools → Memory tab → take 3 snapshots over time. Compare. Growing objects = suspects.\n2. **Common culprits:**\n   - Unbounded caches/Maps → use `lru-cache` or `WeakMap`\n   - Event listeners not removed → `emitter.off()` on cleanup, check `getMaxListeners()`\n   - Closures holding big scope → null refs after use\n   - Timers (`setInterval`) never cleared → `clearInterval` on shutdown\n   - Global arrays growing forever → bound size or stream\n3. **Tools:**\n   - `clinic.js doctor` — fast diagnosis\n   - `heapdump` npm pkg — snapshot on signal\n   - `--max-old-space-size=N` — raise limit (bandaid, not fix)\n4. **Verify:** rerun load, watch `process.memoryUsage().heapUsed` flat over time.\n\nFix root cause, not symptom. Raising heap limit hides leak.",
+    "stop_reason": "end_turn",
+    "session_id": "6d59ce14-359a-4900-88dd-d28945149ec9",
+    "total_cost_usd": 0.0207135,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 21747,
+      "output_tokens": 375,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 0,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 375,
+          "cache_read_input_tokens": 21747,
+          "cache_creation_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 355,
+        "outputTokens": 16,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.000435,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 375,
+        "cacheReadInputTokens": 21747,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.020278499999999998,
+        "contextWindow": 200000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "20e7fbea-8d5d-4ddf-bccd-c507e72b58f4"
+  }
+}

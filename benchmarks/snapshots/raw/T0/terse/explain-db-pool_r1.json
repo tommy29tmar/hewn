@@ -1,0 +1,103 @@
+{
+  "track": "T0",
+  "arm": "terse",
+  "prompt_id": "explain-db-pool",
+  "run_index": 1,
+  "arm_order_index": 0,
+  "arm_order_full": [
+    "terse",
+    "terse_appended",
+    "caveman_full",
+    "caveman_full_appended"
+  ],
+  "digest_hex": "2b21fc020c9f9514ecfb89de5292bc8e27d0913b3aa966344ba89e05bc88db91",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-21T23:24:45.231804+00:00",
+  "output_tokens_tiktoken": 331,
+  "output_tokens_anthropic": 529,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 6529,
+  "cache_read_input_tokens": 13741,
+  "total_input_tokens": 20276,
+  "cache_state": "warm",
+  "wallclock_ms": 16995.341308997013,
+  "duration_ms": 11272,
+  "duration_api_ms": 12214,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "bb68e842-3069-4097-a0f2-8431e0f9abc2",
+  "total_cost_usd": 0.06134175,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "Database connection pooling reuses a fixed set of open connections instead of opening/closing one per request.\n\n**Why:** TCP + auth handshakes are expensive (often 10–100ms). Pooling amortizes that cost and caps concurrent load on the DB.\n\n**How it works:**\n1. Pool opens N connections at startup.\n2. App borrows a connection, runs queries, returns it.\n3. Idle connections are kept warm; excess are closed after a timeout.\n4. If all are in use, new requests wait (or error) until one frees.\n\n**Key knobs:**\n- `min` / `max` size — floor and ceiling on connections.\n- `idleTimeout` — when to close unused connections.\n- `acquireTimeout` — how long a caller waits before failing.\n- `maxLifetime` — force-recycle old connections (avoids stale sockets, load-balancer drops).\n\n**Common pools:** HikariCP (Java), pgbouncer (Postgres, external), SQLAlchemy `QueuePool` (Python), `pg-pool` (Node).\n\n**Gotchas:**\n- `max` too high → DB runs out of memory/workers. Postgres especially: each connection ≈ 10MB.\n- Transactions + pooling: don't hold a connection across user think-time.\n- Serverless: per-instance pools multiply; use an external pooler (pgbouncer, RDS Proxy).\n- Session state (temp tables, `SET` vars) leaks between borrowers unless reset.\n\nRule of thumb for Postgres: `max_connections ≈ cores × 2–4`, not hundreds.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 11272,
+    "duration_api_ms": 12214,
+    "num_turns": 1,
+    "result": "Database connection pooling reuses a fixed set of open connections instead of opening/closing one per request.\n\n**Why:** TCP + auth handshakes are expensive (often 10–100ms). Pooling amortizes that cost and caps concurrent load on the DB.\n\n**How it works:**\n1. Pool opens N connections at startup.\n2. App borrows a connection, runs queries, returns it.\n3. Idle connections are kept warm; excess are closed after a timeout.\n4. If all are in use, new requests wait (or error) until one frees.\n\n**Key knobs:**\n- `min` / `max` size — floor and ceiling on connections.\n- `idleTimeout` — when to close unused connections.\n- `acquireTimeout` — how long a caller waits before failing.\n- `maxLifetime` — force-recycle old connections (avoids stale sockets, load-balancer drops).\n\n**Common pools:** HikariCP (Java), pgbouncer (Postgres, external), SQLAlchemy `QueuePool` (Python), `pg-pool` (Node).\n\n**Gotchas:**\n- `max` too high → DB runs out of memory/workers. Postgres especially: each connection ≈ 10MB.\n- Transactions + pooling: don't hold a connection across user think-time.\n- Serverless: per-instance pools multiply; use an external pooler (pgbouncer, RDS Proxy).\n- Session state (temp tables, `SET` vars) leaks between borrowers unless reset.\n\nRule of thumb for Postgres: `max_connections ≈ cores × 2–4`, not hundreds.",
+    "stop_reason": "end_turn",
+    "session_id": "bb68e842-3069-4097-a0f2-8431e0f9abc2",
+    "total_cost_usd": 0.06134175,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 6529,
+      "cache_read_input_tokens": 13741,
+      "output_tokens": 529,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 6529,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 529,
+          "cache_read_input_tokens": 13741,
+          "cache_creation_input_tokens": 6529,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 6529
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 345,
+        "outputTokens": 13,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.00041,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 529,
+        "cacheReadInputTokens": 13741,
+        "cacheCreationInputTokens": 6529,
+        "webSearchRequests": 0,
+        "costUSD": 0.06093175,
+        "contextWindow": 200000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "07e95773-28d4-4cc2-a357-69d727650b68"
+  }
+}

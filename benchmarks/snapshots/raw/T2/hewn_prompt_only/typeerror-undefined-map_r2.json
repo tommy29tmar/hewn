@@ -1,0 +1,105 @@
+{
+  "track": "T2",
+  "arm": "hewn_prompt_only",
+  "prompt_id": "typeerror-undefined-map",
+  "run_index": 2,
+  "arm_order_index": 2,
+  "arm_order_full": [
+    "terse",
+    "caveman_full_plus_ultra_directive",
+    "hewn_prompt_only",
+    "hewn_full",
+    "caveman_full",
+    "baseline"
+  ],
+  "digest_hex": "14bddb51c1c5866706ff2e594385e235efce8e94983a8266c26c2b19b478fcc1",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T00:21:58.928923+00:00",
+  "output_tokens_tiktoken": 72,
+  "output_tokens_anthropic": 298,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 32639,
+  "total_input_tokens": 32645,
+  "cache_state": "warm",
+  "wallclock_ms": 11200.126701995032,
+  "duration_ms": 6465,
+  "duration_api_ms": 7520,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "2200f46b-2eca-40d3-a34e-f4656c36b80e",
+  "total_cost_usd": 0.0242285,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "That error means something you're calling `.map()` on is `undefined` — an array you expected isn't there yet (or came back empty from an API/prop).\n\nTo pinpoint it I need the stack trace line (file + line number), or at minimum which file/component. Can you paste the full error with the stack, or point me at the file?",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 6465,
+    "duration_api_ms": 7520,
+    "num_turns": 1,
+    "result": "That error means something you're calling `.map()` on is `undefined` — an array you expected isn't there yet (or came back empty from an API/prop).\n\nTo pinpoint it I need the stack trace line (file + line number), or at minimum which file/component. Can you paste the full error with the stack, or point me at the file?",
+    "stop_reason": "end_turn",
+    "session_id": "2200f46b-2eca-40d3-a34e-f4656c36b80e",
+    "total_cost_usd": 0.0242285,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 32639,
+      "output_tokens": 298,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 0,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 298,
+          "cache_read_input_tokens": 32639,
+          "cache_creation_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 364,
+        "outputTokens": 13,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.000429,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 298,
+        "cacheReadInputTokens": 32639,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.0237995,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "5fdbe5a6-d519-4bca-87bd-eadfbeb6bbea"
+  }
+}

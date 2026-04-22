@@ -1,0 +1,17 @@
+{
+  "final": {
+    "tcp_is_connection_oriented": true,
+    "udp_is_connectionless": true,
+    "tcp_guarantees_ordered_delivery": true,
+    "udp_does_not_guarantee_delivery_or_order": true,
+    "tcp_higher_overhead_lower_throughput": false,
+    "use_case_examples_for_each": true
+  },
+  "history": [
+    {
+      "attempt": 0,
+      "raw": "{\"tcp_is_connection_oriented\":true,\"udp_is_connectionless\":true,\"tcp_guarantees_ordered_delivery\":true,\"udp_does_not_guarantee_delivery_or_order\":true,\"tcp_higher_overhead_lower_throughput\":false,\"use_case_examples_for_each\":true}"
+    }
+  ],
+  "ts": "2026-04-22T01:01:11.848630+00:00"
+}

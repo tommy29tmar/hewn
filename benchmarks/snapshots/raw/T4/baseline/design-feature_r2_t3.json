@@ -1,0 +1,96 @@
+{
+  "track": "T4",
+  "arm": "baseline",
+  "sequence_id": "design-feature",
+  "run_index": 2,
+  "turn": 3,
+  "arm_order_index": 0,
+  "arm_order_full": [
+    "baseline",
+    "caveman_full",
+    "hewn_prompt_only",
+    "terse",
+    "hewn_full"
+  ],
+  "digest_hex": "3191b019d37f08f3d5b68d9000f1aeb1e1a3524225f9daa893803df1e240ffd1",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T01:24:35.550836+00:00",
+  "session_id_used_for_resume": "754c5314-d205-4a0d-9e19-5a1e53b97a74",
+  "output_tokens_tiktoken": 506,
+  "output_tokens_anthropic": 1017,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 942,
+  "cache_read_input_tokens": 33527,
+  "total_input_tokens": 34475,
+  "cache_state": "warm",
+  "wallclock_ms": 21066.483342990978,
+  "duration_ms": 17756,
+  "duration_api_ms": 17733,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "754c5314-d205-4a0d-9e19-5a1e53b97a74",
+  "total_cost_usd": 0.048105999999999996,
+  "model_used": "claude-opus-4-7",
+  "result": "Four options, roughly from best-to-worst for this case:\n\n**1. Atomic conditional UPDATE (recommended)**\n```sql\nUPDATE gift_cards\nSET balance = balance - :amount\nWHERE code_hash = :hash AND balance >= :amount\nRETURNING balance;\n```\nCheck `rowcount`: 1 = consumed, 0 = insufficient funds or wrong code. The DB does the compare-and-swap in one statement — no explicit lock, no read-then-write window, works under any isolation level. Simplest correct answer.\n\n**2. `SELECT ... FOR UPDATE` (pessimistic row lock)**\nFine, but you're taking a lock for the duration of your transaction. If the surrounding checkout transaction also calls the payment gateway (slow, 2–10s), you're holding a row lock across a network call to Stripe. Avoid.\n\n**3. Optimistic locking (version column)**\n```sql\nUPDATE gift_cards SET balance = :new, version = version + 1\nWHERE id = :id AND version = :old_version;\n```\nWorks, but #1 is strictly better for a simple decrement — no need to read first.\n\n**4. App-level distributed lock (Redis, etc.)**\nOverkill. Don't reach for this when the DB already gives you atomic primitives.\n\n**Important: separate the DB update from payment capture.** The atomic UPDATE solves double-spend on the gift card, but you still have the \"what if card charge fails after we debited?\" problem. Two patterns:\n\n- **Reserve then commit**: add a `reserved` column, do atomic UPDATE to move balance → reserved, charge card, then either commit (zero the reservation, balance stays debited) or release (move reserved → balance). Cleaner audit, but two writes.\n- **Debit then compensate**: decrement immediately; on card failure, re-credit with a new transaction. Simpler, but the card briefly shows a lower balance to a concurrent reader — usually fine.\n\nAlso: add an **idempotency key** on the redemption (unique on `(gift_card_id, checkout_id)` in a small `gift_card_redemptions` log) so a retried checkout request doesn't double-debit. This is the one place you need a side table even with mutable balances — it's also your poor-man's audit log when finance eventually asks.\n\nFor your stack, I'd do: atomic conditional UPDATE + reservation column + idempotency table. Want me to sketch the schema?",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 17756,
+    "duration_api_ms": 17733,
+    "num_turns": 1,
+    "result": "Four options, roughly from best-to-worst for this case:\n\n**1. Atomic conditional UPDATE (recommended)**\n```sql\nUPDATE gift_cards\nSET balance = balance - :amount\nWHERE code_hash = :hash AND balance >= :amount\nRETURNING balance;\n```\nCheck `rowcount`: 1 = consumed, 0 = insufficient funds or wrong code. The DB does the compare-and-swap in one statement — no explicit lock, no read-then-write window, works under any isolation level. Simplest correct answer.\n\n**2. `SELECT ... FOR UPDATE` (pessimistic row lock)**\nFine, but you're taking a lock for the duration of your transaction. If the surrounding checkout transaction also calls the payment gateway (slow, 2–10s), you're holding a row lock across a network call to Stripe. Avoid.\n\n**3. Optimistic locking (version column)**\n```sql\nUPDATE gift_cards SET balance = :new, version = version + 1\nWHERE id = :id AND version = :old_version;\n```\nWorks, but #1 is strictly better for a simple decrement — no need to read first.\n\n**4. App-level distributed lock (Redis, etc.)**\nOverkill. Don't reach for this when the DB already gives you atomic primitives.\n\n**Important: separate the DB update from payment capture.** The atomic UPDATE solves double-spend on the gift card, but you still have the \"what if card charge fails after we debited?\" problem. Two patterns:\n\n- **Reserve then commit**: add a `reserved` column, do atomic UPDATE to move balance → reserved, charge card, then either commit (zero the reservation, balance stays debited) or release (move reserved → balance). Cleaner audit, but two writes.\n- **Debit then compensate**: decrement immediately; on card failure, re-credit with a new transaction. Simpler, but the card briefly shows a lower balance to a concurrent reader — usually fine.\n\nAlso: add an **idempotency key** on the redemption (unique on `(gift_card_id, checkout_id)` in a small `gift_card_redemptions` log) so a retried checkout request doesn't double-debit. This is the one place you need a side table even with mutable balances — it's also your poor-man's audit log when finance eventually asks.\n\nFor your stack, I'd do: atomic conditional UPDATE + reservation column + idempotency table. Want me to sketch the schema?",
+    "stop_reason": "end_turn",
+    "session_id": "754c5314-d205-4a0d-9e19-5a1e53b97a74",
+    "total_cost_usd": 0.048105999999999996,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 942,
+      "cache_read_input_tokens": 33527,
+      "output_tokens": 1017,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 942,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 1017,
+          "cache_read_input_tokens": 33527,
+          "cache_creation_input_tokens": 942,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 942
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 1017,
+        "cacheReadInputTokens": 33527,
+        "cacheCreationInputTokens": 942,
+        "webSearchRequests": 0,
+        "costUSD": 0.048105999999999996,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "92b8c074-c04d-4713-ba91-3543c51a5353"
+  }
+}

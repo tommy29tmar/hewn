@@ -1,0 +1,96 @@
+{
+  "track": "T4",
+  "arm": "terse",
+  "sequence_id": "debug-prod-incident",
+  "run_index": 2,
+  "turn": 4,
+  "arm_order_index": 1,
+  "arm_order_full": [
+    "caveman_full",
+    "terse",
+    "hewn_full",
+    "hewn_prompt_only",
+    "baseline"
+  ],
+  "digest_hex": "522341918a5177210ef438fa55486ec5b622aaa576febbd731536d82595ec31b",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T01:17:49.322862+00:00",
+  "session_id_used_for_resume": "4cade8ee-c938-4bc2-a7f1-ed60dadb42fb",
+  "output_tokens_tiktoken": 383,
+  "output_tokens_anthropic": 639,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 678,
+  "cache_read_input_tokens": 25125,
+  "total_input_tokens": 25809,
+  "cache_state": "warm",
+  "wallclock_ms": 16211.837602982996,
+  "duration_ms": 13016,
+  "duration_api_ms": 12979,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "4cade8ee-c938-4bc2-a7f1-ed60dadb42fb",
+  "total_cost_usd": 0.032805,
+  "model_used": "claude-opus-4-7",
+  "result": "Depends on cart size and concurrency.\n\n**The math:** `Promise.all(skus.map(lookup))` fires all lookups simultaneously. One order with 50 SKUs = 50 concurrent connection requests from one request. Ten concurrent orders with 10 SKUs each = 100 concurrent lookups competing for 20 connections. Requests queue, latency spikes, timeouts cascade.\n\n**What to check:**\n1. **Max cart size.** If carts are capped at, say, 10 items and peak concurrent orders are modest, you're probably fine. If carts can be 100+ (B2B, bulk), this is a latent incident.\n2. **Connection acquisition timeout.** If your pool throws/rejects on acquire timeout, you'll see errors under load rather than just slowness. Check pool config.\n3. **Other traffic sharing the pool.** Orders aren't the only thing hitting that pool. Budget accordingly.\n4. **Is the lookup actually N queries?** If it's `SELECT ... WHERE sku IN (...)` underneath, `Promise.all` is wasted — one query would do. Worth checking the lookup implementation.\n\n**Safer patterns:**\n- **Batch into one query:** `SELECT * FROM inventory WHERE sku IN (?)` — eliminates the concurrency question entirely. Almost always the right answer for SKU lookups.\n- **Bounded concurrency:** `p-limit` or similar, cap at ~5. Keeps parallelism benefit without pool starvation.\n- **Sequential was fine if lookups are fast.** \"Sequential loop\" at 2ms each for 10 items = 20ms. Not worth the risk unless you measured a real problem.\n\nMy bet: the right fix is a single `WHERE sku IN` query, not `Promise.all`. Ask why the loop existed in the first place — if it was already N+1, the refactor optimized the wrong axis.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 13016,
+    "duration_api_ms": 12979,
+    "num_turns": 1,
+    "result": "Depends on cart size and concurrency.\n\n**The math:** `Promise.all(skus.map(lookup))` fires all lookups simultaneously. One order with 50 SKUs = 50 concurrent connection requests from one request. Ten concurrent orders with 10 SKUs each = 100 concurrent lookups competing for 20 connections. Requests queue, latency spikes, timeouts cascade.\n\n**What to check:**\n1. **Max cart size.** If carts are capped at, say, 10 items and peak concurrent orders are modest, you're probably fine. If carts can be 100+ (B2B, bulk), this is a latent incident.\n2. **Connection acquisition timeout.** If your pool throws/rejects on acquire timeout, you'll see errors under load rather than just slowness. Check pool config.\n3. **Other traffic sharing the pool.** Orders aren't the only thing hitting that pool. Budget accordingly.\n4. **Is the lookup actually N queries?** If it's `SELECT ... WHERE sku IN (...)` underneath, `Promise.all` is wasted — one query would do. Worth checking the lookup implementation.\n\n**Safer patterns:**\n- **Batch into one query:** `SELECT * FROM inventory WHERE sku IN (?)` — eliminates the concurrency question entirely. Almost always the right answer for SKU lookups.\n- **Bounded concurrency:** `p-limit` or similar, cap at ~5. Keeps parallelism benefit without pool starvation.\n- **Sequential was fine if lookups are fast.** \"Sequential loop\" at 2ms each for 10 items = 20ms. Not worth the risk unless you measured a real problem.\n\nMy bet: the right fix is a single `WHERE sku IN` query, not `Promise.all`. Ask why the loop existed in the first place — if it was already N+1, the refactor optimized the wrong axis.",
+    "stop_reason": "end_turn",
+    "session_id": "4cade8ee-c938-4bc2-a7f1-ed60dadb42fb",
+    "total_cost_usd": 0.032805,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 678,
+      "cache_read_input_tokens": 25125,
+      "output_tokens": 639,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 678,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 639,
+          "cache_read_input_tokens": 25125,
+          "cache_creation_input_tokens": 678,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 678
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 639,
+        "cacheReadInputTokens": 25125,
+        "cacheCreationInputTokens": 678,
+        "webSearchRequests": 0,
+        "costUSD": 0.032805,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "232c13bd-e8c8-44e6-9641-a7eb3f07cdce"
+  }
+}

@@ -1,0 +1,105 @@
+{
+  "track": "T1b",
+  "arm": "baseline",
+  "prompt_id": "fix-node-memory-leak",
+  "run_index": 2,
+  "arm_order_index": 4,
+  "arm_order_full": [
+    "caveman_full",
+    "hewn_full",
+    "hewn_prompt_only",
+    "caveman_full_plus_ultra_directive",
+    "baseline",
+    "terse"
+  ],
+  "digest_hex": "7d425b5467d57aae182ad8e9c94b0501514aa39b8cfa8d933e096ea5f14e6554",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-21T23:55:51.298718+00:00",
+  "output_tokens_tiktoken": 436,
+  "output_tokens_anthropic": 701,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 28530,
+  "total_input_tokens": 28536,
+  "cache_state": "warm",
+  "wallclock_ms": 19346.11683699768,
+  "duration_ms": 13843,
+  "duration_api_ms": 14853,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "bf59cf75-28e1-4df2-9c72-fa482b53e1d8",
+  "total_cost_usd": 0.032255,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "Common causes and fixes:\n\n**1. Identify the leak**\n- Run with `node --inspect` and use Chrome DevTools → Memory → heap snapshots (take 2-3 over time, compare retained size).\n- Or `node --heapsnapshot-near-heap-limit=3 --max-old-space-size=512` to auto-dump before OOM.\n- `clinic.js doctor` / `clinic heapprofiler` for guided diagnosis.\n\n**2. Usual suspects**\n- **Unbounded caches** — `Map`/`Object` that only grows. Use `lru-cache` or a TTL.\n- **Event listeners** — `emitter.on()` without matching `off()`. Watch for `MaxListenersExceededWarning`. Use `once()` when possible.\n- **Closures holding large objects** — a callback captures a big buffer/request and lives in a long-lived timer or promise chain.\n- **Timers** — `setInterval` that's never cleared, or `setTimeout` referencing large scope.\n- **Global state** — arrays/maps on `global` or module-level that accumulate per request.\n- **Promises that never settle** — pending promise chains retain their context.\n- **Streams not consumed/destroyed** — backpressure plus retained chunks.\n\n**3. Fix patterns**\n- Bounded cache: `new LRUCache({ max: 1000, ttl: 60_000 })`.\n- Use `WeakMap`/`WeakRef` when keys are objects you don't want to pin.\n- Always pair `on`/`off`, or use `AbortController` with `{ signal }` to cancel listeners/requests/timers together.\n- Destroy streams on error: `stream.destroy()`; or `pipeline()` from `node:stream`.\n- In Express-style handlers, avoid attaching per-request data to module-level arrays.\n\n**4. Verify**\n- Compare heap snapshots before/after the fix under the same load.\n- Track `process.memoryUsage().heapUsed` over time — it should plateau, not climb monotonically.\n\nIf you share the code or a snapshot, I can point at the specific leak.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 13843,
+    "duration_api_ms": 14853,
+    "num_turns": 1,
+    "result": "Common causes and fixes:\n\n**1. Identify the leak**\n- Run with `node --inspect` and use Chrome DevTools → Memory → heap snapshots (take 2-3 over time, compare retained size).\n- Or `node --heapsnapshot-near-heap-limit=3 --max-old-space-size=512` to auto-dump before OOM.\n- `clinic.js doctor` / `clinic heapprofiler` for guided diagnosis.\n\n**2. Usual suspects**\n- **Unbounded caches** — `Map`/`Object` that only grows. Use `lru-cache` or a TTL.\n- **Event listeners** — `emitter.on()` without matching `off()`. Watch for `MaxListenersExceededWarning`. Use `once()` when possible.\n- **Closures holding large objects** — a callback captures a big buffer/request and lives in a long-lived timer or promise chain.\n- **Timers** — `setInterval` that's never cleared, or `setTimeout` referencing large scope.\n- **Global state** — arrays/maps on `global` or module-level that accumulate per request.\n- **Promises that never settle** — pending promise chains retain their context.\n- **Streams not consumed/destroyed** — backpressure plus retained chunks.\n\n**3. Fix patterns**\n- Bounded cache: `new LRUCache({ max: 1000, ttl: 60_000 })`.\n- Use `WeakMap`/`WeakRef` when keys are objects you don't want to pin.\n- Always pair `on`/`off`, or use `AbortController` with `{ signal }` to cancel listeners/requests/timers together.\n- Destroy streams on error: `stream.destroy()`; or `pipeline()` from `node:stream`.\n- In Express-style handlers, avoid attaching per-request data to module-level arrays.\n\n**4. Verify**\n- Compare heap snapshots before/after the fix under the same load.\n- Track `process.memoryUsage().heapUsed` over time — it should plateau, not climb monotonically.\n\nIf you share the code or a snapshot, I can point at the specific leak.",
+    "stop_reason": "end_turn",
+    "session_id": "bf59cf75-28e1-4df2-9c72-fa482b53e1d8",
+    "total_cost_usd": 0.032255,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 28530,
+      "output_tokens": 701,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 0,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 701,
+          "cache_read_input_tokens": 28530,
+          "cache_creation_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 355,
+        "outputTokens": 16,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.000435,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 701,
+        "cacheReadInputTokens": 28530,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.03182,
+        "contextWindow": 200000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "83a780bd-a89f-47b7-b165-b2d2db1a1207"
+  }
+}

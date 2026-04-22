@@ -1,0 +1,105 @@
+{
+  "track": "T3",
+  "arm": "hewn_full",
+  "prompt_id": "rate-limit-xff-review",
+  "run_index": 3,
+  "arm_order_index": 3,
+  "arm_order_full": [
+    "hewn_prompt_only",
+    "baseline",
+    "caveman_full_plus_ultra_directive",
+    "hewn_full",
+    "terse",
+    "caveman_full"
+  ],
+  "digest_hex": "cffe317c5c73922535ac9a56d76b012bce4c891ed45ea6f65a6644bb758137e0",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T00:45:49.479577+00:00",
+  "output_tokens_tiktoken": 1171,
+  "output_tokens_anthropic": 4137,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 41234,
+  "total_input_tokens": 41240,
+  "cache_state": "warm",
+  "wallclock_ms": 77310.96577999415,
+  "duration_ms": 73892,
+  "duration_api_ms": 74979,
+  "wrapper_overhead_ms": 2331.9657799941488,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "d784fe49-23d4-448f-ad26-ead20ab0769f",
+  "total_cost_usd": 0.129647,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "1. multi.exec return shape bug — Section 4 snippet — `const [count] = await multi.exec()` — in ioredis/node-redis, `exec()` returns `[[err, incrResult], [err, expireResult]]`, so `count` is the tuple `[null, N]`, not `N`. Truthy comparison `count > limit` is always truthy/NaN → rate limiter is effectively bypassed. Fix: `const res = await multi.exec(); const count = res[0][1]` (ioredis) or destructure `[[,count]]`.\n\n2. Region prefix missing from documented key — Section 4 — key format `rl:{ip}:{route_prefix}:{minute_bucket}` has no region, but Section 10 says 2025-12 SEV2 RCA added region prefix. Handbook contradicts its own incident history; either fix did not ship or doc drifted. Recurrence of global-collapse for one hot IP. Fix: `rl:{region}:{ip}:{route_prefix}:{minute_bucket}` and regression test.\n\n3. Fixed bucket, not sliding — Section 4 — `Math.floor(Date.now()/60000)` is fixed minute bucket; text claims \"sliding-window approximation\". Allows 2× burst at bucket boundary (limit worth of traffic in last second + limit in first second). Fix: either rename to \"fixed-window\" or implement actual sliding window (e.g., weighted prev+curr bucket).\n\n4. rate_limit runs before auth_jwt — Section 3 pipeline steps 3 vs 5 — throttle keyed only by IP, so CGNAT/corporate-NAT users collide and share a bucket, while authenticated heavy users get no per-user limit. Also means unauth attackers and auth users share the same bucket dimension. Fix: two-stage — cheap per-IP pre-auth cap, per-`sub` cap post-auth.\n\n5. Auto-rollback conflicts with security forensic rule — Section 6 \"SEV1 ANY HOUR triggers automatic rollback\" vs Section 8 \"DO NOT roll back without coordination — security may want to capture forensic state\". On a security SEV1 the automation destroys the evidence before responders arrive. Fix: exclude security-tagged alerts from auto-rollback, require `@security-oncall` ack.\n\n6. body_size_guard after rate_limit — Section 3 steps 3 → 4 — oversized bodies (`>2MB`) consume the rate-limit counter before being `413`'d, and depending on `express.json` position may already be buffered into memory. DoS amplification and wasted quota. Fix: Content-Length precheck in `header_sanitize` or move `body_size_guard` to step 2.5; ensure body parser is mounted after the guard.\n\n7. JWKS stale-while-revalidate window re-exposes 2025-06 — Section 2 rule 4 / Section 5 — 15min refresh + 16min soft TTL + SWR means a poisoned key set (the 2025-06 SEV1 pattern) persists serving for up to ~16min after auth-svc recovers. RCA \"sanity-check on refresh\" is not described in the handbook itself. Fix: document the sanity check (expected kid set, signature self-test), shorten SWR grace, add kill-switch config to force cache flush.\n\n8. `jti` not deduplicated at edge — Section 5 — explicit tradeoff, but combined with 30s clock skew it permits at least a 30s replay window for leaked tokens against any downstream that also does not dedupe. Fix: bounded `jti` seen-set in Redis with TTL = token lifetime + skew, at least for mutating routes.\n\n9. Trust-boundary header list is incomplete — Section 2 rule 1 / Section 5 — strips `X-User-Id`, `X-Org-Id`, `X-Forwarded-For`, `X-Real-IP`, `X-Original-Authorization`; no mention of RFC 7239 `Forwarded`, `CF-Connecting-IP`, `True-Client-IP`, or the `X-Internal-*` set (which Section 5 claims is stripped but rule 1 does not enumerate). Spoof path if any downstream or middleware consults an un-stripped alias. Fix: allowlist (not denylist) — drop everything not in a known-safe set, explicitly including `X-Internal-*`.\n\n10. PII redaction scope is log-only — Section 2 rule 5 / Section 7 — redaction runs in the log-emit middleware, but OTel traces at 100% for `5xx` and `always_trace_routes.json` can carry request attributes (`http.url`, `http.request.body`, user headers) to Tempo with no redaction mentioned. `pii-leak-detector` only runs on logs. Fix: apply `pii_redact` to span attributes before export; extend detector to Tempo.\n\n11. Prometheus `{route}` label cardinality — Section 7 — if `route` is the matched URL (e.g. `/users/:id/orders/:oid`) cardinality is bounded; if it is the raw path it explodes. Not specified. Fix: pin to the Express route template, reject unknown routes with a bucketed `other` label.\n\n12. API-key revocation lag — Section 5 — 30s LRU on last-100k keys means a revoked key is accepted for up to 30s across every edge pod. Acceptable for rotation, risky for compromise. Fix: pub/sub invalidation channel from `auth-svc` that evicts on revoke events, with the 30s TTL as fallback.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 73892,
+    "duration_api_ms": 74979,
+    "num_turns": 1,
+    "result": "1. multi.exec return shape bug — Section 4 snippet — `const [count] = await multi.exec()` — in ioredis/node-redis, `exec()` returns `[[err, incrResult], [err, expireResult]]`, so `count` is the tuple `[null, N]`, not `N`. Truthy comparison `count > limit` is always truthy/NaN → rate limiter is effectively bypassed. Fix: `const res = await multi.exec(); const count = res[0][1]` (ioredis) or destructure `[[,count]]`.\n\n2. Region prefix missing from documented key — Section 4 — key format `rl:{ip}:{route_prefix}:{minute_bucket}` has no region, but Section 10 says 2025-12 SEV2 RCA added region prefix. Handbook contradicts its own incident history; either fix did not ship or doc drifted. Recurrence of global-collapse for one hot IP. Fix: `rl:{region}:{ip}:{route_prefix}:{minute_bucket}` and regression test.\n\n3. Fixed bucket, not sliding — Section 4 — `Math.floor(Date.now()/60000)` is fixed minute bucket; text claims \"sliding-window approximation\". Allows 2× burst at bucket boundary (limit worth of traffic in last second + limit in first second). Fix: either rename to \"fixed-window\" or implement actual sliding window (e.g., weighted prev+curr bucket).\n\n4. rate_limit runs before auth_jwt — Section 3 pipeline steps 3 vs 5 — throttle keyed only by IP, so CGNAT/corporate-NAT users collide and share a bucket, while authenticated heavy users get no per-user limit. Also means unauth attackers and auth users share the same bucket dimension. Fix: two-stage — cheap per-IP pre-auth cap, per-`sub` cap post-auth.\n\n5. Auto-rollback conflicts with security forensic rule — Section 6 \"SEV1 ANY HOUR triggers automatic rollback\" vs Section 8 \"DO NOT roll back without coordination — security may want to capture forensic state\". On a security SEV1 the automation destroys the evidence before responders arrive. Fix: exclude security-tagged alerts from auto-rollback, require `@security-oncall` ack.\n\n6. body_size_guard after rate_limit — Section 3 steps 3 → 4 — oversized bodies (`>2MB`) consume the rate-limit counter before being `413`'d, and depending on `express.json` position may already be buffered into memory. DoS amplification and wasted quota. Fix: Content-Length precheck in `header_sanitize` or move `body_size_guard` to step 2.5; ensure body parser is mounted after the guard.\n\n7. JWKS stale-while-revalidate window re-exposes 2025-06 — Section 2 rule 4 / Section 5 — 15min refresh + 16min soft TTL + SWR means a poisoned key set (the 2025-06 SEV1 pattern) persists serving for up to ~16min after auth-svc recovers. RCA \"sanity-check on refresh\" is not described in the handbook itself. Fix: document the sanity check (expected kid set, signature self-test), shorten SWR grace, add kill-switch config to force cache flush.\n\n8. `jti` not deduplicated at edge — Section 5 — explicit tradeoff, but combined with 30s clock skew it permits at least a 30s replay window for leaked tokens against any downstream that also does not dedupe. Fix: bounded `jti` seen-set in Redis with TTL = token lifetime + skew, at least for mutating routes.\n\n9. Trust-boundary header list is incomplete — Section 2 rule 1 / Section 5 — strips `X-User-Id`, `X-Org-Id`, `X-Forwarded-For`, `X-Real-IP`, `X-Original-Authorization`; no mention of RFC 7239 `Forwarded`, `CF-Connecting-IP`, `True-Client-IP`, or the `X-Internal-*` set (which Section 5 claims is stripped but rule 1 does not enumerate). Spoof path if any downstream or middleware consults an un-stripped alias. Fix: allowlist (not denylist) — drop everything not in a known-safe set, explicitly including `X-Internal-*`.\n\n10. PII redaction scope is log-only — Section 2 rule 5 / Section 7 — redaction runs in the log-emit middleware, but OTel traces at 100% for `5xx` and `always_trace_routes.json` can carry request attributes (`http.url`, `http.request.body`, user headers) to Tempo with no redaction mentioned. `pii-leak-detector` only runs on logs. Fix: apply `pii_redact` to span attributes before export; extend detector to Tempo.\n\n11. Prometheus `{route}` label cardinality — Section 7 — if `route` is the matched URL (e.g. `/users/:id/orders/:oid`) cardinality is bounded; if it is the raw path it explodes. Not specified. Fix: pin to the Express route template, reject unknown routes with a bucketed `other` label.\n\n12. API-key revocation lag — Section 5 — 30s LRU on last-100k keys means a revoked key is accepted for up to 30s across every edge pod. Acceptable for rotation, risky for compromise. Fix: pub/sub invalidation channel from `auth-svc` that evicts on revoke events, with the 30s TTL as fallback.",
+    "stop_reason": "end_turn",
+    "session_id": "d784fe49-23d4-448f-ad26-ead20ab0769f",
+    "total_cost_usd": 0.129647,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 41234,
+      "output_tokens": 4137,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 0,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 4137,
+          "cache_read_input_tokens": 41234,
+          "cache_creation_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 5505,
+        "outputTokens": 14,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.005575,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 4137,
+        "cacheReadInputTokens": 41234,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.124072,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "8492f009-52d1-425b-881d-3dcc69753ef9"
+  }
+}

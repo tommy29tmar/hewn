@@ -1,0 +1,105 @@
+{
+  "track": "T2",
+  "arm": "terse",
+  "prompt_id": "add-search-bar",
+  "run_index": 1,
+  "arm_order_index": 1,
+  "arm_order_full": [
+    "hewn_prompt_only",
+    "terse",
+    "caveman_full",
+    "baseline",
+    "hewn_full",
+    "caveman_full_plus_ultra_directive"
+  ],
+  "digest_hex": "87154785cda4737305ac6142704bf42d817426f83c953447d3e28835e0246410",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T00:15:36.230029+00:00",
+  "output_tokens_tiktoken": 79,
+  "output_tokens_anthropic": 117,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 10492,
+  "cache_read_input_tokens": 13741,
+  "total_input_tokens": 24239,
+  "cache_state": "warm",
+  "wallclock_ms": 7405.813880002825,
+  "duration_ms": 3948,
+  "duration_api_ms": 4855,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "a3e66c01-1a1e-42b3-bfd7-60d9acf49892",
+  "total_cost_usd": 0.0758175,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "Need more info to point you at the right file:\n\n1. Which app/repo? (path)\n2. Framework? (React, Vue, Svelte, plain HTML, etc.)\n3. Search *what* — static list, API, full-text over docs?\n4. Client-side filter or server-side query?\n\nDrop the repo path and I'll open it and sketch the integration point.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 3948,
+    "duration_api_ms": 4855,
+    "num_turns": 1,
+    "result": "Need more info to point you at the right file:\n\n1. Which app/repo? (path)\n2. Framework? (React, Vue, Svelte, plain HTML, etc.)\n3. Search *what* — static list, API, full-text over docs?\n4. Client-side filter or server-side query?\n\nDrop the repo path and I'll open it and sketch the integration point.",
+    "stop_reason": "end_turn",
+    "session_id": "a3e66c01-1a1e-42b3-bfd7-60d9acf49892",
+    "total_cost_usd": 0.0758175,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 10492,
+      "cache_read_input_tokens": 13741,
+      "output_tokens": 117,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 10492,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 117,
+          "cache_read_input_tokens": 13741,
+          "cache_creation_input_tokens": 10492,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 10492
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 352,
+        "outputTokens": 13,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.000417,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 117,
+        "cacheReadInputTokens": 13741,
+        "cacheCreationInputTokens": 10492,
+        "webSearchRequests": 0,
+        "costUSD": 0.0754005,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "1f3213d7-06e0-439d-bf1a-b3c8267e39be"
+  }
+}

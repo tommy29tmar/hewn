@@ -1,0 +1,105 @@
+{
+  "track": "T1b",
+  "arm": "baseline",
+  "prompt_id": "sql-explain",
+  "run_index": 1,
+  "arm_order_index": 4,
+  "arm_order_full": [
+    "caveman_full",
+    "hewn_full",
+    "terse",
+    "hewn_prompt_only",
+    "baseline",
+    "caveman_full_plus_ultra_directive"
+  ],
+  "digest_hex": "e9b043a6109acd8755235ab57ea2087212a5d2fe093212bffca1c20b840c04e8",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-21T23:45:14.947992+00:00",
+  "output_tokens_tiktoken": 90,
+  "output_tokens_anthropic": 148,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 11731,
+  "cache_read_input_tokens": 16796,
+  "total_input_tokens": 28533,
+  "cache_state": "warm",
+  "wallclock_ms": 9696.7129780096,
+  "duration_ms": 3960,
+  "duration_api_ms": 4743,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "b79dcad6-a555-4d21-85ad-2053bcdaf8d5",
+  "total_cost_usd": 0.08585975,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "`EXPLAIN` shows the query plan the database will use to execute a SQL statement — how tables are accessed (sequential scan vs index), join order and algorithms (nested loop, hash, merge), estimated row counts, and cost estimates.\n\nUse `EXPLAIN ANALYZE` to actually run the query and get real timings plus actual vs estimated rows — the gap between the two is usually what points to bad statistics or missing indexes.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 3960,
+    "duration_api_ms": 4743,
+    "num_turns": 1,
+    "result": "`EXPLAIN` shows the query plan the database will use to execute a SQL statement — how tables are accessed (sequential scan vs index), join order and algorithms (nested loop, hash, merge), estimated row counts, and cost estimates.\n\nUse `EXPLAIN ANALYZE` to actually run the query and get real timings plus actual vs estimated rows — the gap between the two is usually what points to bad statistics or missing indexes.",
+    "stop_reason": "end_turn",
+    "session_id": "b79dcad6-a555-4d21-85ad-2053bcdaf8d5",
+    "total_cost_usd": 0.08585975,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 11731,
+      "cache_read_input_tokens": 16796,
+      "output_tokens": 148,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 11731,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 148,
+          "cache_read_input_tokens": 16796,
+          "cache_creation_input_tokens": 11731,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 11731
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 348,
+        "outputTokens": 13,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.000413,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 148,
+        "cacheReadInputTokens": 16796,
+        "cacheCreationInputTokens": 11731,
+        "webSearchRequests": 0,
+        "costUSD": 0.08544675,
+        "contextWindow": 200000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "58be45c7-1e3a-4cd6-8ba2-6feb85c33dc4"
+  }
+}

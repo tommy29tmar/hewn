@@ -1,0 +1,105 @@
+{
+  "track": "T2",
+  "arm": "caveman_full_plus_ultra_directive",
+  "prompt_id": "add-search-bar",
+  "run_index": 2,
+  "arm_order_index": 5,
+  "arm_order_full": [
+    "caveman_full",
+    "baseline",
+    "hewn_full",
+    "terse",
+    "hewn_prompt_only",
+    "caveman_full_plus_ultra_directive"
+  ],
+  "digest_hex": "e4d553ad3e355ccffc56234ee1f9b935b3963f152f24e81c5cb452140df74b94",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T00:21:28.751030+00:00",
+  "output_tokens_tiktoken": 75,
+  "output_tokens_anthropic": 114,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 10491,
+  "cache_read_input_tokens": 15201,
+  "total_input_tokens": 25698,
+  "cache_state": "warm",
+  "wallclock_ms": 9946.529238979565,
+  "duration_ms": 4303,
+  "duration_api_ms": 5314,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "a5067b26-1f68-4357-a4d2-210e9bfc9167",
+  "total_cost_usd": 0.07646625000000001,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "Need info first:\n\n1. Stack? (React/Vue/Next/etc)\n2. Search what? (local list, DB, API)\n3. Data size?\n\nGeneric start:\n- UI: `<input>` + state\n- Debounce input (300ms)\n- Filter/fetch on change\n- Render results\n\nPoint me to repo/file, I scope exact.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 4303,
+    "duration_api_ms": 5314,
+    "num_turns": 1,
+    "result": "Need info first:\n\n1. Stack? (React/Vue/Next/etc)\n2. Search what? (local list, DB, API)\n3. Data size?\n\nGeneric start:\n- UI: `<input>` + state\n- Debounce input (300ms)\n- Filter/fetch on change\n- Render results\n\nPoint me to repo/file, I scope exact.",
+    "stop_reason": "end_turn",
+    "session_id": "a5067b26-1f68-4357-a4d2-210e9bfc9167",
+    "total_cost_usd": 0.07646625000000001,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 10491,
+      "cache_read_input_tokens": 15201,
+      "output_tokens": 114,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 10491,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 114,
+          "cache_read_input_tokens": 15201,
+          "cache_creation_input_tokens": 10491,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 10491
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 352,
+        "outputTokens": 13,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.000417,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 114,
+        "cacheReadInputTokens": 15201,
+        "cacheCreationInputTokens": 10491,
+        "webSearchRequests": 0,
+        "costUSD": 0.07604925000000001,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "37f1e570-a1ab-41b8-a250-539e277e86b9"
+  }
+}

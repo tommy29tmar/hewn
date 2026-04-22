@@ -1,0 +1,103 @@
+{
+  "track": "T0",
+  "arm": "caveman_full",
+  "prompt_id": "explain-db-pool",
+  "run_index": 1,
+  "arm_order_index": 2,
+  "arm_order_full": [
+    "terse",
+    "terse_appended",
+    "caveman_full",
+    "caveman_full_appended"
+  ],
+  "digest_hex": "2b21fc020c9f9514ecfb89de5292bc8e27d0913b3aa966344ba89e05bc88db91",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-21T23:25:19.454124+00:00",
+  "output_tokens_tiktoken": 134,
+  "output_tokens_anthropic": 217,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 6529,
+  "cache_read_input_tokens": 15186,
+  "total_input_tokens": 21721,
+  "cache_state": "warm",
+  "wallclock_ms": 12935.713223007042,
+  "duration_ms": 6377,
+  "duration_api_ms": 7164,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "c9d184df-397e-4e00-89c7-2e29ff5caa52",
+  "total_cost_usd": 0.05426425000000001,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "Pool reuse open DB connections. No new connection per request. Skip TCP + auth handshake overhead.\n\nFlow: app borrow conn from pool → run query → return conn to pool. Conn stay alive, next req grab same one.\n\nKey params:\n- `min`/`max` size — idle floor, hard ceiling\n- `idle timeout` — kill stale conn\n- `acquire timeout` — fail fast when pool exhausted\n\nWin: lower latency, bounded DB load, no thundering herd of fresh handshakes.\n\nWatch: pool too small → req queue. Pool too big → DB conn limit hit. Long txn hog conn → starve others.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 6377,
+    "duration_api_ms": 7164,
+    "num_turns": 1,
+    "result": "Pool reuse open DB connections. No new connection per request. Skip TCP + auth handshake overhead.\n\nFlow: app borrow conn from pool → run query → return conn to pool. Conn stay alive, next req grab same one.\n\nKey params:\n- `min`/`max` size — idle floor, hard ceiling\n- `idle timeout` — kill stale conn\n- `acquire timeout` — fail fast when pool exhausted\n\nWin: lower latency, bounded DB load, no thundering herd of fresh handshakes.\n\nWatch: pool too small → req queue. Pool too big → DB conn limit hit. Long txn hog conn → starve others.",
+    "stop_reason": "end_turn",
+    "session_id": "c9d184df-397e-4e00-89c7-2e29ff5caa52",
+    "total_cost_usd": 0.05426425000000001,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 6529,
+      "cache_read_input_tokens": 15186,
+      "output_tokens": 217,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 6529,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 217,
+          "cache_read_input_tokens": 15186,
+          "cache_creation_input_tokens": 6529,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 6529
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 345,
+        "outputTokens": 13,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.00041,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 217,
+        "cacheReadInputTokens": 15186,
+        "cacheCreationInputTokens": 6529,
+        "webSearchRequests": 0,
+        "costUSD": 0.053854250000000006,
+        "contextWindow": 200000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "7ac4cefd-73f9-4658-9996-3b94c00ff372"
+  }
+}

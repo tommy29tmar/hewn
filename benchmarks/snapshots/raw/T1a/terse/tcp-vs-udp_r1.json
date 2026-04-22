@@ -1,0 +1,102 @@
+{
+  "track": "T1a",
+  "arm": "terse",
+  "prompt_id": "tcp-vs-udp",
+  "run_index": 1,
+  "arm_order_index": 1,
+  "arm_order_full": [
+    "baseline",
+    "terse",
+    "caveman_full"
+  ],
+  "digest_hex": "3477bad1c43abfa53a4c2ef843bb8bd5e1878b32d0cfef82b891d77115a5b941",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-21T23:33:58.031822+00:00",
+  "output_tokens_tiktoken": 136,
+  "output_tokens_anthropic": 253,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 6554,
+  "cache_read_input_tokens": 13741,
+  "total_input_tokens": 20301,
+  "cache_state": "warm",
+  "wallclock_ms": 10446.188706002431,
+  "duration_ms": 5411,
+  "duration_api_ms": 6650,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "c4907a8b-0e79-4c0a-a16b-3d0fdf8a5f0c",
+  "total_cost_usd": 0.054605,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "TCP is connection-oriented, reliable, and ordered — it establishes a handshake, guarantees delivery, retransmits lost packets, and preserves sequence. Higher overhead.\n\nUDP is connectionless and fire-and-forget — no handshake, no delivery guarantee, no ordering, no retransmission. Lower overhead, lower latency.\n\nUse TCP for: web (HTTP/1.1, HTTP/2), SSH, email, file transfer — anything where correctness matters.\n\nUse UDP for: DNS, video/voice streaming, gaming, DHCP — anything where speed matters more than perfect delivery.\n\nNote: HTTP/3 runs on QUIC, which is built on UDP but adds TCP-like reliability in userspace.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 5411,
+    "duration_api_ms": 6650,
+    "num_turns": 1,
+    "result": "TCP is connection-oriented, reliable, and ordered — it establishes a handshake, guarantees delivery, retransmits lost packets, and preserves sequence. Higher overhead.\n\nUDP is connectionless and fire-and-forget — no handshake, no delivery guarantee, no ordering, no retransmission. Lower overhead, lower latency.\n\nUse TCP for: web (HTTP/1.1, HTTP/2), SSH, email, file transfer — anything where correctness matters.\n\nUse UDP for: DNS, video/voice streaming, gaming, DHCP — anything where speed matters more than perfect delivery.\n\nNote: HTTP/3 runs on QUIC, which is built on UDP but adds TCP-like reliability in userspace.",
+    "stop_reason": "end_turn",
+    "session_id": "c4907a8b-0e79-4c0a-a16b-3d0fdf8a5f0c",
+    "total_cost_usd": 0.054605,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 6554,
+      "cache_read_input_tokens": 13741,
+      "output_tokens": 253,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 6554,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 253,
+          "cache_read_input_tokens": 13741,
+          "cache_creation_input_tokens": 6554,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 6554
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 347,
+        "outputTokens": 14,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.00041699999999999994,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 253,
+        "cacheReadInputTokens": 13741,
+        "cacheCreationInputTokens": 6554,
+        "webSearchRequests": 0,
+        "costUSD": 0.054188,
+        "contextWindow": 200000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "b01d0e4c-8cf9-4712-8298-72e4cd6b6ed3"
+  }
+}

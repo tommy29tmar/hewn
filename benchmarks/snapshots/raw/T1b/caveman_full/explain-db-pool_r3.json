@@ -1,0 +1,105 @@
+{
+  "track": "T1b",
+  "arm": "caveman_full",
+  "prompt_id": "explain-db-pool",
+  "run_index": 3,
+  "arm_order_index": 5,
+  "arm_order_full": [
+    "baseline",
+    "terse",
+    "caveman_full_plus_ultra_directive",
+    "hewn_prompt_only",
+    "hewn_full",
+    "caveman_full"
+  ],
+  "digest_hex": "e3d10d5f52851e35a719cea7c3f0a4c0fe61c85245c679233b4438ba074b10fe",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T00:05:24.259225+00:00",
+  "output_tokens_tiktoken": 111,
+  "output_tokens_anthropic": 188,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 21736,
+  "total_input_tokens": 21742,
+  "cache_state": "warm",
+  "wallclock_ms": 12295.992379018571,
+  "duration_ms": 6242,
+  "duration_api_ms": 7127,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "f810213c-34c9-40f0-bf64-a711a39c2ab4",
+  "total_cost_usd": 0.016012999999999996,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "Pool reuse open DB connections. No new connection per request. Skip TCP+auth handshake overhead.\n\nWhy: open conn = expensive (TCP, TLS, auth). Under load, churn kills latency.\n\nHow: pool hold N idle conns. Request borrow → use → return. Exhaust → wait or reject.\n\nKey knobs: max size, min idle, idle timeout, acquire timeout, validation query.\n\nGotchas: pool too small → contention. Too big → DB overload. Leaked conn (no return) → starve pool. Long txn hog conn.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 6242,
+    "duration_api_ms": 7127,
+    "num_turns": 1,
+    "result": "Pool reuse open DB connections. No new connection per request. Skip TCP+auth handshake overhead.\n\nWhy: open conn = expensive (TCP, TLS, auth). Under load, churn kills latency.\n\nHow: pool hold N idle conns. Request borrow → use → return. Exhaust → wait or reject.\n\nKey knobs: max size, min idle, idle timeout, acquire timeout, validation query.\n\nGotchas: pool too small → contention. Too big → DB overload. Leaked conn (no return) → starve pool. Long txn hog conn.",
+    "stop_reason": "end_turn",
+    "session_id": "f810213c-34c9-40f0-bf64-a711a39c2ab4",
+    "total_cost_usd": 0.016012999999999996,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 21736,
+      "output_tokens": 188,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 0,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 188,
+          "cache_read_input_tokens": 21736,
+          "cache_creation_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 345,
+        "outputTokens": 14,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.000415,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 188,
+        "cacheReadInputTokens": 21736,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.015597999999999997,
+        "contextWindow": 200000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "504973c3-6289-48ea-a421-53b17931c4bd"
+  }
+}

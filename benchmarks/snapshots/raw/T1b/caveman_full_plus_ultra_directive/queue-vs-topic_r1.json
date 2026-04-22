@@ -1,0 +1,105 @@
+{
+  "track": "T1b",
+  "arm": "caveman_full_plus_ultra_directive",
+  "prompt_id": "queue-vs-topic",
+  "run_index": 1,
+  "arm_order_index": 0,
+  "arm_order_full": [
+    "caveman_full_plus_ultra_directive",
+    "hewn_prompt_only",
+    "caveman_full",
+    "hewn_full",
+    "terse",
+    "baseline"
+  ],
+  "digest_hex": "5d6d15de966d2de1a01243f9e0d98a5b8908442798145efdf692af7bd3cb36a9",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-21T23:50:16.566535+00:00",
+  "output_tokens_tiktoken": 100,
+  "output_tokens_anthropic": 155,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 6558,
+  "cache_read_input_tokens": 15201,
+  "total_input_tokens": 21765,
+  "cache_state": "warm",
+  "wallclock_ms": 9016.634533996694,
+  "duration_ms": 4611,
+  "duration_api_ms": 5389,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "4aebea5d-ca09-4c8b-bca8-656c1e796c6e",
+  "total_cost_usd": 0.052909,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "Queue = 1 msg → 1 consumer (point-to-point, work dist). Topic = 1 msg → N subscribers (pub/sub, fanout).\n\nQueue when: task distribution, load balance workers, each job done once (order processing, email send, job runner).\n\nTopic when: multi system react same event, decouple producers from N consumers (user signup → email + analytics + CRM).\n\nRule: \"work to do once\" → queue. \"event to broadcast\" → topic.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 4611,
+    "duration_api_ms": 5389,
+    "num_turns": 1,
+    "result": "Queue = 1 msg → 1 consumer (point-to-point, work dist). Topic = 1 msg → N subscribers (pub/sub, fanout).\n\nQueue when: task distribution, load balance workers, each job done once (order processing, email send, job runner).\n\nTopic when: multi system react same event, decouple producers from N consumers (user signup → email + analytics + CRM).\n\nRule: \"work to do once\" → queue. \"event to broadcast\" → topic.",
+    "stop_reason": "end_turn",
+    "session_id": "4aebea5d-ca09-4c8b-bca8-656c1e796c6e",
+    "total_cost_usd": 0.052909,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 6558,
+      "cache_read_input_tokens": 15201,
+      "output_tokens": 155,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 6558,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 155,
+          "cache_read_input_tokens": 15201,
+          "cache_creation_input_tokens": 6558,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 6558
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 351,
+        "outputTokens": 13,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.00041600000000000003,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 155,
+        "cacheReadInputTokens": 15201,
+        "cacheCreationInputTokens": 6558,
+        "webSearchRequests": 0,
+        "costUSD": 0.052493,
+        "contextWindow": 200000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "9788275b-a3c2-4e8e-bcc6-2ac62708f981"
+  }
+}

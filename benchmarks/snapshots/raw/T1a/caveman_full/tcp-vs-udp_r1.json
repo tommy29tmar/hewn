@@ -1,0 +1,102 @@
+{
+  "track": "T1a",
+  "arm": "caveman_full",
+  "prompt_id": "tcp-vs-udp",
+  "run_index": 1,
+  "arm_order_index": 2,
+  "arm_order_full": [
+    "baseline",
+    "terse",
+    "caveman_full"
+  ],
+  "digest_hex": "3477bad1c43abfa53a4c2ef843bb8bd5e1878b32d0cfef82b891d77115a5b941",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-21T23:34:08.478870+00:00",
+  "output_tokens_tiktoken": 73,
+  "output_tokens_anthropic": 128,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 6554,
+  "cache_read_input_tokens": 15186,
+  "total_input_tokens": 21746,
+  "cache_state": "warm",
+  "wallclock_ms": 8251.977930020075,
+  "duration_ms": 3812,
+  "duration_api_ms": 4758,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "5caf99f0-8dc0-41d0-8322-dfebea7c7b67",
+  "total_cost_usd": 0.0521975,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "TCP: connection-based, reliable, ordered, handshake, retransmit lost packets. Slower. Use web, SSH, file transfer.\n\nUDP: connectionless, no guarantee, no order, no retransmit. Fast, low overhead. Use video, games, DNS, VoIP.\n\nKey diff: TCP = reliable + slow. UDP = fast + lossy.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 3812,
+    "duration_api_ms": 4758,
+    "num_turns": 1,
+    "result": "TCP: connection-based, reliable, ordered, handshake, retransmit lost packets. Slower. Use web, SSH, file transfer.\n\nUDP: connectionless, no guarantee, no order, no retransmit. Fast, low overhead. Use video, games, DNS, VoIP.\n\nKey diff: TCP = reliable + slow. UDP = fast + lossy.",
+    "stop_reason": "end_turn",
+    "session_id": "5caf99f0-8dc0-41d0-8322-dfebea7c7b67",
+    "total_cost_usd": 0.0521975,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 6554,
+      "cache_read_input_tokens": 15186,
+      "output_tokens": 128,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 6554,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 128,
+          "cache_read_input_tokens": 15186,
+          "cache_creation_input_tokens": 6554,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 6554
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 347,
+        "outputTokens": 13,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.000412,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 128,
+        "cacheReadInputTokens": 15186,
+        "cacheCreationInputTokens": 6554,
+        "webSearchRequests": 0,
+        "costUSD": 0.0517855,
+        "contextWindow": 200000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "c9beaea7-4884-4ccd-98fd-7a03051af4c9"
+  }
+}

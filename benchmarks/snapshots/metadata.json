@@ -1,0 +1,14 @@
+{
+  "generated_at": "2026-04-22T00:56:33.572071+00:00",
+  "model": "claude-opus-4-7",
+  "claude_cli_version": "2.1.117 (Claude Code)",
+  "hewn_repo_commit": "dd864d7db31fde7d200f72818e1ac6aea8497d95",
+  "caveman_skill_sha256": "1762eb9ab0b566d70f51b040dbfd77d1f5be89cfa70da874564bda38c111be7c",
+  "caveman_repo_commit_pinned": "84cc3c14fa1e10182adaced856e003406ccd250d",
+  "rand_seed": "hewn-bench-v1",
+  "claude_md_present": true,
+  "claude_md_sha256": "fed963e9ef7ef01d1da3ae8ec1ca0dc6903e5c2ccd58023b8ae8b6bb02e2112e",
+  "claude_md_word_count": 169,
+  "env_isolated": false,
+  "_note": "User chose option B: do not isolate ~/.claude/CLAUDE.md. Append-vs-replace asymmetry calibrated by T0."
+}

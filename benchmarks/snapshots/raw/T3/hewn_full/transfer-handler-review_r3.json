@@ -1,0 +1,105 @@
+{
+  "track": "T3",
+  "arm": "hewn_full",
+  "prompt_id": "transfer-handler-review",
+  "run_index": 3,
+  "arm_order_index": 3,
+  "arm_order_full": [
+    "baseline",
+    "terse",
+    "caveman_full_plus_ultra_directive",
+    "hewn_full",
+    "hewn_prompt_only",
+    "caveman_full"
+  ],
+  "digest_hex": "3da3c2e2c5460b8f1a8ef9414263122f0e5b04cd184ce0c20df6d0951ea45236",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T00:48:17.497020+00:00",
+  "output_tokens_tiktoken": 818,
+  "output_tokens_anthropic": 1334,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 24534,
+  "cache_read_input_tokens": 16805,
+  "total_input_tokens": 41345,
+  "cache_state": "warm",
+  "wallclock_ms": 27379.611946002115,
+  "duration_ms": 24223,
+  "duration_api_ms": 25576,
+  "wrapper_overhead_ms": 1803.6119460021146,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "80daff95-f3be-4441-8bc2-f07d4269e402",
+  "total_cost_usd": 0.20078900000000002,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "1. IP keying trusts attacker-controlled header — evidence: `req.headers['x-forwarded-for']||req.ip` in diff; violates Section 2 rule 2 + custom `no-direct-xff-read` lint; trigger/impact: attacker rotates `X-Forwarded-For` per request (same class as 2025-09 SEV1), defeats per-IP limit, enables credential brute-force; fix: key on `trustedClientIp(req)` from `src/edge/util/trustedClientIp.ts` which validates XFF only from `config/trusted_proxies.json` egress IPs, else falls back to `req.socket.remoteAddress`; verify: add test rotating XFF — counter under one key, 429 still fires.\n2. Missing `EXPIRE` — unbounded Redis key — evidence: `redis.incr(key)` with no paired `expire`; violates Section 2 rule 3 + `no-unbounded-redis-key` lint + reproduces 2025-11 SEV2 (Redis OOM); trigger/impact: every unique IP/route creates a permanent counter, Redis evicts under pressure, edge degrades; fix: wrap in `redis.multi().incr(key).expire(key,90).exec()` per Section 4 template; verify: integration test asserts `TTL key` > 0 after first `INCR`.\n3. Missing region prefix in key — evidence: key `rl:${ip}` lacks region segment; reproduces 2025-12 SEV2 (global limit instead of per-region); trigger/impact: one hot user in us-east-1 throttled in eu-west-1 too; fix: `rl:${region}:${ip}:${routePrefix}:${minuteBucket}` per Section 4 canonical format.\n4. Missing route prefix + minute bucket — evidence: key omits `routePrefix` and `Math.floor(Date.now()/60000)`; trigger/impact: per-route limits from `config/rate_limits.json` unenforceable (all routes share one counter), no sliding window — counter never rolls, all users permalimited after first spike; fix: use full `rl:{region}:{ip}:{routePrefix}:{minuteBucket}` format from Section 4.\n5. No limit comparison / no 429 response — evidence: diff increments then returns nothing; trigger/impact: counter grows forever with zero enforcement — limiter is a no-op, Section 4 contract violated, `atlas_edge_rate_limit_total{action=\"throttled\"}` stays flat masking the breakage; fix: compare `count > limit` from `config/rate_limits.json`, return RFC 7807 `429` with `retry_after: secondsUntilNextBucket()` per Section 4 snippet.\n6. `req.ip` fallback unsafe without `trust proxy` audit — evidence: `||req.ip`; trigger/impact: Express `req.ip` honors XFF when `app.set('trust proxy', …)` is permissive, re-introducing finding #1 through a different door; fix: never use `req.ip` at edge — route all IP resolution through `trustedClientIp(req)` which is the single chokepoint lint enforces.\n7. Awaited `incr` without error handling — evidence: bare `await redis.incr(key)` outside try/catch; trigger/impact: transient Redis blip throws uncaught into middleware chain → `5xx` for legitimate traffic, violates Section 11 retry guidance; fix: wrap via `src/util/retry.ts` (3x exp backoff) and on terminal failure fail-open or fail-closed per product decision, increment `atlas_edge_rate_limit_total{action=\"errored\"}`.\n8. CODEOWNERS approval required — evidence: change touches rate limiter logic (Section 6 pre-merge rules); trigger/impact: merge will be blocked without platform-team human review; fix: ensure PR is routed to CODEOWNERS for `src/edge/rate_limit.ts` before requesting merge.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 24223,
+    "duration_api_ms": 25576,
+    "num_turns": 1,
+    "result": "1. IP keying trusts attacker-controlled header — evidence: `req.headers['x-forwarded-for']||req.ip` in diff; violates Section 2 rule 2 + custom `no-direct-xff-read` lint; trigger/impact: attacker rotates `X-Forwarded-For` per request (same class as 2025-09 SEV1), defeats per-IP limit, enables credential brute-force; fix: key on `trustedClientIp(req)` from `src/edge/util/trustedClientIp.ts` which validates XFF only from `config/trusted_proxies.json` egress IPs, else falls back to `req.socket.remoteAddress`; verify: add test rotating XFF — counter under one key, 429 still fires.\n2. Missing `EXPIRE` — unbounded Redis key — evidence: `redis.incr(key)` with no paired `expire`; violates Section 2 rule 3 + `no-unbounded-redis-key` lint + reproduces 2025-11 SEV2 (Redis OOM); trigger/impact: every unique IP/route creates a permanent counter, Redis evicts under pressure, edge degrades; fix: wrap in `redis.multi().incr(key).expire(key,90).exec()` per Section 4 template; verify: integration test asserts `TTL key` > 0 after first `INCR`.\n3. Missing region prefix in key — evidence: key `rl:${ip}` lacks region segment; reproduces 2025-12 SEV2 (global limit instead of per-region); trigger/impact: one hot user in us-east-1 throttled in eu-west-1 too; fix: `rl:${region}:${ip}:${routePrefix}:${minuteBucket}` per Section 4 canonical format.\n4. Missing route prefix + minute bucket — evidence: key omits `routePrefix` and `Math.floor(Date.now()/60000)`; trigger/impact: per-route limits from `config/rate_limits.json` unenforceable (all routes share one counter), no sliding window — counter never rolls, all users permalimited after first spike; fix: use full `rl:{region}:{ip}:{routePrefix}:{minuteBucket}` format from Section 4.\n5. No limit comparison / no 429 response — evidence: diff increments then returns nothing; trigger/impact: counter grows forever with zero enforcement — limiter is a no-op, Section 4 contract violated, `atlas_edge_rate_limit_total{action=\"throttled\"}` stays flat masking the breakage; fix: compare `count > limit` from `config/rate_limits.json`, return RFC 7807 `429` with `retry_after: secondsUntilNextBucket()` per Section 4 snippet.\n6. `req.ip` fallback unsafe without `trust proxy` audit — evidence: `||req.ip`; trigger/impact: Express `req.ip` honors XFF when `app.set('trust proxy', …)` is permissive, re-introducing finding #1 through a different door; fix: never use `req.ip` at edge — route all IP resolution through `trustedClientIp(req)` which is the single chokepoint lint enforces.\n7. Awaited `incr` without error handling — evidence: bare `await redis.incr(key)` outside try/catch; trigger/impact: transient Redis blip throws uncaught into middleware chain → `5xx` for legitimate traffic, violates Section 11 retry guidance; fix: wrap via `src/util/retry.ts` (3x exp backoff) and on terminal failure fail-open or fail-closed per product decision, increment `atlas_edge_rate_limit_total{action=\"errored\"}`.\n8. CODEOWNERS approval required — evidence: change touches rate limiter logic (Section 6 pre-merge rules); trigger/impact: merge will be blocked without platform-team human review; fix: ensure PR is routed to CODEOWNERS for `src/edge/rate_limit.ts` before requesting merge.",
+    "stop_reason": "end_turn",
+    "session_id": "80daff95-f3be-4441-8bc2-f07d4269e402",
+    "total_cost_usd": 0.20078900000000002,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 24534,
+      "cache_read_input_tokens": 16805,
+      "output_tokens": 1334,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 24534,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 1334,
+          "cache_read_input_tokens": 16805,
+          "cache_creation_input_tokens": 24534,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 24534
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 5584,
+        "outputTokens": 17,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.005669,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 1334,
+        "cacheReadInputTokens": 16805,
+        "cacheCreationInputTokens": 24534,
+        "webSearchRequests": 0,
+        "costUSD": 0.19512000000000002,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "9aa0a84d-7e00-4765-a60b-6ec6f4ce5782"
+  }
+}

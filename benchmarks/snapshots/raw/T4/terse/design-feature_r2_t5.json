@@ -1,0 +1,96 @@
+{
+  "track": "T4",
+  "arm": "terse",
+  "sequence_id": "design-feature",
+  "run_index": 2,
+  "turn": 5,
+  "arm_order_index": 3,
+  "arm_order_full": [
+    "baseline",
+    "caveman_full",
+    "hewn_prompt_only",
+    "terse",
+    "hewn_full"
+  ],
+  "digest_hex": "3191b019d37f08f3d5b68d9000f1aeb1e1a3524225f9daa893803df1e240ffd1",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T01:33:37.245255+00:00",
+  "session_id_used_for_resume": "4845fc16-a5df-4b09-9b18-5e011308b766",
+  "output_tokens_tiktoken": 1034,
+  "output_tokens_anthropic": 1596,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 708,
+  "cache_read_input_tokens": 27150,
+  "total_input_tokens": 27864,
+  "cache_state": "warm",
+  "wallclock_ms": 33028.109135018894,
+  "duration_ms": 29711,
+  "duration_api_ms": 29681,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "4845fc16-a5df-4b09-9b18-5e011308b766",
+  "total_cost_usd": 0.057929999999999995,
+  "model_used": "claude-opus-4-7",
+  "result": "**Policy: refund in reverse order of payment (LIFO by tender).**\n\nCard was charged last, so card gets refunded first. Gift card balance was consumed first, so it's refunded last. This is the industry default (Shopify, Stripe, most PSPs) and it's the right one:\n\n- User's out-of-pocket cash comes back first — the thing they actually care about.\n- You don't hand out new spendable gift card balance for a refund the customer didn't initiate as a gift card top-up.\n- Matches accounting: the card refund reverses a real cash movement; the gift card refund reverses a liability reduction.\n\n**Worked example**\n\nOrder: $100. Gift card applied $30, card charged $70. User refunds $50.\n\n- Refund card first: min($50, $70) = $50 → card.\n- Gift card gets $0 back.\n- Remaining card charge: $20. Gift card consumption: $30. Books balance.\n\nSecond case: same order, user refunds $90.\n\n- Refund card: min($90, $70) = $70 → card.\n- Remaining $20 → gift card balance (increment).\n- Gift card now has its original balance + $20 (which equals pre-order balance, since $30 was consumed and $20 comes back — net $10 still consumed against the $10 of goods kept).\n\n**Edge cases to decide now, not later:**\n\n1. **Gift card expired between purchase and refund.** Options: (a) refund to card instead, (b) extend expiry, (c) issue a new card. Pick one. Most shops do (c) — new card, same terms as original.\n2. **Gift card voided/fraud-flagged.** Refund to card, or hold, depending on fraud policy.\n3. **Original card no longer valid** (expired, closed). PSP usually handles this — falls back to ACH or store credit. Confirm with your processor.\n4. **Full refund on a gift-card-only order.** Straight reversal to the gift card.\n5. **Refund exceeds original card charge but gift card is gone/expired.** Cap refund at card amount + available gift-card-reissue, or escalate to support.\n\n**Code path**\n\n```\nrefund(order, amount):\n  tx.begin()\n\n  payments = order.payments sorted by captured_at DESC\n  # => [card: $70, gift_card: $30]\n\n  remaining = amount\n  for p in payments:\n    if remaining <= 0: break\n    portion = min(remaining, p.captured_amount - p.refunded_amount)\n    if portion <= 0: continue\n\n    if p.type == 'card':\n      psp.refund(p.psp_charge_id, portion, idempotency_key=f\"{order.id}:{refund.id}:{p.id}\")\n    elif p.type == 'gift_card':\n      gc = SELECT * FROM gift_cards WHERE id = p.gift_card_id FOR UPDATE\n      if gc.expires_at <= now() or gc.status != 'active':\n        # policy branch: reissue, refund-to-card, or fail\n        handle_unrefundable_gift_card(p, portion)\n      else:\n        UPDATE gift_cards SET balance = balance + portion WHERE id = gc.id\n        INSERT INTO gift_card_transactions (card_id, order_id, refund_id, amount, type='refund')\n\n    p.refunded_amount += portion\n    remaining -= portion\n\n  assert remaining == 0, \"refund exceeds refundable amount\"\n  tx.commit()\n```\n\n**Non-obvious bits:**\n\n- **Idempotency key on PSP refund** must include the refund id, not just the order id — a user can refund the same order twice (two separate partial refunds).\n- **`FOR UPDATE` on the gift card** even on refund. Concurrent checkout on the same card + concurrent refund would otherwise race on the balance row.\n- **Persist the split decision** (`refund_allocations` table or JSON on the refund row). Support will ask \"why did $50 go to the card and not the gift card\" six months from now. Don't recompute — record it.\n- **PSP refund is not transactional with your DB.** Either (a) call PSP inside the txn and accept that a DB commit failure after a successful PSP call leaves you inconsistent (rare, reconcilable), or (b) write a `pending_refund` row, commit, then call PSP from a worker with retries. (b) is more correct; (a) is what most teams ship first. Pick knowingly.\n- **Order of operations matters on failure.** If card refund succeeds and gift card increment fails, you've under-refunded the user. Do gift card first (pure DB, rolls back cleanly), card last — but then card failure after gift card commit leaves you over-refunded on the gift card. The `pending_refund` + worker pattern sidesteps this; inline doesn't.\n\nThe last bullet is the real design choice hiding in refunds. Worth pulling into its own decision if you go inline.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 29711,
+    "duration_api_ms": 29681,
+    "num_turns": 1,
+    "result": "**Policy: refund in reverse order of payment (LIFO by tender).**\n\nCard was charged last, so card gets refunded first. Gift card balance was consumed first, so it's refunded last. This is the industry default (Shopify, Stripe, most PSPs) and it's the right one:\n\n- User's out-of-pocket cash comes back first — the thing they actually care about.\n- You don't hand out new spendable gift card balance for a refund the customer didn't initiate as a gift card top-up.\n- Matches accounting: the card refund reverses a real cash movement; the gift card refund reverses a liability reduction.\n\n**Worked example**\n\nOrder: $100. Gift card applied $30, card charged $70. User refunds $50.\n\n- Refund card first: min($50, $70) = $50 → card.\n- Gift card gets $0 back.\n- Remaining card charge: $20. Gift card consumption: $30. Books balance.\n\nSecond case: same order, user refunds $90.\n\n- Refund card: min($90, $70) = $70 → card.\n- Remaining $20 → gift card balance (increment).\n- Gift card now has its original balance + $20 (which equals pre-order balance, since $30 was consumed and $20 comes back — net $10 still consumed against the $10 of goods kept).\n\n**Edge cases to decide now, not later:**\n\n1. **Gift card expired between purchase and refund.** Options: (a) refund to card instead, (b) extend expiry, (c) issue a new card. Pick one. Most shops do (c) — new card, same terms as original.\n2. **Gift card voided/fraud-flagged.** Refund to card, or hold, depending on fraud policy.\n3. **Original card no longer valid** (expired, closed). PSP usually handles this — falls back to ACH or store credit. Confirm with your processor.\n4. **Full refund on a gift-card-only order.** Straight reversal to the gift card.\n5. **Refund exceeds original card charge but gift card is gone/expired.** Cap refund at card amount + available gift-card-reissue, or escalate to support.\n\n**Code path**\n\n```\nrefund(order, amount):\n  tx.begin()\n\n  payments = order.payments sorted by captured_at DESC\n  # => [card: $70, gift_card: $30]\n\n  remaining = amount\n  for p in payments:\n    if remaining <= 0: break\n    portion = min(remaining, p.captured_amount - p.refunded_amount)\n    if portion <= 0: continue\n\n    if p.type == 'card':\n      psp.refund(p.psp_charge_id, portion, idempotency_key=f\"{order.id}:{refund.id}:{p.id}\")\n    elif p.type == 'gift_card':\n      gc = SELECT * FROM gift_cards WHERE id = p.gift_card_id FOR UPDATE\n      if gc.expires_at <= now() or gc.status != 'active':\n        # policy branch: reissue, refund-to-card, or fail\n        handle_unrefundable_gift_card(p, portion)\n      else:\n        UPDATE gift_cards SET balance = balance + portion WHERE id = gc.id\n        INSERT INTO gift_card_transactions (card_id, order_id, refund_id, amount, type='refund')\n\n    p.refunded_amount += portion\n    remaining -= portion\n\n  assert remaining == 0, \"refund exceeds refundable amount\"\n  tx.commit()\n```\n\n**Non-obvious bits:**\n\n- **Idempotency key on PSP refund** must include the refund id, not just the order id — a user can refund the same order twice (two separate partial refunds).\n- **`FOR UPDATE` on the gift card** even on refund. Concurrent checkout on the same card + concurrent refund would otherwise race on the balance row.\n- **Persist the split decision** (`refund_allocations` table or JSON on the refund row). Support will ask \"why did $50 go to the card and not the gift card\" six months from now. Don't recompute — record it.\n- **PSP refund is not transactional with your DB.** Either (a) call PSP inside the txn and accept that a DB commit failure after a successful PSP call leaves you inconsistent (rare, reconcilable), or (b) write a `pending_refund` row, commit, then call PSP from a worker with retries. (b) is more correct; (a) is what most teams ship first. Pick knowingly.\n- **Order of operations matters on failure.** If card refund succeeds and gift card increment fails, you've under-refunded the user. Do gift card first (pure DB, rolls back cleanly), card last — but then card failure after gift card commit leaves you over-refunded on the gift card. The `pending_refund` + worker pattern sidesteps this; inline doesn't.\n\nThe last bullet is the real design choice hiding in refunds. Worth pulling into its own decision if you go inline.",
+    "stop_reason": "end_turn",
+    "session_id": "4845fc16-a5df-4b09-9b18-5e011308b766",
+    "total_cost_usd": 0.057929999999999995,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 708,
+      "cache_read_input_tokens": 27150,
+      "output_tokens": 1596,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 708,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 1596,
+          "cache_read_input_tokens": 27150,
+          "cache_creation_input_tokens": 708,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 708
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 1596,
+        "cacheReadInputTokens": 27150,
+        "cacheCreationInputTokens": 708,
+        "webSearchRequests": 0,
+        "costUSD": 0.057929999999999995,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "5ce850bf-59c6-4f9d-81eb-8022ac00ca1d"
+  }
+}

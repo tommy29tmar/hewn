@@ -1,0 +1,16 @@
+{
+  "final": {
+    "queue_is_one_to_one_or_competing_consumers": true,
+    "topic_is_one_to_many_publish_subscribe": true,
+    "queue_message_consumed_once": true,
+    "topic_message_delivered_to_each_subscriber": true,
+    "use_case_examples_for_each": true
+  },
+  "history": [
+    {
+      "attempt": 0,
+      "raw": "{\"queue_is_one_to_one_or_competing_consumers\":true,\"topic_is_one_to_many_publish_subscribe\":true,\"queue_message_consumed_once\":true,\"topic_message_delivered_to_each_subscriber\":true,\"use_case_examples_for_each\":true}"
+    }
+  ],
+  "ts": "2026-04-22T01:17:05.244109+00:00"
+}

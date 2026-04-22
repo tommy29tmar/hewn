@@ -1,0 +1,105 @@
+{
+  "track": "T2",
+  "arm": "caveman_full_plus_ultra_directive",
+  "prompt_id": "spaghetti-code",
+  "run_index": 2,
+  "arm_order_index": 3,
+  "arm_order_full": [
+    "baseline",
+    "caveman_full",
+    "hewn_prompt_only",
+    "caveman_full_plus_ultra_directive",
+    "hewn_full",
+    "terse"
+  ],
+  "digest_hex": "c5b7a91bb866632a665b169537e636c6632c835cd292573b5020e32ca3fec5f2",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T00:23:36.062204+00:00",
+  "output_tokens_tiktoken": 283,
+  "output_tokens_anthropic": 451,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 25701,
+  "total_input_tokens": 25707,
+  "cache_state": "warm",
+  "wallclock_ms": 22575.782366999192,
+  "duration_ms": 17377,
+  "duration_api_ms": 18142,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "3491fee2-96e5-44a9-b666-ad2afc5d046d",
+  "total_cost_usd": 0.024604500000000005,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "Spaghetti = no boundary. Fix:\n\n**1. Name by job, not impl.** `sendWelcomeEmail()` > `doStuff2()`. Read name → know purpose.\n\n**2. One thing per fn.** Mixing fetch + parse + save = chaos. Split. 5-20 lines ideal.\n\n**3. Kill deep nesting.** Early return > pyramid. Flat = scannable.\n```\nif (!user) return;\nif (!user.active) return;\n// work here\n```\n\n**4. Group by feature, not type.** `/auth/{routes,db,utils}` > `/routes,/db,/utils` scattered.\n\n**5. No hidden state.** Pure fn when possible. Input → output. No global mutate.\n\n**6. Boundaries.** UI ↔ logic ↔ data = 3 layers. Don't let SQL leak to button click.\n\n**7. Delete dead code now.** Commented-out = rot. Git remember.\n\n**8. Name magic nums.** `setTimeout(fn, 86400000)` → `ONE_DAY_MS`.\n\n**9. Comments = why, not what.** Code show what. Comment explain reason.\n\n**10. Refactor when 3rd copy.** Twice = coincidence. Thrice = extract fn.\n\nStart small: pick worst file, extract 2 fns, rename vars. Repeat weekly.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 17377,
+    "duration_api_ms": 18142,
+    "num_turns": 1,
+    "result": "Spaghetti = no boundary. Fix:\n\n**1. Name by job, not impl.** `sendWelcomeEmail()` > `doStuff2()`. Read name → know purpose.\n\n**2. One thing per fn.** Mixing fetch + parse + save = chaos. Split. 5-20 lines ideal.\n\n**3. Kill deep nesting.** Early return > pyramid. Flat = scannable.\n```\nif (!user) return;\nif (!user.active) return;\n// work here\n```\n\n**4. Group by feature, not type.** `/auth/{routes,db,utils}` > `/routes,/db,/utils` scattered.\n\n**5. No hidden state.** Pure fn when possible. Input → output. No global mutate.\n\n**6. Boundaries.** UI ↔ logic ↔ data = 3 layers. Don't let SQL leak to button click.\n\n**7. Delete dead code now.** Commented-out = rot. Git remember.\n\n**8. Name magic nums.** `setTimeout(fn, 86400000)` → `ONE_DAY_MS`.\n\n**9. Comments = why, not what.** Code show what. Comment explain reason.\n\n**10. Refactor when 3rd copy.** Twice = coincidence. Thrice = extract fn.\n\nStart small: pick worst file, extract 2 fns, rename vars. Repeat weekly.",
+    "stop_reason": "end_turn",
+    "session_id": "3491fee2-96e5-44a9-b666-ad2afc5d046d",
+    "total_cost_usd": 0.024604500000000005,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 25701,
+      "output_tokens": 451,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 0,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 451,
+          "cache_read_input_tokens": 25701,
+          "cache_creation_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 359,
+        "outputTokens": 18,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.000449,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 451,
+        "cacheReadInputTokens": 25701,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.024155500000000003,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "d510c763-bb01-4250-ae3c-2d0268e12079"
+  }
+}

@@ -1,0 +1,96 @@
+{
+  "track": "T4",
+  "arm": "caveman_full",
+  "sequence_id": "debug-prod-incident",
+  "run_index": 2,
+  "turn": 3,
+  "arm_order_index": 0,
+  "arm_order_full": [
+    "caveman_full",
+    "terse",
+    "hewn_full",
+    "hewn_prompt_only",
+    "baseline"
+  ],
+  "digest_hex": "522341918a5177210ef438fa55486ec5b622aaa576febbd731536d82595ec31b",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T01:16:30.718731+00:00",
+  "session_id_used_for_resume": "33b3e2c0-fd51-423c-b5fa-d7d3d26030e2",
+  "output_tokens_tiktoken": 316,
+  "output_tokens_anthropic": 486,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 260,
+  "cache_read_input_tokens": 26286,
+  "total_input_tokens": 26552,
+  "cache_state": "warm",
+  "wallclock_ms": 10096.829932997935,
+  "duration_ms": 6625,
+  "duration_api_ms": 6597,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "33b3e2c0-fd51-423c-b5fa-d7d3d26030e2",
+  "total_cost_usd": 0.026948,
+  "model_used": "claude-opus-4-7",
+  "result": "**Two tests. Contract + integration.**\n\n**1. Contract test — `buildCart` output shape:**\n```js\ndescribe('buildCart', () => {\n  const cart = { id: 'c1', items: [{ price: 10, qty: 2 }] };\n\n  it('returns id, items, total', () => {\n    const out = buildCart(cart);\n    expect(out).toEqual({\n      id: 'c1',\n      items: [{ price: 10, qty: 2 }],\n      total: 20,\n    });\n  });\n\n  it('preserves items field', () => {\n    expect(buildCart(cart)).toHaveProperty('items');\n  });\n});\n```\n\n**2. Integration test — POST /api/orders end-to-end:**\n```js\ndescribe('POST /api/orders', () => {\n  it('creates order from cart with items', async () => {\n    const res = await request(app)\n      .post('/api/orders')\n      .send({ cartId: 'c1' });\n    expect(res.status).toBe(200);\n    expect(res.body.items).toBeDefined();\n  });\n});\n```\n\n**Why both:** contract test catch shape regression fast at unit level. Integration test catch wiring break across handler + serializer.\n\n**Bonus:** snapshot test on `buildCart` output — any shape change fail loud.\n\n```js\nit('matches shape snapshot', () => {\n  expect(buildCart(cart)).toMatchSnapshot();\n});\n```\n\nPick contract + integration minimum. Snapshot optional.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 6625,
+    "duration_api_ms": 6597,
+    "num_turns": 1,
+    "result": "**Two tests. Contract + integration.**\n\n**1. Contract test — `buildCart` output shape:**\n```js\ndescribe('buildCart', () => {\n  const cart = { id: 'c1', items: [{ price: 10, qty: 2 }] };\n\n  it('returns id, items, total', () => {\n    const out = buildCart(cart);\n    expect(out).toEqual({\n      id: 'c1',\n      items: [{ price: 10, qty: 2 }],\n      total: 20,\n    });\n  });\n\n  it('preserves items field', () => {\n    expect(buildCart(cart)).toHaveProperty('items');\n  });\n});\n```\n\n**2. Integration test — POST /api/orders end-to-end:**\n```js\ndescribe('POST /api/orders', () => {\n  it('creates order from cart with items', async () => {\n    const res = await request(app)\n      .post('/api/orders')\n      .send({ cartId: 'c1' });\n    expect(res.status).toBe(200);\n    expect(res.body.items).toBeDefined();\n  });\n});\n```\n\n**Why both:** contract test catch shape regression fast at unit level. Integration test catch wiring break across handler + serializer.\n\n**Bonus:** snapshot test on `buildCart` output — any shape change fail loud.\n\n```js\nit('matches shape snapshot', () => {\n  expect(buildCart(cart)).toMatchSnapshot();\n});\n```\n\nPick contract + integration minimum. Snapshot optional.",
+    "stop_reason": "end_turn",
+    "session_id": "33b3e2c0-fd51-423c-b5fa-d7d3d26030e2",
+    "total_cost_usd": 0.026948,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 260,
+      "cache_read_input_tokens": 26286,
+      "output_tokens": 486,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 260,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 486,
+          "cache_read_input_tokens": 26286,
+          "cache_creation_input_tokens": 260,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 260
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 486,
+        "cacheReadInputTokens": 26286,
+        "cacheCreationInputTokens": 260,
+        "webSearchRequests": 0,
+        "costUSD": 0.026948,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "bfcf5949-0d77-48c9-a95d-ddc91802a396"
+  }
+}

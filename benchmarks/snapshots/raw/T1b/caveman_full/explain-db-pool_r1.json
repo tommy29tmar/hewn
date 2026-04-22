@@ -1,0 +1,105 @@
+{
+  "track": "T1b",
+  "arm": "caveman_full",
+  "prompt_id": "explain-db-pool",
+  "run_index": 1,
+  "arm_order_index": 5,
+  "arm_order_full": [
+    "terse",
+    "hewn_full",
+    "baseline",
+    "hewn_prompt_only",
+    "caveman_full_plus_ultra_directive",
+    "caveman_full"
+  ],
+  "digest_hex": "2b21fc020c9f9514ecfb89de5292bc8e27d0913b3aa966344ba89e05bc88db91",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-21T23:41:30.778239+00:00",
+  "output_tokens_tiktoken": 54,
+  "output_tokens_anthropic": 98,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 21736,
+  "total_input_tokens": 21742,
+  "cache_state": "warm",
+  "wallclock_ms": 9447.520695015555,
+  "duration_ms": 3398,
+  "duration_api_ms": 4069,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "2fcd7e9e-d397-4488-82ac-f9ea8a750ee8",
+  "total_cost_usd": 0.013763,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "Pool reuse open DB connections. No new connection per request. Skip TCP/TLS handshake + auth overhead. Fixed size cap protect DB from overload. Idle conn wait in pool, checkout on request, return after. Config: min/max size, idle timeout, max lifetime.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 3398,
+    "duration_api_ms": 4069,
+    "num_turns": 1,
+    "result": "Pool reuse open DB connections. No new connection per request. Skip TCP/TLS handshake + auth overhead. Fixed size cap protect DB from overload. Idle conn wait in pool, checkout on request, return after. Config: min/max size, idle timeout, max lifetime.",
+    "stop_reason": "end_turn",
+    "session_id": "2fcd7e9e-d397-4488-82ac-f9ea8a750ee8",
+    "total_cost_usd": 0.013763,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 21736,
+      "output_tokens": 98,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 0,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 98,
+          "cache_read_input_tokens": 21736,
+          "cache_creation_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 345,
+        "outputTokens": 14,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.000415,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 98,
+        "cacheReadInputTokens": 21736,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.013347999999999999,
+        "contextWindow": 200000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "1894d1d6-8a5a-4ee9-8d98-caa089b5666b"
+  }
+}

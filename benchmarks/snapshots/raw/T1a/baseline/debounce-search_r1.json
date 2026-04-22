@@ -1,0 +1,102 @@
+{
+  "track": "T1a",
+  "arm": "baseline",
+  "prompt_id": "debounce-search",
+  "run_index": 1,
+  "arm_order_index": 0,
+  "arm_order_full": [
+    "baseline",
+    "terse",
+    "caveman_full"
+  ],
+  "digest_hex": "37dcfc04f7f9bb03f94bf4fe2a87d8ed70cc588f0bfaceb0e1c634e40f418a20",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-21T23:36:57.602648+00:00",
+  "output_tokens_tiktoken": 127,
+  "output_tokens_anthropic": 200,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 11729,
+  "cache_read_input_tokens": 16796,
+  "total_input_tokens": 28531,
+  "cache_state": "warm",
+  "wallclock_ms": 10545.720217982307,
+  "duration_ms": 5615,
+  "duration_api_ms": 6806,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "0c436c36-0f12-4a2b-bda1-f23e9039c020",
+  "total_cost_usd": 0.08716725,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "A debouncer waits until the user stops typing (e.g., 300ms of idle) before firing the search. Without it, every keystroke triggers a request — \"react\" sends 5 queries when you only want 1.\n\nBenefits:\n- Fewer network/API calls (cost, rate limits)\n- Less backend load\n- Avoids race conditions where an earlier slow response overwrites a later one\n- Smoother UI — no flicker from rapid result swaps\n\nThrottle is the cousin: fires at a fixed max rate instead of waiting for a pause. Debounce fits search; throttle fits scroll/resize.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 5615,
+    "duration_api_ms": 6806,
+    "num_turns": 1,
+    "result": "A debouncer waits until the user stops typing (e.g., 300ms of idle) before firing the search. Without it, every keystroke triggers a request — \"react\" sends 5 queries when you only want 1.\n\nBenefits:\n- Fewer network/API calls (cost, rate limits)\n- Less backend load\n- Avoids race conditions where an earlier slow response overwrites a later one\n- Smoother UI — no flicker from rapid result swaps\n\nThrottle is the cousin: fires at a fixed max rate instead of waiting for a pause. Debounce fits search; throttle fits scroll/resize.",
+    "stop_reason": "end_turn",
+    "session_id": "0c436c36-0f12-4a2b-bda1-f23e9039c020",
+    "total_cost_usd": 0.08716725,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 11729,
+      "cache_read_input_tokens": 16796,
+      "output_tokens": 200,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 11729,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 200,
+          "cache_read_input_tokens": 16796,
+          "cache_creation_input_tokens": 11729,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 11729
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 353,
+        "outputTokens": 16,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.000433,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 200,
+        "cacheReadInputTokens": 16796,
+        "cacheCreationInputTokens": 11729,
+        "webSearchRequests": 0,
+        "costUSD": 0.08673425,
+        "contextWindow": 200000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "c6307ba5-74ab-45f2-8a95-599cdade5e23"
+  }
+}

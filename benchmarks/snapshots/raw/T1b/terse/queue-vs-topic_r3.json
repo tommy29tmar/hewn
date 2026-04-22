@@ -1,0 +1,105 @@
+{
+  "track": "T1b",
+  "arm": "terse",
+  "prompt_id": "queue-vs-topic",
+  "run_index": 3,
+  "arm_order_index": 0,
+  "arm_order_full": [
+    "terse",
+    "hewn_full",
+    "hewn_prompt_only",
+    "caveman_full_plus_ultra_directive",
+    "caveman_full",
+    "baseline"
+  ],
+  "digest_hex": "12d5f12129216ce1c15ddae588d0de60b3bad5ba9e88ba91d072dae61c162ecb",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T00:12:55.683923+00:00",
+  "output_tokens_tiktoken": 108,
+  "output_tokens_anthropic": 170,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 10496,
+  "cache_read_input_tokens": 13741,
+  "total_input_tokens": 24243,
+  "cache_state": "warm",
+  "wallclock_ms": 7255.878757976461,
+  "duration_ms": 3979,
+  "duration_api_ms": 4687,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "16fa7c55-d61c-4492-88e6-32b9fe155e59",
+  "total_cost_usd": 0.0771715,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "**Queue**: point-to-point. One message → one consumer. Use for work distribution, task processing, load balancing across workers (e.g. job queues, order processing).\n\n**Topic**: publish-subscribe. One message → many subscribers. Use for event broadcasting, fan-out, decoupled notifications (e.g. \"order placed\" event consumed by billing, shipping, analytics).\n\nRule of thumb: if only one worker should handle the message, queue. If multiple independent systems need to react to the same event, topic.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 3979,
+    "duration_api_ms": 4687,
+    "num_turns": 1,
+    "result": "**Queue**: point-to-point. One message → one consumer. Use for work distribution, task processing, load balancing across workers (e.g. job queues, order processing).\n\n**Topic**: publish-subscribe. One message → many subscribers. Use for event broadcasting, fan-out, decoupled notifications (e.g. \"order placed\" event consumed by billing, shipping, analytics).\n\nRule of thumb: if only one worker should handle the message, queue. If multiple independent systems need to react to the same event, topic.",
+    "stop_reason": "end_turn",
+    "session_id": "16fa7c55-d61c-4492-88e6-32b9fe155e59",
+    "total_cost_usd": 0.0771715,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 10496,
+      "cache_read_input_tokens": 13741,
+      "output_tokens": 170,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 10496,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 170,
+          "cache_read_input_tokens": 13741,
+          "cache_creation_input_tokens": 10496,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 10496
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 351,
+        "outputTokens": 14,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.00042100000000000004,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 170,
+        "cacheReadInputTokens": 13741,
+        "cacheCreationInputTokens": 10496,
+        "webSearchRequests": 0,
+        "costUSD": 0.0767505,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "9890cbe5-415c-4257-993d-9e6a925d6282"
+  }
+}

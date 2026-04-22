@@ -1,0 +1,105 @@
+{
+  "track": "T3",
+  "arm": "baseline",
+  "prompt_id": "transfer-handler-review",
+  "run_index": 3,
+  "arm_order_index": 0,
+  "arm_order_full": [
+    "baseline",
+    "terse",
+    "caveman_full_plus_ultra_directive",
+    "hewn_full",
+    "hewn_prompt_only",
+    "caveman_full"
+  ],
+  "digest_hex": "3da3c2e2c5460b8f1a8ef9414263122f0e5b04cd184ce0c20df6d0951ea45236",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T00:47:18.582403+00:00",
+  "output_tokens_tiktoken": 519,
+  "output_tokens_anthropic": 1247,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 39909,
+  "total_input_tokens": 39915,
+  "cache_state": "warm",
+  "wallclock_ms": 24297.74865799118,
+  "duration_ms": 21183,
+  "duration_api_ms": 22200,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "4cf7bd7c-2a76-4a86-ba8d-2f81b237cb3a",
+  "total_cost_usd": 0.0568285,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "**Risk**\n- XFF spoof bypass. `req.headers['x-forwarded-for']` is client-controlled; attacker rotates the header per request to get a fresh bucket → per-IP limit defeated (SEV1 2025-09). Violates Section 2 rule 2.\n- Unbounded Redis key. `INCR` with no `EXPIRE` → key lives forever → OOM eviction storm (SEV2 2025-11). Violates Section 2 rule 3.\n- Key shape wrong. Missing `route_prefix`, `minute_bucket`, and region prefix — one hot user throttles globally across routes (SEV2 2025-12). Violates Section 4 key format `rl:{ip}:{route_prefix}:{minute_bucket}`.\n- Lint bypass. Direct `req.headers['x-forwarded-for']` read outside `trustedClientIp` trips `no-direct-xff-read`; PR should not merge.\n\n**Mitigation**\n```ts\nconst ip = trustedClientIp(req) // validated chain, falls back to req.socket.remoteAddress\nconst bucket = Math.floor(Date.now() / 60000)\nconst key = `rl:${region}:${ip}:${routePrefix}:${bucket}`\nconst multi = redis.multi()\nmulti.incr(key)\nmulti.expire(key, 90)\nconst [count] = await multi.exec()\n```\nThen apply the `limit`/`429` + `retry_after` + `problem+json` shape from Section 4.\n\n**Verify**\n- `npm run lint` — expect `no-direct-xff-read` and `no-unbounded-redis-key` to pass.\n- Integration test: send N+1 requests with rotating `X-Forwarded-For`, same `req.socket.remoteAddress` → N+1th returns `429`.\n- Integration test: after `INCR`, assert `TTL key` ∈ [1, 90]; no key survives >90s.\n- Two-region test: same user hitting `us-east-1` and `eu-west-1` → independent counters.\n- Metric check: `atlas_edge_rate_limit_total{action=\"throttled\"}` increments under the spoof test; no `errored` spike.\n\n**Residual**\n- `trustedClientIp` depends on `config/trusted_proxies.json` freshness — stale list re-opens XFF trust to attacker-controlled hops. Confirm the config is current before merge.\n- CODEOWNERS requires human approval on `src/edge/rate_limit.ts` (Section 6).",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 21183,
+    "duration_api_ms": 22200,
+    "num_turns": 1,
+    "result": "**Risk**\n- XFF spoof bypass. `req.headers['x-forwarded-for']` is client-controlled; attacker rotates the header per request to get a fresh bucket → per-IP limit defeated (SEV1 2025-09). Violates Section 2 rule 2.\n- Unbounded Redis key. `INCR` with no `EXPIRE` → key lives forever → OOM eviction storm (SEV2 2025-11). Violates Section 2 rule 3.\n- Key shape wrong. Missing `route_prefix`, `minute_bucket`, and region prefix — one hot user throttles globally across routes (SEV2 2025-12). Violates Section 4 key format `rl:{ip}:{route_prefix}:{minute_bucket}`.\n- Lint bypass. Direct `req.headers['x-forwarded-for']` read outside `trustedClientIp` trips `no-direct-xff-read`; PR should not merge.\n\n**Mitigation**\n```ts\nconst ip = trustedClientIp(req) // validated chain, falls back to req.socket.remoteAddress\nconst bucket = Math.floor(Date.now() / 60000)\nconst key = `rl:${region}:${ip}:${routePrefix}:${bucket}`\nconst multi = redis.multi()\nmulti.incr(key)\nmulti.expire(key, 90)\nconst [count] = await multi.exec()\n```\nThen apply the `limit`/`429` + `retry_after` + `problem+json` shape from Section 4.\n\n**Verify**\n- `npm run lint` — expect `no-direct-xff-read` and `no-unbounded-redis-key` to pass.\n- Integration test: send N+1 requests with rotating `X-Forwarded-For`, same `req.socket.remoteAddress` → N+1th returns `429`.\n- Integration test: after `INCR`, assert `TTL key` ∈ [1, 90]; no key survives >90s.\n- Two-region test: same user hitting `us-east-1` and `eu-west-1` → independent counters.\n- Metric check: `atlas_edge_rate_limit_total{action=\"throttled\"}` increments under the spoof test; no `errored` spike.\n\n**Residual**\n- `trustedClientIp` depends on `config/trusted_proxies.json` freshness — stale list re-opens XFF trust to attacker-controlled hops. Confirm the config is current before merge.\n- CODEOWNERS requires human approval on `src/edge/rate_limit.ts` (Section 6).",
+    "stop_reason": "end_turn",
+    "session_id": "4cf7bd7c-2a76-4a86-ba8d-2f81b237cb3a",
+    "total_cost_usd": 0.0568285,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 39909,
+      "output_tokens": 1247,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 0,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 1247,
+          "cache_read_input_tokens": 39909,
+          "cache_creation_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 5584,
+        "outputTokens": 17,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.005669,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 1247,
+        "cacheReadInputTokens": 39909,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.0511595,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "0786e101-5afc-45cc-a7de-df7a962acbe7"
+  }
+}

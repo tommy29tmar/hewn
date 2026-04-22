@@ -1,0 +1,96 @@
+{
+  "track": "T4",
+  "arm": "terse",
+  "sequence_id": "design-feature",
+  "run_index": 1,
+  "turn": 5,
+  "arm_order_index": 2,
+  "arm_order_full": [
+    "hewn_full",
+    "hewn_prompt_only",
+    "terse",
+    "baseline",
+    "caveman_full"
+  ],
+  "digest_hex": "30a2f9a62df0d790c0598917c3ab42509bbadd672a0a484741ea201d2da3b44f",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T01:10:11.563309+00:00",
+  "session_id_used_for_resume": "4793f245-7c29-4b32-91fe-683724713458",
+  "output_tokens_tiktoken": 1428,
+  "output_tokens_anthropic": 2313,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 1033,
+  "cache_read_input_tokens": 27564,
+  "total_input_tokens": 28603,
+  "cache_state": "warm",
+  "wallclock_ms": 43384.28701000521,
+  "duration_ms": 40143,
+  "duration_api_ms": 40122,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "4793f245-7c29-4b32-91fe-683724713458",
+  "total_cost_usd": 0.07809325,
+  "model_used": "claude-opus-4-7",
+  "result": "# Refund Policy & Code Path: Mixed Tender\n\n## Policy decision first\n\nThree defensible policies. Pick one and document it — support tickets will cite this.\n\n### A. Proportional (pro-rata across tenders)\n\nRefund splits across gift card and credit card in the same ratio they were charged.\n\nOrder: $100 total = $30 gift card + $70 credit card. Refund $50 → $15 to gift card, $35 to credit card.\n\n**Pros:** fair, symmetric, no arbitrage. **Cons:** ugly fractional cents; user expected cash back.\n\n### B. Gift card first (refund to GC until original GC amount restored, rest to card)\n\nRefund $50 on the above → $30 restores gift card balance, $20 to credit card.\n\n**Pros:** merchant-friendly — keeps value in your ecosystem, reduces card-processing refund fees. **Cons:** user perceives it as stingy. Common at retailers.\n\n### C. Credit card first (refund to card until card charge exhausted, rest to GC)\n\nRefund $50 → $50 to credit card. Refund $80 → $70 to card, $10 to gift card.\n\n**Pros:** user-friendly, matches intuition (\"give my money back\"). **Cons:** worst for merchant economics; enables a laundering pattern (buy with GC, refund to card).\n\n### Recommendation\n\n**Proportional (A)** is the industry default and the most legally defensible — you're returning tender in the same mix it came in. It also neutralizes the GC-to-cash laundering vector that (C) opens up.\n\nRound to the cent with a deterministic rule (largest-remainder or \"give the extra cent to the card\"), and store the exact split so subsequent partial refunds reconcile.\n\n## Code path (policy A, partial refund)\n\nPreconditions you need on the order:\n- `order.gift_card_applied` — amount, card_id, and the transaction_id of the original debit\n- `order.card_charged` — amount, payment gateway charge_id\n- A refunds ledger so you can tell how much has *already* been refunded per tender\n\n### Steps\n\n```\nBEGIN;\n\n-- 1. Lock the order to serialize concurrent refund attempts\nSELECT * FROM orders WHERE id = $order_id FOR UPDATE;\n\n-- 2. Compute remaining refundable per tender\ngc_refunded_so_far   = SUM(refunds.gc_amount WHERE order_id = $id)\ncard_refunded_so_far = SUM(refunds.card_amount WHERE order_id = $id)\ngc_refundable   = order.gift_card_applied - gc_refunded_so_far\ncard_refundable = order.card_charged      - card_refunded_so_far\n\n-- 3. Split this refund proportionally to ORIGINAL tender ratio\ngc_share   = round(refund_amount * order.gift_card_applied / order.total)\ncard_share = refund_amount - gc_share   -- absorbs rounding\n\n-- 4. Clamp to remaining refundable (handles repeated partials)\nassert gc_share   <= gc_refundable\nassert card_share <= card_refundable\n\n-- 5. Write the refund intent row (idempotency key = refund_id)\nINSERT INTO refunds (id, order_id, gc_amount, card_amount, status)\nVALUES ($refund_id, $order_id, gc_share, card_share, 'pending');\n\n-- 6. Restore gift card balance (lock + update, as in consumption)\nSELECT balance, expires_at, status FROM gift_cards WHERE id = $gc_id FOR UPDATE;\n-- Policy choice: restore even if expired? (see below)\nUPDATE gift_cards SET balance = balance + $gc_share WHERE id = $gc_id;\nINSERT INTO gift_card_transactions (card_id, order_id, amount, type, idempotency_key)\n  VALUES ($gc_id, $order_id, +$gc_share, 'refund', $refund_id);\n\nCOMMIT;\n\n-- 7. OUTSIDE the DB transaction: call payment gateway\ngateway.refund(charge_id=order.charge_id, amount=card_share, idempotency_key=refund_id)\n\n-- 8. On gateway success:\nUPDATE refunds SET status = 'completed' WHERE id = $refund_id;\n\n-- 9. On gateway failure:\n--    Leave refunds.status = 'pending', retry via job.\n--    Do NOT roll back the GC restore — that's a separate tender, already settled.\n--    Alert if stuck in pending beyond SLA.\n```\n\n### Why the gateway call is outside the DB transaction\n\nSame reason as checkout: never hold a row lock across a network call to Stripe/Adyen. Persist intent first, call gateway second, reconcile on result. The `refunds` row + idempotency key makes retries safe.\n\n### Why step 6 still uses `FOR UPDATE`\n\nA concurrent consumption on the same card must see the post-refund balance, and a concurrent refund must serialize. Same locking discipline as debit.\n\n## Edge cases to nail down\n\n1. **Expired gift card at refund time.** Three options: (a) restore anyway and extend expiry (user-friendly, what I'd do), (b) restore but keep original expiry (often worthless, bad UX), (c) refuse GC portion and push it all to card (clean but opens laundering — you just converted expired GC value to cash). Pick (a), document it.\n\n2. **Revoked / deactivated gift card.** Treat like expired — restore and reactivate, or refund that portion to card with a fraud review flag.\n\n3. **Refund > remaining card charge.** After several partials, card_refundable may hit zero before gift-card-refundable. Spill the excess to the gift card (or vice versa). Define the spill order in policy.\n\n4. **Order fully paid by gift card.** Card share = 0, skip gateway call entirely. Make sure the code path handles `card_share == 0` without calling the gateway with a zero-amount refund (some gateways error).\n\n5. **Rounding over many partials.** Track cumulative refunded-per-tender, not per-refund ratios, so rounding errors don't compound. The clamp in step 4 catches this.\n\n6. **Chargebacks.** A card chargeback is a forced refund on the card tender only — do NOT auto-restore gift card balance. That's a separate policy (usually: don't, flag for review).\n\n7. **Gift card deleted / user churned.** Restore to the card-on-file, or to store credit. Don't silently drop the value.\n\n## One structural note\n\nYou said mutable row for gift cards, and I pushed back on that earlier. Refunds are the case where you'll feel it most — the `gift_card_transactions` table I snuck into step 6 is doing real work (idempotency, audit, reconciliation, \"why is this balance $47.13\"). You don't have to call it event-sourcing, but you need that table. Treat the mutable `balance` as a cached projection of those transactions and you get the best of both.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 40143,
+    "duration_api_ms": 40122,
+    "num_turns": 1,
+    "result": "# Refund Policy & Code Path: Mixed Tender\n\n## Policy decision first\n\nThree defensible policies. Pick one and document it — support tickets will cite this.\n\n### A. Proportional (pro-rata across tenders)\n\nRefund splits across gift card and credit card in the same ratio they were charged.\n\nOrder: $100 total = $30 gift card + $70 credit card. Refund $50 → $15 to gift card, $35 to credit card.\n\n**Pros:** fair, symmetric, no arbitrage. **Cons:** ugly fractional cents; user expected cash back.\n\n### B. Gift card first (refund to GC until original GC amount restored, rest to card)\n\nRefund $50 on the above → $30 restores gift card balance, $20 to credit card.\n\n**Pros:** merchant-friendly — keeps value in your ecosystem, reduces card-processing refund fees. **Cons:** user perceives it as stingy. Common at retailers.\n\n### C. Credit card first (refund to card until card charge exhausted, rest to GC)\n\nRefund $50 → $50 to credit card. Refund $80 → $70 to card, $10 to gift card.\n\n**Pros:** user-friendly, matches intuition (\"give my money back\"). **Cons:** worst for merchant economics; enables a laundering pattern (buy with GC, refund to card).\n\n### Recommendation\n\n**Proportional (A)** is the industry default and the most legally defensible — you're returning tender in the same mix it came in. It also neutralizes the GC-to-cash laundering vector that (C) opens up.\n\nRound to the cent with a deterministic rule (largest-remainder or \"give the extra cent to the card\"), and store the exact split so subsequent partial refunds reconcile.\n\n## Code path (policy A, partial refund)\n\nPreconditions you need on the order:\n- `order.gift_card_applied` — amount, card_id, and the transaction_id of the original debit\n- `order.card_charged` — amount, payment gateway charge_id\n- A refunds ledger so you can tell how much has *already* been refunded per tender\n\n### Steps\n\n```\nBEGIN;\n\n-- 1. Lock the order to serialize concurrent refund attempts\nSELECT * FROM orders WHERE id = $order_id FOR UPDATE;\n\n-- 2. Compute remaining refundable per tender\ngc_refunded_so_far   = SUM(refunds.gc_amount WHERE order_id = $id)\ncard_refunded_so_far = SUM(refunds.card_amount WHERE order_id = $id)\ngc_refundable   = order.gift_card_applied - gc_refunded_so_far\ncard_refundable = order.card_charged      - card_refunded_so_far\n\n-- 3. Split this refund proportionally to ORIGINAL tender ratio\ngc_share   = round(refund_amount * order.gift_card_applied / order.total)\ncard_share = refund_amount - gc_share   -- absorbs rounding\n\n-- 4. Clamp to remaining refundable (handles repeated partials)\nassert gc_share   <= gc_refundable\nassert card_share <= card_refundable\n\n-- 5. Write the refund intent row (idempotency key = refund_id)\nINSERT INTO refunds (id, order_id, gc_amount, card_amount, status)\nVALUES ($refund_id, $order_id, gc_share, card_share, 'pending');\n\n-- 6. Restore gift card balance (lock + update, as in consumption)\nSELECT balance, expires_at, status FROM gift_cards WHERE id = $gc_id FOR UPDATE;\n-- Policy choice: restore even if expired? (see below)\nUPDATE gift_cards SET balance = balance + $gc_share WHERE id = $gc_id;\nINSERT INTO gift_card_transactions (card_id, order_id, amount, type, idempotency_key)\n  VALUES ($gc_id, $order_id, +$gc_share, 'refund', $refund_id);\n\nCOMMIT;\n\n-- 7. OUTSIDE the DB transaction: call payment gateway\ngateway.refund(charge_id=order.charge_id, amount=card_share, idempotency_key=refund_id)\n\n-- 8. On gateway success:\nUPDATE refunds SET status = 'completed' WHERE id = $refund_id;\n\n-- 9. On gateway failure:\n--    Leave refunds.status = 'pending', retry via job.\n--    Do NOT roll back the GC restore — that's a separate tender, already settled.\n--    Alert if stuck in pending beyond SLA.\n```\n\n### Why the gateway call is outside the DB transaction\n\nSame reason as checkout: never hold a row lock across a network call to Stripe/Adyen. Persist intent first, call gateway second, reconcile on result. The `refunds` row + idempotency key makes retries safe.\n\n### Why step 6 still uses `FOR UPDATE`\n\nA concurrent consumption on the same card must see the post-refund balance, and a concurrent refund must serialize. Same locking discipline as debit.\n\n## Edge cases to nail down\n\n1. **Expired gift card at refund time.** Three options: (a) restore anyway and extend expiry (user-friendly, what I'd do), (b) restore but keep original expiry (often worthless, bad UX), (c) refuse GC portion and push it all to card (clean but opens laundering — you just converted expired GC value to cash). Pick (a), document it.\n\n2. **Revoked / deactivated gift card.** Treat like expired — restore and reactivate, or refund that portion to card with a fraud review flag.\n\n3. **Refund > remaining card charge.** After several partials, card_refundable may hit zero before gift-card-refundable. Spill the excess to the gift card (or vice versa). Define the spill order in policy.\n\n4. **Order fully paid by gift card.** Card share = 0, skip gateway call entirely. Make sure the code path handles `card_share == 0` without calling the gateway with a zero-amount refund (some gateways error).\n\n5. **Rounding over many partials.** Track cumulative refunded-per-tender, not per-refund ratios, so rounding errors don't compound. The clamp in step 4 catches this.\n\n6. **Chargebacks.** A card chargeback is a forced refund on the card tender only — do NOT auto-restore gift card balance. That's a separate policy (usually: don't, flag for review).\n\n7. **Gift card deleted / user churned.** Restore to the card-on-file, or to store credit. Don't silently drop the value.\n\n## One structural note\n\nYou said mutable row for gift cards, and I pushed back on that earlier. Refunds are the case where you'll feel it most — the `gift_card_transactions` table I snuck into step 6 is doing real work (idempotency, audit, reconciliation, \"why is this balance $47.13\"). You don't have to call it event-sourcing, but you need that table. Treat the mutable `balance` as a cached projection of those transactions and you get the best of both.",
+    "stop_reason": "end_turn",
+    "session_id": "4793f245-7c29-4b32-91fe-683724713458",
+    "total_cost_usd": 0.07809325,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 1033,
+      "cache_read_input_tokens": 27564,
+      "output_tokens": 2313,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 1033,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 2313,
+          "cache_read_input_tokens": 27564,
+          "cache_creation_input_tokens": 1033,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 1033
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 2313,
+        "cacheReadInputTokens": 27564,
+        "cacheCreationInputTokens": 1033,
+        "webSearchRequests": 0,
+        "costUSD": 0.07809325,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "ea076363-7379-4597-8d32-87508eebde73"
+  }
+}

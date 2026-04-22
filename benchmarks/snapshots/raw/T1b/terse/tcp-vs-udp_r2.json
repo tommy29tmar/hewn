@@ -1,0 +1,105 @@
+{
+  "track": "T1b",
+  "arm": "terse",
+  "prompt_id": "tcp-vs-udp",
+  "run_index": 2,
+  "arm_order_index": 4,
+  "arm_order_full": [
+    "caveman_full",
+    "caveman_full_plus_ultra_directive",
+    "baseline",
+    "hewn_prompt_only",
+    "terse",
+    "hewn_full"
+  ],
+  "digest_hex": "f12180983420f4a94b3592c84a1684c904419bcb9246fe5b531e2451e68c7956",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-21T23:54:33.532650+00:00",
+  "output_tokens_tiktoken": 97,
+  "output_tokens_anthropic": 177,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 6554,
+  "cache_read_input_tokens": 13741,
+  "total_input_tokens": 20301,
+  "cache_state": "warm",
+  "wallclock_ms": 9351.288706995547,
+  "duration_ms": 3659,
+  "duration_api_ms": 4842,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "4adc60dd-26ee-4446-8754-1cfbd4359399",
+  "total_cost_usd": 0.052705,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "TCP is connection-oriented, reliable, and ordered: it establishes a handshake, retransmits lost packets, guarantees delivery order, and does flow/congestion control. Used for HTTP, SSH, email.\n\nUDP is connectionless and best-effort: no handshake, no retransmission, no ordering, no congestion control. Lower latency and overhead. Used for DNS, video/voice streaming, games, QUIC.\n\nKey tradeoff: TCP trades speed for reliability; UDP trades reliability for speed.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 3659,
+    "duration_api_ms": 4842,
+    "num_turns": 1,
+    "result": "TCP is connection-oriented, reliable, and ordered: it establishes a handshake, retransmits lost packets, guarantees delivery order, and does flow/congestion control. Used for HTTP, SSH, email.\n\nUDP is connectionless and best-effort: no handshake, no retransmission, no ordering, no congestion control. Lower latency and overhead. Used for DNS, video/voice streaming, games, QUIC.\n\nKey tradeoff: TCP trades speed for reliability; UDP trades reliability for speed.",
+    "stop_reason": "end_turn",
+    "session_id": "4adc60dd-26ee-4446-8754-1cfbd4359399",
+    "total_cost_usd": 0.052705,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 6554,
+      "cache_read_input_tokens": 13741,
+      "output_tokens": 177,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 6554,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 177,
+          "cache_read_input_tokens": 13741,
+          "cache_creation_input_tokens": 6554,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 6554
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 347,
+        "outputTokens": 14,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.00041699999999999994,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 177,
+        "cacheReadInputTokens": 13741,
+        "cacheCreationInputTokens": 6554,
+        "webSearchRequests": 0,
+        "costUSD": 0.052288,
+        "contextWindow": 200000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "1ea46c69-959d-42a8-b20d-930262f2de38"
+  }
+}

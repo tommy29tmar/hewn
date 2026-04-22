@@ -1,0 +1,105 @@
+{
+  "track": "T1b",
+  "arm": "baseline",
+  "prompt_id": "explain-db-pool",
+  "run_index": 2,
+  "arm_order_index": 4,
+  "arm_order_full": [
+    "caveman_full_plus_ultra_directive",
+    "hewn_full",
+    "terse",
+    "caveman_full",
+    "baseline",
+    "hewn_prompt_only"
+  ],
+  "digest_hex": "59c4393a35281e40f896315f0f5b5a542854dc38ea31bd4db0c6451c6b10b031",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-21T23:53:14.290227+00:00",
+  "output_tokens_tiktoken": 420,
+  "output_tokens_anthropic": 672,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 11723,
+  "cache_read_input_tokens": 16796,
+  "total_input_tokens": 28525,
+  "cache_state": "warm",
+  "wallclock_ms": 18741.712445014855,
+  "duration_ms": 13461,
+  "duration_api_ms": 14168,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "7ec2cb9d-04c1-4ae4-a774-c06dcaae373b",
+  "total_cost_usd": 0.09891175,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "Database connection pooling keeps a set of open DB connections alive and reuses them across requests, instead of opening/closing one per query.\n\n**Why it exists:** TCP + auth handshake per connection is expensive (often 10–100ms), and databases cap concurrent connections (Postgres default: 100). Without pooling, a burst of requests either stalls on handshakes or exhausts the server's connection limit.\n\n**How it works:**\n- Pool holds N idle connections.\n- Request checks one out → runs queries → returns it.\n- If all are busy, request waits (up to a timeout) or the pool opens a new one (up to `max`).\n- Idle connections past `idleTimeout` get closed.\n\n**Key knobs:**\n- `min` / `max` — floor and ceiling on pool size.\n- `acquireTimeout` — how long a caller waits for a free connection.\n- `idleTimeout` — when to reap unused ones.\n- `maxLifetime` — force-recycle old connections (avoids stale TCP, server-side memory bloat).\n\n**Two layers, often both:**\n- **In-process** (e.g. HikariCP, `pg.Pool`, SQLAlchemy) — per app instance.\n- **External** (e.g. PgBouncer, RDS Proxy) — sits between apps and DB, multiplexes many app-side connections onto few DB-side ones. Essential for serverless/many-replica setups where each instance can't hold its own pool.\n\n**Common pitfalls:**\n- Pool size > DB `max_connections` → DB rejects connections.\n- Long transactions hold connections, starving the pool.\n- Transaction-scoped state (temp tables, `SET LOCAL`, prepared statements) breaks under PgBouncer's transaction/statement pooling modes.\n- Leaked connections (forgot to release) silently shrink effective pool size.\n\n**Rule of thumb:** pool size ≈ `((core_count * 2) + effective_spindle_count)` per app instance, and total across instances should stay well under the DB's limit.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 13461,
+    "duration_api_ms": 14168,
+    "num_turns": 1,
+    "result": "Database connection pooling keeps a set of open DB connections alive and reuses them across requests, instead of opening/closing one per query.\n\n**Why it exists:** TCP + auth handshake per connection is expensive (often 10–100ms), and databases cap concurrent connections (Postgres default: 100). Without pooling, a burst of requests either stalls on handshakes or exhausts the server's connection limit.\n\n**How it works:**\n- Pool holds N idle connections.\n- Request checks one out → runs queries → returns it.\n- If all are busy, request waits (up to a timeout) or the pool opens a new one (up to `max`).\n- Idle connections past `idleTimeout` get closed.\n\n**Key knobs:**\n- `min` / `max` — floor and ceiling on pool size.\n- `acquireTimeout` — how long a caller waits for a free connection.\n- `idleTimeout` — when to reap unused ones.\n- `maxLifetime` — force-recycle old connections (avoids stale TCP, server-side memory bloat).\n\n**Two layers, often both:**\n- **In-process** (e.g. HikariCP, `pg.Pool`, SQLAlchemy) — per app instance.\n- **External** (e.g. PgBouncer, RDS Proxy) — sits between apps and DB, multiplexes many app-side connections onto few DB-side ones. Essential for serverless/many-replica setups where each instance can't hold its own pool.\n\n**Common pitfalls:**\n- Pool size > DB `max_connections` → DB rejects connections.\n- Long transactions hold connections, starving the pool.\n- Transaction-scoped state (temp tables, `SET LOCAL`, prepared statements) breaks under PgBouncer's transaction/statement pooling modes.\n- Leaked connections (forgot to release) silently shrink effective pool size.\n\n**Rule of thumb:** pool size ≈ `((core_count * 2) + effective_spindle_count)` per app instance, and total across instances should stay well under the DB's limit.",
+    "stop_reason": "end_turn",
+    "session_id": "7ec2cb9d-04c1-4ae4-a774-c06dcaae373b",
+    "total_cost_usd": 0.09891175,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 11723,
+      "cache_read_input_tokens": 16796,
+      "output_tokens": 672,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 11723,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 672,
+          "cache_read_input_tokens": 16796,
+          "cache_creation_input_tokens": 11723,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 11723
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 345,
+        "outputTokens": 14,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.000415,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 672,
+        "cacheReadInputTokens": 16796,
+        "cacheCreationInputTokens": 11723,
+        "webSearchRequests": 0,
+        "costUSD": 0.09849675000000001,
+        "contextWindow": 200000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "855a9827-194e-48a4-afcf-df11285e0922"
+  }
+}

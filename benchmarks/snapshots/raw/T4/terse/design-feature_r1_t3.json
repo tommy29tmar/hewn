@@ -1,0 +1,96 @@
+{
+  "track": "T4",
+  "arm": "terse",
+  "sequence_id": "design-feature",
+  "run_index": 1,
+  "turn": 3,
+  "arm_order_index": 2,
+  "arm_order_full": [
+    "hewn_full",
+    "hewn_prompt_only",
+    "terse",
+    "baseline",
+    "caveman_full"
+  ],
+  "digest_hex": "30a2f9a62df0d790c0598917c3ab42509bbadd672a0a484741ea201d2da3b44f",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T01:09:05.321259+00:00",
+  "session_id_used_for_resume": "4793f245-7c29-4b32-91fe-683724713458",
+  "output_tokens_tiktoken": 747,
+  "output_tokens_anthropic": 1236,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 1096,
+  "cache_read_input_tokens": 25141,
+  "total_input_tokens": 26243,
+  "cache_state": "warm",
+  "wallclock_ms": 25922.109431994613,
+  "duration_ms": 22809,
+  "duration_api_ms": 22779,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "4793f245-7c29-4b32-91fe-683724713458",
+  "total_cost_usd": 0.0503505,
+  "model_used": "claude-opus-4-7",
+  "result": "# Preventing Double-Spend on a Mutable Balance Row\n\nFour viable approaches, roughly in order of what I'd pick:\n\n## 1. Conditional UPDATE (optimistic, atomic)\n\n```sql\nUPDATE gift_cards\nSET balance = balance - $amount\nWHERE code_hash = $hash\n  AND balance >= $amount\n  AND status = 'active';\n```\n\nCheck `rowcount`: 1 = success, 0 = insufficient funds or lost race — retry or fail.\n\n**Pros:** no explicit lock, no deadlock risk, one round trip, scales well.\n**Cons:** caller must handle the 0-row case; doesn't compose cleanly if the debit is part of a larger multi-step operation.\n\nThis is the default. Use it unless you have a reason not to.\n\n## 2. `SELECT ... FOR UPDATE` (pessimistic row lock)\n\n```sql\nBEGIN;\nSELECT balance FROM gift_cards WHERE id = $id FOR UPDATE;\n-- app logic, validation, compute amount\nUPDATE gift_cards SET balance = balance - $amount WHERE id = $id;\nCOMMIT;\n```\n\n**Pros:** natural when you need to read, do work, then write within one logical step (e.g. split across gift card + card payment).\n**Cons:** holds a row lock for the duration of the transaction — keep it short. Avoid external calls (payment gateway) while holding it.\n\n## 3. Reserve-then-commit (two-phase)\n\nAdd a `reserved` column or a `gift_card_holds` row. Checkout reserves `$X`, payment gateway call happens, then commit (decrement balance, release hold) or release (restore).\n\n```\nbalance_available = balance - SUM(active_holds)\n```\n\n**Pros:** lets you call the payment gateway without holding a DB lock; clean story for \"authorize now, capture later\" flows; natural TTL for abandoned carts.\n**Cons:** more moving parts — expiry job for stale holds, reconciliation if a hold leaks.\n\nWorth it if checkout can take seconds (gateway latency, 3DS, user interaction between apply-code and pay).\n\n## 4. Serializable isolation\n\nWorks, but overkill here and causes retries under contention. Skip.\n\n## Idempotency — orthogonal but required\n\nConcurrency protection prevents two debits from racing. **Idempotency** prevents the *same* debit from being applied twice (retry, network blip, double-click).\n\nAdd `gift_card_transactions(card_id, idempotency_key UNIQUE, amount, ...)`:\n- Before the UPDATE, insert a transaction row with the checkout's idempotency key.\n- Unique constraint violation = already applied, return the prior result.\n- Then do the conditional UPDATE in the same DB transaction.\n\nYou said mutable row, not event-sourced — but you still need *some* transaction log for idempotency and for audit/refund. A narrow append-only table alongside the mutable balance is the norm. (This is the \"you end up with both anyway\" I mentioned earlier.)\n\n## Recommendation\n\n- **Default path:** conditional UPDATE (#1) + idempotency-keyed transaction row.\n- **If checkout holds a gateway call open:** reserve-then-commit (#3) so you're not locking a row across a network call.\n- Wrap the balance UPDATE and the transaction INSERT in one DB transaction. Never the gateway call.\n- Pick the idempotency key deliberately: `order_id` (or `order_id + attempt`) is usually right — survives retries, distinct across orders.\n\nWhich checkout shape do you have — is the payment gateway called inline, or is there an authorize/capture split? That decides between #1 and #3.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 22809,
+    "duration_api_ms": 22779,
+    "num_turns": 1,
+    "result": "# Preventing Double-Spend on a Mutable Balance Row\n\nFour viable approaches, roughly in order of what I'd pick:\n\n## 1. Conditional UPDATE (optimistic, atomic)\n\n```sql\nUPDATE gift_cards\nSET balance = balance - $amount\nWHERE code_hash = $hash\n  AND balance >= $amount\n  AND status = 'active';\n```\n\nCheck `rowcount`: 1 = success, 0 = insufficient funds or lost race — retry or fail.\n\n**Pros:** no explicit lock, no deadlock risk, one round trip, scales well.\n**Cons:** caller must handle the 0-row case; doesn't compose cleanly if the debit is part of a larger multi-step operation.\n\nThis is the default. Use it unless you have a reason not to.\n\n## 2. `SELECT ... FOR UPDATE` (pessimistic row lock)\n\n```sql\nBEGIN;\nSELECT balance FROM gift_cards WHERE id = $id FOR UPDATE;\n-- app logic, validation, compute amount\nUPDATE gift_cards SET balance = balance - $amount WHERE id = $id;\nCOMMIT;\n```\n\n**Pros:** natural when you need to read, do work, then write within one logical step (e.g. split across gift card + card payment).\n**Cons:** holds a row lock for the duration of the transaction — keep it short. Avoid external calls (payment gateway) while holding it.\n\n## 3. Reserve-then-commit (two-phase)\n\nAdd a `reserved` column or a `gift_card_holds` row. Checkout reserves `$X`, payment gateway call happens, then commit (decrement balance, release hold) or release (restore).\n\n```\nbalance_available = balance - SUM(active_holds)\n```\n\n**Pros:** lets you call the payment gateway without holding a DB lock; clean story for \"authorize now, capture later\" flows; natural TTL for abandoned carts.\n**Cons:** more moving parts — expiry job for stale holds, reconciliation if a hold leaks.\n\nWorth it if checkout can take seconds (gateway latency, 3DS, user interaction between apply-code and pay).\n\n## 4. Serializable isolation\n\nWorks, but overkill here and causes retries under contention. Skip.\n\n## Idempotency — orthogonal but required\n\nConcurrency protection prevents two debits from racing. **Idempotency** prevents the *same* debit from being applied twice (retry, network blip, double-click).\n\nAdd `gift_card_transactions(card_id, idempotency_key UNIQUE, amount, ...)`:\n- Before the UPDATE, insert a transaction row with the checkout's idempotency key.\n- Unique constraint violation = already applied, return the prior result.\n- Then do the conditional UPDATE in the same DB transaction.\n\nYou said mutable row, not event-sourced — but you still need *some* transaction log for idempotency and for audit/refund. A narrow append-only table alongside the mutable balance is the norm. (This is the \"you end up with both anyway\" I mentioned earlier.)\n\n## Recommendation\n\n- **Default path:** conditional UPDATE (#1) + idempotency-keyed transaction row.\n- **If checkout holds a gateway call open:** reserve-then-commit (#3) so you're not locking a row across a network call.\n- Wrap the balance UPDATE and the transaction INSERT in one DB transaction. Never the gateway call.\n- Pick the idempotency key deliberately: `order_id` (or `order_id + attempt`) is usually right — survives retries, distinct across orders.\n\nWhich checkout shape do you have — is the payment gateway called inline, or is there an authorize/capture split? That decides between #1 and #3.",
+    "stop_reason": "end_turn",
+    "session_id": "4793f245-7c29-4b32-91fe-683724713458",
+    "total_cost_usd": 0.0503505,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 1096,
+      "cache_read_input_tokens": 25141,
+      "output_tokens": 1236,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 1096,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 1236,
+          "cache_read_input_tokens": 25141,
+          "cache_creation_input_tokens": 1096,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 1096
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 1236,
+        "cacheReadInputTokens": 25141,
+        "cacheCreationInputTokens": 1096,
+        "webSearchRequests": 0,
+        "costUSD": 0.0503505,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "abffec65-be6f-49b1-8ade-77fe637632bf"
+  }
+}

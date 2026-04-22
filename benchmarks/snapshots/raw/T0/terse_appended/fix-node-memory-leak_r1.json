@@ -1,0 +1,103 @@
+{
+  "track": "T0",
+  "arm": "terse_appended",
+  "prompt_id": "fix-node-memory-leak",
+  "run_index": 1,
+  "arm_order_index": 1,
+  "arm_order_full": [
+    "terse",
+    "terse_appended",
+    "caveman_full",
+    "caveman_full_appended"
+  ],
+  "digest_hex": "edf96b08b6bf832e7f6141e2b1e51b0b7773d43c771414ddf25ddb62f5d6bccd",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-21T23:26:43.414770+00:00",
+  "output_tokens_tiktoken": 358,
+  "output_tokens_anthropic": 587,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 11742,
+  "cache_read_input_tokens": 16805,
+  "total_input_tokens": 28553,
+  "cache_state": "warm",
+  "wallclock_ms": 17312.146745010978,
+  "duration_ms": 11779,
+  "duration_api_ms": 13012,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "b81e97db-39bc-451f-a798-a45791abee17",
+  "total_cost_usd": 0.09693000000000002,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "Typical workflow:\n\n1. **Confirm it's a leak** — log `process.memoryUsage().heapUsed` over time. Steady growth under steady load = leak. Sawtooth = normal GC.\n\n2. **Capture heap snapshots** — take 2–3 snapshots spaced apart while the process leaks:\n   ```js\n   require('v8').writeHeapSnapshot(`/tmp/heap-${Date.now()}.heapsnapshot`)\n   ```\n   Or send `SIGUSR2` if you've wired it up, or use `--inspect` + Chrome DevTools.\n\n3. **Diff them in Chrome DevTools** — load snapshots in the Memory tab, use \"Comparison\" view, sort by `# Delta`. Objects that keep growing between snapshots are the leak. Click one, check the retainer chain to find what's holding it.\n\n4. **Common culprits**:\n   - Event listeners added in a hot path without `removeListener` (watch for `MaxListenersExceededWarning`)\n   - Closures captured by long-lived callbacks/timers (`setInterval` holding large scopes)\n   - Unbounded `Map`/`Set`/arrays used as caches — switch to `LRUCache` or `WeakMap`/`WeakRef`\n   - Global singletons accumulating entries (request contexts, per-user state)\n   - Promises that never settle, holding their resolution context\n\n5. **Reproduce in isolation** — once you suspect a path, hammer it with a loop and watch heap grow. Fix, re-run, confirm flat.\n\nRun with `--expose-gc` during testing and call `global.gc()` before snapshots to strip noise from un-collected garbage.\n\nIf you want, point me at the process or repo and I'll help dig in.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 11779,
+    "duration_api_ms": 13012,
+    "num_turns": 1,
+    "result": "Typical workflow:\n\n1. **Confirm it's a leak** — log `process.memoryUsage().heapUsed` over time. Steady growth under steady load = leak. Sawtooth = normal GC.\n\n2. **Capture heap snapshots** — take 2–3 snapshots spaced apart while the process leaks:\n   ```js\n   require('v8').writeHeapSnapshot(`/tmp/heap-${Date.now()}.heapsnapshot`)\n   ```\n   Or send `SIGUSR2` if you've wired it up, or use `--inspect` + Chrome DevTools.\n\n3. **Diff them in Chrome DevTools** — load snapshots in the Memory tab, use \"Comparison\" view, sort by `# Delta`. Objects that keep growing between snapshots are the leak. Click one, check the retainer chain to find what's holding it.\n\n4. **Common culprits**:\n   - Event listeners added in a hot path without `removeListener` (watch for `MaxListenersExceededWarning`)\n   - Closures captured by long-lived callbacks/timers (`setInterval` holding large scopes)\n   - Unbounded `Map`/`Set`/arrays used as caches — switch to `LRUCache` or `WeakMap`/`WeakRef`\n   - Global singletons accumulating entries (request contexts, per-user state)\n   - Promises that never settle, holding their resolution context\n\n5. **Reproduce in isolation** — once you suspect a path, hammer it with a loop and watch heap grow. Fix, re-run, confirm flat.\n\nRun with `--expose-gc` during testing and call `global.gc()` before snapshots to strip noise from un-collected garbage.\n\nIf you want, point me at the process or repo and I'll help dig in.",
+    "stop_reason": "end_turn",
+    "session_id": "b81e97db-39bc-451f-a798-a45791abee17",
+    "total_cost_usd": 0.09693000000000002,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 11742,
+      "cache_read_input_tokens": 16805,
+      "output_tokens": 587,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 11742,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 587,
+          "cache_read_input_tokens": 16805,
+          "cache_creation_input_tokens": 11742,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 11742
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 355,
+        "outputTokens": 16,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.000435,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 587,
+        "cacheReadInputTokens": 16805,
+        "cacheCreationInputTokens": 11742,
+        "webSearchRequests": 0,
+        "costUSD": 0.09649500000000001,
+        "contextWindow": 200000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "27e80de5-4aa1-4961-bdf9-31ee26632748"
+  }
+}

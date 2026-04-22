@@ -1,0 +1,105 @@
+{
+  "track": "T1b",
+  "arm": "caveman_full",
+  "prompt_id": "fix-node-memory-leak",
+  "run_index": 3,
+  "arm_order_index": 2,
+  "arm_order_full": [
+    "caveman_full_plus_ultra_directive",
+    "terse",
+    "caveman_full",
+    "hewn_full",
+    "hewn_prompt_only",
+    "baseline"
+  ],
+  "digest_hex": "4fad0128f3b71ccca34936e81d2277af496e07dac1dbb2166396e12e2256680f",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T00:06:59.469084+00:00",
+  "output_tokens_tiktoken": 308,
+  "output_tokens_anthropic": 534,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 10498,
+  "cache_read_input_tokens": 15186,
+  "total_input_tokens": 25690,
+  "cache_state": "warm",
+  "wallclock_ms": 15854.784854018362,
+  "duration_ms": 11985,
+  "duration_api_ms": 12742,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "cb79dc95-6f22-4ac0-9141-77a445f78365",
+  "total_cost_usd": 0.08702050000000001,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "Find leak first, then fix.\n\n**Find:**\n- Run with `--inspect`, open `chrome://inspect`, take 3 heap snapshots (baseline, after load, after idle). Compare retained size.\n- Or `node --heapsnapshot-signal=SIGUSR2` + `kill -USR2 <pid>` for prod snapshots.\n- `process.memoryUsage()` log over time → confirm growth.\n\n**Common causes:**\n- Unbounded caches/Maps. Fix: LRU (`lru-cache`), TTL, size cap.\n- Event listeners not removed. Fix: `off`/`removeListener` on cleanup. Watch `MaxListenersExceededWarning`.\n- Closures holding big objects. Fix: null refs after use.\n- Timers (`setInterval`) never cleared. Fix: `clearInterval` on shutdown.\n- Global arrays pushed forever (logs, metrics buffers). Fix: flush + bound.\n- Promise chains retaining context (e.g. long-lived `Promise.all` over streams).\n- Native addons leaking off-heap — check RSS vs heap gap.\n\n**Fix loop:**\n1. Snapshot → sort by retained size → find dominator.\n2. Trace retainer path to code owning ref.\n3. Break ref (unsubscribe, evict, null).\n4. Re-snapshot, confirm flat.\n\n**Guardrails:**\n- `--max-old-space-size=N` cap.\n- Restart on threshold (pm2/systemd) as safety net, not fix.\n- Add heap metric to monitoring.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 11985,
+    "duration_api_ms": 12742,
+    "num_turns": 1,
+    "result": "Find leak first, then fix.\n\n**Find:**\n- Run with `--inspect`, open `chrome://inspect`, take 3 heap snapshots (baseline, after load, after idle). Compare retained size.\n- Or `node --heapsnapshot-signal=SIGUSR2` + `kill -USR2 <pid>` for prod snapshots.\n- `process.memoryUsage()` log over time → confirm growth.\n\n**Common causes:**\n- Unbounded caches/Maps. Fix: LRU (`lru-cache`), TTL, size cap.\n- Event listeners not removed. Fix: `off`/`removeListener` on cleanup. Watch `MaxListenersExceededWarning`.\n- Closures holding big objects. Fix: null refs after use.\n- Timers (`setInterval`) never cleared. Fix: `clearInterval` on shutdown.\n- Global arrays pushed forever (logs, metrics buffers). Fix: flush + bound.\n- Promise chains retaining context (e.g. long-lived `Promise.all` over streams).\n- Native addons leaking off-heap — check RSS vs heap gap.\n\n**Fix loop:**\n1. Snapshot → sort by retained size → find dominator.\n2. Trace retainer path to code owning ref.\n3. Break ref (unsubscribe, evict, null).\n4. Re-snapshot, confirm flat.\n\n**Guardrails:**\n- `--max-old-space-size=N` cap.\n- Restart on threshold (pm2/systemd) as safety net, not fix.\n- Add heap metric to monitoring.",
+    "stop_reason": "end_turn",
+    "session_id": "cb79dc95-6f22-4ac0-9141-77a445f78365",
+    "total_cost_usd": 0.08702050000000001,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 10498,
+      "cache_read_input_tokens": 15186,
+      "output_tokens": 534,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 10498,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 534,
+          "cache_read_input_tokens": 15186,
+          "cache_creation_input_tokens": 10498,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 10498
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 355,
+        "outputTokens": 16,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.000435,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 534,
+        "cacheReadInputTokens": 15186,
+        "cacheCreationInputTokens": 10498,
+        "webSearchRequests": 0,
+        "costUSD": 0.08658550000000001,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "6cb1f753-3c92-45bb-9207-acee7f799b8d"
+  }
+}

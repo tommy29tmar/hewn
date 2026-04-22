@@ -1,0 +1,105 @@
+{
+  "track": "T1b",
+  "arm": "baseline",
+  "prompt_id": "queue-vs-topic",
+  "run_index": 3,
+  "arm_order_index": 5,
+  "arm_order_full": [
+    "terse",
+    "hewn_full",
+    "hewn_prompt_only",
+    "caveman_full_plus_ultra_directive",
+    "caveman_full",
+    "baseline"
+  ],
+  "digest_hex": "12d5f12129216ce1c15ddae588d0de60b3bad5ba9e88ba91d072dae61c162ecb",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T00:13:42.581802+00:00",
+  "output_tokens_tiktoken": 119,
+  "output_tokens_anthropic": 190,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 15823,
+  "cache_read_input_tokens": 16796,
+  "total_input_tokens": 32625,
+  "cache_state": "warm",
+  "wallclock_ms": 7662.5270289951,
+  "duration_ms": 4350,
+  "duration_api_ms": 5319,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "2932f162-cde6-4389-8c51-f438e9b26fde",
+  "total_cost_usd": 0.11248775,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "**Queue**: point-to-point, one consumer per message. Use for work distribution where each task must be processed exactly once (job processing, order fulfillment, task runners). Multiple consumers compete; each message goes to one.\n\n**Topic**: publish-subscribe, fan-out to many subscribers. Use when multiple independent systems need the same event (user signup → email service + analytics + CRM). Each subscriber gets its own copy.\n\nRule of thumb: if adding a second consumer should *split* the load, use a queue; if it should *duplicate* the stream, use a topic.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 4350,
+    "duration_api_ms": 5319,
+    "num_turns": 1,
+    "result": "**Queue**: point-to-point, one consumer per message. Use for work distribution where each task must be processed exactly once (job processing, order fulfillment, task runners). Multiple consumers compete; each message goes to one.\n\n**Topic**: publish-subscribe, fan-out to many subscribers. Use when multiple independent systems need the same event (user signup → email service + analytics + CRM). Each subscriber gets its own copy.\n\nRule of thumb: if adding a second consumer should *split* the load, use a queue; if it should *duplicate* the stream, use a topic.",
+    "stop_reason": "end_turn",
+    "session_id": "2932f162-cde6-4389-8c51-f438e9b26fde",
+    "total_cost_usd": 0.11248775,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 15823,
+      "cache_read_input_tokens": 16796,
+      "output_tokens": 190,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 15823,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 190,
+          "cache_read_input_tokens": 16796,
+          "cache_creation_input_tokens": 15823,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 15823
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 351,
+        "outputTokens": 13,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.00041600000000000003,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 190,
+        "cacheReadInputTokens": 16796,
+        "cacheCreationInputTokens": 15823,
+        "webSearchRequests": 0,
+        "costUSD": 0.11207175,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "03883fa7-c50a-4106-ae07-1cc845b4ed76"
+  }
+}

@@ -1,0 +1,96 @@
+{
+  "track": "T4",
+  "arm": "terse",
+  "sequence_id": "debug-prod-incident",
+  "run_index": 1,
+  "turn": 4,
+  "arm_order_index": 4,
+  "arm_order_full": [
+    "baseline",
+    "hewn_full",
+    "hewn_prompt_only",
+    "caveman_full",
+    "terse"
+  ],
+  "digest_hex": "c436155c1e87e76d88e6f2c66d47c90c16ae78237b0a8de1b93824cf92fb5c9b",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T01:02:07.875567+00:00",
+  "session_id_used_for_resume": "d88d12d9-978e-4128-8624-4abb35c63ae5",
+  "output_tokens_tiktoken": 362,
+  "output_tokens_anthropic": 648,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 564,
+  "cache_read_input_tokens": 25158,
+  "total_input_tokens": 25728,
+  "cache_state": "warm",
+  "wallclock_ms": 16067.694961006055,
+  "duration_ms": 13234,
+  "duration_api_ms": 13205,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "d88d12d9-978e-4128-8624-4abb35c63ae5",
+  "total_cost_usd": 0.032334,
+  "model_used": "claude-opus-4-7",
+  "result": "Depends on cart size and what else shares the pool.\n\nThe risk: `Promise.all` fires all N lookups concurrently. If a cart has 50 SKUs, you request 50 connections. Pool caps at 20, so 30 queries queue. That's fine in isolation — they just wait — but under load it starves other handlers (checkout, auth, anything) of connections, and you get cascading timeouts that look like a DB outage but are actually pool exhaustion.\n\nChecks:\n\n1. **Max cart size** — what's p99 items per cart? If it's 5, non-issue. If it's 200, you've built a pool bomb.\n2. **Concurrent request load** — 10 concurrent orders × 50 SKUs = 500 queued queries against a 20-conn pool. Every other endpoint stalls.\n3. **Query shape** — N individual `SELECT ... WHERE sku = ?` is the wrong primitive regardless. One `SELECT ... WHERE sku IN (...)` is one connection, one round trip, and doesn't touch the pool question.\n\nRecommendations, in order of preference:\n\n1. **Batch into one query** — `WHERE sku IN (:skus)`. Eliminates the concurrency question entirely. This is almost always the right answer for inventory lookups.\n2. **If batching isn't possible**, bound concurrency: `p-limit` or similar, cap at something like 5. Keeps pool headroom for other traffic.\n3. **Raw `Promise.all` is only safe** when N is small and bounded (schema-enforced, e.g. max 10 items per cart) *and* you've measured pool pressure under peak load.\n\nSequential was slow but safe. Unbounded `Promise.all` is fast but a latent incident. Batched query is both.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 13234,
+    "duration_api_ms": 13205,
+    "num_turns": 1,
+    "result": "Depends on cart size and what else shares the pool.\n\nThe risk: `Promise.all` fires all N lookups concurrently. If a cart has 50 SKUs, you request 50 connections. Pool caps at 20, so 30 queries queue. That's fine in isolation — they just wait — but under load it starves other handlers (checkout, auth, anything) of connections, and you get cascading timeouts that look like a DB outage but are actually pool exhaustion.\n\nChecks:\n\n1. **Max cart size** — what's p99 items per cart? If it's 5, non-issue. If it's 200, you've built a pool bomb.\n2. **Concurrent request load** — 10 concurrent orders × 50 SKUs = 500 queued queries against a 20-conn pool. Every other endpoint stalls.\n3. **Query shape** — N individual `SELECT ... WHERE sku = ?` is the wrong primitive regardless. One `SELECT ... WHERE sku IN (...)` is one connection, one round trip, and doesn't touch the pool question.\n\nRecommendations, in order of preference:\n\n1. **Batch into one query** — `WHERE sku IN (:skus)`. Eliminates the concurrency question entirely. This is almost always the right answer for inventory lookups.\n2. **If batching isn't possible**, bound concurrency: `p-limit` or similar, cap at something like 5. Keeps pool headroom for other traffic.\n3. **Raw `Promise.all` is only safe** when N is small and bounded (schema-enforced, e.g. max 10 items per cart) *and* you've measured pool pressure under peak load.\n\nSequential was slow but safe. Unbounded `Promise.all` is fast but a latent incident. Batched query is both.",
+    "stop_reason": "end_turn",
+    "session_id": "d88d12d9-978e-4128-8624-4abb35c63ae5",
+    "total_cost_usd": 0.032334,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 564,
+      "cache_read_input_tokens": 25158,
+      "output_tokens": 648,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 564,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 648,
+          "cache_read_input_tokens": 25158,
+          "cache_creation_input_tokens": 564,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 564
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 648,
+        "cacheReadInputTokens": 25158,
+        "cacheCreationInputTokens": 564,
+        "webSearchRequests": 0,
+        "costUSD": 0.032334,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "5b1c3242-a812-4da9-b3ae-9d4dae9afabb"
+  }
+}

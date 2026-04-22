@@ -1,0 +1,102 @@
+{
+  "track": "T1a",
+  "arm": "baseline",
+  "prompt_id": "queue-vs-topic",
+  "run_index": 1,
+  "arm_order_index": 0,
+  "arm_order_full": [
+    "baseline",
+    "terse",
+    "caveman_full"
+  ],
+  "digest_hex": "5d6d15de966d2de1a01243f9e0d98a5b8908442798145efdf692af7bd3cb36a9",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-21T23:37:56.828168+00:00",
+  "output_tokens_tiktoken": 141,
+  "output_tokens_anthropic": 226,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 11732,
+  "cache_read_input_tokens": 16796,
+  "total_input_tokens": 28534,
+  "cache_state": "warm",
+  "wallclock_ms": 12262.981793988729,
+  "duration_ms": 7615,
+  "duration_api_ms": 8511,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "e6e3561c-d623-48c0-a5f2-4b45512d47a7",
+  "total_cost_usd": 0.087819,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "**Queue** — point-to-point. One message, one consumer. Use when work must be processed exactly once by a single worker (job processing, task distribution, load balancing across workers).\n\n**Topic** — publish/subscribe. One message, many consumers. Use when multiple independent systems need the same event (order placed → billing, inventory, analytics, email all react).\n\nRule of thumb: if you'd duplicate the message to fan it out, use a topic. If consumers compete for work, use a queue.\n\nModern brokers (Kafka, Pulsar, SNS+SQS) often blur the line — Kafka topics with consumer groups give you both: fan-out across groups, load-balanced within a group.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 7615,
+    "duration_api_ms": 8511,
+    "num_turns": 1,
+    "result": "**Queue** — point-to-point. One message, one consumer. Use when work must be processed exactly once by a single worker (job processing, task distribution, load balancing across workers).\n\n**Topic** — publish/subscribe. One message, many consumers. Use when multiple independent systems need the same event (order placed → billing, inventory, analytics, email all react).\n\nRule of thumb: if you'd duplicate the message to fan it out, use a topic. If consumers compete for work, use a queue.\n\nModern brokers (Kafka, Pulsar, SNS+SQS) often blur the line — Kafka topics with consumer groups give you both: fan-out across groups, load-balanced within a group.",
+    "stop_reason": "end_turn",
+    "session_id": "e6e3561c-d623-48c0-a5f2-4b45512d47a7",
+    "total_cost_usd": 0.087819,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 11732,
+      "cache_read_input_tokens": 16796,
+      "output_tokens": 226,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 11732,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 226,
+          "cache_read_input_tokens": 16796,
+          "cache_creation_input_tokens": 11732,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 11732
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 351,
+        "outputTokens": 13,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.00041600000000000003,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 226,
+        "cacheReadInputTokens": 16796,
+        "cacheCreationInputTokens": 11732,
+        "webSearchRequests": 0,
+        "costUSD": 0.087403,
+        "contextWindow": 200000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "dc75922c-720b-429c-8538-1d88ce2c5f9c"
+  }
+}

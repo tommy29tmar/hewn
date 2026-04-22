@@ -1,0 +1,96 @@
+{
+  "track": "T4",
+  "arm": "caveman_full",
+  "sequence_id": "design-feature",
+  "run_index": 2,
+  "turn": 3,
+  "arm_order_index": 1,
+  "arm_order_full": [
+    "baseline",
+    "caveman_full",
+    "hewn_prompt_only",
+    "terse",
+    "hewn_full"
+  ],
+  "digest_hex": "3191b019d37f08f3d5b68d9000f1aeb1e1a3524225f9daa893803df1e240ffd1",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T01:27:16.724360+00:00",
+  "session_id_used_for_resume": "8e132c32-35f8-4ed4-abb5-c4a26e5c9a79",
+  "output_tokens_tiktoken": 777,
+  "output_tokens_anthropic": 1358,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 1116,
+  "cache_read_input_tokens": 26522,
+  "total_input_tokens": 27644,
+  "cache_state": "warm",
+  "wallclock_ms": 40593.021322012646,
+  "duration_ms": 37291,
+  "duration_api_ms": 37265,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "8e132c32-35f8-4ed4-abb5-c4a26e5c9a79",
+  "total_cost_usd": 0.05421600000000001,
+  "model_used": "claude-opus-4-7",
+  "result": "Four real options:\n\n**1. Pessimistic lock — `SELECT ... FOR UPDATE`**\n```sql\nBEGIN;\nSELECT current_balance FROM gift_cards WHERE code_hash = $1 FOR UPDATE;\n-- app: check >= amount_to_consume\nUPDATE gift_cards SET current_balance = current_balance - $2 WHERE id = $3;\nCOMMIT;\n```\nPros: simple, correct, familiar. Lock held for tx duration → serializes concurrent redeems of same card.\nCons: holds row lock across whole checkout tx. If checkout = slow (payment gateway call inside same tx) → other redeems block. Fix: keep tx short, do gateway call outside.\n\n**2. Optimistic / conditional UPDATE (recommended)**\n```sql\nUPDATE gift_cards\nSET current_balance = current_balance - $amount,\n    version = version + 1\nWHERE id = $card_id\n  AND current_balance >= $amount\n  AND version = $expected_version\nRETURNING current_balance;\n```\nCheck `rows_affected == 1`. If 0 → either insufficient balance or someone beat you. Retry-read or fail.\nPros: no explicit lock, short tx, no blocking. Atomic at row level (Postgres/MySQL guarantee).\nCons: must handle retry logic. Caller must distinguish \"insufficient\" vs \"version mismatch\" (re-read to tell).\n\n**Simpler variant** (no version, just balance guard):\n```sql\nUPDATE gift_cards SET current_balance = current_balance - $amount\nWHERE id = $card_id AND current_balance >= $amount;\n```\n`rows_affected == 0` → insufficient. Atomic. Sufficient for single-step debit.\n\n**3. Serializable isolation** — set tx isolation `SERIALIZABLE`. DB detects conflict, aborts one. Retry in app.\nPros: cleanest semantics.\nCons: more aborts under contention, perf hit globally if set per-connection, retry logic still needed.\n\n**4. App-level lock** (Redis SETNX, advisory lock). Avoid. Adds infra dep, split-brain risk if Redis flaps. DB already has the primitive.\n\n**Recommended: #2 conditional UPDATE.**\n\nPattern:\n```\n1. Read card, show user available balance (UI only, don't trust)\n2. At order submit, in same tx as order create:\n   a. UPDATE ... WHERE balance >= needed  (atomic debit)\n   b. If rows_affected = 0 → fail order, show \"insufficient balance, refresh\"\n   c. Insert order with gift_card_amount populated\n3. Commit tx BEFORE calling payment gateway for remainder\n4. If gateway charge fails → compensating UPDATE to credit balance back\n```\n\nCritical issues to handle:\n\n- **Payment gateway in same tx** = bad. Long tx holds locks, gateway timeout = stuck tx. Debit gift card, commit, then charge card. If charge fails → reverse debit (compensating update). Window where card debited + charge pending = acceptable, recoverable.\n\n- **Crash between debit and charge** = money trapped on gift card, no order. Need reconciliation job: find debits w/o matching successful order after N min → reverse.\n\n- **Idempotency key** on redeem call. Client retries (network) must not double-debit. Store `redemption_id` (UUID from client), unique constraint. Second attempt = no-op return prior result.\n\n- **Refunds** = `UPDATE ... SET balance = balance + $amount` with audit log row (since you skipped event sourcing, you still need a `gift_card_audit` table or you'll regret it — minimum: card_id, delta, reason, order_id, timestamp).\n\nWatch out: even with mutable balance choice, you need *some* log of changes for support + reconciliation. Don't skip it.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 37291,
+    "duration_api_ms": 37265,
+    "num_turns": 1,
+    "result": "Four real options:\n\n**1. Pessimistic lock — `SELECT ... FOR UPDATE`**\n```sql\nBEGIN;\nSELECT current_balance FROM gift_cards WHERE code_hash = $1 FOR UPDATE;\n-- app: check >= amount_to_consume\nUPDATE gift_cards SET current_balance = current_balance - $2 WHERE id = $3;\nCOMMIT;\n```\nPros: simple, correct, familiar. Lock held for tx duration → serializes concurrent redeems of same card.\nCons: holds row lock across whole checkout tx. If checkout = slow (payment gateway call inside same tx) → other redeems block. Fix: keep tx short, do gateway call outside.\n\n**2. Optimistic / conditional UPDATE (recommended)**\n```sql\nUPDATE gift_cards\nSET current_balance = current_balance - $amount,\n    version = version + 1\nWHERE id = $card_id\n  AND current_balance >= $amount\n  AND version = $expected_version\nRETURNING current_balance;\n```\nCheck `rows_affected == 1`. If 0 → either insufficient balance or someone beat you. Retry-read or fail.\nPros: no explicit lock, short tx, no blocking. Atomic at row level (Postgres/MySQL guarantee).\nCons: must handle retry logic. Caller must distinguish \"insufficient\" vs \"version mismatch\" (re-read to tell).\n\n**Simpler variant** (no version, just balance guard):\n```sql\nUPDATE gift_cards SET current_balance = current_balance - $amount\nWHERE id = $card_id AND current_balance >= $amount;\n```\n`rows_affected == 0` → insufficient. Atomic. Sufficient for single-step debit.\n\n**3. Serializable isolation** — set tx isolation `SERIALIZABLE`. DB detects conflict, aborts one. Retry in app.\nPros: cleanest semantics.\nCons: more aborts under contention, perf hit globally if set per-connection, retry logic still needed.\n\n**4. App-level lock** (Redis SETNX, advisory lock). Avoid. Adds infra dep, split-brain risk if Redis flaps. DB already has the primitive.\n\n**Recommended: #2 conditional UPDATE.**\n\nPattern:\n```\n1. Read card, show user available balance (UI only, don't trust)\n2. At order submit, in same tx as order create:\n   a. UPDATE ... WHERE balance >= needed  (atomic debit)\n   b. If rows_affected = 0 → fail order, show \"insufficient balance, refresh\"\n   c. Insert order with gift_card_amount populated\n3. Commit tx BEFORE calling payment gateway for remainder\n4. If gateway charge fails → compensating UPDATE to credit balance back\n```\n\nCritical issues to handle:\n\n- **Payment gateway in same tx** = bad. Long tx holds locks, gateway timeout = stuck tx. Debit gift card, commit, then charge card. If charge fails → reverse debit (compensating update). Window where card debited + charge pending = acceptable, recoverable.\n\n- **Crash between debit and charge** = money trapped on gift card, no order. Need reconciliation job: find debits w/o matching successful order after N min → reverse.\n\n- **Idempotency key** on redeem call. Client retries (network) must not double-debit. Store `redemption_id` (UUID from client), unique constraint. Second attempt = no-op return prior result.\n\n- **Refunds** = `UPDATE ... SET balance = balance + $amount` with audit log row (since you skipped event sourcing, you still need a `gift_card_audit` table or you'll regret it — minimum: card_id, delta, reason, order_id, timestamp).\n\nWatch out: even with mutable balance choice, you need *some* log of changes for support + reconciliation. Don't skip it.",
+    "stop_reason": "end_turn",
+    "session_id": "8e132c32-35f8-4ed4-abb5-c4a26e5c9a79",
+    "total_cost_usd": 0.05421600000000001,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 1116,
+      "cache_read_input_tokens": 26522,
+      "output_tokens": 1358,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 1116,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 1358,
+          "cache_read_input_tokens": 26522,
+          "cache_creation_input_tokens": 1116,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 1116
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 1358,
+        "cacheReadInputTokens": 26522,
+        "cacheCreationInputTokens": 1116,
+        "webSearchRequests": 0,
+        "costUSD": 0.05421600000000001,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "487efac4-96f6-4325-adc0-4215b83384f9"
+  }
+}

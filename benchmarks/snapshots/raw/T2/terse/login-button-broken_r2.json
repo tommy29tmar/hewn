@@ -1,0 +1,105 @@
+{
+  "track": "T2",
+  "arm": "terse",
+  "prompt_id": "login-button-broken",
+  "run_index": 2,
+  "arm_order_index": 3,
+  "arm_order_full": [
+    "caveman_full_plus_ultra_directive",
+    "baseline",
+    "hewn_prompt_only",
+    "terse",
+    "hewn_full",
+    "caveman_full"
+  ],
+  "digest_hex": "e1fff6cb5ce95b9c68e1704c12e3bb9788cf296894302e3a503c3240dcf37267",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T00:20:10.915948+00:00",
+  "output_tokens_tiktoken": 129,
+  "output_tokens_anthropic": 401,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 10491,
+  "cache_read_input_tokens": 13741,
+  "total_input_tokens": 24238,
+  "cache_state": "warm",
+  "wallclock_ms": 12260.935533005977,
+  "duration_ms": 7482,
+  "duration_api_ms": 8551,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "1123f8a0-d55f-49b8-b96f-360ea1c9c440",
+  "total_cost_usd": 0.08290325000000001,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "Need more info to help:\n\n1. **Which repo/app?** Current context is SIGIL/Hewn (a Claude Code CLI wrapper) — no login button there. Is this a different project? Path?\n2. **\"Doesn't work\" how?** Nothing happens on click? Error message? Wrong redirect? 401/500? Stuck spinner?\n3. **Where are users complaining?** Any logs, screenshots, browser console errors, or a bug report I can read?\n4. **When did it break?** Recent deploy? Known-good commit?\n\nPoint me at the repo and one concrete symptom and I'll start investigating.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 7482,
+    "duration_api_ms": 8551,
+    "num_turns": 1,
+    "result": "Need more info to help:\n\n1. **Which repo/app?** Current context is SIGIL/Hewn (a Claude Code CLI wrapper) — no login button there. Is this a different project? Path?\n2. **\"Doesn't work\" how?** Nothing happens on click? Error message? Wrong redirect? 401/500? Stuck spinner?\n3. **Where are users complaining?** Any logs, screenshots, browser console errors, or a bug report I can read?\n4. **When did it break?** Recent deploy? Known-good commit?\n\nPoint me at the repo and one concrete symptom and I'll start investigating.",
+    "stop_reason": "end_turn",
+    "session_id": "1123f8a0-d55f-49b8-b96f-360ea1c9c440",
+    "total_cost_usd": 0.08290325000000001,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 10491,
+      "cache_read_input_tokens": 13741,
+      "output_tokens": 401,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 10491,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 401,
+          "cache_read_input_tokens": 13741,
+          "cache_creation_input_tokens": 10491,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 10491
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 349,
+        "outputTokens": 12,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.000409,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 401,
+        "cacheReadInputTokens": 13741,
+        "cacheCreationInputTokens": 10491,
+        "webSearchRequests": 0,
+        "costUSD": 0.08249425,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "58c06381-e8b3-4a20-b867-b3c33f9f75c5"
+  }
+}

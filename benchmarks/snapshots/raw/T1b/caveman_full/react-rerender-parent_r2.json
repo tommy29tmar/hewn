@@ -1,0 +1,105 @@
+{
+  "track": "T1b",
+  "arm": "caveman_full",
+  "prompt_id": "react-rerender-parent",
+  "run_index": 2,
+  "arm_order_index": 5,
+  "arm_order_full": [
+    "terse",
+    "hewn_prompt_only",
+    "hewn_full",
+    "baseline",
+    "caveman_full_plus_ultra_directive",
+    "caveman_full"
+  ],
+  "digest_hex": "5c7062d59c99ec93d8648382caa16140c672b41605bcf28c536ff4956e9b7125",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-21T23:52:13.466711+00:00",
+  "output_tokens_tiktoken": 89,
+  "output_tokens_anthropic": 136,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 21743,
+  "total_input_tokens": 21749,
+  "cache_state": "warm",
+  "wallclock_ms": 10830.570449004881,
+  "duration_ms": 4061,
+  "duration_api_ms": 5066,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "c7988b02-aff3-44c9-b7c7-58fbbd6b0e27",
+  "total_cost_usd": 0.014728499999999999,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "Parent re-render → children re-render by default. Props change not required.\n\nFix options:\n- `React.memo(Child)` — skip if props shallow-equal.\n- Stable prop refs: `useMemo` for objects/arrays, `useCallback` for fns.\n- Move state down so parent no re-render.\n\nGotcha: `memo` useless if you pass new object/fn/children each render. Memoize those too.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 4061,
+    "duration_api_ms": 5066,
+    "num_turns": 1,
+    "result": "Parent re-render → children re-render by default. Props change not required.\n\nFix options:\n- `React.memo(Child)` — skip if props shallow-equal.\n- Stable prop refs: `useMemo` for objects/arrays, `useCallback` for fns.\n- Move state down so parent no re-render.\n\nGotcha: `memo` useless if you pass new object/fn/children each render. Memoize those too.",
+    "stop_reason": "end_turn",
+    "session_id": "c7988b02-aff3-44c9-b7c7-58fbbd6b0e27",
+    "total_cost_usd": 0.014728499999999999,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 21743,
+      "output_tokens": 136,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 0,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 136,
+          "cache_read_input_tokens": 21743,
+          "cache_creation_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 352,
+        "outputTokens": 15,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.00042699999999999997,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 136,
+        "cacheReadInputTokens": 21743,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.014301499999999998,
+        "contextWindow": 200000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "aabc8f30-a6a5-4f4c-a3e1-fa3e0e64ccae"
+  }
+}

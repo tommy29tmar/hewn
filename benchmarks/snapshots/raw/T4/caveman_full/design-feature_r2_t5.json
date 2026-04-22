@@ -1,0 +1,96 @@
+{
+  "track": "T4",
+  "arm": "caveman_full",
+  "sequence_id": "design-feature",
+  "run_index": 2,
+  "turn": 5,
+  "arm_order_index": 1,
+  "arm_order_full": [
+    "baseline",
+    "caveman_full",
+    "hewn_prompt_only",
+    "terse",
+    "hewn_full"
+  ],
+  "digest_hex": "3191b019d37f08f3d5b68d9000f1aeb1e1a3524225f9daa893803df1e240ffd1",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T01:28:25.720713+00:00",
+  "session_id_used_for_resume": "8e132c32-35f8-4ed4-abb5-c4a26e5c9a79",
+  "output_tokens_tiktoken": 1487,
+  "output_tokens_anthropic": 2548,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 1122,
+  "cache_read_input_tokens": 29087,
+  "total_input_tokens": 30215,
+  "cache_state": "warm",
+  "wallclock_ms": 44360.61094200704,
+  "duration_ms": 40657,
+  "duration_api_ms": 40624,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "8e132c32-35f8-4ed4-abb5-c4a26e5c9a79",
+  "total_cost_usd": 0.085286,
+  "model_used": "claude-opus-4-7",
+  "result": "**Policy first — three viable models:**\n\n**A. Proportional split (recommended default)**\nRefund splits same ratio as original payment.\nOrder $100 = $30 gift card + $70 card. Refund $50 → $15 to card balance, $35 to credit card.\n- Pros: fair, symmetric, no user gaming, accounting clean (each tender returns what it gave).\n- Cons: small rounding edges. User confused why partial refund hits two places.\n\n**B. Card-first (refund credit card until exhausted, then gift card)**\nRefund $50 → $50 to credit card. Refund $80 → $70 to card, $10 to gift card.\n- Pros: user-friendly (cash back > store credit). Reduces gift card liability slowly.\n- Cons: lets users game it — buy $100 w/ $50 gift card + $50 cash, refund $50 → all cash back, gift card preserved. Effectively converts gift card to cash via purchase-refund cycle. **Don't do this if cards are non-cashable by policy.**\n\n**C. Gift-card-first (refund gift card until original amount restored, then card)**\nRefund $50 → $30 to gift card (restore original), $20 to credit card.\n- Pros: prevents the gaming in B. Gift card liability returns to books predictably.\n- Cons: user prefers cash. Customer service complaints.\n\n**Recommendation: A (proportional).** Defensible, symmetric, no gaming. Document in ToS.\n\n**Edge: expired gift card at refund time.**\nOrder used gift card, card now expired. Three sub-policies:\n- Reissue new gift card w/ new expiry (most common, customer-friendly).\n- Refund proportional share to credit card instead (simpler, may violate ToS that says \"gift card portion non-refundable to cash\").\n- Forfeit (hostile, avoid).\nPick reissue. Pre-decide.\n\n**Edge: gift card deleted/disabled** (fraud, chargeback) → reissue.\n\n**Edge: refund > remaining refundable.** Track `refunded_amount` per tender. Don't over-refund either leg.\n\n**Code path:**\n\nSchema additions:\n```\norder_payments (\n  id, order_id, tender_type ENUM('gift_card','credit_card'),\n  gift_card_id NULL, gateway_charge_id NULL,\n  amount NUMERIC, refunded_amount NUMERIC DEFAULT 0\n)\n\nrefunds (\n  id, order_id, total_amount, reason, created_at, status\n)\n\nrefund_allocations (\n  id, refund_id, order_payment_id, amount, status, external_ref\n)\n```\n\nFlow:\n\n```\nfunction refundOrder(order_id, refund_amount, reason):\n  BEGIN TRANSACTION\n\n  payments = SELECT * FROM order_payments\n             WHERE order_id = $1 FOR UPDATE\n\n  # 1. Compute proportional split\n  total_paid = sum(p.amount for p in payments)\n  allocations = []\n  remaining = refund_amount\n  for p in payments[:-1]:\n    share = round(refund_amount * p.amount / total_paid, 2)\n    share = min(share, p.amount - p.refunded_amount)  # cap\n    allocations.append((p, share))\n    remaining -= share\n  # last gets remainder → absorbs rounding\n  last = payments[-1]\n  allocations.append((last, min(remaining, last.amount - last.refunded_amount)))\n\n  # 2. Create refund record\n  refund = INSERT INTO refunds (...) RETURNING id\n\n  # 3. Execute each allocation\n  for (payment, amount) in allocations:\n    if amount == 0: continue\n    alloc = INSERT INTO refund_allocations (refund_id, payment_id, amount, status='pending') RETURNING id\n\n    if payment.tender_type == 'gift_card':\n      # synchronous, in-tx\n      card = SELECT * FROM gift_cards WHERE id = $1 FOR UPDATE\n      if card.expires_at <= now() OR card.status != 'active':\n        # reissue policy\n        new_card = issueGiftCard(amount, expires_at = now() + 12 months,\n                                 origin_refund_id = refund.id)\n        UPDATE refund_allocations SET status='completed', external_ref=new_card.id WHERE id=alloc.id\n      else:\n        UPDATE gift_cards SET current_balance = current_balance + $amount WHERE id = card.id\n        INSERT INTO gift_card_audit (card_id, delta, reason='refund', refund_id, order_id)\n        UPDATE refund_allocations SET status='completed', external_ref=card.id WHERE id=alloc.id\n\n      UPDATE order_payments SET refunded_amount = refunded_amount + $amount WHERE id = payment.id\n\n    elif payment.tender_type == 'credit_card':\n      # mark pending, defer gateway call OUT of tx\n      pass  # handled after commit\n\n  COMMIT\n\n  # 4. Gateway calls AFTER commit (network → must not hold locks)\n  for alloc in pending_card_allocations:\n    try:\n      ref = gateway.refund(payment.gateway_charge_id, alloc.amount,\n                           idempotency_key = alloc.id)\n      UPDATE refund_allocations SET status='completed', external_ref=ref WHERE id=alloc.id\n      UPDATE order_payments SET refunded_amount = refunded_amount + $amount WHERE id = payment.id\n    except GatewayError:\n      UPDATE refund_allocations SET status='failed', error_msg=... WHERE id=alloc.id\n      # alert ops, retryable\n```\n\n**Key invariants:**\n\n1. **Idempotency** — refund_allocation.id = idempotency key for gateway. Retry safe.\n2. **Tx boundary** — gift card credit + refund record in one tx. Card refund call OUTSIDE tx. Same reason as redemption: don't hold row locks across network.\n3. **Partial failure** — gift card credited, card refund fails → allocation row in `failed` state. Retry job picks up. User sees partial refund. Don't auto-reverse the gift card credit; ops decides.\n4. **Audit trail** — `gift_card_audit` (your minimum-viable ledger) captures every credit. `refund_allocations` captures every leg of every refund.\n5. **Over-refund guard** — `refunded_amount <= amount` per `order_payment`. Add CHECK constraint.\n6. **Rounding** — last allocation absorbs remainder. Total of allocations == refund_amount exactly. Test with $0.01 and $33.33 splits.\n7. **Reconciliation job** — daily: for each completed refund, sum(allocations.amount where status=completed) == refunds.total_amount. Drift → alert.\n\n**Gotchas:**\n\n- Chargebacks ≠ refunds. If user disputes credit card portion and wins → handle separately, may also need to claw back gift card portion (depends on dispute reason). Don't auto-link.\n- Tax refund — refunded amount usually includes proportional tax. Compute on gross.\n- Reporting — \"gift card breakage\" metric must subtract refund-reissued cards or you double-count liability.\n- ToS — write down the policy before you ship. \"Refunds returned proportionally to original tender. Expired gift card portions reissued with new 12-month expiry.\" Customer service needs script.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 40657,
+    "duration_api_ms": 40624,
+    "num_turns": 1,
+    "result": "**Policy first — three viable models:**\n\n**A. Proportional split (recommended default)**\nRefund splits same ratio as original payment.\nOrder $100 = $30 gift card + $70 card. Refund $50 → $15 to card balance, $35 to credit card.\n- Pros: fair, symmetric, no user gaming, accounting clean (each tender returns what it gave).\n- Cons: small rounding edges. User confused why partial refund hits two places.\n\n**B. Card-first (refund credit card until exhausted, then gift card)**\nRefund $50 → $50 to credit card. Refund $80 → $70 to card, $10 to gift card.\n- Pros: user-friendly (cash back > store credit). Reduces gift card liability slowly.\n- Cons: lets users game it — buy $100 w/ $50 gift card + $50 cash, refund $50 → all cash back, gift card preserved. Effectively converts gift card to cash via purchase-refund cycle. **Don't do this if cards are non-cashable by policy.**\n\n**C. Gift-card-first (refund gift card until original amount restored, then card)**\nRefund $50 → $30 to gift card (restore original), $20 to credit card.\n- Pros: prevents the gaming in B. Gift card liability returns to books predictably.\n- Cons: user prefers cash. Customer service complaints.\n\n**Recommendation: A (proportional).** Defensible, symmetric, no gaming. Document in ToS.\n\n**Edge: expired gift card at refund time.**\nOrder used gift card, card now expired. Three sub-policies:\n- Reissue new gift card w/ new expiry (most common, customer-friendly).\n- Refund proportional share to credit card instead (simpler, may violate ToS that says \"gift card portion non-refundable to cash\").\n- Forfeit (hostile, avoid).\nPick reissue. Pre-decide.\n\n**Edge: gift card deleted/disabled** (fraud, chargeback) → reissue.\n\n**Edge: refund > remaining refundable.** Track `refunded_amount` per tender. Don't over-refund either leg.\n\n**Code path:**\n\nSchema additions:\n```\norder_payments (\n  id, order_id, tender_type ENUM('gift_card','credit_card'),\n  gift_card_id NULL, gateway_charge_id NULL,\n  amount NUMERIC, refunded_amount NUMERIC DEFAULT 0\n)\n\nrefunds (\n  id, order_id, total_amount, reason, created_at, status\n)\n\nrefund_allocations (\n  id, refund_id, order_payment_id, amount, status, external_ref\n)\n```\n\nFlow:\n\n```\nfunction refundOrder(order_id, refund_amount, reason):\n  BEGIN TRANSACTION\n\n  payments = SELECT * FROM order_payments\n             WHERE order_id = $1 FOR UPDATE\n\n  # 1. Compute proportional split\n  total_paid = sum(p.amount for p in payments)\n  allocations = []\n  remaining = refund_amount\n  for p in payments[:-1]:\n    share = round(refund_amount * p.amount / total_paid, 2)\n    share = min(share, p.amount - p.refunded_amount)  # cap\n    allocations.append((p, share))\n    remaining -= share\n  # last gets remainder → absorbs rounding\n  last = payments[-1]\n  allocations.append((last, min(remaining, last.amount - last.refunded_amount)))\n\n  # 2. Create refund record\n  refund = INSERT INTO refunds (...) RETURNING id\n\n  # 3. Execute each allocation\n  for (payment, amount) in allocations:\n    if amount == 0: continue\n    alloc = INSERT INTO refund_allocations (refund_id, payment_id, amount, status='pending') RETURNING id\n\n    if payment.tender_type == 'gift_card':\n      # synchronous, in-tx\n      card = SELECT * FROM gift_cards WHERE id = $1 FOR UPDATE\n      if card.expires_at <= now() OR card.status != 'active':\n        # reissue policy\n        new_card = issueGiftCard(amount, expires_at = now() + 12 months,\n                                 origin_refund_id = refund.id)\n        UPDATE refund_allocations SET status='completed', external_ref=new_card.id WHERE id=alloc.id\n      else:\n        UPDATE gift_cards SET current_balance = current_balance + $amount WHERE id = card.id\n        INSERT INTO gift_card_audit (card_id, delta, reason='refund', refund_id, order_id)\n        UPDATE refund_allocations SET status='completed', external_ref=card.id WHERE id=alloc.id\n\n      UPDATE order_payments SET refunded_amount = refunded_amount + $amount WHERE id = payment.id\n\n    elif payment.tender_type == 'credit_card':\n      # mark pending, defer gateway call OUT of tx\n      pass  # handled after commit\n\n  COMMIT\n\n  # 4. Gateway calls AFTER commit (network → must not hold locks)\n  for alloc in pending_card_allocations:\n    try:\n      ref = gateway.refund(payment.gateway_charge_id, alloc.amount,\n                           idempotency_key = alloc.id)\n      UPDATE refund_allocations SET status='completed', external_ref=ref WHERE id=alloc.id\n      UPDATE order_payments SET refunded_amount = refunded_amount + $amount WHERE id = payment.id\n    except GatewayError:\n      UPDATE refund_allocations SET status='failed', error_msg=... WHERE id=alloc.id\n      # alert ops, retryable\n```\n\n**Key invariants:**\n\n1. **Idempotency** — refund_allocation.id = idempotency key for gateway. Retry safe.\n2. **Tx boundary** — gift card credit + refund record in one tx. Card refund call OUTSIDE tx. Same reason as redemption: don't hold row locks across network.\n3. **Partial failure** — gift card credited, card refund fails → allocation row in `failed` state. Retry job picks up. User sees partial refund. Don't auto-reverse the gift card credit; ops decides.\n4. **Audit trail** — `gift_card_audit` (your minimum-viable ledger) captures every credit. `refund_allocations` captures every leg of every refund.\n5. **Over-refund guard** — `refunded_amount <= amount` per `order_payment`. Add CHECK constraint.\n6. **Rounding** — last allocation absorbs remainder. Total of allocations == refund_amount exactly. Test with $0.01 and $33.33 splits.\n7. **Reconciliation job** — daily: for each completed refund, sum(allocations.amount where status=completed) == refunds.total_amount. Drift → alert.\n\n**Gotchas:**\n\n- Chargebacks ≠ refunds. If user disputes credit card portion and wins → handle separately, may also need to claw back gift card portion (depends on dispute reason). Don't auto-link.\n- Tax refund — refunded amount usually includes proportional tax. Compute on gross.\n- Reporting — \"gift card breakage\" metric must subtract refund-reissued cards or you double-count liability.\n- ToS — write down the policy before you ship. \"Refunds returned proportionally to original tender. Expired gift card portions reissued with new 12-month expiry.\" Customer service needs script.",
+    "stop_reason": "end_turn",
+    "session_id": "8e132c32-35f8-4ed4-abb5-c4a26e5c9a79",
+    "total_cost_usd": 0.085286,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 1122,
+      "cache_read_input_tokens": 29087,
+      "output_tokens": 2548,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 1122,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 2548,
+          "cache_read_input_tokens": 29087,
+          "cache_creation_input_tokens": 1122,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 1122
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 2548,
+        "cacheReadInputTokens": 29087,
+        "cacheCreationInputTokens": 1122,
+        "webSearchRequests": 0,
+        "costUSD": 0.085286,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "3fbb4fba-92ed-477e-a7ee-fc010cb547bb"
+  }
+}

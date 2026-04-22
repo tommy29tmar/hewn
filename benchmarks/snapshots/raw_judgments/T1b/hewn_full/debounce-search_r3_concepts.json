@@ -1,0 +1,15 @@
+{
+  "final": {
+    "limits_request_rate_during_typing": true,
+    "fires_only_after_user_pauses": true,
+    "saves_server_load_or_api_quota": true,
+    "improves_user_experience_or_avoids_stale_results": true
+  },
+  "history": [
+    {
+      "attempt": 0,
+      "raw": "{\"limits_request_rate_during_typing\": true, \"fires_only_after_user_pauses\": true, \"saves_server_load_or_api_quota\": true, \"improves_user_experience_or_avoids_stale_results\": true}"
+    }
+  ],
+  "ts": "2026-04-22T01:10:47.280978+00:00"
+}

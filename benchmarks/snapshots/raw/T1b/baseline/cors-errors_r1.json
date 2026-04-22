@@ -1,0 +1,105 @@
+{
+  "track": "T1b",
+  "arm": "baseline",
+  "prompt_id": "cors-errors",
+  "run_index": 1,
+  "arm_order_index": 4,
+  "arm_order_full": [
+    "terse",
+    "caveman_full_plus_ultra_directive",
+    "caveman_full",
+    "hewn_prompt_only",
+    "baseline",
+    "hewn_full"
+  ],
+  "digest_hex": "884a34005020aaa2decf7247298a83a400cb843e18bc330b080d55c1b5324fb3",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-21T23:47:44.420488+00:00",
+  "output_tokens_tiktoken": 108,
+  "output_tokens_anthropic": 237,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 28526,
+  "total_input_tokens": 28532,
+  "cache_state": "warm",
+  "wallclock_ms": 11820.05259799189,
+  "duration_ms": 5644,
+  "duration_api_ms": 6487,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "cec25e10-6a95-4c4e-9e28-9ad501f3c0f2",
+  "total_cost_usd": 0.020638,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "Need more context to answer usefully. Can you share:\n\n1. The exact error message from the console\n2. What request is failing (URL, method)\n3. Where the request originates (local dev server? deployed site?) and where it's going (your API? third-party?)\n\nMost common causes: server isn't sending `Access-Control-Allow-Origin` for your frontend's origin, preflight (OPTIONS) isn't handled, or you're sending credentials without `Access-Control-Allow-Credentials: true` + a specific origin (not `*`).",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 5644,
+    "duration_api_ms": 6487,
+    "num_turns": 1,
+    "result": "Need more context to answer usefully. Can you share:\n\n1. The exact error message from the console\n2. What request is failing (URL, method)\n3. Where the request originates (local dev server? deployed site?) and where it's going (your API? third-party?)\n\nMost common causes: server isn't sending `Access-Control-Allow-Origin` for your frontend's origin, preflight (OPTIONS) isn't handled, or you're sending credentials without `Access-Control-Allow-Credentials: true` + a specific origin (not `*`).",
+    "stop_reason": "end_turn",
+    "session_id": "cec25e10-6a95-4c4e-9e28-9ad501f3c0f2",
+    "total_cost_usd": 0.020638,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 28526,
+      "output_tokens": 237,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 0,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 237,
+          "cache_read_input_tokens": 28526,
+          "cache_creation_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 350,
+        "outputTokens": 14,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.00042,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 237,
+        "cacheReadInputTokens": 28526,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.020218,
+        "contextWindow": 200000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "07e4148d-0a4e-4a4f-8c35-90b6076d4807"
+  }
+}

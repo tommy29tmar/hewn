@@ -1,0 +1,96 @@
+{
+  "track": "T4",
+  "arm": "terse",
+  "sequence_id": "design-feature",
+  "run_index": 2,
+  "turn": 3,
+  "arm_order_index": 3,
+  "arm_order_full": [
+    "baseline",
+    "caveman_full",
+    "hewn_prompt_only",
+    "terse",
+    "hewn_full"
+  ],
+  "digest_hex": "3191b019d37f08f3d5b68d9000f1aeb1e1a3524225f9daa893803df1e240ffd1",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T01:32:47.117720+00:00",
+  "session_id_used_for_resume": "4845fc16-a5df-4b09-9b18-5e011308b766",
+  "output_tokens_tiktoken": 603,
+  "output_tokens_anthropic": 957,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 983,
+  "cache_read_input_tokens": 25119,
+  "total_input_tokens": 26108,
+  "cache_state": "warm",
+  "wallclock_ms": 20639.601689996198,
+  "duration_ms": 17140,
+  "duration_api_ms": 17117,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "4845fc16-a5df-4b09-9b18-5e011308b766",
+  "total_cost_usd": 0.042658249999999995,
+  "model_used": "claude-opus-4-7",
+  "result": "**Options, worst to best for this case:**\n\n**1. Optimistic (version/CAS)**\n```sql\nUPDATE gift_cards SET balance = balance - :amt, version = version + 1\nWHERE id = :id AND version = :v AND balance >= :amt\n```\nRetry on zero rows affected. Works, but checkout is a bad place for retry loops — you'd rather fail fast than race.\n\n**2. Pessimistic row lock (`SELECT ... FOR UPDATE`)**\nLock the row at the start of the redemption transaction, read balance, write, commit.\n- Simple, correct, familiar.\n- Serializes redemptions per card, which is exactly what you want — contention on a single gift card is fine, different cards don't block each other.\n- Hold the lock only for the redemption step, not the whole checkout.\n\n**3. Conditional update (atomic decrement)**\n```sql\nUPDATE gift_cards SET balance = balance - :amt\nWHERE id = :id AND balance >= :amt\nRETURNING balance\n```\nZero rows affected = insufficient funds. No explicit lock, no read-modify-write, no retry. The DB does it atomically.\n- Cleanest for the \"consume up to remaining\" case: compute `applied = min(balance, order_total)` in one statement:\n  ```sql\n  UPDATE gift_cards\n  SET balance = GREATEST(balance - :requested, 0)\n  WHERE id = :id AND balance > 0\n  RETURNING (balance + :requested) - balance AS applied\n  ```\n\n**Recommendation: conditional update (#3) for the redemption step.**\n\nWhy:\n- No retry logic, no lock management, no deadlock surface.\n- Matches the semantics you described: \"consume up to remaining value.\"\n- One statement, one round trip.\n\n**But: redemption ≠ checkout.** Checkout has auth → capture, possibly minutes apart. You need a **two-phase flow**:\n\n1. **Reserve** at auth: atomic decrement, write a `reserved` row on the side-table with an idempotency key and TTL.\n2. **Commit** at capture: flip reserved → consumed. No balance change.\n3. **Release** on auth failure/cancel/TTL expiry: atomic increment back, mark the reservation voided.\n\nOtherwise you double-spend a different way: user pays with card, card auth fails, but you already \"spent\" the gift card balance.\n\n**Gotchas:**\n- Idempotency key on `(card_id, order_id)` with a unique constraint — prevents double-reserve on retries.\n- Release must be idempotent too (don't refund twice if the cancel webhook fires twice).\n- A reaper job for expired reservations; don't trust clients to release.\n- Even with mutable rows, you need the side-table for reservations — which is 80% of a ledger. Worth noting before you commit to \"mutable for consistency with wallets.\"",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 17140,
+    "duration_api_ms": 17117,
+    "num_turns": 1,
+    "result": "**Options, worst to best for this case:**\n\n**1. Optimistic (version/CAS)**\n```sql\nUPDATE gift_cards SET balance = balance - :amt, version = version + 1\nWHERE id = :id AND version = :v AND balance >= :amt\n```\nRetry on zero rows affected. Works, but checkout is a bad place for retry loops — you'd rather fail fast than race.\n\n**2. Pessimistic row lock (`SELECT ... FOR UPDATE`)**\nLock the row at the start of the redemption transaction, read balance, write, commit.\n- Simple, correct, familiar.\n- Serializes redemptions per card, which is exactly what you want — contention on a single gift card is fine, different cards don't block each other.\n- Hold the lock only for the redemption step, not the whole checkout.\n\n**3. Conditional update (atomic decrement)**\n```sql\nUPDATE gift_cards SET balance = balance - :amt\nWHERE id = :id AND balance >= :amt\nRETURNING balance\n```\nZero rows affected = insufficient funds. No explicit lock, no read-modify-write, no retry. The DB does it atomically.\n- Cleanest for the \"consume up to remaining\" case: compute `applied = min(balance, order_total)` in one statement:\n  ```sql\n  UPDATE gift_cards\n  SET balance = GREATEST(balance - :requested, 0)\n  WHERE id = :id AND balance > 0\n  RETURNING (balance + :requested) - balance AS applied\n  ```\n\n**Recommendation: conditional update (#3) for the redemption step.**\n\nWhy:\n- No retry logic, no lock management, no deadlock surface.\n- Matches the semantics you described: \"consume up to remaining value.\"\n- One statement, one round trip.\n\n**But: redemption ≠ checkout.** Checkout has auth → capture, possibly minutes apart. You need a **two-phase flow**:\n\n1. **Reserve** at auth: atomic decrement, write a `reserved` row on the side-table with an idempotency key and TTL.\n2. **Commit** at capture: flip reserved → consumed. No balance change.\n3. **Release** on auth failure/cancel/TTL expiry: atomic increment back, mark the reservation voided.\n\nOtherwise you double-spend a different way: user pays with card, card auth fails, but you already \"spent\" the gift card balance.\n\n**Gotchas:**\n- Idempotency key on `(card_id, order_id)` with a unique constraint — prevents double-reserve on retries.\n- Release must be idempotent too (don't refund twice if the cancel webhook fires twice).\n- A reaper job for expired reservations; don't trust clients to release.\n- Even with mutable rows, you need the side-table for reservations — which is 80% of a ledger. Worth noting before you commit to \"mutable for consistency with wallets.\"",
+    "stop_reason": "end_turn",
+    "session_id": "4845fc16-a5df-4b09-9b18-5e011308b766",
+    "total_cost_usd": 0.042658249999999995,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 983,
+      "cache_read_input_tokens": 25119,
+      "output_tokens": 957,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 983,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 957,
+          "cache_read_input_tokens": 25119,
+          "cache_creation_input_tokens": 983,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 983
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 957,
+        "cacheReadInputTokens": 25119,
+        "cacheCreationInputTokens": 983,
+        "webSearchRequests": 0,
+        "costUSD": 0.042658249999999995,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "a128d087-68c9-41f9-b1d3-1c45cefb36a0"
+  }
+}

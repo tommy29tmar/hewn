@@ -1,0 +1,105 @@
+{
+  "track": "T1b",
+  "arm": "hewn_full",
+  "prompt_id": "react-rerender-parent",
+  "run_index": 2,
+  "arm_order_index": 2,
+  "arm_order_full": [
+    "terse",
+    "hewn_prompt_only",
+    "hewn_full",
+    "baseline",
+    "caveman_full_plus_ultra_directive",
+    "caveman_full"
+  ],
+  "digest_hex": "5c7062d59c99ec93d8648382caa16140c672b41605bcf28c536ff4956e9b7125",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-21T23:51:41.032343+00:00",
+  "output_tokens_tiktoken": 136,
+  "output_tokens_anthropic": 214,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 30009,
+  "total_input_tokens": 30015,
+  "cache_state": "warm",
+  "wallclock_ms": 10401.768354990054,
+  "duration_ms": 5559,
+  "duration_api_ms": 6466,
+  "wrapper_overhead_ms": 3935.768354990054,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "76a52295-cfaf-4d7e-9210-f5057bd76e58",
+  "total_cost_usd": 0.0208115,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "React re-renders children by default when parent re-renders, regardless of whether props changed.\n\nFix options:\n- Wrap child in `React.memo(Child)` — skips re-render if props shallow-equal.\n- Stabilize prop references: `useCallback` for functions, `useMemo` for objects/arrays passed as props.\n- Move state down so parent doesn't re-render in first place.\n\nCommon trap: memoized child still re-renders because parent passes `onClick={() => ...}` or `style={{...}}` inline — new reference every render defeats memo.\n\nCheck with React DevTools Profiler → \"Why did this render?\" shows exact prop that changed.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 5559,
+    "duration_api_ms": 6466,
+    "num_turns": 1,
+    "result": "React re-renders children by default when parent re-renders, regardless of whether props changed.\n\nFix options:\n- Wrap child in `React.memo(Child)` — skips re-render if props shallow-equal.\n- Stabilize prop references: `useCallback` for functions, `useMemo` for objects/arrays passed as props.\n- Move state down so parent doesn't re-render in first place.\n\nCommon trap: memoized child still re-renders because parent passes `onClick={() => ...}` or `style={{...}}` inline — new reference every render defeats memo.\n\nCheck with React DevTools Profiler → \"Why did this render?\" shows exact prop that changed.",
+    "stop_reason": "end_turn",
+    "session_id": "76a52295-cfaf-4d7e-9210-f5057bd76e58",
+    "total_cost_usd": 0.0208115,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 30009,
+      "output_tokens": 214,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 0,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 214,
+          "cache_read_input_tokens": 30009,
+          "cache_creation_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 352,
+        "outputTokens": 15,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.00042699999999999997,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 214,
+        "cacheReadInputTokens": 30009,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.0203845,
+        "contextWindow": 200000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "e1e07c0c-651e-4585-8b72-5f7130daf50d"
+  }
+}

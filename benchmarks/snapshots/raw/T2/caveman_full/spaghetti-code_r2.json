@@ -1,0 +1,105 @@
+{
+  "track": "T2",
+  "arm": "caveman_full",
+  "prompt_id": "spaghetti-code",
+  "run_index": 2,
+  "arm_order_index": 1,
+  "arm_order_full": [
+    "baseline",
+    "caveman_full",
+    "hewn_prompt_only",
+    "caveman_full_plus_ultra_directive",
+    "hewn_full",
+    "terse"
+  ],
+  "digest_hex": "c5b7a91bb866632a665b169537e636c6632c835cd292573b5020e32ca3fec5f2",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T00:23:06.319926+00:00",
+  "output_tokens_tiktoken": 264,
+  "output_tokens_anthropic": 427,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 10501,
+  "cache_read_input_tokens": 15186,
+  "total_input_tokens": 25693,
+  "cache_state": "warm",
+  "wallclock_ms": 13512.97819998581,
+  "duration_ms": 9278,
+  "duration_api_ms": 10193,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "88028747-f0b9-4c1b-a55e-16636740c65c",
+  "total_cost_usd": 0.08437325000000001,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "Signs of spaghetti: long functions, unclear names, deep nesting, mixed concerns.\n\nFix:\n\n1. **Small functions.** One job each. If name need \"and\" → split.\n2. **Good names.** `processData()` bad. `parseCsvRows()` good. Read like sentence.\n3. **Flatten nesting.** Early return on bad case. Guard clauses top.\n   ```\n   if (!user) return null;\n   if (!user.active) return null;\n   // main logic here, not nested\n   ```\n4. **Group by concern.** Auth stuff together. DB stuff together. UI stuff together. Separate files/modules.\n5. **Kill globals.** Pass state explicit. Hidden mutation = lost track.\n6. **Types/interfaces.** Shape data upfront. Reader see contract instant.\n7. **Delete dead code.** Commented-out blocks, unused fn → gone. Git remember.\n8. **One abstraction level per function.** Don't mix high-level orchestration with low-level byte twiddling same fn.\n\nRule of thumb: if you scroll to understand one function → too big. If you jump 5 files to trace one request → too scattered. Aim middle.\n\nStart: pick worst file, extract 3 functions, rename 5 things. Repeat weekly.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 9278,
+    "duration_api_ms": 10193,
+    "num_turns": 1,
+    "result": "Signs of spaghetti: long functions, unclear names, deep nesting, mixed concerns.\n\nFix:\n\n1. **Small functions.** One job each. If name need \"and\" → split.\n2. **Good names.** `processData()` bad. `parseCsvRows()` good. Read like sentence.\n3. **Flatten nesting.** Early return on bad case. Guard clauses top.\n   ```\n   if (!user) return null;\n   if (!user.active) return null;\n   // main logic here, not nested\n   ```\n4. **Group by concern.** Auth stuff together. DB stuff together. UI stuff together. Separate files/modules.\n5. **Kill globals.** Pass state explicit. Hidden mutation = lost track.\n6. **Types/interfaces.** Shape data upfront. Reader see contract instant.\n7. **Delete dead code.** Commented-out blocks, unused fn → gone. Git remember.\n8. **One abstraction level per function.** Don't mix high-level orchestration with low-level byte twiddling same fn.\n\nRule of thumb: if you scroll to understand one function → too big. If you jump 5 files to trace one request → too scattered. Aim middle.\n\nStart: pick worst file, extract 3 functions, rename 5 things. Repeat weekly.",
+    "stop_reason": "end_turn",
+    "session_id": "88028747-f0b9-4c1b-a55e-16636740c65c",
+    "total_cost_usd": 0.08437325000000001,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 10501,
+      "cache_read_input_tokens": 15186,
+      "output_tokens": 427,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 10501,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 427,
+          "cache_read_input_tokens": 15186,
+          "cache_creation_input_tokens": 10501,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 10501
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 359,
+        "outputTokens": 17,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.000444,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 427,
+        "cacheReadInputTokens": 15186,
+        "cacheCreationInputTokens": 10501,
+        "webSearchRequests": 0,
+        "costUSD": 0.08392925000000001,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "87c90001-abf3-4cf7-8324-237426d2ff96"
+  }
+}

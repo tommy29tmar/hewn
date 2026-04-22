@@ -1,0 +1,105 @@
+{
+  "track": "T2",
+  "arm": "baseline",
+  "prompt_id": "typeerror-undefined-map",
+  "run_index": 1,
+  "arm_order_index": 5,
+  "arm_order_full": [
+    "caveman_full_plus_ultra_directive",
+    "hewn_full",
+    "terse",
+    "caveman_full",
+    "hewn_prompt_only",
+    "baseline"
+  ],
+  "digest_hex": "5b724573e058540f92f1cf0a27ec02ab3ed51a957569e6eb2a6e04a27a1062f9",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T00:17:11.879780+00:00",
+  "output_tokens_tiktoken": 133,
+  "output_tokens_anthropic": 254,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 32639,
+  "total_input_tokens": 32645,
+  "cache_state": "warm",
+  "wallclock_ms": 10798.27502198168,
+  "duration_ms": 6646,
+  "duration_api_ms": 7692,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "a237fe95-f797-4e5d-9660-7351dced5369",
+  "total_cost_usd": 0.0231335,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "That error means something is calling `.map()` on a value that's `undefined` — usually an array prop/state/API response that hasn't arrived yet or wasn't returned in the shape you expected.\n\nTo actually find it I need a bit more:\n1. Which file/line? (the stack trace usually points at it — paste the first frame)\n2. Is this the Hewn repo you're in (`/home/tommaso/dev/playground/SIGIL`), or a different project? I don't see an obvious JS/React app here.\n3. What were you doing when it crashed?\n\nIf you paste the stack trace I'll jump straight to the offending line.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 6646,
+    "duration_api_ms": 7692,
+    "num_turns": 1,
+    "result": "That error means something is calling `.map()` on a value that's `undefined` — usually an array prop/state/API response that hasn't arrived yet or wasn't returned in the shape you expected.\n\nTo actually find it I need a bit more:\n1. Which file/line? (the stack trace usually points at it — paste the first frame)\n2. Is this the Hewn repo you're in (`/home/tommaso/dev/playground/SIGIL`), or a different project? I don't see an obvious JS/React app here.\n3. What were you doing when it crashed?\n\nIf you paste the stack trace I'll jump straight to the offending line.",
+    "stop_reason": "end_turn",
+    "session_id": "a237fe95-f797-4e5d-9660-7351dced5369",
+    "total_cost_usd": 0.0231335,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 32639,
+      "output_tokens": 254,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 0,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 254,
+          "cache_read_input_tokens": 32639,
+          "cache_creation_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 364,
+        "outputTokens": 14,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.00043400000000000003,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 254,
+        "cacheReadInputTokens": 32639,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.0226995,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "683819fd-5317-45ea-b34e-ceea09660012"
+  }
+}

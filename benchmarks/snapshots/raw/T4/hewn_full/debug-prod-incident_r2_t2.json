@@ -1,0 +1,96 @@
+{
+  "track": "T4",
+  "arm": "hewn_full",
+  "sequence_id": "debug-prod-incident",
+  "run_index": 2,
+  "turn": 2,
+  "arm_order_index": 2,
+  "arm_order_full": [
+    "caveman_full",
+    "terse",
+    "hewn_full",
+    "hewn_prompt_only",
+    "baseline"
+  ],
+  "digest_hex": "522341918a5177210ef438fa55486ec5b622aaa576febbd731536d82595ec31b",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T01:18:24.836940+00:00",
+  "session_id_used_for_resume": "3e4c6f56-3671-4661-a0c7-27d8396e46e9",
+  "output_tokens_tiktoken": 149,
+  "output_tokens_anthropic": 285,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 622,
+  "cache_read_input_tokens": 34167,
+  "total_input_tokens": 34795,
+  "cache_state": "warm",
+  "wallclock_ms": 12483.683811005903,
+  "duration_ms": 9033,
+  "duration_api_ms": 8949,
+  "wrapper_overhead_ms": 3534.6838110059034,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "3e4c6f56-3671-4661-a0c7-27d8396e46e9",
+  "total_cost_usd": 0.028125999999999998,
+  "model_used": "claude-opus-4-7",
+  "result": "@hewn v0 hybrid\nG: identify_breaking_change_in_buildcart\nC: refactor_removed_items_field_from_returned_cart ∧ downstream_createorder_reads_cart_items ∧ rollback_stopped_500s\nP: new_buildcart_returns_only_id_and_total ∧ original_returned_id_items_total ∧ createorder_accesses_items_on_buildcart_output ∧ missing_items_yields_undefined\nV: restore_items_field_in_returned_object ∧ redeploy ∧ post_order_returns_200 ∧ no_typeerror_on_items\nA: add_items_back_to_buildcart_return ∧ grep_callers_of_buildcart_for_items_access ∧ add_regression_test_covering_items_shape ∧ add_contract_test_for_cart_serializer",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 9033,
+    "duration_api_ms": 8949,
+    "num_turns": 1,
+    "result": "@hewn v0 hybrid\nG: identify_breaking_change_in_buildcart\nC: refactor_removed_items_field_from_returned_cart ∧ downstream_createorder_reads_cart_items ∧ rollback_stopped_500s\nP: new_buildcart_returns_only_id_and_total ∧ original_returned_id_items_total ∧ createorder_accesses_items_on_buildcart_output ∧ missing_items_yields_undefined\nV: restore_items_field_in_returned_object ∧ redeploy ∧ post_order_returns_200 ∧ no_typeerror_on_items\nA: add_items_back_to_buildcart_return ∧ grep_callers_of_buildcart_for_items_access ∧ add_regression_test_covering_items_shape ∧ add_contract_test_for_cart_serializer",
+    "stop_reason": "end_turn",
+    "session_id": "3e4c6f56-3671-4661-a0c7-27d8396e46e9",
+    "total_cost_usd": 0.028125999999999998,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 622,
+      "cache_read_input_tokens": 34167,
+      "output_tokens": 285,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 622,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 285,
+          "cache_read_input_tokens": 34167,
+          "cache_creation_input_tokens": 622,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 622
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 285,
+        "cacheReadInputTokens": 34167,
+        "cacheCreationInputTokens": 622,
+        "webSearchRequests": 0,
+        "costUSD": 0.028125999999999998,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "a5236716-5163-468e-81a4-a596dc8ed437"
+  }
+}

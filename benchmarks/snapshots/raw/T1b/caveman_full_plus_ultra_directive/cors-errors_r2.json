@@ -1,0 +1,105 @@
+{
+  "track": "T1b",
+  "arm": "caveman_full_plus_ultra_directive",
+  "prompt_id": "cors-errors",
+  "run_index": 2,
+  "arm_order_index": 2,
+  "arm_order_full": [
+    "terse",
+    "baseline",
+    "caveman_full_plus_ultra_directive",
+    "hewn_prompt_only",
+    "hewn_full",
+    "caveman_full"
+  ],
+  "digest_hex": "258887ceb8366586f3dea59b17c1ef6a12bb3fbc92c09a2a53837c2cc3a1ccbf",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-21T23:59:12.317960+00:00",
+  "output_tokens_tiktoken": 118,
+  "output_tokens_anthropic": 221,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 21757,
+  "total_input_tokens": 21763,
+  "cache_state": "warm",
+  "wallclock_ms": 10038.947858003667,
+  "duration_ms": 4741,
+  "duration_api_ms": 5506,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "328e7d1a-27d3-4be3-96db-6377adff97d6",
+  "total_cost_usd": 0.0168535,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "Server no send `Access-Control-Allow-Origin` header for cross-origin req. Browser block.\n\nFix:\n- Add header server-side: `Access-Control-Allow-Origin: https://yoursite.com` (or `*` for public).\n- Preflight (OPTIONS): also need `Access-Control-Allow-Methods`, `Access-Control-Allow-Headers`.\n- Creds (cookies/auth): `Access-Control-Allow-Credentials: true` + explicit origin (no `*`).\n- Dev: proxy via framework (Vite/Next rewrite) → same-origin.\n\nPaste exact console error → pinpoint cause.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 4741,
+    "duration_api_ms": 5506,
+    "num_turns": 1,
+    "result": "Server no send `Access-Control-Allow-Origin` header for cross-origin req. Browser block.\n\nFix:\n- Add header server-side: `Access-Control-Allow-Origin: https://yoursite.com` (or `*` for public).\n- Preflight (OPTIONS): also need `Access-Control-Allow-Methods`, `Access-Control-Allow-Headers`.\n- Creds (cookies/auth): `Access-Control-Allow-Credentials: true` + explicit origin (no `*`).\n- Dev: proxy via framework (Vite/Next rewrite) → same-origin.\n\nPaste exact console error → pinpoint cause.",
+    "stop_reason": "end_turn",
+    "session_id": "328e7d1a-27d3-4be3-96db-6377adff97d6",
+    "total_cost_usd": 0.0168535,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 21757,
+      "output_tokens": 221,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 0,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 221,
+          "cache_read_input_tokens": 21757,
+          "cache_creation_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 350,
+        "outputTokens": 14,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.00042,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 221,
+        "cacheReadInputTokens": 21757,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.0164335,
+        "contextWindow": 200000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "1e363de8-f5e8-424b-a654-049d06a87702"
+  }
+}

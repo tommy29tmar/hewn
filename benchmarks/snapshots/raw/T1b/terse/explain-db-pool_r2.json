@@ -1,0 +1,105 @@
+{
+  "track": "T1b",
+  "arm": "terse",
+  "prompt_id": "explain-db-pool",
+  "run_index": 2,
+  "arm_order_index": 2,
+  "arm_order_full": [
+    "caveman_full_plus_ultra_directive",
+    "hewn_full",
+    "terse",
+    "caveman_full",
+    "baseline",
+    "hewn_prompt_only"
+  ],
+  "digest_hex": "59c4393a35281e40f896315f0f5b5a542854dc38ea31bd4db0c6451c6b10b031",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-21T23:52:47.689701+00:00",
+  "output_tokens_tiktoken": 366,
+  "output_tokens_anthropic": 583,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 20291,
+  "total_input_tokens": 20297,
+  "cache_state": "warm",
+  "wallclock_ms": 17840.64536000369,
+  "duration_ms": 12639,
+  "duration_api_ms": 13755,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "2abd5444-48a3-4834-af47-b15aef8f4bd3",
+  "total_cost_usd": 0.0251655,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "Database connection pooling is a technique where a pool of reusable database connections is maintained and shared across application requests, instead of opening a new connection per query.\n\n**Why it matters:**\n- Opening a TCP + TLS + auth handshake per query is slow (often 10–100ms).\n- Databases cap concurrent connections; unbounded clients exhaust them.\n- Each connection consumes memory on the DB server (Postgres: ~10MB each).\n\n**How it works:**\n1. Pool pre-opens N connections at startup.\n2. App requests a connection → pool hands out an idle one.\n3. App runs queries, returns connection to pool (doesn't close it).\n4. If all are busy, new requests wait in a queue or spawn up to a max.\n5. Idle connections get reaped after a timeout.\n\n**Key settings:**\n- `min` / `max` size — steady-state vs. peak capacity.\n- `acquire timeout` — how long a caller waits before erroring.\n- `idle timeout` — when to close unused connections.\n- `max lifetime` — recycle connections to avoid stale state / memory leaks.\n\n**Client-side vs. server-side pools:**\n- Client-side (HikariCP, pgx, SQLAlchemy): per-process pool.\n- Server-side (PgBouncer, RDS Proxy): shared across many app instances, essential for serverless/many-worker setups where each process would otherwise hold its own pool.\n\n**Pitfalls:**\n- Transactions, prepared statements, and `SET` state leak across checkouts unless the pool resets.\n- PgBouncer's transaction/statement mode breaks features that require session state.\n- Sizing too high hurts the DB more than it helps; typical rule: `connections ≈ cores × 2 + spindles`.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 12639,
+    "duration_api_ms": 13755,
+    "num_turns": 1,
+    "result": "Database connection pooling is a technique where a pool of reusable database connections is maintained and shared across application requests, instead of opening a new connection per query.\n\n**Why it matters:**\n- Opening a TCP + TLS + auth handshake per query is slow (often 10–100ms).\n- Databases cap concurrent connections; unbounded clients exhaust them.\n- Each connection consumes memory on the DB server (Postgres: ~10MB each).\n\n**How it works:**\n1. Pool pre-opens N connections at startup.\n2. App requests a connection → pool hands out an idle one.\n3. App runs queries, returns connection to pool (doesn't close it).\n4. If all are busy, new requests wait in a queue or spawn up to a max.\n5. Idle connections get reaped after a timeout.\n\n**Key settings:**\n- `min` / `max` size — steady-state vs. peak capacity.\n- `acquire timeout` — how long a caller waits before erroring.\n- `idle timeout` — when to close unused connections.\n- `max lifetime` — recycle connections to avoid stale state / memory leaks.\n\n**Client-side vs. server-side pools:**\n- Client-side (HikariCP, pgx, SQLAlchemy): per-process pool.\n- Server-side (PgBouncer, RDS Proxy): shared across many app instances, essential for serverless/many-worker setups where each process would otherwise hold its own pool.\n\n**Pitfalls:**\n- Transactions, prepared statements, and `SET` state leak across checkouts unless the pool resets.\n- PgBouncer's transaction/statement mode breaks features that require session state.\n- Sizing too high hurts the DB more than it helps; typical rule: `connections ≈ cores × 2 + spindles`.",
+    "stop_reason": "end_turn",
+    "session_id": "2abd5444-48a3-4834-af47-b15aef8f4bd3",
+    "total_cost_usd": 0.0251655,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 20291,
+      "output_tokens": 583,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 0,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 583,
+          "cache_read_input_tokens": 20291,
+          "cache_creation_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 345,
+        "outputTokens": 14,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.000415,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 583,
+        "cacheReadInputTokens": 20291,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.0247505,
+        "contextWindow": 200000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "d76405f2-c3bb-480f-9d77-339abc2c3296"
+  }
+}

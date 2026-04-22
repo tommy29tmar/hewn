@@ -1,0 +1,105 @@
+{
+  "track": "T3",
+  "arm": "hewn_full",
+  "prompt_id": "rate-limit-xff-review",
+  "run_index": 2,
+  "arm_order_index": 0,
+  "arm_order_full": [
+    "hewn_full",
+    "caveman_full",
+    "terse",
+    "baseline",
+    "hewn_prompt_only",
+    "caveman_full_plus_ultra_directive"
+  ],
+  "digest_hex": "2bb2d5707e1a95f128e077efe38d2768de5a410e8723ddc95510208906649ba7",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T00:38:05.182420+00:00",
+  "output_tokens_tiktoken": 1247,
+  "output_tokens_anthropic": 5180,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 24429,
+  "cache_read_input_tokens": 16805,
+  "total_input_tokens": 41240,
+  "cache_state": "warm",
+  "wallclock_ms": 89008.69918998796,
+  "duration_ms": 84026,
+  "duration_api_ms": 84952,
+  "wrapper_overhead_ms": 4056.699189987965,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "e2027c53-4640-49bc-a538-cafad819fe26",
+  "total_cost_usd": 0.29618875,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "[Task] section is empty — no explicit question. Proceeding with top findings on the handbook itself since classification is prose-findings. Flag if you wanted something else.\n\n1. multi.exec() destructure silently breaks rate limiter — Section 4 code snippet\nEvidence: `const [count] = await multi.exec()` with ioredis; exec returns `[[null, 1], [null, 1]]`, so `count` is the array `[null, 1]`, not the integer. `count > limit` compares array to number → NaN → always false → limiter never trips.\nFix: destructure inner tuple — `const [[, count]] = await multi.exec()` — and assert error is null; or switch to `redis.call('INCR'...)` + separate `EXPIRE`. Add regression test that returns >limit and asserts 429.\n\n2. Region prefix missing from key format despite 2025-12 RCA — Section 4 key `rl:{ip}:{route_prefix}:{minute_bucket}` vs Section 10 \"region prefix in key, regression test added\"\nEvidence: documented key shape contradicts the RCA action item; either the handbook is stale or the fix regressed.\nFix: reconcile — if fix shipped, update key format to `rl:{region}:{ip}:{route_prefix}:{minute_bucket}`; if not, reopen incident.\n\n3. Fixed-window masquerading as sliding window; retry_after allows burst-wait-burst — Section 4 bucket = `Math.floor(Date.now() / 60000)`\nEvidence: minute_bucket is a wall-clock bucket, not sliding. A client at limit at 59.9s waits 0.1s (`secondsUntilNextBucket()` returns ~1) and gets a full fresh bucket — effectively 2× limit across bucket boundary.\nFix: true sliding window via sorted set (ZADD + ZREMRANGEBYSCORE + ZCARD) or token bucket; at minimum, compute retry_after against effective window, not bucket edge.\n\n4. JWKS stale-while-revalidate can serve poisoned keys indefinitely — Section 2 rule 4 and Section 5\nEvidence: 2025-06 SEV1 was wrong-key poisoning; current policy is 15-min refresh + 16-min soft TTL + SWR, with no hard TTL cap. A persistent upstream JWKS failure keeps a bad key live forever while returning stale.\nFix: add hard TTL (e.g. 2×refresh); on JWKS sanity-check failure, do not promote — keep prior good set and alert; ensure Section 10 RCA action \"JWKS sanity-check on every refresh\" is enforced in code, not just doc.\n\n5. `no-unbounded-redis-key` lint rule is syntactic and easily bypassed — Section 11\nEvidence: rule requires \"same async function as a matching redis.expire call\". Satisfied by any literal `redis.expire(...)` in the function, even on a different key or in dead/conditional code. 2025-11 SEV2 class of bugs still possible.\nFix: type-level affordance (wrap `incr` in helper that forces `{ ttlSeconds }`); ban raw `redis.incr` in edge code; lint on the helper instead.\n\n6. JWT 30s post-expiry grace is an exploit window for stolen tokens — Section 5\nEvidence: `skewMs = 30000` applied to `exp` means a revoked/stolen token remains valid 30s past real expiry across the entire fleet.\nFix: apply skew only to `nbf` (clock-drift direction that matters); reject on strict `exp`. If skew on exp is required, cap tightly (≤5s) and document the risk explicitly.\n\n7. CODEOWNERS gate omits pipeline order and lint plugin — Section 6\nEvidence: approval required on `auth_jwt.ts`, `rate_limit.ts`, `header_sanitize.ts`, `trusted_proxies.json`, but not `src/edge/pipeline.ts` (Section 3 states ordering is a security invariant) nor `tools/eslint-plugin-atlas/` (contains `no-direct-xff-read`, `no-jwt-none-allowed`).\nFix: extend CODEOWNERS to `src/edge/pipeline.ts` and `tools/eslint-plugin-atlas/**`.\n\n8. `no-direct-xff-read` rule scope too narrow — Section 11\nEvidence: forbids `req.headers['x-forwarded-for']` string literally. A dev writing `req.headers[\"X-Forwarded-For\"]`, destructuring `const { \"x-forwarded-for\": xff } = req.headers`, or reading via computed key escapes the rule. 2025-09 SEV1 regression path still open.\nFix: broaden to AST match on any property access whose key (case-insensitive) equals `x-forwarded-for` on a `req.headers`-typed node; add integration test that spoofs XFF and asserts `trustedClientIp` ignores it.\n\n9. API-key LRU cache has no revocation invalidation path — Section 5\nEvidence: \"30-second LRU cache of last-100k keys\". Revoked/leaked partner key remains accepted up to 30s post-revoke with no documented bust mechanism.\nFix: subscribe to `auth-svc` revocation pub/sub (Redis channel) and punch holes in the LRU on revoke events; keep 30s as a fallback TTL, not the only barrier.\n\n10. Section 3 pipeline has no explicit XFF normalization step — middleware list at `src/edge/pipeline.ts`\nEvidence: Section 2 rule 2 is a hard invariant but pipeline lists only `header_sanitize` and `rate_limit`; Section 4 invokes `trustedClientIp(req)` but its trust source and when XFF is rewritten vs stripped is undocumented.\nFix: document (and verify in code) that `header_sanitize` canonicalizes XFF against `config/trusted_proxies.json` and overwrites a derived `req.trustedIp`; forbid any other IP reads.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 84026,
+    "duration_api_ms": 84952,
+    "num_turns": 1,
+    "result": "[Task] section is empty — no explicit question. Proceeding with top findings on the handbook itself since classification is prose-findings. Flag if you wanted something else.\n\n1. multi.exec() destructure silently breaks rate limiter — Section 4 code snippet\nEvidence: `const [count] = await multi.exec()` with ioredis; exec returns `[[null, 1], [null, 1]]`, so `count` is the array `[null, 1]`, not the integer. `count > limit` compares array to number → NaN → always false → limiter never trips.\nFix: destructure inner tuple — `const [[, count]] = await multi.exec()` — and assert error is null; or switch to `redis.call('INCR'...)` + separate `EXPIRE`. Add regression test that returns >limit and asserts 429.\n\n2. Region prefix missing from key format despite 2025-12 RCA — Section 4 key `rl:{ip}:{route_prefix}:{minute_bucket}` vs Section 10 \"region prefix in key, regression test added\"\nEvidence: documented key shape contradicts the RCA action item; either the handbook is stale or the fix regressed.\nFix: reconcile — if fix shipped, update key format to `rl:{region}:{ip}:{route_prefix}:{minute_bucket}`; if not, reopen incident.\n\n3. Fixed-window masquerading as sliding window; retry_after allows burst-wait-burst — Section 4 bucket = `Math.floor(Date.now() / 60000)`\nEvidence: minute_bucket is a wall-clock bucket, not sliding. A client at limit at 59.9s waits 0.1s (`secondsUntilNextBucket()` returns ~1) and gets a full fresh bucket — effectively 2× limit across bucket boundary.\nFix: true sliding window via sorted set (ZADD + ZREMRANGEBYSCORE + ZCARD) or token bucket; at minimum, compute retry_after against effective window, not bucket edge.\n\n4. JWKS stale-while-revalidate can serve poisoned keys indefinitely — Section 2 rule 4 and Section 5\nEvidence: 2025-06 SEV1 was wrong-key poisoning; current policy is 15-min refresh + 16-min soft TTL + SWR, with no hard TTL cap. A persistent upstream JWKS failure keeps a bad key live forever while returning stale.\nFix: add hard TTL (e.g. 2×refresh); on JWKS sanity-check failure, do not promote — keep prior good set and alert; ensure Section 10 RCA action \"JWKS sanity-check on every refresh\" is enforced in code, not just doc.\n\n5. `no-unbounded-redis-key` lint rule is syntactic and easily bypassed — Section 11\nEvidence: rule requires \"same async function as a matching redis.expire call\". Satisfied by any literal `redis.expire(...)` in the function, even on a different key or in dead/conditional code. 2025-11 SEV2 class of bugs still possible.\nFix: type-level affordance (wrap `incr` in helper that forces `{ ttlSeconds }`); ban raw `redis.incr` in edge code; lint on the helper instead.\n\n6. JWT 30s post-expiry grace is an exploit window for stolen tokens — Section 5\nEvidence: `skewMs = 30000` applied to `exp` means a revoked/stolen token remains valid 30s past real expiry across the entire fleet.\nFix: apply skew only to `nbf` (clock-drift direction that matters); reject on strict `exp`. If skew on exp is required, cap tightly (≤5s) and document the risk explicitly.\n\n7. CODEOWNERS gate omits pipeline order and lint plugin — Section 6\nEvidence: approval required on `auth_jwt.ts`, `rate_limit.ts`, `header_sanitize.ts`, `trusted_proxies.json`, but not `src/edge/pipeline.ts` (Section 3 states ordering is a security invariant) nor `tools/eslint-plugin-atlas/` (contains `no-direct-xff-read`, `no-jwt-none-allowed`).\nFix: extend CODEOWNERS to `src/edge/pipeline.ts` and `tools/eslint-plugin-atlas/**`.\n\n8. `no-direct-xff-read` rule scope too narrow — Section 11\nEvidence: forbids `req.headers['x-forwarded-for']` string literally. A dev writing `req.headers[\"X-Forwarded-For\"]`, destructuring `const { \"x-forwarded-for\": xff } = req.headers`, or reading via computed key escapes the rule. 2025-09 SEV1 regression path still open.\nFix: broaden to AST match on any property access whose key (case-insensitive) equals `x-forwarded-for` on a `req.headers`-typed node; add integration test that spoofs XFF and asserts `trustedClientIp` ignores it.\n\n9. API-key LRU cache has no revocation invalidation path — Section 5\nEvidence: \"30-second LRU cache of last-100k keys\". Revoked/leaked partner key remains accepted up to 30s post-revoke with no documented bust mechanism.\nFix: subscribe to `auth-svc` revocation pub/sub (Redis channel) and punch holes in the LRU on revoke events; keep 30s as a fallback TTL, not the only barrier.\n\n10. Section 3 pipeline has no explicit XFF normalization step — middleware list at `src/edge/pipeline.ts`\nEvidence: Section 2 rule 2 is a hard invariant but pipeline lists only `header_sanitize` and `rate_limit`; Section 4 invokes `trustedClientIp(req)` but its trust source and when XFF is rewritten vs stripped is undocumented.\nFix: document (and verify in code) that `header_sanitize` canonicalizes XFF against `config/trusted_proxies.json` and overwrites a derived `req.trustedIp`; forbid any other IP reads.",
+    "stop_reason": "end_turn",
+    "session_id": "e2027c53-4640-49bc-a538-cafad819fe26",
+    "total_cost_usd": 0.29618875,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 24429,
+      "cache_read_input_tokens": 16805,
+      "output_tokens": 5180,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 24429,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 5180,
+          "cache_read_input_tokens": 16805,
+          "cache_creation_input_tokens": 24429,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 24429
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 5505,
+        "outputTokens": 14,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.005575,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 5180,
+        "cacheReadInputTokens": 16805,
+        "cacheCreationInputTokens": 24429,
+        "webSearchRequests": 0,
+        "costUSD": 0.29061375,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "61fa6eab-28fc-4617-b5d1-69bd73af0d29"
+  }
+}

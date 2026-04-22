@@ -1,0 +1,105 @@
+{
+  "track": "T2",
+  "arm": "terse",
+  "prompt_id": "spaghetti-code",
+  "run_index": 2,
+  "arm_order_index": 5,
+  "arm_order_full": [
+    "baseline",
+    "caveman_full",
+    "hewn_prompt_only",
+    "caveman_full_plus_ultra_directive",
+    "hewn_full",
+    "terse"
+  ],
+  "digest_hex": "c5b7a91bb866632a665b169537e636c6632c835cd292573b5020e32ca3fec5f2",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T00:24:12.667106+00:00",
+  "output_tokens_tiktoken": 319,
+  "output_tokens_anthropic": 455,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 10501,
+  "cache_read_input_tokens": 13741,
+  "total_input_tokens": 24248,
+  "cache_state": "warm",
+  "wallclock_ms": 16090.721098007634,
+  "duration_ms": 10518,
+  "duration_api_ms": 11243,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "48fdbce3-06e1-4185-9037-e8444514a082",
+  "total_cost_usd": 0.08434575,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "Few things that actually help:\n\n**Name things for what they do, not how.** `calculateTax` beats `processData`. If you can't name it cleanly, the function is doing too much.\n\n**One function = one job.** If you're writing \"and\" in the description (`fetchUserAndSendEmail`), split it.\n\n**Flatten nesting.** Early returns over pyramids:\n```js\n// bad\nif (user) { if (user.active) { if (user.paid) { ... } } }\n// good\nif (!user) return;\nif (!user.active) return;\nif (!user.paid) return;\n```\n\n**Group by feature, not by type.** `users/` with its component, styles, and logic beats `components/`, `styles/`, `utils/` with pieces scattered.\n\n**Keep functions short.** If it doesn't fit on screen, you can't hold it in your head. That's your signal to extract.\n\n**Separate layers.** Data fetching, business logic, and UI shouldn't be in the same function. Even just splitting into `fetch → transform → render` helps enormously.\n\n**Delete dead code immediately.** Commented-out blocks, unused imports, \"just in case\" branches — they're lies about what matters.\n\n**Write the call site first.** Imagine the cleanest way to use the thing, then build the thing to match.\n\nPractical next step: pick your worst file, extract three functions with clear names, and see how it reads. Do that once a day for a week.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 10518,
+    "duration_api_ms": 11243,
+    "num_turns": 1,
+    "result": "Few things that actually help:\n\n**Name things for what they do, not how.** `calculateTax` beats `processData`. If you can't name it cleanly, the function is doing too much.\n\n**One function = one job.** If you're writing \"and\" in the description (`fetchUserAndSendEmail`), split it.\n\n**Flatten nesting.** Early returns over pyramids:\n```js\n// bad\nif (user) { if (user.active) { if (user.paid) { ... } } }\n// good\nif (!user) return;\nif (!user.active) return;\nif (!user.paid) return;\n```\n\n**Group by feature, not by type.** `users/` with its component, styles, and logic beats `components/`, `styles/`, `utils/` with pieces scattered.\n\n**Keep functions short.** If it doesn't fit on screen, you can't hold it in your head. That's your signal to extract.\n\n**Separate layers.** Data fetching, business logic, and UI shouldn't be in the same function. Even just splitting into `fetch → transform → render` helps enormously.\n\n**Delete dead code immediately.** Commented-out blocks, unused imports, \"just in case\" branches — they're lies about what matters.\n\n**Write the call site first.** Imagine the cleanest way to use the thing, then build the thing to match.\n\nPractical next step: pick your worst file, extract three functions with clear names, and see how it reads. Do that once a day for a week.",
+    "stop_reason": "end_turn",
+    "session_id": "48fdbce3-06e1-4185-9037-e8444514a082",
+    "total_cost_usd": 0.08434575,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 10501,
+      "cache_read_input_tokens": 13741,
+      "output_tokens": 455,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 10501,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 455,
+          "cache_read_input_tokens": 13741,
+          "cache_creation_input_tokens": 10501,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 10501
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 359,
+        "outputTokens": 16,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.000439,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 455,
+        "cacheReadInputTokens": 13741,
+        "cacheCreationInputTokens": 10501,
+        "webSearchRequests": 0,
+        "costUSD": 0.08390675,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "0ad4ddd8-da8a-4efa-a3e6-31a65dc44301"
+  }
+}

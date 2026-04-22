@@ -1,0 +1,96 @@
+{
+  "track": "T4",
+  "arm": "baseline",
+  "sequence_id": "debug-prod-incident",
+  "run_index": 2,
+  "turn": 3,
+  "arm_order_index": 4,
+  "arm_order_full": [
+    "caveman_full",
+    "terse",
+    "hewn_full",
+    "hewn_prompt_only",
+    "baseline"
+  ],
+  "digest_hex": "522341918a5177210ef438fa55486ec5b622aaa576febbd731536d82595ec31b",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T01:22:32.792058+00:00",
+  "session_id_used_for_resume": "f21b92b7-d679-4b3a-93e7-d3a4590143e5",
+  "output_tokens_tiktoken": 466,
+  "output_tokens_anthropic": 1365,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 2937,
+  "cache_read_input_tokens": 33585,
+  "total_input_tokens": 36528,
+  "cache_state": "warm",
+  "wallclock_ms": 25147.56578899687,
+  "duration_ms": 21900,
+  "duration_api_ms": 21870,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "f21b92b7-d679-4b3a-93e7-d3a4590143e5",
+  "total_cost_usd": 0.06930375,
+  "model_used": "claude-opus-4-7",
+  "result": "Test the **contract**, not the implementation. Two layers:\n\n**1. Shape assertion on `buildCart`** (minimal regression test):\n\n```js\ndescribe('buildCart', () => {\n  it('returns {id, items, total}', () => {\n    const cart = { id: 'c1', items: [{ price: 10, qty: 2 }, { price: 5, qty: 1 }] };\n    expect(buildCart(cart)).toEqual({\n      id: 'c1',\n      items: cart.items,\n      total: 25,\n    });\n  });\n});\n```\n\nUse `toEqual`, not `toMatchObject`. `toMatchObject` would have *passed* on the broken refactor because `{id, total}` is a subset of `{id, items, total}`. `toEqual` fails on any missing or extra key.\n\n**2. Consumer expectation test** (stronger — this is the one that actually prevents recurrence):\n\n```js\ndescribe('buildCart contract with order service', () => {\n  it('output contains fields order service requires', () => {\n    const result = buildCart(fixtureCart);\n    // Keys the order service reads — if this list changes, both sides must change.\n    for (const key of ['id', 'items', 'total']) {\n      expect(result).toHaveProperty(key);\n    }\n  });\n});\n```\n\nThe value of this second test is it names *why* each field must exist. When someone tries to drop `items` again, the test failure tells them \"order service depends on this\" instead of \"shape changed\" — so they either update the consumer or don't drop the field.\n\n**Stronger still, if you're on TypeScript**: give `buildCart` an explicit return type (`: SerializedCart`) and have the order service consume that same type. Then the refactor fails at `tsc`, not at 14:23 in prod. A runtime test is a fallback for what a type system should catch.\n\nOne thing to avoid: don't write a snapshot test here (`toMatchSnapshot`). Snapshots rot — when someone changes buildCart intentionally, they'll update the snapshot without thinking, and you lose the signal. An explicit `toEqual` forces a conscious decision.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 21900,
+    "duration_api_ms": 21870,
+    "num_turns": 1,
+    "result": "Test the **contract**, not the implementation. Two layers:\n\n**1. Shape assertion on `buildCart`** (minimal regression test):\n\n```js\ndescribe('buildCart', () => {\n  it('returns {id, items, total}', () => {\n    const cart = { id: 'c1', items: [{ price: 10, qty: 2 }, { price: 5, qty: 1 }] };\n    expect(buildCart(cart)).toEqual({\n      id: 'c1',\n      items: cart.items,\n      total: 25,\n    });\n  });\n});\n```\n\nUse `toEqual`, not `toMatchObject`. `toMatchObject` would have *passed* on the broken refactor because `{id, total}` is a subset of `{id, items, total}`. `toEqual` fails on any missing or extra key.\n\n**2. Consumer expectation test** (stronger — this is the one that actually prevents recurrence):\n\n```js\ndescribe('buildCart contract with order service', () => {\n  it('output contains fields order service requires', () => {\n    const result = buildCart(fixtureCart);\n    // Keys the order service reads — if this list changes, both sides must change.\n    for (const key of ['id', 'items', 'total']) {\n      expect(result).toHaveProperty(key);\n    }\n  });\n});\n```\n\nThe value of this second test is it names *why* each field must exist. When someone tries to drop `items` again, the test failure tells them \"order service depends on this\" instead of \"shape changed\" — so they either update the consumer or don't drop the field.\n\n**Stronger still, if you're on TypeScript**: give `buildCart` an explicit return type (`: SerializedCart`) and have the order service consume that same type. Then the refactor fails at `tsc`, not at 14:23 in prod. A runtime test is a fallback for what a type system should catch.\n\nOne thing to avoid: don't write a snapshot test here (`toMatchSnapshot`). Snapshots rot — when someone changes buildCart intentionally, they'll update the snapshot without thinking, and you lose the signal. An explicit `toEqual` forces a conscious decision.",
+    "stop_reason": "end_turn",
+    "session_id": "f21b92b7-d679-4b3a-93e7-d3a4590143e5",
+    "total_cost_usd": 0.06930375,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 2937,
+      "cache_read_input_tokens": 33585,
+      "output_tokens": 1365,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 2937,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 1365,
+          "cache_read_input_tokens": 33585,
+          "cache_creation_input_tokens": 2937,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 2937
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 1365,
+        "cacheReadInputTokens": 33585,
+        "cacheCreationInputTokens": 2937,
+        "webSearchRequests": 0,
+        "costUSD": 0.06930375,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "2411219a-bccb-410a-a5c5-c85ed91a4a0a"
+  }
+}

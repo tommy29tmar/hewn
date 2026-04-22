@@ -1,0 +1,105 @@
+{
+  "track": "T1b",
+  "arm": "caveman_full",
+  "prompt_id": "cors-errors",
+  "run_index": 3,
+  "arm_order_index": 5,
+  "arm_order_full": [
+    "caveman_full_plus_ultra_directive",
+    "baseline",
+    "hewn_prompt_only",
+    "terse",
+    "hewn_full",
+    "caveman_full"
+  ],
+  "digest_hex": "322754c2ebc09f71e86e46b9ab4501d055dac72445f2e52e0e5526e87eaf7857",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T00:11:15.005190+00:00",
+  "output_tokens_tiktoken": 170,
+  "output_tokens_anthropic": 305,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 10494,
+  "cache_read_input_tokens": 15186,
+  "total_input_tokens": 25686,
+  "cache_state": "warm",
+  "wallclock_ms": 9352.810746990144,
+  "duration_ms": 6225,
+  "duration_api_ms": 7140,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "2ae2a3b3-fae0-4590-86e0-b57c19b0aace",
+  "total_cost_usd": 0.0812555,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "Browser block cross-origin req. Server no send `Access-Control-Allow-Origin` header matching your origin.\n\nFix:\n- Add CORS header on server: `Access-Control-Allow-Origin: <your-origin>`\n- Preflight (non-simple req): handle `OPTIONS`, return `Access-Control-Allow-Methods` + `Access-Control-Allow-Headers`\n- Credentials: set `Access-Control-Allow-Credentials: true`, origin must be exact (no `*`)\n\nCommon cause: frontend `localhost:3000` → API `localhost:8000`, API no CORS middleware.\n\nFramework quick fix:\n- Express: `app.use(cors({ origin: 'http://localhost:3000', credentials: true }))`\n- FastAPI: `CORSMiddleware`\n- Django: `django-cors-headers`\n\nPaste exact error + stack = more precise fix.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 6225,
+    "duration_api_ms": 7140,
+    "num_turns": 1,
+    "result": "Browser block cross-origin req. Server no send `Access-Control-Allow-Origin` header matching your origin.\n\nFix:\n- Add CORS header on server: `Access-Control-Allow-Origin: <your-origin>`\n- Preflight (non-simple req): handle `OPTIONS`, return `Access-Control-Allow-Methods` + `Access-Control-Allow-Headers`\n- Credentials: set `Access-Control-Allow-Credentials: true`, origin must be exact (no `*`)\n\nCommon cause: frontend `localhost:3000` → API `localhost:8000`, API no CORS middleware.\n\nFramework quick fix:\n- Express: `app.use(cors({ origin: 'http://localhost:3000', credentials: true }))`\n- FastAPI: `CORSMiddleware`\n- Django: `django-cors-headers`\n\nPaste exact error + stack = more precise fix.",
+    "stop_reason": "end_turn",
+    "session_id": "2ae2a3b3-fae0-4590-86e0-b57c19b0aace",
+    "total_cost_usd": 0.0812555,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 10494,
+      "cache_read_input_tokens": 15186,
+      "output_tokens": 305,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 10494,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 305,
+          "cache_read_input_tokens": 15186,
+          "cache_creation_input_tokens": 10494,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 10494
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 350,
+        "outputTokens": 14,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.00042,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 305,
+        "cacheReadInputTokens": 15186,
+        "cacheCreationInputTokens": 10494,
+        "webSearchRequests": 0,
+        "costUSD": 0.08083549999999999,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "95a7365d-685e-4da5-8259-195eb6d6783d"
+  }
+}

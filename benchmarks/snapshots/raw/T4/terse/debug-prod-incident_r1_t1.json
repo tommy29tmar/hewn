@@ -1,0 +1,106 @@
+{
+  "track": "T4",
+  "arm": "terse",
+  "sequence_id": "debug-prod-incident",
+  "run_index": 1,
+  "turn": 1,
+  "arm_order_index": 4,
+  "arm_order_full": [
+    "baseline",
+    "hewn_full",
+    "hewn_prompt_only",
+    "caveman_full",
+    "terse"
+  ],
+  "digest_hex": "c436155c1e87e76d88e6f2c66d47c90c16ae78237b0a8de1b93824cf92fb5c9b",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T01:01:30.959407+00:00",
+  "session_id_used_for_resume": null,
+  "output_tokens_tiktoken": 267,
+  "output_tokens_anthropic": 401,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 10561,
+  "cache_read_input_tokens": 13741,
+  "total_input_tokens": 24308,
+  "cache_state": "warm",
+  "wallclock_ms": 12770.072757004527,
+  "duration_ms": 9413,
+  "duration_api_ms": 10479,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "d88d12d9-978e-4128-8624-4abb35c63ae5",
+  "total_cost_usd": 0.08341274999999998,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "Roll back the 14:18 deploy, then investigate.\n\nFirst checks, in order:\n\n1. **Diff the deploy** — `git log 14:18..HEAD` on the release branch, focus on `createOrder` and anything touching the request body shape (validation, middleware, schema).\n2. **Request payload** — grab a failing request from logs. Is `req.body` undefined (missing `express.json()` / body-parser) or is `req.body.items` undefined (client contract change)?\n3. **Client contract** — did the payload key rename (e.g. `items` → `lineItems`, or nested under `order.items`)? Check frontend/mobile deploys in the same window.\n4. **Middleware order** — if body-parser or an auth middleware was reordered, `req.body` can be undefined.\n5. **Stack trace line** — exact file:line of the throw tells you whether it's `req.body.items`, `order.items`, or a downstream destructure.\n\nFastest triage: one failing request + the deploy diff. That pair usually identifies it in under 5 minutes.\n\nIf rollback isn't instant, hotfix: `const items = req.body?.items ?? []` with a 400 if empty — but only after you know which `.items` is undefined.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 9413,
+    "duration_api_ms": 10479,
+    "num_turns": 1,
+    "result": "Roll back the 14:18 deploy, then investigate.\n\nFirst checks, in order:\n\n1. **Diff the deploy** — `git log 14:18..HEAD` on the release branch, focus on `createOrder` and anything touching the request body shape (validation, middleware, schema).\n2. **Request payload** — grab a failing request from logs. Is `req.body` undefined (missing `express.json()` / body-parser) or is `req.body.items` undefined (client contract change)?\n3. **Client contract** — did the payload key rename (e.g. `items` → `lineItems`, or nested under `order.items`)? Check frontend/mobile deploys in the same window.\n4. **Middleware order** — if body-parser or an auth middleware was reordered, `req.body` can be undefined.\n5. **Stack trace line** — exact file:line of the throw tells you whether it's `req.body.items`, `order.items`, or a downstream destructure.\n\nFastest triage: one failing request + the deploy diff. That pair usually identifies it in under 5 minutes.\n\nIf rollback isn't instant, hotfix: `const items = req.body?.items ?? []` with a 400 if empty — but only after you know which `.items` is undefined.",
+    "stop_reason": "end_turn",
+    "session_id": "d88d12d9-978e-4128-8624-4abb35c63ae5",
+    "total_cost_usd": 0.08341274999999998,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 10561,
+      "cache_read_input_tokens": 13741,
+      "output_tokens": 401,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 10561,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 401,
+          "cache_read_input_tokens": 13741,
+          "cache_creation_input_tokens": 10561,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 10561
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 396,
+        "outputTokens": 17,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.000481,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 401,
+        "cacheReadInputTokens": 13741,
+        "cacheCreationInputTokens": 10561,
+        "webSearchRequests": 0,
+        "costUSD": 0.08293174999999998,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "fb0dd4fb-6108-4846-8145-e2a560b05d5e"
+  }
+}

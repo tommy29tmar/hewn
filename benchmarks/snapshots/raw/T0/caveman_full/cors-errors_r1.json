@@ -1,0 +1,103 @@
+{
+  "track": "T0",
+  "arm": "caveman_full",
+  "prompt_id": "cors-errors",
+  "run_index": 1,
+  "arm_order_index": 2,
+  "arm_order_full": [
+    "terse",
+    "terse_appended",
+    "caveman_full",
+    "caveman_full_appended"
+  ],
+  "digest_hex": "884a34005020aaa2decf7247298a83a400cb843e18bc330b080d55c1b5324fb3",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-21T23:29:39.941560+00:00",
+  "output_tokens_tiktoken": 120,
+  "output_tokens_anthropic": 204,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 6557,
+  "cache_read_input_tokens": 15186,
+  "total_input_tokens": 21749,
+  "cache_state": "warm",
+  "wallclock_ms": 10509.51478802017,
+  "duration_ms": 4798,
+  "duration_api_ms": 5609,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "154206e2-97a9-450d-8dbf-6ca1e7c309af",
+  "total_cost_usd": 0.05412425,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "CORS = server no send `Access-Control-Allow-Origin` header match your origin. Browser block response.\n\nCommon cause:\n- API server missing CORS middleware\n- Origin not in allowlist\n- Preflight (OPTIONS) not handled\n- Credentials req but `Allow-Credentials: true` missing, or wildcard `*` with credentials (illegal)\n\nFix: add CORS middleware on server. Example Express:\n```js\napp.use(cors({ origin: 'https://yoursite.com', credentials: true }));\n```\n\nShare exact error msg + stack (frontend/backend) for precise fix.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 4798,
+    "duration_api_ms": 5609,
+    "num_turns": 1,
+    "result": "CORS = server no send `Access-Control-Allow-Origin` header match your origin. Browser block response.\n\nCommon cause:\n- API server missing CORS middleware\n- Origin not in allowlist\n- Preflight (OPTIONS) not handled\n- Credentials req but `Allow-Credentials: true` missing, or wildcard `*` with credentials (illegal)\n\nFix: add CORS middleware on server. Example Express:\n```js\napp.use(cors({ origin: 'https://yoursite.com', credentials: true }));\n```\n\nShare exact error msg + stack (frontend/backend) for precise fix.",
+    "stop_reason": "end_turn",
+    "session_id": "154206e2-97a9-450d-8dbf-6ca1e7c309af",
+    "total_cost_usd": 0.05412425,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 6557,
+      "cache_read_input_tokens": 15186,
+      "output_tokens": 204,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 6557,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 204,
+          "cache_read_input_tokens": 15186,
+          "cache_creation_input_tokens": 6557,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 6557
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 350,
+        "outputTokens": 14,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.00042,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 204,
+        "cacheReadInputTokens": 15186,
+        "cacheCreationInputTokens": 6557,
+        "webSearchRequests": 0,
+        "costUSD": 0.05370425,
+        "contextWindow": 200000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "66e35853-19ae-4629-8912-63dd3f2aaf01"
+  }
+}

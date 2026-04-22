@@ -1,0 +1,96 @@
+{
+  "track": "T4",
+  "arm": "baseline",
+  "sequence_id": "debug-prod-incident",
+  "run_index": 2,
+  "turn": 5,
+  "arm_order_index": 4,
+  "arm_order_full": [
+    "caveman_full",
+    "terse",
+    "hewn_full",
+    "hewn_prompt_only",
+    "baseline"
+  ],
+  "digest_hex": "522341918a5177210ef438fa55486ec5b622aaa576febbd731536d82595ec31b",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T01:23:31.144814+00:00",
+  "session_id_used_for_resume": "f21b92b7-d679-4b3a-93e7-d3a4590143e5",
+  "output_tokens_tiktoken": 562,
+  "output_tokens_anthropic": 1671,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 1465,
+  "cache_read_input_tokens": 37974,
+  "total_input_tokens": 39445,
+  "cache_state": "warm",
+  "wallclock_ms": 30219.69063297729,
+  "duration_ms": 26966,
+  "duration_api_ms": 26942,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "f21b92b7-d679-4b3a-93e7-d3a4590143e5",
+  "total_cost_usd": 0.06994825,
+  "model_used": "claude-opus-4-7",
+  "result": "Batch it. One query. That's strictly faster than the current parallel approach for the common case *and* safe for the 47-SKU outlier.\n\n```js\nasync function checkInventory(skus) {\n  if (skus.length === 0) return new Map();\n  const rows = await db.query(\n    'SELECT sku, stock FROM inventory WHERE sku = ANY($1)',\n    [skus]\n  );\n  return new Map(rows.map(r => [r.sku, r.stock]));\n}\n```\n\n**Why this beats the parallel fan-out even at 3 SKUs:**\n\n- 3 parallel queries = 3 connection acquisitions + 3 network round-trips + 3 query plans. Latency ≈ max of the three (~one query's worth) *plus* pool-acquire overhead × 3.\n- 1 batched query = 1 acquisition + 1 round-trip + 1 plan. Latency ≈ one query, slightly more work in the WHERE clause (negligible for IN-list of 3-47 items on an indexed column).\n\nIn practice the batched version is ~2-3× faster for 3 SKUs and ~10-20× faster for 47, because the dominant cost at small N is round-trip time, not query work.\n\n**Pool math after the fix:**\n\n- Per request: 1 connection regardless of cart size\n- Pool of 20 → supports 20 concurrent checkouts comfortably, with the other pool users still having room\n- 47-SKU cart becomes a non-event\n\n**What to check before merging:**\n\n1. `sku` column is indexed — almost certainly yes, but confirm. `WHERE sku = ANY(...)` on an unindexed column scans the whole table per query.\n2. Downstream code handles the Map correctly — if the old code assumed results come back in input order, the Map fixes that (lookup by sku) but any positional logic needs updating.\n3. Missing SKUs — `ANY` silently drops them. If an order references a SKU that doesn't exist in inventory, the old per-SKU code probably threw or returned null for that SKU; the batched version returns a Map without that key. Make sure the caller checks `bySku.has(sku)` for each requested sku and errors appropriately, otherwise you'll ship orders for deleted SKUs.\n\n**If for some reason you can't batch** (each SKU lives in a different service, etc.), the next-best is `p-limit(5)` always-on — caps the 47-SKU case at 5 concurrent without adding overhead to the 3-SKU case, since 3 < 5 runs fully parallel anyway. But I'd push hard on batching first; it's the simpler and faster answer.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 26966,
+    "duration_api_ms": 26942,
+    "num_turns": 1,
+    "result": "Batch it. One query. That's strictly faster than the current parallel approach for the common case *and* safe for the 47-SKU outlier.\n\n```js\nasync function checkInventory(skus) {\n  if (skus.length === 0) return new Map();\n  const rows = await db.query(\n    'SELECT sku, stock FROM inventory WHERE sku = ANY($1)',\n    [skus]\n  );\n  return new Map(rows.map(r => [r.sku, r.stock]));\n}\n```\n\n**Why this beats the parallel fan-out even at 3 SKUs:**\n\n- 3 parallel queries = 3 connection acquisitions + 3 network round-trips + 3 query plans. Latency ≈ max of the three (~one query's worth) *plus* pool-acquire overhead × 3.\n- 1 batched query = 1 acquisition + 1 round-trip + 1 plan. Latency ≈ one query, slightly more work in the WHERE clause (negligible for IN-list of 3-47 items on an indexed column).\n\nIn practice the batched version is ~2-3× faster for 3 SKUs and ~10-20× faster for 47, because the dominant cost at small N is round-trip time, not query work.\n\n**Pool math after the fix:**\n\n- Per request: 1 connection regardless of cart size\n- Pool of 20 → supports 20 concurrent checkouts comfortably, with the other pool users still having room\n- 47-SKU cart becomes a non-event\n\n**What to check before merging:**\n\n1. `sku` column is indexed — almost certainly yes, but confirm. `WHERE sku = ANY(...)` on an unindexed column scans the whole table per query.\n2. Downstream code handles the Map correctly — if the old code assumed results come back in input order, the Map fixes that (lookup by sku) but any positional logic needs updating.\n3. Missing SKUs — `ANY` silently drops them. If an order references a SKU that doesn't exist in inventory, the old per-SKU code probably threw or returned null for that SKU; the batched version returns a Map without that key. Make sure the caller checks `bySku.has(sku)` for each requested sku and errors appropriately, otherwise you'll ship orders for deleted SKUs.\n\n**If for some reason you can't batch** (each SKU lives in a different service, etc.), the next-best is `p-limit(5)` always-on — caps the 47-SKU case at 5 concurrent without adding overhead to the 3-SKU case, since 3 < 5 runs fully parallel anyway. But I'd push hard on batching first; it's the simpler and faster answer.",
+    "stop_reason": "end_turn",
+    "session_id": "f21b92b7-d679-4b3a-93e7-d3a4590143e5",
+    "total_cost_usd": 0.06994825,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 1465,
+      "cache_read_input_tokens": 37974,
+      "output_tokens": 1671,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 1465,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 1671,
+          "cache_read_input_tokens": 37974,
+          "cache_creation_input_tokens": 1465,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 1465
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 1671,
+        "cacheReadInputTokens": 37974,
+        "cacheCreationInputTokens": 1465,
+        "webSearchRequests": 0,
+        "costUSD": 0.06994825,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "d2e00ea7-6649-4070-8d8a-cecad8f55c8a"
+  }
+}

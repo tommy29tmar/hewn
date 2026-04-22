@@ -1,0 +1,105 @@
+{
+  "track": "T2",
+  "arm": "baseline",
+  "prompt_id": "make-website-faster",
+  "run_index": 1,
+  "arm_order_index": 4,
+  "arm_order_full": [
+    "hewn_full",
+    "hewn_prompt_only",
+    "terse",
+    "caveman_full",
+    "baseline",
+    "caveman_full_plus_ultra_directive"
+  ],
+  "digest_hex": "7f50b87761132f5aa42b93557a015fe57f3c5214edc0baf0cfc53704c3da3593",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T00:14:19.930479+00:00",
+  "output_tokens_tiktoken": 30,
+  "output_tokens_anthropic": 43,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 15815,
+  "cache_read_input_tokens": 16796,
+  "total_input_tokens": 32617,
+  "cache_state": "warm",
+  "wallclock_ms": 5833.02225501393,
+  "duration_ms": 2479,
+  "duration_api_ms": 3227,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "e6c932a7-e954-4808-a5bd-d592d39c9861",
+  "total_cost_usd": 0.10876374999999999,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "Which website? I need a URL or local path, and ideally what \"slow\" means — slow to load, slow to interact, specific page?",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 2479,
+    "duration_api_ms": 3227,
+    "num_turns": 1,
+    "result": "Which website? I need a URL or local path, and ideally what \"slow\" means — slow to load, slow to interact, specific page?",
+    "stop_reason": "end_turn",
+    "session_id": "e6c932a7-e954-4808-a5bd-d592d39c9861",
+    "total_cost_usd": 0.10876374999999999,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 15815,
+      "cache_read_input_tokens": 16796,
+      "output_tokens": 43,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 15815,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 43,
+          "cache_read_input_tokens": 16796,
+          "cache_creation_input_tokens": 15815,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 15815
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 347,
+        "outputTokens": 14,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.00041699999999999994,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 43,
+        "cacheReadInputTokens": 16796,
+        "cacheCreationInputTokens": 15815,
+        "webSearchRequests": 0,
+        "costUSD": 0.10834674999999999,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "bae5081b-bc93-4b9c-a17c-d1cf3e663f22"
+  }
+}

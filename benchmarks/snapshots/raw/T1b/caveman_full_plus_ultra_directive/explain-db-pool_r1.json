@@ -1,0 +1,105 @@
+{
+  "track": "T1b",
+  "arm": "caveman_full_plus_ultra_directive",
+  "prompt_id": "explain-db-pool",
+  "run_index": 1,
+  "arm_order_index": 4,
+  "arm_order_full": [
+    "terse",
+    "hewn_full",
+    "baseline",
+    "hewn_prompt_only",
+    "caveman_full_plus_ultra_directive",
+    "caveman_full"
+  ],
+  "digest_hex": "2b21fc020c9f9514ecfb89de5292bc8e27d0913b3aa966344ba89e05bc88db91",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-21T23:41:20.475067+00:00",
+  "output_tokens_tiktoken": 45,
+  "output_tokens_anthropic": 76,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 6549,
+  "cache_read_input_tokens": 15201,
+  "total_input_tokens": 21756,
+  "cache_state": "warm",
+  "wallclock_ms": 10301.572019001469,
+  "duration_ms": 3457,
+  "duration_api_ms": 4135,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "1b4eb848-5385-49b2-a486-236e275bc28b",
+  "total_cost_usd": 0.05087675,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "Pool = reuse DB conn. New conn = TCP + auth + TLS → slow. Pool hold N open, hand out on req, return after. Skip handshake → fast under load. Cap conn count → DB no drown.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 3457,
+    "duration_api_ms": 4135,
+    "num_turns": 1,
+    "result": "Pool = reuse DB conn. New conn = TCP + auth + TLS → slow. Pool hold N open, hand out on req, return after. Skip handshake → fast under load. Cap conn count → DB no drown.",
+    "stop_reason": "end_turn",
+    "session_id": "1b4eb848-5385-49b2-a486-236e275bc28b",
+    "total_cost_usd": 0.05087675,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 6549,
+      "cache_read_input_tokens": 15201,
+      "output_tokens": 76,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 6549,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 76,
+          "cache_read_input_tokens": 15201,
+          "cache_creation_input_tokens": 6549,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 6549
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 345,
+        "outputTokens": 14,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.000415,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 76,
+        "cacheReadInputTokens": 15201,
+        "cacheCreationInputTokens": 6549,
+        "webSearchRequests": 0,
+        "costUSD": 0.05046175,
+        "contextWindow": 200000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "4921e75c-45c7-4a85-a3e9-d9e9262d71d5"
+  }
+}

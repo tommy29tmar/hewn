@@ -1,0 +1,105 @@
+{
+  "track": "T1b",
+  "arm": "caveman_full_plus_ultra_directive",
+  "prompt_id": "sql-explain",
+  "run_index": 3,
+  "arm_order_index": 0,
+  "arm_order_full": [
+    "caveman_full_plus_ultra_directive",
+    "hewn_prompt_only",
+    "baseline",
+    "caveman_full",
+    "hewn_full",
+    "terse"
+  ],
+  "digest_hex": "3aa90e0ce3bf73b84f09778e7aa8f88c3b89ffe3948e8877446a0e78f751df25",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T00:08:02.138780+00:00",
+  "output_tokens_tiktoken": 74,
+  "output_tokens_anthropic": 123,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 10494,
+  "cache_read_input_tokens": 15201,
+  "total_input_tokens": 25701,
+  "cache_state": "warm",
+  "wallclock_ms": 8579.75822201115,
+  "duration_ms": 4092,
+  "duration_api_ms": 4995,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "b8b23800-8abd-424e-8f40-9cff345c53d3",
+  "total_cost_usd": 0.076706,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "EXPLAIN show query plan. How DB execute query — scan type (seq/index), join order, row estimates, cost.\n\nUse: spot slow ops (seq scan big table, nested loop on millions), missing indexes, bad join order.\n\n`EXPLAIN ANALYZE` run query + show actual time/rows vs planner estimate. Gap = bad stats.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 4092,
+    "duration_api_ms": 4995,
+    "num_turns": 1,
+    "result": "EXPLAIN show query plan. How DB execute query — scan type (seq/index), join order, row estimates, cost.\n\nUse: spot slow ops (seq scan big table, nested loop on millions), missing indexes, bad join order.\n\n`EXPLAIN ANALYZE` run query + show actual time/rows vs planner estimate. Gap = bad stats.",
+    "stop_reason": "end_turn",
+    "session_id": "b8b23800-8abd-424e-8f40-9cff345c53d3",
+    "total_cost_usd": 0.076706,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 10494,
+      "cache_read_input_tokens": 15201,
+      "output_tokens": 123,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 10494,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 123,
+          "cache_read_input_tokens": 15201,
+          "cache_creation_input_tokens": 10494,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 10494
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 348,
+        "outputTokens": 13,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.000413,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 123,
+        "cacheReadInputTokens": 15201,
+        "cacheCreationInputTokens": 10494,
+        "webSearchRequests": 0,
+        "costUSD": 0.076293,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "9c477b44-dc91-460b-aa19-6e7f589dda31"
+  }
+}

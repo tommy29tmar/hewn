@@ -1,0 +1,105 @@
+{
+  "track": "T1b",
+  "arm": "baseline",
+  "prompt_id": "debounce-search",
+  "run_index": 3,
+  "arm_order_index": 1,
+  "arm_order_full": [
+    "terse",
+    "baseline",
+    "hewn_prompt_only",
+    "hewn_full",
+    "caveman_full",
+    "caveman_full_plus_ultra_directive"
+  ],
+  "digest_hex": "b0eeadf6370d53c38ab46c1c682c894eb1c04899ce7fb9c5cde713f602ef439d",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T00:11:33.906648+00:00",
+  "output_tokens_tiktoken": 148,
+  "output_tokens_anthropic": 225,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 15820,
+  "cache_read_input_tokens": 16796,
+  "total_input_tokens": 32622,
+  "cache_state": "warm",
+  "wallclock_ms": 8851.284982985817,
+  "duration_ms": 5901,
+  "duration_api_ms": 6843,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "33656e70-5f41-4d46-8535-5a8355f9581e",
+  "total_cost_usd": 0.113356,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "A debouncer delays firing the search until the user stops typing for a set window (e.g., 300ms), so you don't send a request on every keystroke.\n\nMain wins:\n- **Fewer requests** — one call for \"react\" instead of five (r, re, rea, reac, react).\n- **Less backend/DB load** and lower API cost.\n- **Avoids race conditions** where a slower earlier response overwrites a newer one.\n- **Smoother UI** — no flicker from rapid-fire result swaps.\n\nTradeoff: added latency equal to the debounce window. If you want instant feedback *and* fewer stale requests, pair a shorter debounce with request cancellation (AbortController).",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 5901,
+    "duration_api_ms": 6843,
+    "num_turns": 1,
+    "result": "A debouncer delays firing the search until the user stops typing for a set window (e.g., 300ms), so you don't send a request on every keystroke.\n\nMain wins:\n- **Fewer requests** — one call for \"react\" instead of five (r, re, rea, reac, react).\n- **Less backend/DB load** and lower API cost.\n- **Avoids race conditions** where a slower earlier response overwrites a newer one.\n- **Smoother UI** — no flicker from rapid-fire result swaps.\n\nTradeoff: added latency equal to the debounce window. If you want instant feedback *and* fewer stale requests, pair a shorter debounce with request cancellation (AbortController).",
+    "stop_reason": "end_turn",
+    "session_id": "33656e70-5f41-4d46-8535-5a8355f9581e",
+    "total_cost_usd": 0.113356,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 15820,
+      "cache_read_input_tokens": 16796,
+      "output_tokens": 225,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 15820,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 225,
+          "cache_read_input_tokens": 16796,
+          "cache_creation_input_tokens": 15820,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 15820
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 353,
+        "outputTokens": 15,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.000428,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 225,
+        "cacheReadInputTokens": 16796,
+        "cacheCreationInputTokens": 15820,
+        "webSearchRequests": 0,
+        "costUSD": 0.112928,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "6f71a699-d39f-445a-9676-b3a2cce1e979"
+  }
+}

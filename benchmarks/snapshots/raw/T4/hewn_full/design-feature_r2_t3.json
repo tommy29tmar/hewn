@@ -1,0 +1,96 @@
+{
+  "track": "T4",
+  "arm": "hewn_full",
+  "sequence_id": "design-feature",
+  "run_index": 2,
+  "turn": 3,
+  "arm_order_index": 4,
+  "arm_order_full": [
+    "baseline",
+    "caveman_full",
+    "hewn_prompt_only",
+    "terse",
+    "hewn_full"
+  ],
+  "digest_hex": "3191b019d37f08f3d5b68d9000f1aeb1e1a3524225f9daa893803df1e240ffd1",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T01:34:54.841855+00:00",
+  "session_id_used_for_resume": "6e1e9b6f-4231-446d-bb78-7ccf3f2e0132",
+  "output_tokens_tiktoken": 693,
+  "output_tokens_anthropic": 1232,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 1240,
+  "cache_read_input_tokens": 35605,
+  "total_input_tokens": 36851,
+  "cache_state": "warm",
+  "wallclock_ms": 26617.180859000655,
+  "duration_ms": 22808,
+  "duration_api_ms": 22703,
+  "wrapper_overhead_ms": 3914.180859000655,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "6e1e9b6f-4231-446d-bb78-7ccf3f2e0132",
+  "total_cost_usd": 0.056382499999999995,
+  "model_used": "claude-opus-4-7",
+  "result": "Core trick — do the read and the decrement in one atomic SQL statement, not read-then-write in app code.\n\nConditional UPDATE — UPDATE gift_cards SET balance = balance - :amount WHERE id = :id AND balance >= :amount. Check rows_affected. 1 = success, 0 = insufficient or card gone. No app-level \"if balance >= amount\" branch, because that's where the race lives.\n\nThis works because the DB takes a row lock for the UPDATE. Two concurrent statements serialize; second one sees the decremented balance and its WHERE fails cleanly.\n\nSELECT FOR UPDATE — also valid. Begin tx, SELECT balance FROM gift_cards WHERE id = :id FOR UPDATE, check in app, UPDATE, commit. Second txn blocks on the lock until first commits, then sees new balance. More verbose, same guarantee. Use it only when you need to read other fields (expiry, currency) under the lock too — otherwise conditional UPDATE is cleaner.\n\nDo NOT use SELECT then UPDATE without FOR UPDATE. Classic lost-update bug. Even at SERIALIZABLE isolation Postgres will let you through and then raise a serialization failure at commit, which you'd have to retry anyway.\n\nIsolation level — READ COMMITTED is fine with conditional UPDATE; the row lock does the work. Don't reach for SERIALIZABLE just for this.\n\nIdempotency — add an idempotency_key column on the redemption insert (or on the order_id applying the card). Unique index. If the checkout endpoint retries after a timeout, the second attempt hits the unique constraint and you return the original result instead of double-decrementing. Network retries are the most common cause of double-spend in practice, not truly concurrent users.\n\nShape it as — one transaction:\n1. INSERT redemption (card_id, order_id, amount, idempotency_key) — unique on (card_id, idempotency_key).\n2. UPDATE gift_cards SET balance = balance - :amount WHERE id = :id AND balance >= :amount.\n3. If rows_affected = 0, rollback, return insufficient_funds.\n4. Commit.\n\nOrder matters — insert first so the unique constraint fires before you touch balance. If you UPDATE first and INSERT second, a retry re-decrements then fails on insert and you rollback — correct, but wastes lock time.\n\nDeadlock note — if a single checkout applies multiple cards, always lock them in a consistent order (e.g. by card id ascending). Otherwise two checkouts applying the same two cards in opposite orders can deadlock. Rare but real.\n\nPartial consumption — if user's balance is $30 and order wants $50, business decision: consume all $30 and charge $20 to card, or reject. Assuming consume-all, the UPDATE becomes UPDATE ... SET balance = 0 WHERE id = :id AND balance > 0, and the amount consumed is the old balance read inside the same tx (RETURNING old balance, or SELECT FOR UPDATE then compute). This is the one case where SELECT FOR UPDATE is cleaner than conditional UPDATE.\n\nPostgres-specific nicety — UPDATE ... RETURNING balance lets you get the post-update balance without a second SELECT. Use it.\n\nTesting — write a test that fires N goroutines/threads at the same card with small amounts summing above balance, assert final balance >= 0 and sum of successful redemptions == initial balance. Catches regressions when someone \"simplifies\" the query later.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 22808,
+    "duration_api_ms": 22703,
+    "num_turns": 1,
+    "result": "Core trick — do the read and the decrement in one atomic SQL statement, not read-then-write in app code.\n\nConditional UPDATE — UPDATE gift_cards SET balance = balance - :amount WHERE id = :id AND balance >= :amount. Check rows_affected. 1 = success, 0 = insufficient or card gone. No app-level \"if balance >= amount\" branch, because that's where the race lives.\n\nThis works because the DB takes a row lock for the UPDATE. Two concurrent statements serialize; second one sees the decremented balance and its WHERE fails cleanly.\n\nSELECT FOR UPDATE — also valid. Begin tx, SELECT balance FROM gift_cards WHERE id = :id FOR UPDATE, check in app, UPDATE, commit. Second txn blocks on the lock until first commits, then sees new balance. More verbose, same guarantee. Use it only when you need to read other fields (expiry, currency) under the lock too — otherwise conditional UPDATE is cleaner.\n\nDo NOT use SELECT then UPDATE without FOR UPDATE. Classic lost-update bug. Even at SERIALIZABLE isolation Postgres will let you through and then raise a serialization failure at commit, which you'd have to retry anyway.\n\nIsolation level — READ COMMITTED is fine with conditional UPDATE; the row lock does the work. Don't reach for SERIALIZABLE just for this.\n\nIdempotency — add an idempotency_key column on the redemption insert (or on the order_id applying the card). Unique index. If the checkout endpoint retries after a timeout, the second attempt hits the unique constraint and you return the original result instead of double-decrementing. Network retries are the most common cause of double-spend in practice, not truly concurrent users.\n\nShape it as — one transaction:\n1. INSERT redemption (card_id, order_id, amount, idempotency_key) — unique on (card_id, idempotency_key).\n2. UPDATE gift_cards SET balance = balance - :amount WHERE id = :id AND balance >= :amount.\n3. If rows_affected = 0, rollback, return insufficient_funds.\n4. Commit.\n\nOrder matters — insert first so the unique constraint fires before you touch balance. If you UPDATE first and INSERT second, a retry re-decrements then fails on insert and you rollback — correct, but wastes lock time.\n\nDeadlock note — if a single checkout applies multiple cards, always lock them in a consistent order (e.g. by card id ascending). Otherwise two checkouts applying the same two cards in opposite orders can deadlock. Rare but real.\n\nPartial consumption — if user's balance is $30 and order wants $50, business decision: consume all $30 and charge $20 to card, or reject. Assuming consume-all, the UPDATE becomes UPDATE ... SET balance = 0 WHERE id = :id AND balance > 0, and the amount consumed is the old balance read inside the same tx (RETURNING old balance, or SELECT FOR UPDATE then compute). This is the one case where SELECT FOR UPDATE is cleaner than conditional UPDATE.\n\nPostgres-specific nicety — UPDATE ... RETURNING balance lets you get the post-update balance without a second SELECT. Use it.\n\nTesting — write a test that fires N goroutines/threads at the same card with small amounts summing above balance, assert final balance >= 0 and sum of successful redemptions == initial balance. Catches regressions when someone \"simplifies\" the query later.",
+    "stop_reason": "end_turn",
+    "session_id": "6e1e9b6f-4231-446d-bb78-7ccf3f2e0132",
+    "total_cost_usd": 0.056382499999999995,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 1240,
+      "cache_read_input_tokens": 35605,
+      "output_tokens": 1232,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 1240,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 1232,
+          "cache_read_input_tokens": 35605,
+          "cache_creation_input_tokens": 1240,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 1240
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 1232,
+        "cacheReadInputTokens": 35605,
+        "cacheCreationInputTokens": 1240,
+        "webSearchRequests": 0,
+        "costUSD": 0.056382499999999995,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "09fb4461-704e-4bdf-9878-bced6bf16caa"
+  }
+}

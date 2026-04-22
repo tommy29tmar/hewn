@@ -1,0 +1,105 @@
+{
+  "track": "T1b",
+  "arm": "terse",
+  "prompt_id": "git-rebase-vs-merge",
+  "run_index": 1,
+  "arm_order_index": 1,
+  "arm_order_full": [
+    "hewn_prompt_only",
+    "terse",
+    "hewn_full",
+    "caveman_full",
+    "baseline",
+    "caveman_full_plus_ultra_directive"
+  ],
+  "digest_hex": "0db86ef9039b5089d2e722b87250da0e6caef801039c526c02d2b461a0eb6acc",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-21T23:49:25.906583+00:00",
+  "output_tokens_tiktoken": 154,
+  "output_tokens_anthropic": 248,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 20294,
+  "total_input_tokens": 20300,
+  "cache_state": "warm",
+  "wallclock_ms": 10728.213334019529,
+  "duration_ms": 5201,
+  "duration_api_ms": 5956,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "725918c3-11e8-4a91-add2-9085d9caabf3",
+  "total_cost_usd": 0.0168,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "**Merge**: Creates a new commit that joins two branches. Preserves full history, including the branch topology. Non-destructive.\n\n**Rebase**: Replays your commits on top of another branch, rewriting history. Produces a linear history with no merge commit.\n\nKey differences:\n- **History shape**: merge = branching graph; rebase = straight line.\n- **Commit hashes**: merge keeps them; rebase creates new ones.\n- **Safety**: merge is safe on shared branches; rebase rewrites history, so avoid on branches others have pulled.\n- **Conflict resolution**: merge resolves once; rebase may require resolving per replayed commit.\n\nRule of thumb: rebase local work before pushing; merge when integrating shared branches.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 5201,
+    "duration_api_ms": 5956,
+    "num_turns": 1,
+    "result": "**Merge**: Creates a new commit that joins two branches. Preserves full history, including the branch topology. Non-destructive.\n\n**Rebase**: Replays your commits on top of another branch, rewriting history. Produces a linear history with no merge commit.\n\nKey differences:\n- **History shape**: merge = branching graph; rebase = straight line.\n- **Commit hashes**: merge keeps them; rebase creates new ones.\n- **Safety**: merge is safe on shared branches; rebase rewrites history, so avoid on branches others have pulled.\n- **Conflict resolution**: merge resolves once; rebase may require resolving per replayed commit.\n\nRule of thumb: rebase local work before pushing; merge when integrating shared branches.",
+    "stop_reason": "end_turn",
+    "session_id": "725918c3-11e8-4a91-add2-9085d9caabf3",
+    "total_cost_usd": 0.0168,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 20294,
+      "output_tokens": 248,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 0,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 248,
+          "cache_read_input_tokens": 20294,
+          "cache_creation_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 348,
+        "outputTokens": 15,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.000423,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 248,
+        "cacheReadInputTokens": 20294,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.016377,
+        "contextWindow": 200000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "ef53d70c-a807-4f10-b57c-f0f43924cc83"
+  }
+}

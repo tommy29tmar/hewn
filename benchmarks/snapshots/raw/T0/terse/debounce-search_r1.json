@@ -1,0 +1,103 @@
+{
+  "track": "T0",
+  "arm": "terse",
+  "prompt_id": "debounce-search",
+  "run_index": 1,
+  "arm_order_index": 0,
+  "arm_order_full": [
+    "terse",
+    "terse_appended",
+    "caveman_full",
+    "caveman_full_appended"
+  ],
+  "digest_hex": "37dcfc04f7f9bb03f94bf4fe2a87d8ed70cc588f0bfaceb0e1c634e40f418a20",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-21T23:30:00.566070+00:00",
+  "output_tokens_tiktoken": 154,
+  "output_tokens_anthropic": 245,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 6556,
+  "cache_read_input_tokens": 13741,
+  "total_input_tokens": 20303,
+  "cache_state": "warm",
+  "wallclock_ms": 10735.01476299134,
+  "duration_ms": 5534,
+  "duration_api_ms": 6223,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "0156fec1-b63f-4fd0-883e-abe3350d80a9",
+  "total_cost_usd": 0.05442350000000001,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "A debouncer delays running the search until the user stops typing for a set interval (e.g., 300ms). Without it, every keystroke fires a request.\n\nBenefits:\n- **Fewer API calls** — one request per pause instead of one per keystroke.\n- **Less server/DB load** — avoids wasted queries for intermediate strings like \"a\", \"ap\", \"app\".\n- **Avoids race conditions** — fewer in-flight requests means fewer stale responses overwriting newer ones.\n- **Smoother UI** — no flicker from rapid result swaps.\n- **Lower cost** — matters for paid APIs or expensive queries.\n\nTypical debounce: 200–400ms. Use throttle instead if you want periodic updates during continuous input.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 5534,
+    "duration_api_ms": 6223,
+    "num_turns": 1,
+    "result": "A debouncer delays running the search until the user stops typing for a set interval (e.g., 300ms). Without it, every keystroke fires a request.\n\nBenefits:\n- **Fewer API calls** — one request per pause instead of one per keystroke.\n- **Less server/DB load** — avoids wasted queries for intermediate strings like \"a\", \"ap\", \"app\".\n- **Avoids race conditions** — fewer in-flight requests means fewer stale responses overwriting newer ones.\n- **Smoother UI** — no flicker from rapid result swaps.\n- **Lower cost** — matters for paid APIs or expensive queries.\n\nTypical debounce: 200–400ms. Use throttle instead if you want periodic updates during continuous input.",
+    "stop_reason": "end_turn",
+    "session_id": "0156fec1-b63f-4fd0-883e-abe3350d80a9",
+    "total_cost_usd": 0.05442350000000001,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 6556,
+      "cache_read_input_tokens": 13741,
+      "output_tokens": 245,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 6556,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 245,
+          "cache_read_input_tokens": 13741,
+          "cache_creation_input_tokens": 6556,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 6556
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 353,
+        "outputTokens": 14,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.000423,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 245,
+        "cacheReadInputTokens": 13741,
+        "cacheCreationInputTokens": 6556,
+        "webSearchRequests": 0,
+        "costUSD": 0.05400050000000001,
+        "contextWindow": 200000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "6f43c1d3-8957-4fad-b9bc-d201d8427f48"
+  }
+}

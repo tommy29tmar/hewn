@@ -1,0 +1,105 @@
+{
+  "track": "T1b",
+  "arm": "terse",
+  "prompt_id": "sql-explain",
+  "run_index": 1,
+  "arm_order_index": 2,
+  "arm_order_full": [
+    "caveman_full",
+    "hewn_full",
+    "terse",
+    "hewn_prompt_only",
+    "baseline",
+    "caveman_full_plus_ultra_directive"
+  ],
+  "digest_hex": "e9b043a6109acd8755235ab57ea2087212a5d2fe093212bffca1c20b840c04e8",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-21T23:44:46.052578+00:00",
+  "output_tokens_tiktoken": 254,
+  "output_tokens_anthropic": 414,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 6558,
+  "cache_read_input_tokens": 13741,
+  "total_input_tokens": 20305,
+  "cache_state": "warm",
+  "wallclock_ms": 14285.33011500258,
+  "duration_ms": 8230,
+  "duration_api_ms": 8937,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "a1b85b00-8046-48e8-9f99-f8dc64604ce4",
+  "total_cost_usd": 0.058661,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "EXPLAIN shows the query execution plan — how the database will run your query without actually executing it.\n\nKey things it reveals:\n- **Access method**: sequential scan, index scan, index-only scan, bitmap scan\n- **Join strategy**: nested loop, hash join, merge join\n- **Join order**: which tables get processed first\n- **Cost estimates**: startup cost, total cost (in arbitrary units)\n- **Row estimates**: how many rows the planner expects at each step\n- **Width**: estimated average row size in bytes\n\nVariants:\n- `EXPLAIN ANALYZE` — actually runs the query and shows real timings + row counts alongside estimates\n- `EXPLAIN (ANALYZE, BUFFERS)` — adds cache hit/miss info (Postgres)\n- `EXPLAIN FORMAT=JSON` — machine-readable output\n\nCommon uses:\n- Spot sequential scans on large tables (missing index)\n- Find estimate-vs-actual row mismatches (stale statistics)\n- Identify expensive nested loops that should be hash joins\n- Verify an index is actually being used\n\nSyntax varies slightly across Postgres, MySQL, SQL Server, and Oracle, but the concept is the same.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 8230,
+    "duration_api_ms": 8937,
+    "num_turns": 1,
+    "result": "EXPLAIN shows the query execution plan — how the database will run your query without actually executing it.\n\nKey things it reveals:\n- **Access method**: sequential scan, index scan, index-only scan, bitmap scan\n- **Join strategy**: nested loop, hash join, merge join\n- **Join order**: which tables get processed first\n- **Cost estimates**: startup cost, total cost (in arbitrary units)\n- **Row estimates**: how many rows the planner expects at each step\n- **Width**: estimated average row size in bytes\n\nVariants:\n- `EXPLAIN ANALYZE` — actually runs the query and shows real timings + row counts alongside estimates\n- `EXPLAIN (ANALYZE, BUFFERS)` — adds cache hit/miss info (Postgres)\n- `EXPLAIN FORMAT=JSON` — machine-readable output\n\nCommon uses:\n- Spot sequential scans on large tables (missing index)\n- Find estimate-vs-actual row mismatches (stale statistics)\n- Identify expensive nested loops that should be hash joins\n- Verify an index is actually being used\n\nSyntax varies slightly across Postgres, MySQL, SQL Server, and Oracle, but the concept is the same.",
+    "stop_reason": "end_turn",
+    "session_id": "a1b85b00-8046-48e8-9f99-f8dc64604ce4",
+    "total_cost_usd": 0.058661,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 6558,
+      "cache_read_input_tokens": 13741,
+      "output_tokens": 414,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 6558,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 414,
+          "cache_read_input_tokens": 13741,
+          "cache_creation_input_tokens": 6558,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 6558
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 348,
+        "outputTokens": 15,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.000423,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 414,
+        "cacheReadInputTokens": 13741,
+        "cacheCreationInputTokens": 6558,
+        "webSearchRequests": 0,
+        "costUSD": 0.058238,
+        "contextWindow": 200000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "046448c0-487b-44ac-b737-ed92c022909a"
+  }
+}

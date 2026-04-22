@@ -1,0 +1,105 @@
+{
+  "track": "T1b",
+  "arm": "hewn_prompt_only",
+  "prompt_id": "debounce-search",
+  "run_index": 2,
+  "arm_order_index": 4,
+  "arm_order_full": [
+    "caveman_full",
+    "hewn_full",
+    "terse",
+    "caveman_full_plus_ultra_directive",
+    "hewn_prompt_only",
+    "baseline"
+  ],
+  "digest_hex": "e838a3fd4acfd4bf53980182f48a52cd7f3d453d713bc5be86257f0f482fe618",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T00:00:37.038822+00:00",
+  "output_tokens_tiktoken": 144,
+  "output_tokens_anthropic": 212,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 11729,
+  "cache_read_input_tokens": 16796,
+  "total_input_tokens": 28531,
+  "cache_state": "warm",
+  "wallclock_ms": 11954.055035021156,
+  "duration_ms": 6540,
+  "duration_api_ms": 8274,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "572ace02-666f-416f-b250-2d6a33782f18",
+  "total_cost_usd": 0.08746225,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "A debouncer delays running the search until the user pauses typing (say, 300ms of no new keystrokes), so you fire one request instead of one per keystroke.\n\nWhy it matters:\n- **Fewer requests** — typing \"laptop\" sends 1 query instead of 6, cutting API load and cost.\n- **Avoids race conditions** — later keystrokes' responses can arrive before earlier ones, flashing stale results.\n- **Smoother UI** — no rapid re-renders or loading flicker on every character.\n\nThrottle is the sibling tool (fires at most every N ms); debounce is usually the right pick for search since you only care about the final query.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 6540,
+    "duration_api_ms": 8274,
+    "num_turns": 1,
+    "result": "A debouncer delays running the search until the user pauses typing (say, 300ms of no new keystrokes), so you fire one request instead of one per keystroke.\n\nWhy it matters:\n- **Fewer requests** — typing \"laptop\" sends 1 query instead of 6, cutting API load and cost.\n- **Avoids race conditions** — later keystrokes' responses can arrive before earlier ones, flashing stale results.\n- **Smoother UI** — no rapid re-renders or loading flicker on every character.\n\nThrottle is the sibling tool (fires at most every N ms); debounce is usually the right pick for search since you only care about the final query.",
+    "stop_reason": "end_turn",
+    "session_id": "572ace02-666f-416f-b250-2d6a33782f18",
+    "total_cost_usd": 0.08746225,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 11729,
+      "cache_read_input_tokens": 16796,
+      "output_tokens": 212,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 11729,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 212,
+          "cache_read_input_tokens": 16796,
+          "cache_creation_input_tokens": 11729,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 11729
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 353,
+        "outputTokens": 15,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.000428,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 212,
+        "cacheReadInputTokens": 16796,
+        "cacheCreationInputTokens": 11729,
+        "webSearchRequests": 0,
+        "costUSD": 0.08703425000000001,
+        "contextWindow": 200000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "ecc1ad62-bc5f-47bf-8229-ee6cc2d483dd"
+  }
+}

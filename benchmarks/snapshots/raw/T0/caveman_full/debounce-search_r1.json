@@ -1,0 +1,103 @@
+{
+  "track": "T0",
+  "arm": "caveman_full",
+  "prompt_id": "debounce-search",
+  "run_index": 1,
+  "arm_order_index": 2,
+  "arm_order_full": [
+    "terse",
+    "terse_appended",
+    "caveman_full",
+    "caveman_full_appended"
+  ],
+  "digest_hex": "37dcfc04f7f9bb03f94bf4fe2a87d8ed70cc588f0bfaceb0e1c634e40f418a20",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-21T23:30:24.954576+00:00",
+  "output_tokens_tiktoken": 40,
+  "output_tokens_anthropic": 62,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 6556,
+  "cache_read_input_tokens": 15186,
+  "total_input_tokens": 21748,
+  "cache_state": "warm",
+  "wallclock_ms": 9584.234763984568,
+  "duration_ms": 3138,
+  "duration_api_ms": 4665,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "c34d2385-a322-4865-96fe-f29eceab11f9",
+  "total_cost_usd": 0.05058100000000001,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "Stop firing search on every keystroke. Wait til user pause typing (e.g. 300ms) → one request instead of many. Save API calls, reduce lag, skip stale results.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 3138,
+    "duration_api_ms": 4665,
+    "num_turns": 1,
+    "result": "Stop firing search on every keystroke. Wait til user pause typing (e.g. 300ms) → one request instead of many. Save API calls, reduce lag, skip stale results.",
+    "stop_reason": "end_turn",
+    "session_id": "c34d2385-a322-4865-96fe-f29eceab11f9",
+    "total_cost_usd": 0.05058100000000001,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 6556,
+      "cache_read_input_tokens": 15186,
+      "output_tokens": 62,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 6556,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 62,
+          "cache_read_input_tokens": 15186,
+          "cache_creation_input_tokens": 6556,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 6556
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 353,
+        "outputTokens": 16,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.000433,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 62,
+        "cacheReadInputTokens": 15186,
+        "cacheCreationInputTokens": 6556,
+        "webSearchRequests": 0,
+        "costUSD": 0.050148000000000005,
+        "contextWindow": 200000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "fde3d1ff-3414-4b8f-b290-f722e02e1275"
+  }
+}

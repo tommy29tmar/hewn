@@ -1,0 +1,105 @@
+{
+  "track": "T1b",
+  "arm": "baseline",
+  "prompt_id": "debounce-search",
+  "run_index": 1,
+  "arm_order_index": 0,
+  "arm_order_full": [
+    "baseline",
+    "caveman_full_plus_ultra_directive",
+    "hewn_prompt_only",
+    "caveman_full",
+    "terse",
+    "hewn_full"
+  ],
+  "digest_hex": "37dcfc04f7f9bb03f94bf4fe2a87d8ed70cc588f0bfaceb0e1c634e40f418a20",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-21T23:48:09.653279+00:00",
+  "output_tokens_tiktoken": 115,
+  "output_tokens_anthropic": 169,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 11729,
+  "cache_read_input_tokens": 16796,
+  "total_input_tokens": 28531,
+  "cache_state": "warm",
+  "wallclock_ms": 11921.016889013117,
+  "duration_ms": 5607,
+  "duration_api_ms": 6554,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "c63f97a8-70e1-4331-bd08-3a377c0d9371",
+  "total_cost_usd": 0.08639225,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "A debouncer waits until the user stops typing (e.g. 300ms of no new keystrokes) before firing the search. Without it, every keystroke triggers a request — \"react\" = 5 requests, most of which are wasted.\n\nBenefits:\n- Fewer network calls / less server load\n- Avoids race conditions where an earlier slow response overwrites a later one\n- Smoother UI — no flicker from results churning on every keystroke\n\nTrade-off: slight perceived latency (the debounce delay) before results appear.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 5607,
+    "duration_api_ms": 6554,
+    "num_turns": 1,
+    "result": "A debouncer waits until the user stops typing (e.g. 300ms of no new keystrokes) before firing the search. Without it, every keystroke triggers a request — \"react\" = 5 requests, most of which are wasted.\n\nBenefits:\n- Fewer network calls / less server load\n- Avoids race conditions where an earlier slow response overwrites a later one\n- Smoother UI — no flicker from results churning on every keystroke\n\nTrade-off: slight perceived latency (the debounce delay) before results appear.",
+    "stop_reason": "end_turn",
+    "session_id": "c63f97a8-70e1-4331-bd08-3a377c0d9371",
+    "total_cost_usd": 0.08639225,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 11729,
+      "cache_read_input_tokens": 16796,
+      "output_tokens": 169,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 11729,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 169,
+          "cache_read_input_tokens": 16796,
+          "cache_creation_input_tokens": 11729,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 11729
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 353,
+        "outputTokens": 16,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.000433,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 169,
+        "cacheReadInputTokens": 16796,
+        "cacheCreationInputTokens": 11729,
+        "webSearchRequests": 0,
+        "costUSD": 0.08595925,
+        "contextWindow": 200000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "61c1edf4-a3d4-420a-b636-8b5cf05a7e66"
+  }
+}

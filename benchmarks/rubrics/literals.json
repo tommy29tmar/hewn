@@ -1,0 +1,32 @@
+{
+  "version": 1,
+  "_comment": "Per prompt_id, list literal strings that should appear verbatim in the response. Used for literal-preservation regex check (case-sensitive). Empty list = no literal check.",
+  "short_en": {
+    "react-rerender-parent": ["useMemo"],
+    "explain-db-pool": [],
+    "tcp-vs-udp": ["TCP", "UDP"],
+    "fix-node-memory-leak": [],
+    "sql-explain": ["EXPLAIN"],
+    "hash-table-collisions": [],
+    "cors-errors": ["CORS"],
+    "debounce-search": [],
+    "git-rebase-vs-merge": ["rebase", "merge"],
+    "queue-vs-topic": []
+  },
+  "vibe_en": {
+    "make-website-faster": [],
+    "login-button-broken": [],
+    "add-search-bar": [],
+    "typeerror-undefined-map": ["TypeError", "undefined"],
+    "spaghetti-code": []
+  },
+  "long_en": {
+    "rate-limit-xff-review": ["X-Forwarded-For", "Redis"],
+    "transfer-handler-review": [],
+    "body-size-rollout-plan": ["POST /v1/media/upload-meta", "512KB"]
+  },
+  "expansive_en": {
+    "smart-drafts-release-note": ["Smart Drafts"],
+    "outage-apology-email": []
+  }
+}

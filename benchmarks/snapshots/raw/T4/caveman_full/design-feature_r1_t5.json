@@ -1,0 +1,96 @@
+{
+  "track": "T4",
+  "arm": "caveman_full",
+  "sequence_id": "design-feature",
+  "run_index": 1,
+  "turn": 5,
+  "arm_order_index": 4,
+  "arm_order_full": [
+    "hewn_full",
+    "hewn_prompt_only",
+    "terse",
+    "baseline",
+    "caveman_full"
+  ],
+  "digest_hex": "30a2f9a62df0d790c0598917c3ab42509bbadd672a0a484741ea201d2da3b44f",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T01:16:01.184686+00:00",
+  "session_id_used_for_resume": "76d6c2fd-4d09-4f39-a793-96e383321b32",
+  "output_tokens_tiktoken": 1183,
+  "output_tokens_anthropic": 2527,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 961,
+  "cache_read_input_tokens": 29520,
+  "total_input_tokens": 30487,
+  "cache_state": "warm",
+  "wallclock_ms": 46280.833664990496,
+  "duration_ms": 42992,
+  "duration_api_ms": 42966,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "76d6c2fd-4d09-4f39-a793-96e383321b32",
+  "total_cost_usd": 0.08397125000000001,
+  "model_used": "claude-opus-4-7",
+  "result": "**Policy decisions first (pick before you code):**\n\n**1. Split strategy — the core question**\n\n| Strategy | Behavior | Pro | Con |\n|---|---|---|---|\n| **Proportional** | Refund splits by original ratio (e.g. $60 GC + $40 card → 60/40 on every refund) | Fair, symmetric | More txns per refund, small refunds may be $0.01 to one side |\n| **Gift card first** | Re-credit GC up to amount originally redeemed, remainder to card | Keeps funds in closed loop, lower interchange fees | Consumer-unfriendly (\"I wanted my cash back\") |\n| **Card first** | Refund card up to amount originally charged, remainder to GC | Consumer-friendly | Merchant loses closed-loop retention |\n| **User choice at return** | Ask | Flexible | Ops burden, dispute risk |\n\n**Recommend: proportional.** Symmetric, audit-clean, no policy argument with customers, matches how most payment platforms (Stripe, Adyen) model split tenders. Handle penny rounding by sending remainder to card.\n\n**2. Edge cases the policy must answer**\n\n- **GC expired since redemption** → re-credit with new 12-month expiry, or extend to original + 12mo. Don't refund expired balance into a dead card. (Also: reconfirm legal — refunding to an \"expired\" card may itself be illegal if expiry itself was illegal.)\n- **GC voided / flagged fraud** → refund entire amount to card. Never re-credit a voided card.\n- **GC fully consumed, balance = 0** → re-credit brings it back to life; that's fine, it's the same card_id.\n- **Original card gone** (expired, closed) → gateway will reject; fall back to store credit / new GC / check. Gateway-dependent.\n- **Tax/shipping** → refund proportionally on the post-tax total. Don't try to assign \"GC paid the tax, card paid the shipping\" — that way lies madness and wrong 1099-Ks.\n- **Refund > original charge on a tender** (shouldn't happen, but) → cap at original amount per tender, surface error.\n\n**3. Accounting note**\nRe-crediting GC = reversing the liability reduction (deferred revenue goes back up). Refund to card = cash out + revenue reversal. Finance will want these as distinct journal entries, not one \"refund\" line.\n\n---\n\n**Code path (proportional, partial refund of $X on order with $G from GC + $C from card):**\n\n```\nratio_gc   = G / (G + C)\nratio_card = C / (G + C)\nrefund_gc   = round(X * ratio_gc, 2)\nrefund_card = X - refund_gc           # absorb rounding on card side\n```\n\n**Transaction (single DB txn wrapping gateway call — but see caveat):**\n\n```\nBEGIN;\n\n-- 1. Lock order + refund ledger row\nSELECT ... FROM orders WHERE id = :order_id FOR UPDATE;\nSELECT SUM(amount) FROM refunds WHERE order_id = :order_id;  -- enforce cap\n\n-- 2. Validate: already_refunded + X <= original_total, per-tender caps hold\n\n-- 3. Lock gift card\nSELECT balance, status, expires_at FROM gift_cards\n  WHERE id = :card_id FOR UPDATE;\n-- if status = 'voided' → route refund_gc to card instead\n\n-- 4. Call payment gateway for refund_card\n--    ⚠️ external call inside txn = bad. See caveat below.\ngateway.refund(charge_id, refund_card, idempotency_key)\n\n-- 5. Credit gift card\nUPDATE gift_cards\n  SET balance = balance + :refund_gc,\n      status = 'active',\n      expires_at = GREATEST(expires_at, now() + interval '12 months')\n  WHERE id = :card_id;\n\n-- 6. Insert refund record (audit)\nINSERT INTO refunds (order_id, amount, gc_portion, card_portion,\n                     gateway_refund_id, idempotency_key, ...);\n\nCOMMIT;\n```\n\n**Caveat on step 4:** earlier we said never hold a DB lock across a gateway call. Same rule here. Two ways out:\n\n- **Saga:** (a) insert `pending_refund` row, release locks; (b) call gateway; (c) on success, txn to apply GC credit + mark refund `completed`; on failure, mark `failed`, no GC credit. Idempotency key prevents double-refund on retry.\n- **Gateway-first:** call gateway outside txn with idempotency key → then open txn to record result + credit GC. If DB txn fails after gateway succeeds, a recovery job reconciles using the idempotency key.\n\nPick saga. Same pattern as the checkout charge path — symmetry with how you applied the GC in the first place.\n\n**Idempotency key for refund:** `refund:{order_id}:{refund_attempt_id}`. Unique constraint on `refunds` table. Retries safe.\n\n**Failure modes to test:**\n- Gateway refund succeeds, DB update fails → reconcile job finds orphan gateway refund via idempotency key, replays DB side.\n- GC credit succeeds, gateway refund fails → saga rolls back GC credit (compensating UPDATE), marks refund failed, surfaces to user.\n- Double-click refund button → idempotency key dedupes, same result returned.\n\n**One more policy question worth raising:** does a refund to GC extend its expiry? If not, user can have a card with $50 that expires tomorrow — bad UX, possible complaint. Refreshing expiry on credit (as in step 5) is kinder and simpler than partial-balance expiry tracking.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 42992,
+    "duration_api_ms": 42966,
+    "num_turns": 1,
+    "result": "**Policy decisions first (pick before you code):**\n\n**1. Split strategy — the core question**\n\n| Strategy | Behavior | Pro | Con |\n|---|---|---|---|\n| **Proportional** | Refund splits by original ratio (e.g. $60 GC + $40 card → 60/40 on every refund) | Fair, symmetric | More txns per refund, small refunds may be $0.01 to one side |\n| **Gift card first** | Re-credit GC up to amount originally redeemed, remainder to card | Keeps funds in closed loop, lower interchange fees | Consumer-unfriendly (\"I wanted my cash back\") |\n| **Card first** | Refund card up to amount originally charged, remainder to GC | Consumer-friendly | Merchant loses closed-loop retention |\n| **User choice at return** | Ask | Flexible | Ops burden, dispute risk |\n\n**Recommend: proportional.** Symmetric, audit-clean, no policy argument with customers, matches how most payment platforms (Stripe, Adyen) model split tenders. Handle penny rounding by sending remainder to card.\n\n**2. Edge cases the policy must answer**\n\n- **GC expired since redemption** → re-credit with new 12-month expiry, or extend to original + 12mo. Don't refund expired balance into a dead card. (Also: reconfirm legal — refunding to an \"expired\" card may itself be illegal if expiry itself was illegal.)\n- **GC voided / flagged fraud** → refund entire amount to card. Never re-credit a voided card.\n- **GC fully consumed, balance = 0** → re-credit brings it back to life; that's fine, it's the same card_id.\n- **Original card gone** (expired, closed) → gateway will reject; fall back to store credit / new GC / check. Gateway-dependent.\n- **Tax/shipping** → refund proportionally on the post-tax total. Don't try to assign \"GC paid the tax, card paid the shipping\" — that way lies madness and wrong 1099-Ks.\n- **Refund > original charge on a tender** (shouldn't happen, but) → cap at original amount per tender, surface error.\n\n**3. Accounting note**\nRe-crediting GC = reversing the liability reduction (deferred revenue goes back up). Refund to card = cash out + revenue reversal. Finance will want these as distinct journal entries, not one \"refund\" line.\n\n---\n\n**Code path (proportional, partial refund of $X on order with $G from GC + $C from card):**\n\n```\nratio_gc   = G / (G + C)\nratio_card = C / (G + C)\nrefund_gc   = round(X * ratio_gc, 2)\nrefund_card = X - refund_gc           # absorb rounding on card side\n```\n\n**Transaction (single DB txn wrapping gateway call — but see caveat):**\n\n```\nBEGIN;\n\n-- 1. Lock order + refund ledger row\nSELECT ... FROM orders WHERE id = :order_id FOR UPDATE;\nSELECT SUM(amount) FROM refunds WHERE order_id = :order_id;  -- enforce cap\n\n-- 2. Validate: already_refunded + X <= original_total, per-tender caps hold\n\n-- 3. Lock gift card\nSELECT balance, status, expires_at FROM gift_cards\n  WHERE id = :card_id FOR UPDATE;\n-- if status = 'voided' → route refund_gc to card instead\n\n-- 4. Call payment gateway for refund_card\n--    ⚠️ external call inside txn = bad. See caveat below.\ngateway.refund(charge_id, refund_card, idempotency_key)\n\n-- 5. Credit gift card\nUPDATE gift_cards\n  SET balance = balance + :refund_gc,\n      status = 'active',\n      expires_at = GREATEST(expires_at, now() + interval '12 months')\n  WHERE id = :card_id;\n\n-- 6. Insert refund record (audit)\nINSERT INTO refunds (order_id, amount, gc_portion, card_portion,\n                     gateway_refund_id, idempotency_key, ...);\n\nCOMMIT;\n```\n\n**Caveat on step 4:** earlier we said never hold a DB lock across a gateway call. Same rule here. Two ways out:\n\n- **Saga:** (a) insert `pending_refund` row, release locks; (b) call gateway; (c) on success, txn to apply GC credit + mark refund `completed`; on failure, mark `failed`, no GC credit. Idempotency key prevents double-refund on retry.\n- **Gateway-first:** call gateway outside txn with idempotency key → then open txn to record result + credit GC. If DB txn fails after gateway succeeds, a recovery job reconciles using the idempotency key.\n\nPick saga. Same pattern as the checkout charge path — symmetry with how you applied the GC in the first place.\n\n**Idempotency key for refund:** `refund:{order_id}:{refund_attempt_id}`. Unique constraint on `refunds` table. Retries safe.\n\n**Failure modes to test:**\n- Gateway refund succeeds, DB update fails → reconcile job finds orphan gateway refund via idempotency key, replays DB side.\n- GC credit succeeds, gateway refund fails → saga rolls back GC credit (compensating UPDATE), marks refund failed, surfaces to user.\n- Double-click refund button → idempotency key dedupes, same result returned.\n\n**One more policy question worth raising:** does a refund to GC extend its expiry? If not, user can have a card with $50 that expires tomorrow — bad UX, possible complaint. Refreshing expiry on credit (as in step 5) is kinder and simpler than partial-balance expiry tracking.",
+    "stop_reason": "end_turn",
+    "session_id": "76d6c2fd-4d09-4f39-a793-96e383321b32",
+    "total_cost_usd": 0.08397125000000001,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 961,
+      "cache_read_input_tokens": 29520,
+      "output_tokens": 2527,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 961,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 2527,
+          "cache_read_input_tokens": 29520,
+          "cache_creation_input_tokens": 961,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 961
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 2527,
+        "cacheReadInputTokens": 29520,
+        "cacheCreationInputTokens": 961,
+        "webSearchRequests": 0,
+        "costUSD": 0.08397125000000001,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "71d58e70-6534-4133-afdf-9fe8115929ba"
+  }
+}

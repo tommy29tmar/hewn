@@ -1,0 +1,105 @@
+{
+  "track": "T3",
+  "arm": "caveman_full_plus_ultra_directive",
+  "prompt_id": "body-size-rollout-plan",
+  "run_index": 1,
+  "arm_order_index": 5,
+  "arm_order_full": [
+    "baseline",
+    "hewn_full",
+    "terse",
+    "hewn_prompt_only",
+    "caveman_full",
+    "caveman_full_plus_ultra_directive"
+  ],
+  "digest_hex": "5cec5867cbfe8d2d7c19052a4434bcde0ff4203f3deef4f0370586b6544a69c8",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T00:37:28.509086+00:00",
+  "output_tokens_tiktoken": 1091,
+  "output_tokens_anthropic": 1734,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 17891,
+  "cache_read_input_tokens": 15201,
+  "total_input_tokens": 33098,
+  "cache_state": "warm",
+  "wallclock_ms": 36669.645359012065,
+  "duration_ms": 32194,
+  "duration_api_ms": 33429,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "40635ccd-937e-4862-ac93-2831d64ac1ef",
+  "total_cost_usd": 0.16854725,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "# Review: `POST /v1/orgs/:org_id/transfer`\n\n## P0 — Security (blocking)\n\n**1. Trusts client-supplied `X-User-Id`** (§2 rule 1, §5)\nReads `req.headers['x-user-id']` as identity. Client can spoof → auth bypass / cross-user fund transfer. Exact class of attack §2 forbids.\n**Fix:** use `req.user.sub` (set by `auth_jwt` middleware). Read org from `req.user.org`; reject if `req.user.org !== req.params.org_id`.\n**Verify:** test request with forged `X-User-Id` header → must resolve to JWT `sub`, not header.\n\n**2. Not mounted on authenticated router / no authz check**\nHandler registered directly on `app` — bypasses pipeline order (§3). No JWT check, no org membership check, no role check for `transfer` capability.\n**Fix:** mount on the authenticated router after `auth_jwt`. Add role/scope check (`X-Internal-Roles` contains transfer scope). Verify `sub` belongs to `org_id`.\n**Verify:** unauth request → `401`; cross-org request → `403`.\n\n**3. No input validation on body**\n`from`, `to`, `amount` used raw → type confusion, negative amount, same-account transfer, non-account IDs belonging to other orgs, floating-point money.\n**Fix:** schema-validate (zod/ajv). `amount` integer minor units > 0, `from !== to`, both UUIDs, both scoped to `org_id` (downstream `tx-svc` re-checks but edge should reject obvious garbage).\n**Verify:** negative/zero/string/missing `amount` → `400` problem+json.\n\n## P1 — Correctness\n\n**4. No idempotency key**\nFund movement, no replay protection. Network retry = double transfer.\n**Fix:** require `Idempotency-Key` header, forward to `tx-svc`; reject missing with `400`.\n\n**5. No rate limiting consideration**\n`POST` → default 30/min/IP (§4). Fund transfer should be stricter per-user, not per-IP. Add entry in `config/rate_limits.json` keyed per `sub`.\n\n**6. Error handling missing**\n`await txSvc.transfer(...)` throws → unhandled rejection, Express 5 forwards but no shaping. Errors leak internals (§2 rule 6).\n**Fix:** `try/catch` → `next(err)`; central handler emits RFC 7807 with `request_id`.\n\n**7. Response not RFC 7807 compatible on errors; success lacks `request_id`**\n`{ok:true}` fine for 200 but include `request_id` for traceability. Error paths must follow §2 rule 6.\n\n## P2 — Operational / Standards\n\n**8. Not using `trustedClientIp` / pipeline assumptions**\nRaw handler sidesteps `header_sanitize`, `body_size_guard`, `audit_log` if not mounted via `pipeline.ts`. Fund movement MUST hit `audit_log`.\n**Fix:** register via `src/edge/pipeline.ts` router.\n\n**9. No OTel span / metrics**\nMoney-moving route should be in `config/always_trace_routes.json` (§7, 100% sampling). Add `atlas_edge_requests_total` labels auto-applied via pipeline — confirm route is registered there, not bare `app.post`.\n\n**10. Logging risk**\nIf handler logs `req.body`, `amount` and account IDs land in Loki. Don't log body (§11). PII redaction already handles named fields but account IDs aren't in the list — add to `pii_redact` config if treated as sensitive.\n\n**11. Style**\nSemicolons present, single quotes mixed with double — violates §11 Prettier config. `const userId` unused after fix. File placement: route should live under `src/edge/routes/` not top-level `app`.\n\n**12. CODEOWNERS**\nChanges touching auth/authorization logic need human approval (§6). Ensure route module is covered or add to CODEOWNERS.\n\n## Fixed sketch\n\n```typescript\nrouter.post(\n  '/v1/orgs/:org_id/transfer',\n  requireAuth,\n  requireRole('transfer:write'),\n  requireIdempotencyKey,\n  validateBody(TransferSchema),\n  async (req, res, next) => {\n    try {\n      if (req.user.org !== req.params.org_id) {\n        return next(problem(403, 'forbidden', 'org mismatch'))\n      }\n      const { from, to, amount } = req.body\n      const result = await txSvc.transfer({\n        orgId: req.params.org_id,\n        userId: req.user.sub,\n        idempotencyKey: req.header('Idempotency-Key'),\n        from, to, amount,\n        traceparent: req.header('traceparent'),\n      })\n      res.json({ ok: true, request_id: req.id, transfer_id: result.id })\n    } catch (err) {\n      next(err)\n    }\n  },\n)\n```\n\nMain remaining risk: `tx-svc` must still enforce org/account ownership + balance — edge validation is defense-in-depth, not authoritative.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 32194,
+    "duration_api_ms": 33429,
+    "num_turns": 1,
+    "result": "# Review: `POST /v1/orgs/:org_id/transfer`\n\n## P0 — Security (blocking)\n\n**1. Trusts client-supplied `X-User-Id`** (§2 rule 1, §5)\nReads `req.headers['x-user-id']` as identity. Client can spoof → auth bypass / cross-user fund transfer. Exact class of attack §2 forbids.\n**Fix:** use `req.user.sub` (set by `auth_jwt` middleware). Read org from `req.user.org`; reject if `req.user.org !== req.params.org_id`.\n**Verify:** test request with forged `X-User-Id` header → must resolve to JWT `sub`, not header.\n\n**2. Not mounted on authenticated router / no authz check**\nHandler registered directly on `app` — bypasses pipeline order (§3). No JWT check, no org membership check, no role check for `transfer` capability.\n**Fix:** mount on the authenticated router after `auth_jwt`. Add role/scope check (`X-Internal-Roles` contains transfer scope). Verify `sub` belongs to `org_id`.\n**Verify:** unauth request → `401`; cross-org request → `403`.\n\n**3. No input validation on body**\n`from`, `to`, `amount` used raw → type confusion, negative amount, same-account transfer, non-account IDs belonging to other orgs, floating-point money.\n**Fix:** schema-validate (zod/ajv). `amount` integer minor units > 0, `from !== to`, both UUIDs, both scoped to `org_id` (downstream `tx-svc` re-checks but edge should reject obvious garbage).\n**Verify:** negative/zero/string/missing `amount` → `400` problem+json.\n\n## P1 — Correctness\n\n**4. No idempotency key**\nFund movement, no replay protection. Network retry = double transfer.\n**Fix:** require `Idempotency-Key` header, forward to `tx-svc`; reject missing with `400`.\n\n**5. No rate limiting consideration**\n`POST` → default 30/min/IP (§4). Fund transfer should be stricter per-user, not per-IP. Add entry in `config/rate_limits.json` keyed per `sub`.\n\n**6. Error handling missing**\n`await txSvc.transfer(...)` throws → unhandled rejection, Express 5 forwards but no shaping. Errors leak internals (§2 rule 6).\n**Fix:** `try/catch` → `next(err)`; central handler emits RFC 7807 with `request_id`.\n\n**7. Response not RFC 7807 compatible on errors; success lacks `request_id`**\n`{ok:true}` fine for 200 but include `request_id` for traceability. Error paths must follow §2 rule 6.\n\n## P2 — Operational / Standards\n\n**8. Not using `trustedClientIp` / pipeline assumptions**\nRaw handler sidesteps `header_sanitize`, `body_size_guard`, `audit_log` if not mounted via `pipeline.ts`. Fund movement MUST hit `audit_log`.\n**Fix:** register via `src/edge/pipeline.ts` router.\n\n**9. No OTel span / metrics**\nMoney-moving route should be in `config/always_trace_routes.json` (§7, 100% sampling). Add `atlas_edge_requests_total` labels auto-applied via pipeline — confirm route is registered there, not bare `app.post`.\n\n**10. Logging risk**\nIf handler logs `req.body`, `amount` and account IDs land in Loki. Don't log body (§11). PII redaction already handles named fields but account IDs aren't in the list — add to `pii_redact` config if treated as sensitive.\n\n**11. Style**\nSemicolons present, single quotes mixed with double — violates §11 Prettier config. `const userId` unused after fix. File placement: route should live under `src/edge/routes/` not top-level `app`.\n\n**12. CODEOWNERS**\nChanges touching auth/authorization logic need human approval (§6). Ensure route module is covered or add to CODEOWNERS.\n\n## Fixed sketch\n\n```typescript\nrouter.post(\n  '/v1/orgs/:org_id/transfer',\n  requireAuth,\n  requireRole('transfer:write'),\n  requireIdempotencyKey,\n  validateBody(TransferSchema),\n  async (req, res, next) => {\n    try {\n      if (req.user.org !== req.params.org_id) {\n        return next(problem(403, 'forbidden', 'org mismatch'))\n      }\n      const { from, to, amount } = req.body\n      const result = await txSvc.transfer({\n        orgId: req.params.org_id,\n        userId: req.user.sub,\n        idempotencyKey: req.header('Idempotency-Key'),\n        from, to, amount,\n        traceparent: req.header('traceparent'),\n      })\n      res.json({ ok: true, request_id: req.id, transfer_id: result.id })\n    } catch (err) {\n      next(err)\n    }\n  },\n)\n```\n\nMain remaining risk: `tx-svc` must still enforce org/account ownership + balance — edge validation is defense-in-depth, not authoritative.",
+    "stop_reason": "end_turn",
+    "session_id": "40635ccd-937e-4862-ac93-2831d64ac1ef",
+    "total_cost_usd": 0.16854725,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 17891,
+      "cache_read_input_tokens": 15201,
+      "output_tokens": 1734,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 17891,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 1734,
+          "cache_read_input_tokens": 15201,
+          "cache_creation_input_tokens": 17891,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 17891
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 5668,
+        "outputTokens": 16,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.0057480000000000005,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 1734,
+        "cacheReadInputTokens": 15201,
+        "cacheCreationInputTokens": 17891,
+        "webSearchRequests": 0,
+        "costUSD": 0.16279925,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "1881ae5b-953b-4f58-882c-f714105d580d"
+  }
+}

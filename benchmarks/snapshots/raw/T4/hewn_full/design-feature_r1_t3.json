@@ -1,0 +1,96 @@
+{
+  "track": "T4",
+  "arm": "hewn_full",
+  "sequence_id": "design-feature",
+  "run_index": 1,
+  "turn": 3,
+  "arm_order_index": 0,
+  "arm_order_full": [
+    "hewn_full",
+    "hewn_prompt_only",
+    "terse",
+    "baseline",
+    "caveman_full"
+  ],
+  "digest_hex": "30a2f9a62df0d790c0598917c3ab42509bbadd672a0a484741ea201d2da3b44f",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T01:03:30.950875+00:00",
+  "session_id_used_for_resume": "b3f40e90-02ea-4c6b-a1d6-396c50dde0bb",
+  "output_tokens_tiktoken": 613,
+  "output_tokens_anthropic": 947,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 1081,
+  "cache_read_input_tokens": 35283,
+  "total_input_tokens": 36370,
+  "cache_state": "warm",
+  "wallclock_ms": 27567.235605994938,
+  "duration_ms": 24810,
+  "duration_api_ms": 24722,
+  "wrapper_overhead_ms": 2845.235605994938,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "b3f40e90-02ea-4c6b-a1d6-396c50dde0bb",
+  "total_cost_usd": 0.04810275,
+  "model_used": "claude-opus-4-7",
+  "result": "core move: never read-then-write in app code. make decrement atomic at DB level.\n\noption 1: conditional UPDATE (best default)\n- single statement: UPDATE gift_cards SET balance = balance - :amt WHERE code = :code AND balance >= :amt\n- check affected rows = 1, else reject as insufficient\n- atomic, no explicit lock, handles any isolation level\n- works across Postgres/MySQL/most RDBMS\n\noption 2: SELECT ... FOR UPDATE\n- lock row, read balance, decide, UPDATE, commit\n- more flexible when decision logic is complex (e.g. split across multiple cards, tax interactions)\n- costs a round-trip, holds lock longer, deadlock risk if you touch multiple rows in inconsistent order\n- use when conditional UPDATE can't express the rule\n\noption 3: optimistic with version column\n- SELECT balance, version; UPDATE ... WHERE version = :v; retry on 0 rows\n- fine under low contention, degrades to livelock under high contention on same code\n- not worth it here — gift cards have low write volume per row but need correctness\n\npick option 1 as default, option 2 for multi-step flows.\n\non top of that, idempotency is non-negotiable\n- every redeem carries idempotency_key (e.g. order_id + attempt_id)\n- record (code, idempotency_key, amount, result) in redemptions table with UNIQUE(code, idempotency_key)\n- on retry, look up first — if key exists, return stored result, don't re-decrement\n- without this, network retries double-spend even with atomic UPDATE\n\nreserve-vs-capture question\n- if checkout can fail after gift card debited (card decline, timeout), either:\n  a) debit at capture only, accept race risk during checkout session (small window, small volume)\n  b) reserve: move amount to \"held\" column / separate pending row, commit or release on checkout outcome\n- reserves add complexity (timeouts to auto-release orphaned holds) but prevent \"gift card shown as spent mid-checkout, then checkout fails\" UX\n- for low-volume gift cards, (a) is usually fine. for high-value or heavy use, (b)\n\nordering within the DB transaction matters\n- decrement gift card, insert ledger row, create payment record — all in one transaction\n- if card auth happens outside DB txn (external gateway), do: reserve gift card in txn → call gateway → commit or rollback reservation based on result\n- never commit gift card debit before you know card auth outcome, unless you have a compensating reversal path\n\ncommon trap: two gift cards on same order\n- lock them in deterministic order (sorted by code) to avoid deadlock\n- or process sequentially, not in parallel\n\nmonitoring: alert on any gift card going negative. should be impossible with conditional UPDATE — if it happens, you have a bug or a missing WHERE clause.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 24810,
+    "duration_api_ms": 24722,
+    "num_turns": 1,
+    "result": "core move: never read-then-write in app code. make decrement atomic at DB level.\n\noption 1: conditional UPDATE (best default)\n- single statement: UPDATE gift_cards SET balance = balance - :amt WHERE code = :code AND balance >= :amt\n- check affected rows = 1, else reject as insufficient\n- atomic, no explicit lock, handles any isolation level\n- works across Postgres/MySQL/most RDBMS\n\noption 2: SELECT ... FOR UPDATE\n- lock row, read balance, decide, UPDATE, commit\n- more flexible when decision logic is complex (e.g. split across multiple cards, tax interactions)\n- costs a round-trip, holds lock longer, deadlock risk if you touch multiple rows in inconsistent order\n- use when conditional UPDATE can't express the rule\n\noption 3: optimistic with version column\n- SELECT balance, version; UPDATE ... WHERE version = :v; retry on 0 rows\n- fine under low contention, degrades to livelock under high contention on same code\n- not worth it here — gift cards have low write volume per row but need correctness\n\npick option 1 as default, option 2 for multi-step flows.\n\non top of that, idempotency is non-negotiable\n- every redeem carries idempotency_key (e.g. order_id + attempt_id)\n- record (code, idempotency_key, amount, result) in redemptions table with UNIQUE(code, idempotency_key)\n- on retry, look up first — if key exists, return stored result, don't re-decrement\n- without this, network retries double-spend even with atomic UPDATE\n\nreserve-vs-capture question\n- if checkout can fail after gift card debited (card decline, timeout), either:\n  a) debit at capture only, accept race risk during checkout session (small window, small volume)\n  b) reserve: move amount to \"held\" column / separate pending row, commit or release on checkout outcome\n- reserves add complexity (timeouts to auto-release orphaned holds) but prevent \"gift card shown as spent mid-checkout, then checkout fails\" UX\n- for low-volume gift cards, (a) is usually fine. for high-value or heavy use, (b)\n\nordering within the DB transaction matters\n- decrement gift card, insert ledger row, create payment record — all in one transaction\n- if card auth happens outside DB txn (external gateway), do: reserve gift card in txn → call gateway → commit or rollback reservation based on result\n- never commit gift card debit before you know card auth outcome, unless you have a compensating reversal path\n\ncommon trap: two gift cards on same order\n- lock them in deterministic order (sorted by code) to avoid deadlock\n- or process sequentially, not in parallel\n\nmonitoring: alert on any gift card going negative. should be impossible with conditional UPDATE — if it happens, you have a bug or a missing WHERE clause.",
+    "stop_reason": "end_turn",
+    "session_id": "b3f40e90-02ea-4c6b-a1d6-396c50dde0bb",
+    "total_cost_usd": 0.04810275,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 1081,
+      "cache_read_input_tokens": 35283,
+      "output_tokens": 947,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 1081,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 947,
+          "cache_read_input_tokens": 35283,
+          "cache_creation_input_tokens": 1081,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 1081
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 947,
+        "cacheReadInputTokens": 35283,
+        "cacheCreationInputTokens": 1081,
+        "webSearchRequests": 0,
+        "costUSD": 0.04810275,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "3d7b5357-5bc2-45ec-ad6a-7857b077feee"
+  }
+}

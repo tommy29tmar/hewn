@@ -1,0 +1,102 @@
+{
+  "track": "T1a",
+  "arm": "caveman_full",
+  "prompt_id": "explain-db-pool",
+  "run_index": 1,
+  "arm_order_index": 2,
+  "arm_order_full": [
+    "baseline",
+    "terse",
+    "caveman_full"
+  ],
+  "digest_hex": "2b21fc020c9f9514ecfb89de5292bc8e27d0913b3aa966344ba89e05bc88db91",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-21T23:33:36.676009+00:00",
+  "output_tokens_tiktoken": 96,
+  "output_tokens_anthropic": 168,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 6550,
+  "cache_read_input_tokens": 15186,
+  "total_input_tokens": 21742,
+  "cache_state": "warm",
+  "wallclock_ms": 9406.537223985652,
+  "duration_ms": 4659,
+  "duration_api_ms": 5431,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "0d2d31f3-93bc-400f-8659-b2aecad58e11",
+  "total_cost_usd": 0.0531755,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "Pool reuse open DB connections. No new connect per request. Skip TCP + auth handshake overhead.\n\nFlow: app borrow conn from pool → query → return to pool. Idle conns stay warm.\n\nKey knobs: max size (cap concurrent), min idle (pre-warm), timeout (wait limit), max lifetime (recycle stale).\n\nWin: fast under load, bounded DB load, no connect storm. Risk: pool too small → queue stalls. Too big → DB overwhelm.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 4659,
+    "duration_api_ms": 5431,
+    "num_turns": 1,
+    "result": "Pool reuse open DB connections. No new connect per request. Skip TCP + auth handshake overhead.\n\nFlow: app borrow conn from pool → query → return to pool. Idle conns stay warm.\n\nKey knobs: max size (cap concurrent), min idle (pre-warm), timeout (wait limit), max lifetime (recycle stale).\n\nWin: fast under load, bounded DB load, no connect storm. Risk: pool too small → queue stalls. Too big → DB overwhelm.",
+    "stop_reason": "end_turn",
+    "session_id": "0d2d31f3-93bc-400f-8659-b2aecad58e11",
+    "total_cost_usd": 0.0531755,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 6550,
+      "cache_read_input_tokens": 15186,
+      "output_tokens": 168,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 6550,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 168,
+          "cache_read_input_tokens": 15186,
+          "cache_creation_input_tokens": 6550,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 6550
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 345,
+        "outputTokens": 14,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.000415,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 168,
+        "cacheReadInputTokens": 15186,
+        "cacheCreationInputTokens": 6550,
+        "webSearchRequests": 0,
+        "costUSD": 0.0527605,
+        "contextWindow": 200000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "a2a79a36-7664-4b86-93e1-4e5228a3cb4d"
+  }
+}

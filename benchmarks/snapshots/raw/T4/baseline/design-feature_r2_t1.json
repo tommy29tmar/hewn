@@ -1,0 +1,106 @@
+{
+  "track": "T4",
+  "arm": "baseline",
+  "sequence_id": "design-feature",
+  "run_index": 2,
+  "turn": 1,
+  "arm_order_index": 0,
+  "arm_order_full": [
+    "baseline",
+    "caveman_full",
+    "hewn_prompt_only",
+    "terse",
+    "hewn_full"
+  ],
+  "digest_hex": "3191b019d37f08f3d5b68d9000f1aeb1e1a3524225f9daa893803df1e240ffd1",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T01:23:50.296122+00:00",
+  "session_id_used_for_resume": null,
+  "output_tokens_tiktoken": 371,
+  "output_tokens_anthropic": 776,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 32671,
+  "total_input_tokens": 32677,
+  "cache_state": "warm",
+  "wallclock_ms": 19150.20761897904,
+  "duration_ms": 15920,
+  "duration_api_ms": 16837,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "754c5314-d205-4a0d-9e19-5a1e53b97a74",
+  "total_cost_usd": 0.0362265,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "Quick flag: this repo (SIGIL/Hewn) is a Claude Code CLI wrapper — no checkout code here. Assuming you mean a different project, the main decisions:\n\n1. **Storage & atomicity** — where balances live (own table vs. ledger of credits/debits). A ledger is auditable and handles refunds/partial reversals cleanly; a mutable balance column is simpler but harder to reconcile.\n2. **Code format & security** — length/charset, hashed-at-rest vs. plaintext lookup, rate-limit on redemption attempts, single-use vs. reusable-until-zero.\n3. **Redemption order vs. other discounts** — does the gift card apply before or after promo codes, tax, and shipping? This changes the taxable amount and is usually a finance/legal call.\n4. **Payment flow & partial capture** — one charge to card for the remainder, or authorize full amount then adjust? Matters for auth holds, 3DS, and failure recovery (what if card declines after balance is debited?).\n5. **Concurrency** — same code redeemed twice in parallel tabs. Row lock on redemption, or idempotency key per checkout session.\n6. **Refunds** — refund to original gift card, new card, or split? Does the balance become re-redeemable?\n7. **Expiry, regional rules, and tax treatment** — many jurisdictions forbid expiry or require escheatment; gift card sale vs. redemption have different tax points.\n8. **Multi-currency** — fixed currency per card, or convert at redemption?\n\nThe two that usually bite hardest: **#1 (ledger vs. balance)** and **#4 (what happens if the card charge fails after you've debited the gift card)**. Want me to sketch a data model for the one you're actually working in?",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 15920,
+    "duration_api_ms": 16837,
+    "num_turns": 1,
+    "result": "Quick flag: this repo (SIGIL/Hewn) is a Claude Code CLI wrapper — no checkout code here. Assuming you mean a different project, the main decisions:\n\n1. **Storage & atomicity** — where balances live (own table vs. ledger of credits/debits). A ledger is auditable and handles refunds/partial reversals cleanly; a mutable balance column is simpler but harder to reconcile.\n2. **Code format & security** — length/charset, hashed-at-rest vs. plaintext lookup, rate-limit on redemption attempts, single-use vs. reusable-until-zero.\n3. **Redemption order vs. other discounts** — does the gift card apply before or after promo codes, tax, and shipping? This changes the taxable amount and is usually a finance/legal call.\n4. **Payment flow & partial capture** — one charge to card for the remainder, or authorize full amount then adjust? Matters for auth holds, 3DS, and failure recovery (what if card declines after balance is debited?).\n5. **Concurrency** — same code redeemed twice in parallel tabs. Row lock on redemption, or idempotency key per checkout session.\n6. **Refunds** — refund to original gift card, new card, or split? Does the balance become re-redeemable?\n7. **Expiry, regional rules, and tax treatment** — many jurisdictions forbid expiry or require escheatment; gift card sale vs. redemption have different tax points.\n8. **Multi-currency** — fixed currency per card, or convert at redemption?\n\nThe two that usually bite hardest: **#1 (ledger vs. balance)** and **#4 (what happens if the card charge fails after you've debited the gift card)**. Want me to sketch a data model for the one you're actually working in?",
+    "stop_reason": "end_turn",
+    "session_id": "754c5314-d205-4a0d-9e19-5a1e53b97a74",
+    "total_cost_usd": 0.0362265,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 32671,
+      "output_tokens": 776,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 0,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 776,
+          "cache_read_input_tokens": 32671,
+          "cache_creation_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 391,
+        "outputTokens": 14,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.00046100000000000004,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 776,
+        "cacheReadInputTokens": 32671,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.0357655,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "23515080-d3a5-46a5-9787-17a8bbdacbf0"
+  }
+}

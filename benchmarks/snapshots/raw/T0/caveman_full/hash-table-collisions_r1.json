@@ -1,0 +1,103 @@
+{
+  "track": "T0",
+  "arm": "caveman_full",
+  "prompt_id": "hash-table-collisions",
+  "run_index": 1,
+  "arm_order_index": 2,
+  "arm_order_full": [
+    "terse",
+    "terse_appended",
+    "caveman_full",
+    "caveman_full_appended"
+  ],
+  "digest_hex": "2a54ba54e1f7192ed7b81622a0de8bb31264ddae15be620c57cd7c027de6901e",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-21T23:28:46.496591+00:00",
+  "output_tokens_tiktoken": 117,
+  "output_tokens_anthropic": 181,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 6552,
+  "cache_read_input_tokens": 15186,
+  "total_input_tokens": 21744,
+  "cache_state": "warm",
+  "wallclock_ms": 11415.662936022272,
+  "duration_ms": 5165,
+  "duration_api_ms": 6188,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "3727cda5-e92e-4ded-8e63-1eb7d0324df2",
+  "total_cost_usd": 0.05351,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "Two main way:\n\n**Chaining**: each bucket hold linked list (or tree). Collide → append. Lookup walk list.\n\n**Open addressing**: probe other slots in array.\n- Linear: next slot (i+1)\n- Quadratic: i+1², i+2²…\n- Double hash: step = hash2(key)\n\nChaining simple, handle high load factor. Open addressing cache-friendly, need resize before full.\n\nJava `HashMap` = chaining (tree after 8). Python `dict`, Go `map` = open addressing variant.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 5165,
+    "duration_api_ms": 6188,
+    "num_turns": 1,
+    "result": "Two main way:\n\n**Chaining**: each bucket hold linked list (or tree). Collide → append. Lookup walk list.\n\n**Open addressing**: probe other slots in array.\n- Linear: next slot (i+1)\n- Quadratic: i+1², i+2²…\n- Double hash: step = hash2(key)\n\nChaining simple, handle high load factor. Open addressing cache-friendly, need resize before full.\n\nJava `HashMap` = chaining (tree after 8). Python `dict`, Go `map` = open addressing variant.",
+    "stop_reason": "end_turn",
+    "session_id": "3727cda5-e92e-4ded-8e63-1eb7d0324df2",
+    "total_cost_usd": 0.05351,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 6552,
+      "cache_read_input_tokens": 15186,
+      "output_tokens": 181,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 6552,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 181,
+          "cache_read_input_tokens": 15186,
+          "cache_creation_input_tokens": 6552,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 6552
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 347,
+        "outputTokens": 13,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.000412,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 181,
+        "cacheReadInputTokens": 15186,
+        "cacheCreationInputTokens": 6552,
+        "webSearchRequests": 0,
+        "costUSD": 0.053098,
+        "contextWindow": 200000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "ac9526f6-54fa-4e4e-9156-9c765568a347"
+  }
+}

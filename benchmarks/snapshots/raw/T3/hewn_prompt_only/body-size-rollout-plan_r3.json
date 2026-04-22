@@ -1,0 +1,105 @@
+{
+  "track": "T3",
+  "arm": "hewn_prompt_only",
+  "prompt_id": "body-size-rollout-plan",
+  "run_index": 3,
+  "arm_order_index": 1,
+  "arm_order_full": [
+    "hewn_full",
+    "hewn_prompt_only",
+    "baseline",
+    "terse",
+    "caveman_full_plus_ultra_directive",
+    "caveman_full"
+  ],
+  "digest_hex": "83cf61101f93c83952a720a1c10bb2b89a0fe33cd226823e26742150e5132c55",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T00:49:49.023802+00:00",
+  "output_tokens_tiktoken": 1391,
+  "output_tokens_anthropic": 2158,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 40015,
+  "total_input_tokens": 40021,
+  "cache_state": "warm",
+  "wallclock_ms": 39473.13907498028,
+  "duration_ms": 36315,
+  "duration_api_ms": 37361,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "f2b4a21e-f00e-449b-89cb-d4a7ba3f99e4",
+  "total_cost_usd": 0.07973050000000001,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "# Code Review: `POST /v1/orgs/:org_id/transfer`\n\n## P0 — Security / Trust Boundary\n\n**1. Trusting client-supplied `X-User-Id` header** (Section 2 rule 1, Section 5)\n- Finding: `req.headers['x-user-id']` is a client-controlled header. A caller can set it to any value and impersonate any user.\n- Exploit: attacker sends `X-User-Id: <victim-sub>` and transfers funds as that victim.\n- Fix: derive identity from the validated JWT only — `req.user.sub` (set by `auth_jwt` middleware). The internal forwarded header is `X-Internal-User-Id`, not `X-User-Id`, and those internal headers are stripped on ingress precisely to prevent this.\n- Verify: add a test that sends `X-User-Id: attacker` with a JWT for a different user, assert the transfer uses the JWT's `sub`.\n\n**2. No authentication guard on the route**\n- Finding: the handler is registered directly on `app.post(...)` with no auth check visible. If this bypasses the pipeline in `src/edge/pipeline.ts`, `auth_jwt` never runs and the route is open.\n- Fix: register via the edge pipeline so middleware chain (`header_sanitize` → `rate_limit` → `auth_jwt` → ...) runs. Do not add routes outside `route_dispatcher`.\n\n**3. No org-membership / authorization check**\n- Finding: even with a valid JWT, nothing verifies `req.user` belongs to `:org_id` or has a role permitting transfers. Any authenticated user can move funds in any org.\n- Fix: check `req.user.org === req.params.org_id` (or membership lookup) and required role in `req.user.roles` before forwarding. Cross-tenant authorization is the edge's job here since the handler constructs the downstream call.\n\n## P1 — Correctness / Input Validation\n\n**4. No input validation on `from`, `to`, `amount`**\n- Finding: body is forwarded blindly. `amount` could be negative, non-numeric, a string, `Infinity`, or missing. `from`/`to` could be arbitrary account IDs across orgs.\n- Fix: validate schema (e.g., zod) — `amount` is a positive integer (minor units), `from`/`to` are well-formed account IDs belonging to `:org_id`. Reject with `400` + RFC 7807 body.\n\n**5. No body-size / content-type check at handler level**\n- Finding: relies on pipeline `body_size_guard`, which is fine — but only if this route goes through the pipeline (see issue 2). Worth confirming.\n\n**6. `:org_id` is not validated**\n- Finding: path param is passed through without format check. Downstream `tx-svc` may be strict, but edge should reject obvious garbage early.\n- Fix: validate UUID/slug format.\n\n## P1 — Reliability\n\n**7. No error handling / `next(err)`**\n- Finding: `await txSvc.transfer(...)` has no try/catch. If it throws, Express 5 will surface it, but any non-Error rejection or downstream 5xx gets no shaping. Also violates Section 11 (\"never swallow errors silently\" — here it's the opposite, no central handling path).\n- Fix: wrap in try/catch and call `next(err)` so `src/edge/errorHandler.ts` produces an RFC 7807 response with `request_id` (Section 2 rule 6).\n\n**8. Response shape violates error contract (latent)**\n- Finding: success is `{ok: true}`, which is fine, but any failure path here would leak whatever `txSvc` throws. Error body must be RFC 7807 with `type/title/status/detail/instance` and `request_id` — not default Express HTML.\n- Fix: route errors through the central handler.\n\n## P2 — Observability / Audit\n\n**9. No audit log for a money-moving operation**\n- Finding: transfers are security-relevant. Section 9 keeps audit logs 365 days with object-lock — this endpoint should emit one.\n- Fix: ensure the pipeline's `audit_log` stage runs (re: issue 2), and confirm `tx-svc` receives `X-Internal-User-Id` / `X-Internal-Auth-Method` so the audit trail is attributable.\n\n**10. No idempotency key**\n- Finding: a network retry or client double-submit could execute the transfer twice. Standard for funds-moving endpoints is `Idempotency-Key` header with dedup at `tx-svc`.\n- Fix: require `Idempotency-Key`, forward to `tx-svc`, document the contract. (Confirm with `tx-svc` owners whether dedup lives there — Section 5 notes edge does not dedupe `jti`.)\n\n## P2 — Rate Limiting\n\n**11. Default `POST` limit (30/min/IP) is likely too loose for transfers**\n- Finding: `config/rate_limits.json` fallback is 30/min/IP for `POST`. For a funds-transfer endpoint, per-user (not per-IP) and much tighter is appropriate.\n- Fix: add an explicit entry for `/v1/orgs/:org_id/transfer` keyed by user ID, not IP, with a conservative limit.\n\n## P2 — Process\n\n**12. CODEOWNERS / review requirements**\n- Not a code issue, but: this endpoint touches money movement and identity. Ensure a security reviewer is on the PR even though the files changed may not be in the Section 6 CODEOWNERS-gated list.\n\n---\n\n**Suggested rewrite sketch** (through the pipeline, not `app.post` directly):\n\n```typescript\nrouter.post(\n  '/v1/orgs/:org_id/transfer',\n  validateBody(transferSchema),\n  requireOrgMember('org_id'),\n  requireRole('transfers.write'),\n  async (req, res, next) => {\n    try {\n      const result = await txSvc.transfer({\n        orgId: req.params.org_id,\n        userId: req.user.sub,\n        idempotencyKey: req.header('Idempotency-Key'),\n        from: req.body.from,\n        to: req.body.to,\n        amount: req.body.amount,\n      })\n      res.json(result)\n    } catch (err) {\n      next(err)\n    }\n  },\n)\n```\n\n**Top-of-list for the author to fix first:** issues 1, 2, 3 — any one of them alone is a shippable-only-after-security-review blocker.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 36315,
+    "duration_api_ms": 37361,
+    "num_turns": 1,
+    "result": "# Code Review: `POST /v1/orgs/:org_id/transfer`\n\n## P0 — Security / Trust Boundary\n\n**1. Trusting client-supplied `X-User-Id` header** (Section 2 rule 1, Section 5)\n- Finding: `req.headers['x-user-id']` is a client-controlled header. A caller can set it to any value and impersonate any user.\n- Exploit: attacker sends `X-User-Id: <victim-sub>` and transfers funds as that victim.\n- Fix: derive identity from the validated JWT only — `req.user.sub` (set by `auth_jwt` middleware). The internal forwarded header is `X-Internal-User-Id`, not `X-User-Id`, and those internal headers are stripped on ingress precisely to prevent this.\n- Verify: add a test that sends `X-User-Id: attacker` with a JWT for a different user, assert the transfer uses the JWT's `sub`.\n\n**2. No authentication guard on the route**\n- Finding: the handler is registered directly on `app.post(...)` with no auth check visible. If this bypasses the pipeline in `src/edge/pipeline.ts`, `auth_jwt` never runs and the route is open.\n- Fix: register via the edge pipeline so middleware chain (`header_sanitize` → `rate_limit` → `auth_jwt` → ...) runs. Do not add routes outside `route_dispatcher`.\n\n**3. No org-membership / authorization check**\n- Finding: even with a valid JWT, nothing verifies `req.user` belongs to `:org_id` or has a role permitting transfers. Any authenticated user can move funds in any org.\n- Fix: check `req.user.org === req.params.org_id` (or membership lookup) and required role in `req.user.roles` before forwarding. Cross-tenant authorization is the edge's job here since the handler constructs the downstream call.\n\n## P1 — Correctness / Input Validation\n\n**4. No input validation on `from`, `to`, `amount`**\n- Finding: body is forwarded blindly. `amount` could be negative, non-numeric, a string, `Infinity`, or missing. `from`/`to` could be arbitrary account IDs across orgs.\n- Fix: validate schema (e.g., zod) — `amount` is a positive integer (minor units), `from`/`to` are well-formed account IDs belonging to `:org_id`. Reject with `400` + RFC 7807 body.\n\n**5. No body-size / content-type check at handler level**\n- Finding: relies on pipeline `body_size_guard`, which is fine — but only if this route goes through the pipeline (see issue 2). Worth confirming.\n\n**6. `:org_id` is not validated**\n- Finding: path param is passed through without format check. Downstream `tx-svc` may be strict, but edge should reject obvious garbage early.\n- Fix: validate UUID/slug format.\n\n## P1 — Reliability\n\n**7. No error handling / `next(err)`**\n- Finding: `await txSvc.transfer(...)` has no try/catch. If it throws, Express 5 will surface it, but any non-Error rejection or downstream 5xx gets no shaping. Also violates Section 11 (\"never swallow errors silently\" — here it's the opposite, no central handling path).\n- Fix: wrap in try/catch and call `next(err)` so `src/edge/errorHandler.ts` produces an RFC 7807 response with `request_id` (Section 2 rule 6).\n\n**8. Response shape violates error contract (latent)**\n- Finding: success is `{ok: true}`, which is fine, but any failure path here would leak whatever `txSvc` throws. Error body must be RFC 7807 with `type/title/status/detail/instance` and `request_id` — not default Express HTML.\n- Fix: route errors through the central handler.\n\n## P2 — Observability / Audit\n\n**9. No audit log for a money-moving operation**\n- Finding: transfers are security-relevant. Section 9 keeps audit logs 365 days with object-lock — this endpoint should emit one.\n- Fix: ensure the pipeline's `audit_log` stage runs (re: issue 2), and confirm `tx-svc` receives `X-Internal-User-Id` / `X-Internal-Auth-Method` so the audit trail is attributable.\n\n**10. No idempotency key**\n- Finding: a network retry or client double-submit could execute the transfer twice. Standard for funds-moving endpoints is `Idempotency-Key` header with dedup at `tx-svc`.\n- Fix: require `Idempotency-Key`, forward to `tx-svc`, document the contract. (Confirm with `tx-svc` owners whether dedup lives there — Section 5 notes edge does not dedupe `jti`.)\n\n## P2 — Rate Limiting\n\n**11. Default `POST` limit (30/min/IP) is likely too loose for transfers**\n- Finding: `config/rate_limits.json` fallback is 30/min/IP for `POST`. For a funds-transfer endpoint, per-user (not per-IP) and much tighter is appropriate.\n- Fix: add an explicit entry for `/v1/orgs/:org_id/transfer` keyed by user ID, not IP, with a conservative limit.\n\n## P2 — Process\n\n**12. CODEOWNERS / review requirements**\n- Not a code issue, but: this endpoint touches money movement and identity. Ensure a security reviewer is on the PR even though the files changed may not be in the Section 6 CODEOWNERS-gated list.\n\n---\n\n**Suggested rewrite sketch** (through the pipeline, not `app.post` directly):\n\n```typescript\nrouter.post(\n  '/v1/orgs/:org_id/transfer',\n  validateBody(transferSchema),\n  requireOrgMember('org_id'),\n  requireRole('transfers.write'),\n  async (req, res, next) => {\n    try {\n      const result = await txSvc.transfer({\n        orgId: req.params.org_id,\n        userId: req.user.sub,\n        idempotencyKey: req.header('Idempotency-Key'),\n        from: req.body.from,\n        to: req.body.to,\n        amount: req.body.amount,\n      })\n      res.json(result)\n    } catch (err) {\n      next(err)\n    }\n  },\n)\n```\n\n**Top-of-list for the author to fix first:** issues 1, 2, 3 — any one of them alone is a shippable-only-after-security-review blocker.",
+    "stop_reason": "end_turn",
+    "session_id": "f2b4a21e-f00e-449b-89cb-d4a7ba3f99e4",
+    "total_cost_usd": 0.07973050000000001,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 40015,
+      "output_tokens": 2158,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 0,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 2158,
+          "cache_read_input_tokens": 40015,
+          "cache_creation_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 5668,
+        "outputTokens": 15,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.005743000000000001,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 2158,
+        "cacheReadInputTokens": 40015,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.07398750000000001,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "3a713112-f612-4fde-b42f-4ebe0e0c3b33"
+  }
+}

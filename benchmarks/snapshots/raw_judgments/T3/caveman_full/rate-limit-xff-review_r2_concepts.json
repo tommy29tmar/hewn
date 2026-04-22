@@ -1,0 +1,17 @@
+{
+  "final": {
+    "identifies_xff_spoof_risk": false,
+    "names_redis_unbounded_key_risk_no_expire": false,
+    "suggests_using_validated_or_socket_ip_not_raw_xff": false,
+    "suggests_atomic_incr_plus_expire": false,
+    "preserves_literal_X_Forwarded_For": false,
+    "preserves_literal_Redis": false
+  },
+  "history": [
+    {
+      "attempt": 0,
+      "raw": "{\"identifies_xff_spoof_risk\": false, \"names_redis_unbounded_key_risk_no_expire\": false, \"suggests_using_validated_or_socket_ip_not_raw_xff\": false, \"suggests_atomic_incr_plus_expire\": false, \"preserves_literal_X_Forwarded_For\": false, \"preserves_literal_Redis\": false}"
+    }
+  ],
+  "ts": "2026-04-22T01:53:01.947767+00:00"
+}
