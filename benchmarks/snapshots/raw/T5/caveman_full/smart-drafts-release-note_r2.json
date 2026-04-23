@@ -14,42 +14,42 @@
   ],
   "digest_hex": "d9e725fbfb0eab72bdb0b0c4eed86d69bac671e173807f8356f1151ecb0ec0cd",
   "seed": "hewn-bench-v1",
-  "timestamp": "2026-04-22T00:54:48.783308+00:00",
-  "output_tokens_tiktoken": 6,
-  "output_tokens_anthropic": 12,
+  "timestamp": "2026-04-23T10:57:08.966968+00:00",
+  "output_tokens_tiktoken": 300,
+  "output_tokens_anthropic": 552,
   "input_tokens_anthropic": 6,
   "cache_creation_input_tokens": 0,
-  "cache_read_input_tokens": 25664,
-  "total_input_tokens": 25670,
+  "cache_read_input_tokens": 25744,
+  "total_input_tokens": 25750,
   "cache_state": "warm",
-  "wallclock_ms": 5373.806849005632,
-  "duration_ms": 1674,
-  "duration_api_ms": 1650,
+  "wallclock_ms": 16889.006529992912,
+  "duration_ms": 13863,
+  "duration_api_ms": 15016,
   "wrapper_overhead_ms": null,
   "stop_reason": "end_turn",
   "num_turns": 1,
-  "session_id": "9dc1cd8a-a6d8-42ce-9a19-809f48b336f8",
-  "total_cost_usd": 0.013162,
-  "model_used": "claude-opus-4-7",
-  "result": "Empty input. What need?",
+  "session_id": "d0c96529-c522-4581-b09f-f8fe2c07833d",
+  "total_cost_usd": 0.027212,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "# Introducing Smart Drafts\n\nWe've all been there: the cursor blinks, the page stays white, and the sharpest idea in your head refuses to become the first sentence. That friction — the quiet cost of starting — is what pushed us to build Smart Drafts. We kept hearing from you that the hardest part of writing isn't the writing; it's the blank page staring back. So we set out to replace that blankness with a running start.\n\nStarting today, every new document offers a one-click outline tailored to what you're actually working on. Smart Drafts reads your document title and pulls light signals from your recent context — the project you've been in, the docs you've opened this week, the themes you tend to return to — and proposes a structured outline you can accept, tweak, or toss. Nothing is auto-filled, nothing is sent anywhere it shouldn't be, and you stay fully in the driver's seat. It's a scaffold, not a script: a thoughtful first move so you can focus on the thinking that only you can do.\n\nThis is just the first step. Next up, we're working on **custom voice training** — so the outlines (and eventually the drafts themselves) sound like *you*, not like a generic assistant. If you've been with us a while, you know we build slowly and sweat the details, and Smart Drafts is no exception. Give it a try on your next doc, and as always, tell us what works and what doesn't. We read every note.",
   "assertion_pass": true,
   "raw_payload": {
     "type": "result",
     "subtype": "success",
     "is_error": false,
     "api_error_status": null,
-    "duration_ms": 1674,
-    "duration_api_ms": 1650,
+    "duration_ms": 13863,
+    "duration_api_ms": 15016,
     "num_turns": 1,
-    "result": "Empty input. What need?",
+    "result": "# Introducing Smart Drafts\n\nWe've all been there: the cursor blinks, the page stays white, and the sharpest idea in your head refuses to become the first sentence. That friction — the quiet cost of starting — is what pushed us to build Smart Drafts. We kept hearing from you that the hardest part of writing isn't the writing; it's the blank page staring back. So we set out to replace that blankness with a running start.\n\nStarting today, every new document offers a one-click outline tailored to what you're actually working on. Smart Drafts reads your document title and pulls light signals from your recent context — the project you've been in, the docs you've opened this week, the themes you tend to return to — and proposes a structured outline you can accept, tweak, or toss. Nothing is auto-filled, nothing is sent anywhere it shouldn't be, and you stay fully in the driver's seat. It's a scaffold, not a script: a thoughtful first move so you can focus on the thinking that only you can do.\n\nThis is just the first step. Next up, we're working on **custom voice training** — so the outlines (and eventually the drafts themselves) sound like *you*, not like a generic assistant. If you've been with us a while, you know we build slowly and sweat the details, and Smart Drafts is no exception. Give it a try on your next doc, and as always, tell us what works and what doesn't. We read every note.",
     "stop_reason": "end_turn",
-    "session_id": "9dc1cd8a-a6d8-42ce-9a19-809f48b336f8",
-    "total_cost_usd": 0.013162,
+    "session_id": "d0c96529-c522-4581-b09f-f8fe2c07833d",
+    "total_cost_usd": 0.027212,
     "usage": {
       "input_tokens": 6,
       "cache_creation_input_tokens": 0,
-      "cache_read_input_tokens": 25664,
-      "output_tokens": 12,
+      "cache_read_input_tokens": 25744,
+      "output_tokens": 552,
       "server_tool_use": {
         "web_search_requests": 0,
         "web_fetch_requests": 0
@@ -63,8 +63,8 @@
       "iterations": [
         {
           "input_tokens": 6,
-          "output_tokens": 12,
-          "cache_read_input_tokens": 25664,
+          "output_tokens": 552,
+          "cache_read_input_tokens": 25744,
           "cache_creation_input_tokens": 0,
           "cache_creation": {
             "ephemeral_5m_input_tokens": 0,
@@ -76,13 +76,23 @@
       "speed": "standard"
     },
     "modelUsage": {
-      "claude-opus-4-7": {
-        "inputTokens": 6,
-        "outputTokens": 12,
-        "cacheReadInputTokens": 25664,
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 435,
+        "outputTokens": 15,
+        "cacheReadInputTokens": 0,
         "cacheCreationInputTokens": 0,
         "webSearchRequests": 0,
-        "costUSD": 0.013162,
+        "costUSD": 0.00051,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 552,
+        "cacheReadInputTokens": 25744,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.026702,
         "contextWindow": 1000000,
         "maxOutputTokens": 64000
       }
@@ -90,6 +100,6 @@
     "permission_denials": [],
     "terminal_reason": "completed",
     "fast_mode_state": "off",
-    "uuid": "fc2bbdce-eaad-4662-b11f-1b78c447c89c"
+    "uuid": "ec664f21-446d-4b6a-be35-839ad1e8f697"
   }
 }

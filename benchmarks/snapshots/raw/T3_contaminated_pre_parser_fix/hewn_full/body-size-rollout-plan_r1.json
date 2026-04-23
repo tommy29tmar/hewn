@@ -1,0 +1,105 @@
+{
+  "track": "T3",
+  "arm": "hewn_full",
+  "prompt_id": "body-size-rollout-plan",
+  "run_index": 1,
+  "arm_order_index": 1,
+  "arm_order_full": [
+    "baseline",
+    "hewn_full",
+    "terse",
+    "hewn_prompt_only",
+    "caveman_full",
+    "caveman_full_plus_ultra_directive"
+  ],
+  "digest_hex": "5cec5867cbfe8d2d7c19052a4434bcde0ff4203f3deef4f0370586b6544a69c8",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T09:44:12.961994+00:00",
+  "output_tokens_tiktoken": 1164,
+  "output_tokens_anthropic": 1758,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 25727,
+  "cache_read_input_tokens": 16805,
+  "total_input_tokens": 42538,
+  "cache_state": "warm",
+  "wallclock_ms": 40071.690787997795,
+  "duration_ms": 33747,
+  "duration_api_ms": 35276,
+  "wrapper_overhead_ms": 4795.690787997795,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "90444bd3-1a41-47df-bc8f-11a3de7100c8",
+  "total_cost_usd": 0.21891925,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "1. Trusts client-supplied `X-User-Id` header for identity — Section 2 rule 1, Section 5. Any caller can set `X-User-Id: <victim>` and move that victim's funds. Fix: remove `req.headers['x-user-id']`; read `req.user.sub` populated by `auth_jwt` middleware (and `req.user.org` for org), after `header_sanitize` has stripped inbound `X-*` identity headers.\n\n2. No authorization check that `userId` belongs to `org_id` or has transfer role — Section 5 (roles claim), Section 12 priority 1. Attacker with any valid JWT could POST to another org's transfer endpoint. Fix: assert `req.user.org === req.params.org_id` (or membership lookup) and require a role like `transfer:write` from `X-Internal-Roles`/`req.user.roles` before calling `txSvc`.\n\n3. Registered via `app.post(...)` inline, bypassing the documented middleware chain — Section 3 (`src/edge/pipeline.ts` order: `header_sanitize` → `rate_limit` → `body_size_guard` → `auth_jwt` → `route_dispatcher`). Fix: add the route through `route_dispatcher` so all edge middleware runs; do not register handlers directly on `app` outside the pipeline.\n\n4. No input validation on `from`, `to`, `amount`, `org_id` — Section 12 priority 2. `amount` could be negative, non-numeric, or a string; `from`/`to` could be cross-org account IDs; `org_id` is untyped path param. Fix: validate with a schema (e.g. zod) — `amount` positive integer minor-units, `from`/`to` UUIDs belonging to `org_id`, reject otherwise with RFC 7807 `400`.\n\n5. No idempotency key on a money-moving POST — Section 12 priority 2, operational. Network retry or double-click double-transfers funds. Fix: require `Idempotency-Key` header, dedupe in `tx-svc` (or an edge cache keyed by `(org_id, user, key)`) before calling `transfer`.\n\n6. Identity passed downstream via request body/param instead of trusted internal headers — Section 5 (`X-Internal-User-Id`, `X-Internal-Org-Id`, `X-Internal-Auth-Method` over mTLS). Fix: let `mTLS_egress` forward the internal headers set by `auth_jwt`; `tx-svc` should authorize from those, not from a `userId` field in the JSON body.\n\n7. No explicit rate limit for a sensitive money-movement route — Section 4 falls back to 30/min/IP for POST, which is far too permissive for transfers. Fix: add a tight entry in `config/rate_limits.json` keyed by user+org (not just IP) for `/v1/orgs/:org_id/transfer`.\n\n8. Body size not bounded at handler; relies on global `body_size_guard` — fine if routed through pipeline (see #3), but inline registration skips it. Fix: resolved by #3; otherwise add per-route body cap.\n\n9. No `try/catch` or `next(err)` — Section 11 error handling. A rejection from `txSvc.transfer` becomes an unhandled promise rejection; Express 5 surfaces it, but the response lacks RFC 7807 shape and `request_id`. Fix: wrap in `try/catch` and `next(err)` so `src/edge/errorHandler.ts` emits problem+json with `request_id`.\n\n10. Response `{ok: true}` leaks nothing useful and omits `request_id`/trace correlation — Section 2 rule 6 (for errors) and Section 12 priority 4. Fix: return a canonical success shape including `request_id` and a `transfer_id` from `tx-svc`; for failures use problem+json.\n\n11. No audit log entry — Section 3 step 9, Section 9 (365-day audit retention for security-relevant events). A funds transfer is exactly the event that must land in `atlas-audit-logs-us-east-1`. Fix: ensure the route flows through `audit_log` middleware and/or emit an explicit audit event with `org_id`, `from`, `to`, `amount`, `user_id`, `jti`, `request_id`.\n\n12. PII/financial fields could hit logs — Section 2 rule 5, Section 11 (never log full bodies). `from`/`to`/`amount` in body may be auto-logged by ad-hoc debug logging. Fix: ensure `pii_redact` covers account identifiers and amounts, and never log the raw body.\n\n13. CODEOWNERS/human-approval not applicable here, but touching routing near auth boundary should ping platform + security reviewers — Section 6. Fix: tag `@platform` and `@security` on the PR; add integration test under `tests/integration/` hitting real Redis+PG (no mocks — Section 11, 2025-Q3 incident).\n\n14. Missing tests — Section 12 priority 2. No unit test for authz denial, schema rejection, idempotent replay, cross-org attempt, spoofed `X-User-Id` attempt. Fix: add cases covering each; specifically assert that an inbound `X-User-Id` is ignored after `header_sanitize`.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 33747,
+    "duration_api_ms": 35276,
+    "num_turns": 1,
+    "result": "1. Trusts client-supplied `X-User-Id` header for identity — Section 2 rule 1, Section 5. Any caller can set `X-User-Id: <victim>` and move that victim's funds. Fix: remove `req.headers['x-user-id']`; read `req.user.sub` populated by `auth_jwt` middleware (and `req.user.org` for org), after `header_sanitize` has stripped inbound `X-*` identity headers.\n\n2. No authorization check that `userId` belongs to `org_id` or has transfer role — Section 5 (roles claim), Section 12 priority 1. Attacker with any valid JWT could POST to another org's transfer endpoint. Fix: assert `req.user.org === req.params.org_id` (or membership lookup) and require a role like `transfer:write` from `X-Internal-Roles`/`req.user.roles` before calling `txSvc`.\n\n3. Registered via `app.post(...)` inline, bypassing the documented middleware chain — Section 3 (`src/edge/pipeline.ts` order: `header_sanitize` → `rate_limit` → `body_size_guard` → `auth_jwt` → `route_dispatcher`). Fix: add the route through `route_dispatcher` so all edge middleware runs; do not register handlers directly on `app` outside the pipeline.\n\n4. No input validation on `from`, `to`, `amount`, `org_id` — Section 12 priority 2. `amount` could be negative, non-numeric, or a string; `from`/`to` could be cross-org account IDs; `org_id` is untyped path param. Fix: validate with a schema (e.g. zod) — `amount` positive integer minor-units, `from`/`to` UUIDs belonging to `org_id`, reject otherwise with RFC 7807 `400`.\n\n5. No idempotency key on a money-moving POST — Section 12 priority 2, operational. Network retry or double-click double-transfers funds. Fix: require `Idempotency-Key` header, dedupe in `tx-svc` (or an edge cache keyed by `(org_id, user, key)`) before calling `transfer`.\n\n6. Identity passed downstream via request body/param instead of trusted internal headers — Section 5 (`X-Internal-User-Id`, `X-Internal-Org-Id`, `X-Internal-Auth-Method` over mTLS). Fix: let `mTLS_egress` forward the internal headers set by `auth_jwt`; `tx-svc` should authorize from those, not from a `userId` field in the JSON body.\n\n7. No explicit rate limit for a sensitive money-movement route — Section 4 falls back to 30/min/IP for POST, which is far too permissive for transfers. Fix: add a tight entry in `config/rate_limits.json` keyed by user+org (not just IP) for `/v1/orgs/:org_id/transfer`.\n\n8. Body size not bounded at handler; relies on global `body_size_guard` — fine if routed through pipeline (see #3), but inline registration skips it. Fix: resolved by #3; otherwise add per-route body cap.\n\n9. No `try/catch` or `next(err)` — Section 11 error handling. A rejection from `txSvc.transfer` becomes an unhandled promise rejection; Express 5 surfaces it, but the response lacks RFC 7807 shape and `request_id`. Fix: wrap in `try/catch` and `next(err)` so `src/edge/errorHandler.ts` emits problem+json with `request_id`.\n\n10. Response `{ok: true}` leaks nothing useful and omits `request_id`/trace correlation — Section 2 rule 6 (for errors) and Section 12 priority 4. Fix: return a canonical success shape including `request_id` and a `transfer_id` from `tx-svc`; for failures use problem+json.\n\n11. No audit log entry — Section 3 step 9, Section 9 (365-day audit retention for security-relevant events). A funds transfer is exactly the event that must land in `atlas-audit-logs-us-east-1`. Fix: ensure the route flows through `audit_log` middleware and/or emit an explicit audit event with `org_id`, `from`, `to`, `amount`, `user_id`, `jti`, `request_id`.\n\n12. PII/financial fields could hit logs — Section 2 rule 5, Section 11 (never log full bodies). `from`/`to`/`amount` in body may be auto-logged by ad-hoc debug logging. Fix: ensure `pii_redact` covers account identifiers and amounts, and never log the raw body.\n\n13. CODEOWNERS/human-approval not applicable here, but touching routing near auth boundary should ping platform + security reviewers — Section 6. Fix: tag `@platform` and `@security` on the PR; add integration test under `tests/integration/` hitting real Redis+PG (no mocks — Section 11, 2025-Q3 incident).\n\n14. Missing tests — Section 12 priority 2. No unit test for authz denial, schema rejection, idempotent replay, cross-org attempt, spoofed `X-User-Id` attempt. Fix: add cases covering each; specifically assert that an inbound `X-User-Id` is ignored after `header_sanitize`.",
+    "stop_reason": "end_turn",
+    "session_id": "90444bd3-1a41-47df-bc8f-11a3de7100c8",
+    "total_cost_usd": 0.21891925,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 25727,
+      "cache_read_input_tokens": 16805,
+      "output_tokens": 1758,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 25727,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 1758,
+          "cache_read_input_tokens": 16805,
+          "cache_creation_input_tokens": 25727,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 25727
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 5668,
+        "outputTokens": 15,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.005743000000000001,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 1758,
+        "cacheReadInputTokens": 16805,
+        "cacheCreationInputTokens": 25727,
+        "webSearchRequests": 0,
+        "costUSD": 0.21317625,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "4d71e5d3-5b0c-40b8-97e8-25982453606e"
+  }
+}

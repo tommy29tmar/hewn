@@ -1,0 +1,105 @@
+{
+  "track": "T3",
+  "arm": "hewn_prompt_only",
+  "prompt_id": "transfer-handler-review",
+  "run_index": 2,
+  "arm_order_index": 2,
+  "arm_order_full": [
+    "caveman_full",
+    "caveman_full_plus_ultra_directive",
+    "hewn_prompt_only",
+    "terse",
+    "hewn_full",
+    "baseline"
+  ],
+  "digest_hex": "394d162344f9342c7b47283b28bfa130e4fb435382a1f0a8aa819239935b955a",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T09:47:28.320697+00:00",
+  "output_tokens_tiktoken": 450,
+  "output_tokens_anthropic": 1106,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 24343,
+  "cache_read_input_tokens": 16796,
+  "total_input_tokens": 41145,
+  "cache_state": "warm",
+  "wallclock_ms": 25263.253643992357,
+  "duration_ms": 18954,
+  "duration_api_ms": 20132,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "8c3215f3-fc75-4f1a-a29f-ffb11f345d19",
+  "total_cost_usd": 0.19389075,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "**Risk**\n- XFF spoof bypass: `req.headers['x-forwarded-for']` is attacker-controlled; rotating it defeats per-IP limits. Exact repeat of 2025-09 SEV1. Also violates `no-direct-xff-read` lint.\n- Unbounded Redis key: `incr` without `expire` → OOM under load. Exact repeat of 2025-11 SEV2. Violates `no-unbounded-redis-key`.\n- Key shape wrong: missing `route_prefix`, `minute_bucket`, and region prefix → cross-route/cross-region collisions (2025-12 SEV2 regression). No limit comparison, no `429` RFC 7807 body.\n\n**Mitigation**\n```ts\nconst ip = trustedClientIp(req) // src/edge/util/trustedClientIp.ts\nconst bucket = Math.floor(Date.now() / 60000)\nconst key = `rl:${region}:${ip}:${routePrefix}:${bucket}`\nconst [count] = await redis.multi().incr(key).expire(key, 90).exec()\nif (count > limit) return res.status(429).json({\n  type: '/errors/rate-limited', title: 'Too Many Requests',\n  status: 429, detail: `Limit ${limit}/min exceeded`,\n  retry_after: secondsUntilNextBucket(),\n})\n```\n\n**Verify**\n- `eslint` passes (both `no-direct-xff-read` and `no-unbounded-redis-key` clean).\n- Integration test: spoof `X-Forwarded-For: 1.2.3.4` from untrusted peer → key uses `req.socket.remoteAddress`, not the header.\n- Integration test: after `INCR`, `TTL key` returns > 0.\n- Load test: 10k distinct XFF values from one socket IP → throttled after `limit`; Redis keyspace bounded.\n- Metric check: `atlas_edge_rate_limit_total{action=\"throttled\"}` increments; `atlas_edge_jwt_verifications_total` unaffected.\n\n**Residual**\n- Blocks edge merge: touches `src/edge/rate_limit.ts` → CODEOWNERS human approval required (Section 6).",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 18954,
+    "duration_api_ms": 20132,
+    "num_turns": 1,
+    "result": "**Risk**\n- XFF spoof bypass: `req.headers['x-forwarded-for']` is attacker-controlled; rotating it defeats per-IP limits. Exact repeat of 2025-09 SEV1. Also violates `no-direct-xff-read` lint.\n- Unbounded Redis key: `incr` without `expire` → OOM under load. Exact repeat of 2025-11 SEV2. Violates `no-unbounded-redis-key`.\n- Key shape wrong: missing `route_prefix`, `minute_bucket`, and region prefix → cross-route/cross-region collisions (2025-12 SEV2 regression). No limit comparison, no `429` RFC 7807 body.\n\n**Mitigation**\n```ts\nconst ip = trustedClientIp(req) // src/edge/util/trustedClientIp.ts\nconst bucket = Math.floor(Date.now() / 60000)\nconst key = `rl:${region}:${ip}:${routePrefix}:${bucket}`\nconst [count] = await redis.multi().incr(key).expire(key, 90).exec()\nif (count > limit) return res.status(429).json({\n  type: '/errors/rate-limited', title: 'Too Many Requests',\n  status: 429, detail: `Limit ${limit}/min exceeded`,\n  retry_after: secondsUntilNextBucket(),\n})\n```\n\n**Verify**\n- `eslint` passes (both `no-direct-xff-read` and `no-unbounded-redis-key` clean).\n- Integration test: spoof `X-Forwarded-For: 1.2.3.4` from untrusted peer → key uses `req.socket.remoteAddress`, not the header.\n- Integration test: after `INCR`, `TTL key` returns > 0.\n- Load test: 10k distinct XFF values from one socket IP → throttled after `limit`; Redis keyspace bounded.\n- Metric check: `atlas_edge_rate_limit_total{action=\"throttled\"}` increments; `atlas_edge_jwt_verifications_total` unaffected.\n\n**Residual**\n- Blocks edge merge: touches `src/edge/rate_limit.ts` → CODEOWNERS human approval required (Section 6).",
+    "stop_reason": "end_turn",
+    "session_id": "8c3215f3-fc75-4f1a-a29f-ffb11f345d19",
+    "total_cost_usd": 0.19389075,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 24343,
+      "cache_read_input_tokens": 16796,
+      "output_tokens": 1106,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 24343,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 1106,
+          "cache_read_input_tokens": 16796,
+          "cache_creation_input_tokens": 24343,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 24343
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 5584,
+        "outputTokens": 17,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.005669,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 1106,
+        "cacheReadInputTokens": 16796,
+        "cacheCreationInputTokens": 24343,
+        "webSearchRequests": 0,
+        "costUSD": 0.18822175,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "58871b4b-e1fc-42eb-bac7-2edc90d5be66"
+  }
+}

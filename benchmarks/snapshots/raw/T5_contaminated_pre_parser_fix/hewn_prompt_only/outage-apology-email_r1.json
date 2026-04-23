@@ -1,0 +1,105 @@
+{
+  "track": "T5",
+  "arm": "hewn_prompt_only",
+  "prompt_id": "outage-apology-email",
+  "run_index": 1,
+  "arm_order_index": 0,
+  "arm_order_full": [
+    "hewn_prompt_only",
+    "terse",
+    "caveman_full_plus_ultra_directive",
+    "baseline",
+    "hewn_full",
+    "caveman_full"
+  ],
+  "digest_hex": "36e797c847e3757d1a2926befe138e80e847ce989079f243b0c9f2ab5130be3e",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T09:53:42.773352+00:00",
+  "output_tokens_tiktoken": 320,
+  "output_tokens_anthropic": 491,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 17160,
+  "cache_read_input_tokens": 16796,
+  "total_input_tokens": 33962,
+  "cache_state": "warm",
+  "wallclock_ms": 17838.55849300744,
+  "duration_ms": 11439,
+  "duration_api_ms": 12509,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "010efd0f-8e6c-434b-9ae0-61860a10304e",
+  "total_cost_usd": 0.12846300000000002,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "# Introducing Smart Drafts: Start Every Document With Momentum\n\nWe've all been there — title typed, cursor blinking, a quiet panic setting in. The blank page is the single friction point our users mention most, and it's the moment where good ideas stall before they ever reach the page. So we built **Smart Drafts**, a new way to begin: the moment you name a document, we'll offer a thoughtful starting outline shaped around what you're actually trying to write.\n\nSmart Drafts works with one click. Once you've given your document a title, tap the new ✨ *Suggest outline* button in the toolbar, and we'll generate a structured draft using your title plus light context from your recent work — the project you're in, the docs you've been referencing, the shape of similar things you've written before. Nothing is sent until you ask for it, and every suggestion is fully editable, deletable, or replaceable. It's a springboard, not a script. Early testers told us their time-to-first-paragraph dropped from minutes to seconds, and that's exactly the feeling we were chasing.\n\nThis is just the first step. Next up is **custom voice training**: Smart Drafts that don't just structure your thinking, but sound like *you* — your cadence, your vocabulary, the way your team actually writes. We'll be rolling that out to workspaces over the coming months, with opt-in controls and full transparency about what's learned from where. Until then, give Smart Drafts a try on your next doc — and as always, tell us what works and what doesn't. We read every reply.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 11439,
+    "duration_api_ms": 12509,
+    "num_turns": 1,
+    "result": "# Introducing Smart Drafts: Start Every Document With Momentum\n\nWe've all been there — title typed, cursor blinking, a quiet panic setting in. The blank page is the single friction point our users mention most, and it's the moment where good ideas stall before they ever reach the page. So we built **Smart Drafts**, a new way to begin: the moment you name a document, we'll offer a thoughtful starting outline shaped around what you're actually trying to write.\n\nSmart Drafts works with one click. Once you've given your document a title, tap the new ✨ *Suggest outline* button in the toolbar, and we'll generate a structured draft using your title plus light context from your recent work — the project you're in, the docs you've been referencing, the shape of similar things you've written before. Nothing is sent until you ask for it, and every suggestion is fully editable, deletable, or replaceable. It's a springboard, not a script. Early testers told us their time-to-first-paragraph dropped from minutes to seconds, and that's exactly the feeling we were chasing.\n\nThis is just the first step. Next up is **custom voice training**: Smart Drafts that don't just structure your thinking, but sound like *you* — your cadence, your vocabulary, the way your team actually writes. We'll be rolling that out to workspaces over the coming months, with opt-in controls and full transparency about what's learned from where. Until then, give Smart Drafts a try on your next doc — and as always, tell us what works and what doesn't. We read every reply.",
+    "stop_reason": "end_turn",
+    "session_id": "010efd0f-8e6c-434b-9ae0-61860a10304e",
+    "total_cost_usd": 0.12846300000000002,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 17160,
+      "cache_read_input_tokens": 16796,
+      "output_tokens": 491,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 17160,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 491,
+          "cache_read_input_tokens": 16796,
+          "cache_creation_input_tokens": 17160,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 17160
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 435,
+        "outputTokens": 15,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.00051,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 491,
+        "cacheReadInputTokens": 16796,
+        "cacheCreationInputTokens": 17160,
+        "webSearchRequests": 0,
+        "costUSD": 0.127953,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "238c0ee4-5b3d-49e9-8a7b-4a0b96b67811"
+  }
+}

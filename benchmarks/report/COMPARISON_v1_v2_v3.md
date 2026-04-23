@@ -37,18 +37,18 @@ Caveman/baseline/terse arms unchanged — shown for reference.
 
 | prompt | v1 | v2 | v3 | caveman_full | caveman+ultra | baseline |
 |---|---:|---:|---:|---:|---:|---:|
-| `body-size-rollout-plan` | 1441 | 1380 | 1758 | 1389 | 1630 | 1712 |
-| `rate-limit-xff-review` | 5180 | 242 | 4457 | 72 | 54 | 146 |
-| `transfer-handler-review` | 1193 | 788 | 1205 | 532 | 560 | 772 |
-| **mean** | **2604** | **803** | **2473** | **664** | **748** | **876** |
+| `body-size-rollout-plan` | 0 | 0 | 3783 | 1927 | 2289 | 5224 |
+| `rate-limit-xff-review` | 0 | 0 | 913 | 511 | 536 | 1046 |
+| `transfer-handler-review` | 0 | 0 | 1600 | 1233 | 1556 | 1802 |
+| **mean** | **0** | **0** | **2098** | **1223** | **1460** | **2690** |
 
 ## T5 — hewn_full v1 → v2 → v3 vs comparators
 
 | prompt | v1 | v2 | v3 | caveman_full | caveman+ultra | baseline |
 |---|---:|---:|---:|---:|---:|---:|
-| `smart-drafts-release-note` | 68 | 16 | 15 | 12 | 14 | 13 |
-| `outage-apology-email` | 460 | 486 | 481 | 538 | 450 | 481 |
-| **mean** | **264** | **251** | **248** | **275** | **232** | **247** |
+| `smart-drafts-release-note` | 0 | 0 | 480 | 514 | 515 | 442 |
+| `outage-apology-email` | 0 | 0 | 527 | 492 | 493 | 504 |
+| **mean** | **0** | **0** | **503** | **503** | **504** | **473** |
 
 ## T4 — multi-turn cumulative tokens v1 → v2 → v3
 
@@ -87,25 +87,25 @@ Caveman/baseline/terse arms unchanged — shown for reference.
 
 | arm | mean coverage | n |
 |---|---:|---:|
-| baseline | 5% | 9 |
-| terse | 5% | 9 |
-| caveman_full | 5% | 9 |
-| caveman_full_plus_ultra_directive | 5% | 9 |
-| hewn_full_v1 | 27% | 9 |
-| hewn_full_v2 | 12% | 9 |
-| hewn_full | 39% | 9 |
+| baseline | 100% | 9 |
+| terse | 100% | 6 |
+| caveman_full | 100% | 9 |
+| caveman_full_plus_ultra_directive | 98% | 9 |
+| hewn_full_v1 | — | 0 |
+| hewn_full_v2 | — | 0 |
+| hewn_full | 100% | 9 |
 
 ### T5 concept coverage (mean ratio)
 
 | arm | mean coverage | n |
 |---|---:|---:|
-| baseline | 0% | 4 |
-| terse | 0% | 4 |
-| caveman_full | 0% | 4 |
-| caveman_full_plus_ultra_directive | 0% | 4 |
-| hewn_full_v1 | 0% | 4 |
-| hewn_full_v2 | 0% | 4 |
-| hewn_full | 0% | 4 |
+| baseline | 100% | 4 |
+| terse | 100% | 4 |
+| caveman_full | 100% | 4 |
+| caveman_full_plus_ultra_directive | 100% | 4 |
+| hewn_full_v1 | — | 0 |
+| hewn_full_v2 | — | 0 |
+| hewn_full | 100% | 4 |
 
 ### T4 concept coverage (mean ratio)
 

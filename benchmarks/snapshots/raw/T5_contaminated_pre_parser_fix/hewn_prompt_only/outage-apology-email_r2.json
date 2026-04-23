@@ -1,0 +1,105 @@
+{
+  "track": "T5",
+  "arm": "hewn_prompt_only",
+  "prompt_id": "outage-apology-email",
+  "run_index": 2,
+  "arm_order_index": 2,
+  "arm_order_full": [
+    "caveman_full_plus_ultra_directive",
+    "terse",
+    "hewn_prompt_only",
+    "caveman_full",
+    "baseline",
+    "hewn_full"
+  ],
+  "digest_hex": "79c7f153f103ae8cb05b518a7c67b3127fd5c21a2990920ab1827dd6eafbf25d",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T09:54:36.060128+00:00",
+  "output_tokens_tiktoken": 281,
+  "output_tokens_anthropic": 423,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 17160,
+  "cache_read_input_tokens": 16796,
+  "total_input_tokens": 33962,
+  "cache_state": "warm",
+  "wallclock_ms": 16339.92477497668,
+  "duration_ms": 9908,
+  "duration_api_ms": 11199,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "9d108aa7-2a46-4aa2-b6b6-f40c52a83068",
+  "total_cost_usd": 0.126773,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "# Introducing Smart Drafts\n\nWe've all been there — the cursor blinking on an empty page, a deadline creeping closer, and that quiet panic that sets in when you know what you want to say but can't find the first sentence. Starting is the hardest part, and we heard it from enough of you that it stopped feeling like a quirk and started feeling like a problem worth solving. So we built Smart Drafts: a faster, friendlier way to go from blank page to real momentum.\n\nHere's how it works. Give your document a title, and with one click, Smart Drafts suggests a tailored outline based on what you've written recently and the shape of the doc you're starting. Planning a kickoff brief? You'll get sections for goals, stakeholders, and timelines. Drafting a retro? Expect wins, learnings, and next steps — shaped by your team's voice, not a generic template. You stay in control: accept the outline as-is, reshape it, or toss it and start fresh. It's a starting point, not a straitjacket.\n\nThis is just the first step. Next up, we're working on custom voice training, so Smart Drafts can learn the cadence and tone that make your writing sound like *you* — not a polished stranger. In the meantime, give Smart Drafts a try on your next doc and let us know how it feels. We read every reply.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 9908,
+    "duration_api_ms": 11199,
+    "num_turns": 1,
+    "result": "# Introducing Smart Drafts\n\nWe've all been there — the cursor blinking on an empty page, a deadline creeping closer, and that quiet panic that sets in when you know what you want to say but can't find the first sentence. Starting is the hardest part, and we heard it from enough of you that it stopped feeling like a quirk and started feeling like a problem worth solving. So we built Smart Drafts: a faster, friendlier way to go from blank page to real momentum.\n\nHere's how it works. Give your document a title, and with one click, Smart Drafts suggests a tailored outline based on what you've written recently and the shape of the doc you're starting. Planning a kickoff brief? You'll get sections for goals, stakeholders, and timelines. Drafting a retro? Expect wins, learnings, and next steps — shaped by your team's voice, not a generic template. You stay in control: accept the outline as-is, reshape it, or toss it and start fresh. It's a starting point, not a straitjacket.\n\nThis is just the first step. Next up, we're working on custom voice training, so Smart Drafts can learn the cadence and tone that make your writing sound like *you* — not a polished stranger. In the meantime, give Smart Drafts a try on your next doc and let us know how it feels. We read every reply.",
+    "stop_reason": "end_turn",
+    "session_id": "9d108aa7-2a46-4aa2-b6b6-f40c52a83068",
+    "total_cost_usd": 0.126773,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 17160,
+      "cache_read_input_tokens": 16796,
+      "output_tokens": 423,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 17160,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 423,
+          "cache_read_input_tokens": 16796,
+          "cache_creation_input_tokens": 17160,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 17160
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 435,
+        "outputTokens": 17,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.0005200000000000001,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 423,
+        "cacheReadInputTokens": 16796,
+        "cacheCreationInputTokens": 17160,
+        "webSearchRequests": 0,
+        "costUSD": 0.126253,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "cf568b70-c137-416b-8e47-2af4f5b08631"
+  }
+}

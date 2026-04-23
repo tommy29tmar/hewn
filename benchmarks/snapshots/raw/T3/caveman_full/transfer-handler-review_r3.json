@@ -14,42 +14,42 @@
   ],
   "digest_hex": "3da3c2e2c5460b8f1a8ef9414263122f0e5b04cd184ce0c20df6d0951ea45236",
   "seed": "hewn-bench-v1",
-  "timestamp": "2026-04-22T00:49:07.011194+00:00",
-  "output_tokens_tiktoken": 325,
-  "output_tokens_anthropic": 535,
+  "timestamp": "2026-04-23T10:23:31.845657+00:00",
+  "output_tokens_tiktoken": 808,
+  "output_tokens_anthropic": 1233,
   "input_tokens_anthropic": 6,
   "cache_creation_input_tokens": 0,
-  "cache_read_input_tokens": 32972,
-  "total_input_tokens": 32978,
+  "cache_read_input_tokens": 33033,
+  "total_input_tokens": 33039,
   "cache_state": "warm",
-  "wallclock_ms": 12616.856923006708,
-  "duration_ms": 9240,
-  "duration_api_ms": 11300,
+  "wallclock_ms": 28819.231443980243,
+  "duration_ms": 25611,
+  "duration_api_ms": 26774,
   "wrapper_overhead_ms": null,
   "stop_reason": "end_turn",
   "num_turns": 1,
-  "session_id": "bcd50697-cb2e-4b36-8079-49b75e2bfd38",
-  "total_cost_usd": 0.03556,
+  "session_id": "4bfe3e8e-ba1f-4e96-a31a-3815d9d420d0",
+  "total_cost_usd": 0.0531045,
   "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
-  "result": "**Risk**\n- `req.headers['x-forwarded-for']` direct read → spoofable per-IP limit bypass. Violates §2 rule 2, §11 lint `no-direct-xff-read`. Repeat of 2025-09 SEV1.\n- No `EXPIRE` after `INCR` → unbounded `rl:*` keys → Redis OOM. Violates §2 rule 3, §11 lint `no-unbounded-redis-key`. Repeat of 2025-11 SEV2.\n- Key missing route prefix + region + minute bucket → cross-route/region collision. Repeat of 2025-12 SEV2.\n\n**Mitigation**\n```\nconst key = `rl:${region}:${trustedClientIp(req)}:${routePrefix}:${minuteBucket}`\nconst [count] = await redis.multi().incr(key).expire(key, 90).exec()\n```\n\n**Verify**\n- Unit: spoofed `X-Forwarded-For` does not change key; `trustedClientIp` falls back to `req.socket.remoteAddress`.\n- Integration: after `INCR`, `TTL key` ∈ [1,90]; never `-1`.\n- Lint: `no-direct-xff-read` + `no-unbounded-redis-key` pass.\n- Metric: `atlas_edge_rate_limit_total{action=\"throttled\"}` rises under spoofed-XFF load test.\n\n**Residual**\n- Trusted-proxy list staleness (`config/trusted_proxies.json`) still spoofable if CF/CloudFront egress IPs rotate unnoticed.",
+  "result": "# Review: `POST /v1/orgs/:org_id/transfer`\n\n## P0 — Security (block merge)\n\n**1. Trusts client `X-User-Id` header.** Violate §2 rule 1. Client spoof → any user impersonate. Handler bypass JWT entire.\n- Fix: remove `req.headers['x-user-id']`. Use `req.user.sub` set by `auth_jwt` middleware (§5). Confirm `auth_jwt` run before handler in `src/edge/pipeline.ts`.\n\n**2. No auth middleware evident.** Route register direct on `app.post`, skip pipeline §3. No JWT verify, no `header_sanitize`, no `rate_limit`, no `body_size_guard`.\n- Fix: register via `route_dispatcher` or mount router after full middleware chain. Handler must run step 5+ only.\n\n**3. No org authorization.** `org_id` from URL not check against `req.user.org` claim. User in org A transfer funds in org B.\n- Fix: assert `req.user.org === req.params.org_id` (or role check for cross-org admin). `403` otherwise.\n\n## P1 — Correctness\n\n**4. Zero input validation.** `from`, `to`, `amount` pass raw to `txSvc`. Negative amount, non-numeric, missing fields, wrong-org accounts — all reach downstream.\n- Fix: schema validate (zod/joi). `amount` positive integer/decimal, currency bounded. `from`/`to` UUID format, both belong to `org_id`.\n\n**5. No idempotency key.** Money movement without `Idempotency-Key` header → client retry double-spend.\n- Fix: require `Idempotency-Key`, forward to `tx-svc`, reject duplicate.\n\n**6. No error handling.** `await txSvc.transfer` throw → unhandled rejection, Express default 500 with stacktrace. Violate §2 rule 6 (leak internals) and §11 (use `next(err)`).\n- Fix: `try/catch` → `next(err)`. Central handler §11 emit RFC 7807.\n\n**7. `res.json({ok: true})` non-informative.** No `request_id`, no transfer id, no new balance. Client can't reconcile.\n- Fix: return `{request_id, transfer_id, status}`.\n\n## P2 — Ops / observability\n\n**8. No rate limit config.** `config/rate_limits.json` need entry for this route — default 30/min POST likely too loose for money endpoint.\n- Fix: add tight per-user limit (e.g. 10/min) keyed on `user_id` not just IP.\n\n**9. No audit log hook.** Money movement must hit audit log (§9, 365d retention). Relying on generic `audit_log` middleware may not capture `from/to/amount`.\n- Fix: explicit audit entry with redacted fields.\n\n**10. No always-trace flag.** Financial endpoint should be in `config/always_trace_routes.json` for 100% sampling.\n\n## P3 — Style\n\n**11. `app.post` direct on app** instead of versioned router. Check project convention in `src/edge/pipeline.ts` / route modules.\n\n**12. CODEOWNERS.** Any change touching transfer path likely needs security + payments review (§6 analog).\n\n## Verification steps for author\n\n- Unit test: spoofed `X-User-Id` ignored, `req.user.sub` used.\n- Unit test: `org_id` mismatch → 403.\n- Integration test: invalid amount/missing field → 400 RFC 7807.\n- Integration test: duplicate `Idempotency-Key` → single transfer.\n- Grep: no `req.headers['x-user-id']` in src (add lint rule?).",
   "assertion_pass": true,
   "raw_payload": {
     "type": "result",
     "subtype": "success",
     "is_error": false,
     "api_error_status": null,
-    "duration_ms": 9240,
-    "duration_api_ms": 11300,
+    "duration_ms": 25611,
+    "duration_api_ms": 26774,
     "num_turns": 1,
-    "result": "**Risk**\n- `req.headers['x-forwarded-for']` direct read → spoofable per-IP limit bypass. Violates §2 rule 2, §11 lint `no-direct-xff-read`. Repeat of 2025-09 SEV1.\n- No `EXPIRE` after `INCR` → unbounded `rl:*` keys → Redis OOM. Violates §2 rule 3, §11 lint `no-unbounded-redis-key`. Repeat of 2025-11 SEV2.\n- Key missing route prefix + region + minute bucket → cross-route/region collision. Repeat of 2025-12 SEV2.\n\n**Mitigation**\n```\nconst key = `rl:${region}:${trustedClientIp(req)}:${routePrefix}:${minuteBucket}`\nconst [count] = await redis.multi().incr(key).expire(key, 90).exec()\n```\n\n**Verify**\n- Unit: spoofed `X-Forwarded-For` does not change key; `trustedClientIp` falls back to `req.socket.remoteAddress`.\n- Integration: after `INCR`, `TTL key` ∈ [1,90]; never `-1`.\n- Lint: `no-direct-xff-read` + `no-unbounded-redis-key` pass.\n- Metric: `atlas_edge_rate_limit_total{action=\"throttled\"}` rises under spoofed-XFF load test.\n\n**Residual**\n- Trusted-proxy list staleness (`config/trusted_proxies.json`) still spoofable if CF/CloudFront egress IPs rotate unnoticed.",
+    "result": "# Review: `POST /v1/orgs/:org_id/transfer`\n\n## P0 — Security (block merge)\n\n**1. Trusts client `X-User-Id` header.** Violate §2 rule 1. Client spoof → any user impersonate. Handler bypass JWT entire.\n- Fix: remove `req.headers['x-user-id']`. Use `req.user.sub` set by `auth_jwt` middleware (§5). Confirm `auth_jwt` run before handler in `src/edge/pipeline.ts`.\n\n**2. No auth middleware evident.** Route register direct on `app.post`, skip pipeline §3. No JWT verify, no `header_sanitize`, no `rate_limit`, no `body_size_guard`.\n- Fix: register via `route_dispatcher` or mount router after full middleware chain. Handler must run step 5+ only.\n\n**3. No org authorization.** `org_id` from URL not check against `req.user.org` claim. User in org A transfer funds in org B.\n- Fix: assert `req.user.org === req.params.org_id` (or role check for cross-org admin). `403` otherwise.\n\n## P1 — Correctness\n\n**4. Zero input validation.** `from`, `to`, `amount` pass raw to `txSvc`. Negative amount, non-numeric, missing fields, wrong-org accounts — all reach downstream.\n- Fix: schema validate (zod/joi). `amount` positive integer/decimal, currency bounded. `from`/`to` UUID format, both belong to `org_id`.\n\n**5. No idempotency key.** Money movement without `Idempotency-Key` header → client retry double-spend.\n- Fix: require `Idempotency-Key`, forward to `tx-svc`, reject duplicate.\n\n**6. No error handling.** `await txSvc.transfer` throw → unhandled rejection, Express default 500 with stacktrace. Violate §2 rule 6 (leak internals) and §11 (use `next(err)`).\n- Fix: `try/catch` → `next(err)`. Central handler §11 emit RFC 7807.\n\n**7. `res.json({ok: true})` non-informative.** No `request_id`, no transfer id, no new balance. Client can't reconcile.\n- Fix: return `{request_id, transfer_id, status}`.\n\n## P2 — Ops / observability\n\n**8. No rate limit config.** `config/rate_limits.json` need entry for this route — default 30/min POST likely too loose for money endpoint.\n- Fix: add tight per-user limit (e.g. 10/min) keyed on `user_id` not just IP.\n\n**9. No audit log hook.** Money movement must hit audit log (§9, 365d retention). Relying on generic `audit_log` middleware may not capture `from/to/amount`.\n- Fix: explicit audit entry with redacted fields.\n\n**10. No always-trace flag.** Financial endpoint should be in `config/always_trace_routes.json` for 100% sampling.\n\n## P3 — Style\n\n**11. `app.post` direct on app** instead of versioned router. Check project convention in `src/edge/pipeline.ts` / route modules.\n\n**12. CODEOWNERS.** Any change touching transfer path likely needs security + payments review (§6 analog).\n\n## Verification steps for author\n\n- Unit test: spoofed `X-User-Id` ignored, `req.user.sub` used.\n- Unit test: `org_id` mismatch → 403.\n- Integration test: invalid amount/missing field → 400 RFC 7807.\n- Integration test: duplicate `Idempotency-Key` → single transfer.\n- Grep: no `req.headers['x-user-id']` in src (add lint rule?).",
     "stop_reason": "end_turn",
-    "session_id": "bcd50697-cb2e-4b36-8079-49b75e2bfd38",
-    "total_cost_usd": 0.03556,
+    "session_id": "4bfe3e8e-ba1f-4e96-a31a-3815d9d420d0",
+    "total_cost_usd": 0.0531045,
     "usage": {
       "input_tokens": 6,
       "cache_creation_input_tokens": 0,
-      "cache_read_input_tokens": 32972,
-      "output_tokens": 535,
+      "cache_read_input_tokens": 33033,
+      "output_tokens": 1233,
       "server_tool_use": {
         "web_search_requests": 0,
         "web_fetch_requests": 0
@@ -63,8 +63,8 @@
       "iterations": [
         {
           "input_tokens": 6,
-          "output_tokens": 535,
-          "cache_read_input_tokens": 32972,
+          "output_tokens": 1233,
+          "cache_read_input_tokens": 33033,
           "cache_creation_input_tokens": 0,
           "cache_creation": {
             "ephemeral_5m_input_tokens": 0,
@@ -77,22 +77,22 @@
     },
     "modelUsage": {
       "claude-haiku-4-5-20251001": {
-        "inputTokens": 5584,
-        "outputTokens": 17,
+        "inputTokens": 5668,
+        "outputTokens": 13,
         "cacheReadInputTokens": 0,
         "cacheCreationInputTokens": 0,
         "webSearchRequests": 0,
-        "costUSD": 0.005669,
+        "costUSD": 0.005733,
         "contextWindow": 200000,
         "maxOutputTokens": 32000
       },
       "claude-opus-4-7": {
         "inputTokens": 6,
-        "outputTokens": 535,
-        "cacheReadInputTokens": 32972,
+        "outputTokens": 1233,
+        "cacheReadInputTokens": 33033,
         "cacheCreationInputTokens": 0,
         "webSearchRequests": 0,
-        "costUSD": 0.029891,
+        "costUSD": 0.0473715,
         "contextWindow": 1000000,
         "maxOutputTokens": 64000
       }
@@ -100,6 +100,6 @@
     "permission_denials": [],
     "terminal_reason": "completed",
     "fast_mode_state": "off",
-    "uuid": "065c93ef-84b2-4e6b-ba8d-4d63ee625568"
+    "uuid": "152bd651-3c6e-4083-83b5-c539fbecac75"
   }
 }

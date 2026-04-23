@@ -1,0 +1,105 @@
+{
+  "track": "T5",
+  "arm": "caveman_full_plus_ultra_directive",
+  "prompt_id": "outage-apology-email",
+  "run_index": 1,
+  "arm_order_index": 2,
+  "arm_order_full": [
+    "hewn_prompt_only",
+    "terse",
+    "caveman_full_plus_ultra_directive",
+    "baseline",
+    "hewn_full",
+    "caveman_full"
+  ],
+  "digest_hex": "36e797c847e3757d1a2926befe138e80e847ce989079f243b0c9f2ab5130be3e",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T00:53:38.950846+00:00",
+  "output_tokens_tiktoken": 213,
+  "output_tokens_anthropic": 338,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 10602,
+  "cache_read_input_tokens": 15201,
+  "total_input_tokens": 25809,
+  "cache_state": "warm",
+  "wallclock_ms": 12845.998839009553,
+  "duration_ms": 9525,
+  "duration_api_ms": 10625,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "e94618d2-2793-4d01-9086-6dd85316c39e",
+  "total_cost_usd": 0.082853,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "# Introducing Smart Drafts\n\nBlank page big scary. We see team stare at cursor, wait for idea strike. Idea no come. Project slip. We build Smart Drafts so start never hardest part again.\n\nHere how it work: open new doc, type title, click **Generate Outline**. Smart Drafts read title + recent docs you touch (last week context, not whole history — privacy stay tight), then draft structured outline tuned to doc type. Meeting notes get agenda + action items. Spec get problem, approach, risks. Post get hook, body, call-to-action. You keep what fit, delete rest, write real thing. Outline gone in seconds, momentum stay.\n\nNext up: **custom voice training**. Smart Drafts soon learn your team voice — tone, vocab, structure quirks — from docs you already ship. Outline feel like you wrote it, not generic AI. Rolling out coming weeks to all workspaces. Try Smart Drafts today on any new doc, tell us what work and what not. Blank page era over.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 9525,
+    "duration_api_ms": 10625,
+    "num_turns": 1,
+    "result": "# Introducing Smart Drafts\n\nBlank page big scary. We see team stare at cursor, wait for idea strike. Idea no come. Project slip. We build Smart Drafts so start never hardest part again.\n\nHere how it work: open new doc, type title, click **Generate Outline**. Smart Drafts read title + recent docs you touch (last week context, not whole history — privacy stay tight), then draft structured outline tuned to doc type. Meeting notes get agenda + action items. Spec get problem, approach, risks. Post get hook, body, call-to-action. You keep what fit, delete rest, write real thing. Outline gone in seconds, momentum stay.\n\nNext up: **custom voice training**. Smart Drafts soon learn your team voice — tone, vocab, structure quirks — from docs you already ship. Outline feel like you wrote it, not generic AI. Rolling out coming weeks to all workspaces. Try Smart Drafts today on any new doc, tell us what work and what not. Blank page era over.",
+    "stop_reason": "end_turn",
+    "session_id": "e94618d2-2793-4d01-9086-6dd85316c39e",
+    "total_cost_usd": 0.082853,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 10602,
+      "cache_read_input_tokens": 15201,
+      "output_tokens": 338,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 10602,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 338,
+          "cache_read_input_tokens": 15201,
+          "cache_creation_input_tokens": 10602,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 10602
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 435,
+        "outputTokens": 15,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.00051,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 338,
+        "cacheReadInputTokens": 15201,
+        "cacheCreationInputTokens": 10602,
+        "webSearchRequests": 0,
+        "costUSD": 0.082343,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "eb589f79-de00-453d-b89a-a034944399bc"
+  }
+}

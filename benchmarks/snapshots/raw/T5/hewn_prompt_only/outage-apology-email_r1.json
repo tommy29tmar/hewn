@@ -14,61 +14,61 @@
   ],
   "digest_hex": "36e797c847e3757d1a2926befe138e80e847ce989079f243b0c9f2ab5130be3e",
   "seed": "hewn-bench-v1",
-  "timestamp": "2026-04-22T09:53:42.773352+00:00",
-  "output_tokens_tiktoken": 320,
-  "output_tokens_anthropic": 491,
+  "timestamp": "2026-04-23T10:54:56.518978+00:00",
+  "output_tokens_tiktoken": 331,
+  "output_tokens_anthropic": 510,
   "input_tokens_anthropic": 6,
-  "cache_creation_input_tokens": 17160,
-  "cache_read_input_tokens": 16796,
-  "total_input_tokens": 33962,
+  "cache_creation_input_tokens": 17064,
+  "cache_read_input_tokens": 16794,
+  "total_input_tokens": 33864,
   "cache_state": "warm",
-  "wallclock_ms": 17838.55849300744,
-  "duration_ms": 11439,
-  "duration_api_ms": 12509,
+  "wallclock_ms": 14249.909739999566,
+  "duration_ms": 10964,
+  "duration_api_ms": 12102,
   "wrapper_overhead_ms": null,
   "stop_reason": "end_turn",
   "num_turns": 1,
-  "session_id": "010efd0f-8e6c-434b-9ae0-61860a10304e",
-  "total_cost_usd": 0.12846300000000002,
+  "session_id": "3890daf8-4316-4c02-80d5-5be1d0f172a5",
+  "total_cost_usd": 0.12834399999999999,
   "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
-  "result": "# Introducing Smart Drafts: Start Every Document With Momentum\n\nWe've all been there — title typed, cursor blinking, a quiet panic setting in. The blank page is the single friction point our users mention most, and it's the moment where good ideas stall before they ever reach the page. So we built **Smart Drafts**, a new way to begin: the moment you name a document, we'll offer a thoughtful starting outline shaped around what you're actually trying to write.\n\nSmart Drafts works with one click. Once you've given your document a title, tap the new ✨ *Suggest outline* button in the toolbar, and we'll generate a structured draft using your title plus light context from your recent work — the project you're in, the docs you've been referencing, the shape of similar things you've written before. Nothing is sent until you ask for it, and every suggestion is fully editable, deletable, or replaceable. It's a springboard, not a script. Early testers told us their time-to-first-paragraph dropped from minutes to seconds, and that's exactly the feeling we were chasing.\n\nThis is just the first step. Next up is **custom voice training**: Smart Drafts that don't just structure your thinking, but sound like *you* — your cadence, your vocabulary, the way your team actually writes. We'll be rolling that out to workspaces over the coming months, with opt-in controls and full transparency about what's learned from where. Until then, give Smart Drafts a try on your next doc — and as always, tell us what works and what doesn't. We read every reply.",
+  "result": "Subject: About yesterday's payments outage\n\nHi there,\n\nYesterday, between roughly [start time] and [end time] UTC, our payments service was degraded for about four hours. During that window, some of you saw transactions fail outright — charges that didn't go through, checkouts that wouldn't complete, and retries that compounded the frustration. We're sorry. When you trust us to move money, \"mostly working\" isn't good enough, and we fell short of that standard.\n\nThe root cause was a misconfigured cache invalidation rule that, under a traffic spike, began evicting entries faster than downstream services could repopulate them. That cascaded into timeouts across the payment path. We've reverted the rule, added the correct invalidation bounds, and confirmed the service has been stable since. No payment data was lost or exposed — the failures were transactional, not a data incident.\n\nTo make sure this specific class of failure doesn't reach you again, we're rolling out two changes: canary deployments for all cache and routing configuration, so changes hit a small slice of traffic before going broad, and scheduled chaos testing in staging that simulates traffic spikes against new config before release. Both are in flight this week, and we'll share a fuller post-mortem once they're live.\n\nIf your account was affected, we'll be applying a goodwill credit automatically over the next few days — no action needed on your end. If you had a failed transaction that caused knock-on issues for your business or customers, please reply to this email and we'll work through it with you directly. Thank you for your patience, and again, we're sorry.\n\n— The [Company] Payments Team",
   "assertion_pass": true,
   "raw_payload": {
     "type": "result",
     "subtype": "success",
     "is_error": false,
     "api_error_status": null,
-    "duration_ms": 11439,
-    "duration_api_ms": 12509,
+    "duration_ms": 10964,
+    "duration_api_ms": 12102,
     "num_turns": 1,
-    "result": "# Introducing Smart Drafts: Start Every Document With Momentum\n\nWe've all been there — title typed, cursor blinking, a quiet panic setting in. The blank page is the single friction point our users mention most, and it's the moment where good ideas stall before they ever reach the page. So we built **Smart Drafts**, a new way to begin: the moment you name a document, we'll offer a thoughtful starting outline shaped around what you're actually trying to write.\n\nSmart Drafts works with one click. Once you've given your document a title, tap the new ✨ *Suggest outline* button in the toolbar, and we'll generate a structured draft using your title plus light context from your recent work — the project you're in, the docs you've been referencing, the shape of similar things you've written before. Nothing is sent until you ask for it, and every suggestion is fully editable, deletable, or replaceable. It's a springboard, not a script. Early testers told us their time-to-first-paragraph dropped from minutes to seconds, and that's exactly the feeling we were chasing.\n\nThis is just the first step. Next up is **custom voice training**: Smart Drafts that don't just structure your thinking, but sound like *you* — your cadence, your vocabulary, the way your team actually writes. We'll be rolling that out to workspaces over the coming months, with opt-in controls and full transparency about what's learned from where. Until then, give Smart Drafts a try on your next doc — and as always, tell us what works and what doesn't. We read every reply.",
+    "result": "Subject: About yesterday's payments outage\n\nHi there,\n\nYesterday, between roughly [start time] and [end time] UTC, our payments service was degraded for about four hours. During that window, some of you saw transactions fail outright — charges that didn't go through, checkouts that wouldn't complete, and retries that compounded the frustration. We're sorry. When you trust us to move money, \"mostly working\" isn't good enough, and we fell short of that standard.\n\nThe root cause was a misconfigured cache invalidation rule that, under a traffic spike, began evicting entries faster than downstream services could repopulate them. That cascaded into timeouts across the payment path. We've reverted the rule, added the correct invalidation bounds, and confirmed the service has been stable since. No payment data was lost or exposed — the failures were transactional, not a data incident.\n\nTo make sure this specific class of failure doesn't reach you again, we're rolling out two changes: canary deployments for all cache and routing configuration, so changes hit a small slice of traffic before going broad, and scheduled chaos testing in staging that simulates traffic spikes against new config before release. Both are in flight this week, and we'll share a fuller post-mortem once they're live.\n\nIf your account was affected, we'll be applying a goodwill credit automatically over the next few days — no action needed on your end. If you had a failed transaction that caused knock-on issues for your business or customers, please reply to this email and we'll work through it with you directly. Thank you for your patience, and again, we're sorry.\n\n— The [Company] Payments Team",
     "stop_reason": "end_turn",
-    "session_id": "010efd0f-8e6c-434b-9ae0-61860a10304e",
-    "total_cost_usd": 0.12846300000000002,
+    "session_id": "3890daf8-4316-4c02-80d5-5be1d0f172a5",
+    "total_cost_usd": 0.12834399999999999,
     "usage": {
       "input_tokens": 6,
-      "cache_creation_input_tokens": 17160,
-      "cache_read_input_tokens": 16796,
-      "output_tokens": 491,
+      "cache_creation_input_tokens": 17064,
+      "cache_read_input_tokens": 16794,
+      "output_tokens": 510,
       "server_tool_use": {
         "web_search_requests": 0,
         "web_fetch_requests": 0
       },
       "service_tier": "standard",
       "cache_creation": {
-        "ephemeral_1h_input_tokens": 17160,
+        "ephemeral_1h_input_tokens": 17064,
         "ephemeral_5m_input_tokens": 0
       },
       "inference_geo": "",
       "iterations": [
         {
           "input_tokens": 6,
-          "output_tokens": 491,
-          "cache_read_input_tokens": 16796,
-          "cache_creation_input_tokens": 17160,
+          "output_tokens": 510,
+          "cache_read_input_tokens": 16794,
+          "cache_creation_input_tokens": 17064,
           "cache_creation": {
             "ephemeral_5m_input_tokens": 0,
-            "ephemeral_1h_input_tokens": 17160
+            "ephemeral_1h_input_tokens": 17064
           },
           "type": "message"
         }
@@ -77,22 +77,22 @@
     },
     "modelUsage": {
       "claude-haiku-4-5-20251001": {
-        "inputTokens": 435,
+        "inputTokens": 442,
         "outputTokens": 15,
         "cacheReadInputTokens": 0,
         "cacheCreationInputTokens": 0,
         "webSearchRequests": 0,
-        "costUSD": 0.00051,
+        "costUSD": 0.000517,
         "contextWindow": 200000,
         "maxOutputTokens": 32000
       },
       "claude-opus-4-7": {
         "inputTokens": 6,
-        "outputTokens": 491,
-        "cacheReadInputTokens": 16796,
-        "cacheCreationInputTokens": 17160,
+        "outputTokens": 510,
+        "cacheReadInputTokens": 16794,
+        "cacheCreationInputTokens": 17064,
         "webSearchRequests": 0,
-        "costUSD": 0.127953,
+        "costUSD": 0.127827,
         "contextWindow": 1000000,
         "maxOutputTokens": 64000
       }
@@ -100,6 +100,6 @@
     "permission_denials": [],
     "terminal_reason": "completed",
     "fast_mode_state": "off",
-    "uuid": "238c0ee4-5b3d-49e9-8a7b-4a0b96b67811"
+    "uuid": "ade03118-e6ff-447f-a6bd-b1ece1235595"
   }
 }

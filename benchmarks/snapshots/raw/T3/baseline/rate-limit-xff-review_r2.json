@@ -14,61 +14,61 @@
   ],
   "digest_hex": "2bb2d5707e1a95f128e077efe38d2768de5a410e8723ddc95510208906649ba7",
   "seed": "hewn-bench-v1",
-  "timestamp": "2026-04-22T00:39:50.001211+00:00",
-  "output_tokens_tiktoken": 48,
-  "output_tokens_anthropic": 140,
+  "timestamp": "2026-04-23T09:58:54.079871+00:00",
+  "output_tokens_tiktoken": 437,
+  "output_tokens_anthropic": 988,
   "input_tokens_anthropic": 6,
-  "cache_creation_input_tokens": 0,
-  "cache_read_input_tokens": 39804,
-  "total_input_tokens": 39810,
+  "cache_creation_input_tokens": 24202,
+  "cache_read_input_tokens": 16794,
+  "total_input_tokens": 41002,
   "cache_state": "warm",
-  "wallclock_ms": 8635.109089984326,
-  "duration_ms": 4228,
-  "duration_api_ms": 5456,
+  "wallclock_ms": 21854.69062696211,
+  "duration_ms": 18847,
+  "duration_api_ms": 20336,
   "wrapper_overhead_ms": null,
   "stop_reason": "end_turn",
   "num_turns": 1,
-  "session_id": "fdf9cbdd-9a1d-4d84-8d50-2739dc4d7611",
-  "total_cost_usd": 0.029006999999999998,
+  "session_id": "fc35fc02-eb74-4d80-92aa-85aa59627b5f",
+  "total_cost_usd": 0.19005850000000002,
   "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
-  "result": "The `[Task]` section is empty — what would you like me to do with the Atlas API handbook? Common options: review a PR against it, audit code for compliance, draft a runbook/doc, or answer a specific question.",
+  "result": "**Risks**\n- XFF spoof bypass: `req.headers['x-forwarded-for']||req.ip` is the exact pattern that caused the 2025-09 SEV1. Attacker rotates `X-Forwarded-For` per request → unbounded distinct keys, per-IP limit defeated. Also violates Section 2 rule 2 and the `no-direct-xff-read` lint rule.\n- Unbounded Redis key: `redis.incr(key)` with no `EXPIRE` → 2025-11 SEV2 (Redis OOM) repeats. Violates Section 2 rule 3 and `no-unbounded-redis-key`.\n- Key shape regression: missing `route_prefix`, `minute_bucket`, and region prefix (2025-12 SEV2) — collisions across routes/regions, wrong limit semantics.\n\n**Mitigations**\n- Derive IP via `trustedClientIp(req)` (validated proxy chain, `req.socket.remoteAddress` authoritative).\n- Use the Section 4 key format: `rl:{region}:{ip}:{route_prefix}:{minute_bucket}`.\n- Atomic `MULTI` → `INCR` + `EXPIRE(key, 90)`; gate on `count > limit` returning RFC 7807 `429` with `retry_after`.\n\n**Verify**\n- `eslint` passes (`no-direct-xff-read`, `no-unbounded-redis-key` clean).\n- Integration test: send N requests with rotating `X-Forwarded-For` from a single socket → all counted against one key, `429` after limit.\n- Integration test: assert `TTL` on the created `rl:*` key is in `(0, 90]`.\n- Metric check: `atlas_edge_rate_limit_total{action=\"throttled\"}` increments under abuse; no growth in distinct `rl:*` cardinality beyond expected.\n\n**Residual risk**\n- Trusted-proxy list (`config/trusted_proxies.json`) must be current, else `trustedClientIp` falls back unexpectedly.\n- CODEOWNERS approval required for `src/edge/rate_limit.ts` changes — don't merge without it.",
   "assertion_pass": true,
   "raw_payload": {
     "type": "result",
     "subtype": "success",
     "is_error": false,
     "api_error_status": null,
-    "duration_ms": 4228,
-    "duration_api_ms": 5456,
+    "duration_ms": 18847,
+    "duration_api_ms": 20336,
     "num_turns": 1,
-    "result": "The `[Task]` section is empty — what would you like me to do with the Atlas API handbook? Common options: review a PR against it, audit code for compliance, draft a runbook/doc, or answer a specific question.",
+    "result": "**Risks**\n- XFF spoof bypass: `req.headers['x-forwarded-for']||req.ip` is the exact pattern that caused the 2025-09 SEV1. Attacker rotates `X-Forwarded-For` per request → unbounded distinct keys, per-IP limit defeated. Also violates Section 2 rule 2 and the `no-direct-xff-read` lint rule.\n- Unbounded Redis key: `redis.incr(key)` with no `EXPIRE` → 2025-11 SEV2 (Redis OOM) repeats. Violates Section 2 rule 3 and `no-unbounded-redis-key`.\n- Key shape regression: missing `route_prefix`, `minute_bucket`, and region prefix (2025-12 SEV2) — collisions across routes/regions, wrong limit semantics.\n\n**Mitigations**\n- Derive IP via `trustedClientIp(req)` (validated proxy chain, `req.socket.remoteAddress` authoritative).\n- Use the Section 4 key format: `rl:{region}:{ip}:{route_prefix}:{minute_bucket}`.\n- Atomic `MULTI` → `INCR` + `EXPIRE(key, 90)`; gate on `count > limit` returning RFC 7807 `429` with `retry_after`.\n\n**Verify**\n- `eslint` passes (`no-direct-xff-read`, `no-unbounded-redis-key` clean).\n- Integration test: send N requests with rotating `X-Forwarded-For` from a single socket → all counted against one key, `429` after limit.\n- Integration test: assert `TTL` on the created `rl:*` key is in `(0, 90]`.\n- Metric check: `atlas_edge_rate_limit_total{action=\"throttled\"}` increments under abuse; no growth in distinct `rl:*` cardinality beyond expected.\n\n**Residual risk**\n- Trusted-proxy list (`config/trusted_proxies.json`) must be current, else `trustedClientIp` falls back unexpectedly.\n- CODEOWNERS approval required for `src/edge/rate_limit.ts` changes — don't merge without it.",
     "stop_reason": "end_turn",
-    "session_id": "fdf9cbdd-9a1d-4d84-8d50-2739dc4d7611",
-    "total_cost_usd": 0.029006999999999998,
+    "session_id": "fc35fc02-eb74-4d80-92aa-85aa59627b5f",
+    "total_cost_usd": 0.19005850000000002,
     "usage": {
       "input_tokens": 6,
-      "cache_creation_input_tokens": 0,
-      "cache_read_input_tokens": 39804,
-      "output_tokens": 140,
+      "cache_creation_input_tokens": 24202,
+      "cache_read_input_tokens": 16794,
+      "output_tokens": 988,
       "server_tool_use": {
         "web_search_requests": 0,
         "web_fetch_requests": 0
       },
       "service_tier": "standard",
       "cache_creation": {
-        "ephemeral_1h_input_tokens": 0,
+        "ephemeral_1h_input_tokens": 24202,
         "ephemeral_5m_input_tokens": 0
       },
       "inference_geo": "",
       "iterations": [
         {
           "input_tokens": 6,
-          "output_tokens": 140,
-          "cache_read_input_tokens": 39804,
-          "cache_creation_input_tokens": 0,
+          "output_tokens": 988,
+          "cache_read_input_tokens": 16794,
+          "cache_creation_input_tokens": 24202,
           "cache_creation": {
             "ephemeral_5m_input_tokens": 0,
-            "ephemeral_1h_input_tokens": 0
+            "ephemeral_1h_input_tokens": 24202
           },
           "type": "message"
         }
@@ -77,22 +77,22 @@
     },
     "modelUsage": {
       "claude-haiku-4-5-20251001": {
-        "inputTokens": 5505,
-        "outputTokens": 14,
+        "inputTokens": 5584,
+        "outputTokens": 17,
         "cacheReadInputTokens": 0,
         "cacheCreationInputTokens": 0,
         "webSearchRequests": 0,
-        "costUSD": 0.005575,
+        "costUSD": 0.005669,
         "contextWindow": 200000,
         "maxOutputTokens": 32000
       },
       "claude-opus-4-7": {
         "inputTokens": 6,
-        "outputTokens": 140,
-        "cacheReadInputTokens": 39804,
-        "cacheCreationInputTokens": 0,
+        "outputTokens": 988,
+        "cacheReadInputTokens": 16794,
+        "cacheCreationInputTokens": 24202,
         "webSearchRequests": 0,
-        "costUSD": 0.023431999999999998,
+        "costUSD": 0.1843895,
         "contextWindow": 1000000,
         "maxOutputTokens": 64000
       }
@@ -100,6 +100,6 @@
     "permission_denials": [],
     "terminal_reason": "completed",
     "fast_mode_state": "off",
-    "uuid": "8d07b1dc-ec2d-494f-b23a-349158ea26a4"
+    "uuid": "81ee6b59-c26c-44b4-b090-aa2d29295756"
   }
 }

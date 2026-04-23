@@ -380,77 +380,17 @@ are NOT committed to the repo. If you want to preserve them long-term,
 copy them under `benchmarks/codex-review-iterations/` before the next
 reboot.
 
-## 15. Reference numbers from the 2026-04-22 run
+## 15. Reference numbers — superseded
 
-Use these to sanity-check a re-run. Rerunning end-to-end on the same
-CLI version, same model, same prompts, same seed should produce values
-in the same ballpark (single runs in T0/T1a will vary at the
-~10-20% level due to model-side temperature).
+The original v1-era reference numbers that lived here have been
+**superseded by Section 19** (final v4 numbers, post Hewn iteration v1
+→ v2 → v3 → v4 and post benchmark prompt-loader fix).
 
-**T1a (strict Caveman parity, 1 run)** — output tokens via tiktoken:
+For the iteration history (v1 numbers, what changed at each step), see
+**Section 17**. For the current canonical numbers, see **Section 19**.
 
-| Arm | Total tokens | Mean savings vs terse |
-|---|---:|---:|
-| `baseline` | 2377 | — |
-| `terse` | 2318 | — |
-| `caveman_full` | 943 | **59% median, 60% vs baseline** |
-
-(matches Caveman's published ~60% claim within tolerance)
-
-**T1b (3 runs, median per arm/prompt)** — output tokens (Anthropic):
-
-| Arm | Mean output tokens across 10 prompts |
-|---|---:|
-| `baseline` | 349 |
-| `terse` | 356 |
-| `caveman_full` | **167** ← winner on raw token count |
-| `caveman_full_plus_ultra_directive` | 140 |
-| `hewn_prompt_only` | 352 |
-| `hewn_full` | 264 |
-
-Hewn-vs-baseline median savings: **24%** (range −46% to +47%).
-Hewn-vs-Caveman observed: Hewn produces ~97 tokens MORE than Caveman
-(median). So Caveman wins single-turn Q&A token compression.
-
-**T4 (multi-turn cumulative, median across 2 runs)**:
-
-| Sequence | baseline | terse | caveman_full | hewn_prompt_only | hewn_full |
-|---|---:|---:|---:|---:|---:|
-| `debug-prod-incident` (5 turns) | 5550 | 2255 | 1612 | 6030 | **1301** |
-| `design-feature` (5 turns) | 8841 | 5585 | 6840 | 10902 | **5295** |
-
-Hook value `(hewn_prompt_only − hewn_full)`: +4729 and +5607
-cumulative tokens. The hook is doing real work.
-
-**T2 (non-tech readability persona judge)**:
-
-| Arm | Readability mean true ratio |
-|---|---:|
-| `baseline` | **78%** ← best |
-| `hewn_prompt_only` | 60% |
-| `terse` | 43% |
-| `hewn_full` | 35% |
-| `caveman_full_plus_ultra_directive` | 28% |
-| `caveman_full` | **20%** ← worst |
-
-**T3 `rate-limit-xff-review` (IR-style task) — concepts coverage**:
-
-| Arm | Concepts (best of 3 runs) | Output tokens |
-|---|---:|---:|
-| `baseline` | 0/6 | ~146 (asked clarifying question) |
-| `terse` | 0/6 | ~100 (same) |
-| `caveman_full` | 0/6 | ~72 (same) |
-| `caveman_full_plus_ultra_directive` | 0/6 | ~54 (same) |
-| `hewn_prompt_only` | 0/6 | ~252 (same) |
-| `hewn_full` | **6/6** | ~5180 (full review) |
-
-Hewn understood the IR-shaped prompt; nothing else did.
-
-If your re-run drifts more than ±25% on any of these summary numbers,
-investigate before claiming parity. Likely causes: CLI version change,
-model snapshot drift, different `~/.claude/CLAUDE.md` content, or
-silent rate limit / fallback to a different model (check
-`assertion_pass` field in the snapshots).
+This section is intentionally collapsed to avoid the trust problem of
+maintaining two contradictory T1b tables in one document.
 
 ## 16. Common pitfalls (from this run)
 
@@ -558,15 +498,24 @@ Headline: Hewn ~3x more compressed than Caveman at −15pp concept
 coverage. Readability ties Caveman. Documented design trade-off
 (agent-mode vs tutorial-mode).
 
-**T3 (3 long-context prompts):**
+**T3 (3 long-context prompts × 3 runs, post parser-fix re-run on
+2026-04-23):**
 | Arm | Mean tokens | Concept coverage |
 |---|---:|---:|
-| baseline | 876 | 5% |
-| caveman_full | 664 | 5% |
-| **hewn_full (v4)** | 2473 | **39%** |
+| baseline | 2691 | 100% |
+| terse | n/a (model timeout on body-size; see honesty box) | 100% on the 2 measurable prompts |
+| **caveman_full** | **1224** | 100% |
+| caveman_full_plus_ultra_directive | 1460 | 98% |
+| hewn_prompt_only | 2617 | 100% |
+| hewn_full (v4) | 2099 | 100% |
 
-Headline: on the IR-shaped `rate-limit-xff-review` prompt Hewn is the
-only arm that understands the task. Different artifact category.
+Headline: on long-context tasks Caveman wins on tokens (1224 mean),
+not Hewn (2099 mean, ~22% under baseline). All arms reach ~100%
+concept coverage when they don't time out — the previous "Hewn 39% vs
+others 5%" was a parser-bug artefact (the comment line in long_en.txt
+quoted "---PROMPT---" and shifted the prompt-id pairing). See the
+honesty box for the (T3, terse, body-size-rollout-plan) cell that
+reproducibly times out at 600s with no model response.
 
 **T4 (2 sequences × 5 turns × 2 runs, cumulative per sequence,
 transcript-aware concept judge):**
@@ -574,13 +523,26 @@ transcript-aware concept judge):**
 |---|---:|---:|---:|
 | baseline | 5550 | 8841 | 100% |
 | caveman_full | 1612 | 6840 | 100% |
+| caveman_full_plus_ultra_directive | 1119 | 6683 | 100% |
 | **hewn_full (v4)** | **719** | **4956** | **100%** |
 
-Headline: Hewn wins on tokens, ties on quality.
+Headline: Hewn wins on tokens, ties on quality. This is the strongest
+result and the basis for the README hero image.
 
-**T5 (2 expansive-prose prompts):** all arms refuse / produce stubs
-(~0% concept coverage across the board, ~250 tokens mean). Not a
-differentiator.
+**T5 (2 expansive-prose prompts × 2 runs, post parser-fix re-run on
+2026-04-23):**
+| Arm | Mean tokens | Concept coverage |
+|---|---:|---:|
+| baseline | 473 | 100% |
+| caveman_full | 503 | 100% |
+| caveman_full_plus_ultra_directive | 504 | 100% |
+| hewn_full (v4) | 504 | 100% |
+
+Headline: all arms reach ~100% concept coverage on expansive prose at
+roughly equivalent token cost (within ±10% of baseline). T5 is not a
+differentiator in either direction. The previous "all arms refuse /
+~0% coverage" reading was the parser-bug artefact: the test was
+sending the wrong prompt body for one of the two T5 prompts.
 
 If a re-run drifts more than ±25% on these, investigate CLI version
 drift, model snapshot change, or `~/.claude/CLAUDE.md` content change.

@@ -1,0 +1,105 @@
+{
+  "track": "T3",
+  "arm": "caveman_full_plus_ultra_directive",
+  "prompt_id": "body-size-rollout-plan",
+  "run_index": 3,
+  "arm_order_index": 4,
+  "arm_order_full": [
+    "hewn_full",
+    "hewn_prompt_only",
+    "baseline",
+    "terse",
+    "caveman_full_plus_ultra_directive",
+    "caveman_full"
+  ],
+  "digest_hex": "83cf61101f93c83952a720a1c10bb2b89a0fe33cd226823e26742150e5132c55",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T00:51:32.305767+00:00",
+  "output_tokens_tiktoken": 1032,
+  "output_tokens_anthropic": 1630,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 33092,
+  "total_input_tokens": 33098,
+  "cache_state": "warm",
+  "wallclock_ms": 33691.06701397686,
+  "duration_ms": 30524,
+  "duration_api_ms": 31772,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "b4d1d0b5-78e9-4304-bdd0-388d2a9bcd38",
+  "total_cost_usd": 0.063094,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "# Review: `POST /v1/orgs/:org_id/transfer`\n\n## P0 — Security (Section 2, 5)\n\n**1. Trusts client-supplied `X-User-Id` header.**\nRule 1 violated. Attacker sets `X-User-Id: <victim>` → transfers any user's funds. Handbook says identity headers from outside trust zone MUST be stripped before handler runs, and only `req.user` (set by `auth_jwt`) is trusted.\nFix: drop `req.headers['x-user-id']`. Use `req.user.sub` (set by `auth_jwt` middleware). Read `X-Internal-User-Id` only from internal mTLS-forwarded context, never at edge.\n\n**2. No authN/authZ check for org membership.**\nNothing verifies caller belongs to `:org_id` or has transfer role. Cross-org fund movement via path param.\nFix: assert `req.user.org === req.params.org_id` (or membership lookup) and `req.user.roles` includes transfer capability. 403 otherwise.\n\n**3. Bypasses pipeline.**\nHandler registered via `app.post` directly — skips `header_sanitize`, `rate_limit`, `body_size_guard`, `auth_jwt`, `route_dispatcher`, `response_filter`, `audit_log` (Section 3). Order matters per handbook.\nFix: register through `src/edge/pipeline.ts` via `route_dispatcher` targeting `tx-svc`. Do not hand-mount raw Express routes at edge.\n\n## P0 — Correctness\n\n**4. No input validation.**\n`from`, `to`, `amount` used unvalidated. Amount could be negative, string, NaN, float precision bug, or reference accounts outside org. `req.body` could be missing entirely.\nFix: schema validate (zod/ajv). `amount` = positive integer minor units. `from`/`to` = UUIDs belonging to `org_id`. Reject `from === to`.\n\n**5. No idempotency key.**\nMoney movement without idempotency → network retry = double transfer.\nFix: require `Idempotency-Key` header, forward to `tx-svc`.\n\n**6. No error handling.**\n`await txSvc.transfer(...)` throws → unhandled promise → default Express error → leaks stack (Section 2 rule 6).\nFix: wrap handler with `next(err)` delegation to `src/edge/errorHandler.ts` (Section 11). Return RFC 7807 problem+json.\n\n## P1 — Operational\n\n**7. Route-specific rate limit missing.**\nDefault POST = 30/min/IP (Section 4). Transfer endpoint should be tighter and keyed per-user, not per-IP, to prevent account-drain abuse.\nFix: add entry in `config/rate_limits.json` for `/v1/orgs/*/transfer`; consider per-user+per-org composite key.\n\n**8. No audit log.**\nMoney movement must be in 365-day audit bucket (Section 9), not just 14-day edge logs.\nFix: emit audit event via `audit_log` middleware with `{user_id, org_id, from, to, amount, request_id, jti}`.\n\n**9. Not in `always_trace_routes.json`.**\nFinancial endpoint should be 100% traced (Section 7), not 5% sampled.\n\n## P2 — Process\n\n**10. CODEOWNERS / review.**\nNew route touching money flow needs human approval gate equivalent to auth/rate_limit changes (Section 6). Add to CODEOWNERS-enforced paths.\n\n**11. Tests.**\nNo tests shown. Requires Jest unit + integration against real Redis + Postgres + `tx-svc` fixture (Section 11, no DB mocks).\n\n## P3 — Style\n\n**12. Coding standards.**\nSemicolons present (team voted no-semi). `app.post` direct registration violates pipeline convention. No `logger` usage. Response `{ok: true}` not RFC 7807 shape on success paths — minor, but transfer should return `{transfer_id, status}` for client reconciliation.\n\n## Verification\n\n- Curl with spoofed `X-User-Id` → expect 401 (header stripped) not victim's funds moved.\n- Curl with mismatched `org_id` in path vs JWT `org` → 403.\n- Replay same `Idempotency-Key` → second call returns first result, no double charge.\n- Negative `amount`, string `amount`, `from === to` → 400.\n- Burst 100 requests → 429 after per-route limit.\n- Check audit bucket has event within 1s of 200 response.\n\n## Residual risk\n\nEven fixed at edge, `tx-svc` must enforce its own authZ (Section 2: downstream validates independently). Confirm `tx-svc` checks caller org + role from mTLS-forwarded `X-Internal-*` headers, not trusts edge blindly.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 30524,
+    "duration_api_ms": 31772,
+    "num_turns": 1,
+    "result": "# Review: `POST /v1/orgs/:org_id/transfer`\n\n## P0 — Security (Section 2, 5)\n\n**1. Trusts client-supplied `X-User-Id` header.**\nRule 1 violated. Attacker sets `X-User-Id: <victim>` → transfers any user's funds. Handbook says identity headers from outside trust zone MUST be stripped before handler runs, and only `req.user` (set by `auth_jwt`) is trusted.\nFix: drop `req.headers['x-user-id']`. Use `req.user.sub` (set by `auth_jwt` middleware). Read `X-Internal-User-Id` only from internal mTLS-forwarded context, never at edge.\n\n**2. No authN/authZ check for org membership.**\nNothing verifies caller belongs to `:org_id` or has transfer role. Cross-org fund movement via path param.\nFix: assert `req.user.org === req.params.org_id` (or membership lookup) and `req.user.roles` includes transfer capability. 403 otherwise.\n\n**3. Bypasses pipeline.**\nHandler registered via `app.post` directly — skips `header_sanitize`, `rate_limit`, `body_size_guard`, `auth_jwt`, `route_dispatcher`, `response_filter`, `audit_log` (Section 3). Order matters per handbook.\nFix: register through `src/edge/pipeline.ts` via `route_dispatcher` targeting `tx-svc`. Do not hand-mount raw Express routes at edge.\n\n## P0 — Correctness\n\n**4. No input validation.**\n`from`, `to`, `amount` used unvalidated. Amount could be negative, string, NaN, float precision bug, or reference accounts outside org. `req.body` could be missing entirely.\nFix: schema validate (zod/ajv). `amount` = positive integer minor units. `from`/`to` = UUIDs belonging to `org_id`. Reject `from === to`.\n\n**5. No idempotency key.**\nMoney movement without idempotency → network retry = double transfer.\nFix: require `Idempotency-Key` header, forward to `tx-svc`.\n\n**6. No error handling.**\n`await txSvc.transfer(...)` throws → unhandled promise → default Express error → leaks stack (Section 2 rule 6).\nFix: wrap handler with `next(err)` delegation to `src/edge/errorHandler.ts` (Section 11). Return RFC 7807 problem+json.\n\n## P1 — Operational\n\n**7. Route-specific rate limit missing.**\nDefault POST = 30/min/IP (Section 4). Transfer endpoint should be tighter and keyed per-user, not per-IP, to prevent account-drain abuse.\nFix: add entry in `config/rate_limits.json` for `/v1/orgs/*/transfer`; consider per-user+per-org composite key.\n\n**8. No audit log.**\nMoney movement must be in 365-day audit bucket (Section 9), not just 14-day edge logs.\nFix: emit audit event via `audit_log` middleware with `{user_id, org_id, from, to, amount, request_id, jti}`.\n\n**9. Not in `always_trace_routes.json`.**\nFinancial endpoint should be 100% traced (Section 7), not 5% sampled.\n\n## P2 — Process\n\n**10. CODEOWNERS / review.**\nNew route touching money flow needs human approval gate equivalent to auth/rate_limit changes (Section 6). Add to CODEOWNERS-enforced paths.\n\n**11. Tests.**\nNo tests shown. Requires Jest unit + integration against real Redis + Postgres + `tx-svc` fixture (Section 11, no DB mocks).\n\n## P3 — Style\n\n**12. Coding standards.**\nSemicolons present (team voted no-semi). `app.post` direct registration violates pipeline convention. No `logger` usage. Response `{ok: true}` not RFC 7807 shape on success paths — minor, but transfer should return `{transfer_id, status}` for client reconciliation.\n\n## Verification\n\n- Curl with spoofed `X-User-Id` → expect 401 (header stripped) not victim's funds moved.\n- Curl with mismatched `org_id` in path vs JWT `org` → 403.\n- Replay same `Idempotency-Key` → second call returns first result, no double charge.\n- Negative `amount`, string `amount`, `from === to` → 400.\n- Burst 100 requests → 429 after per-route limit.\n- Check audit bucket has event within 1s of 200 response.\n\n## Residual risk\n\nEven fixed at edge, `tx-svc` must enforce its own authZ (Section 2: downstream validates independently). Confirm `tx-svc` checks caller org + role from mTLS-forwarded `X-Internal-*` headers, not trusts edge blindly.",
+    "stop_reason": "end_turn",
+    "session_id": "b4d1d0b5-78e9-4304-bdd0-388d2a9bcd38",
+    "total_cost_usd": 0.063094,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 33092,
+      "output_tokens": 1630,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 0,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 1630,
+          "cache_read_input_tokens": 33092,
+          "cache_creation_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 5668,
+        "outputTokens": 20,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.0057680000000000006,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 1630,
+        "cacheReadInputTokens": 33092,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.057326,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "d3647e76-6a56-41bf-92aa-9e3f5f1ba05f"
+  }
+}

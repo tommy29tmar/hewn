@@ -1,0 +1,17 @@
+{
+  "final": {
+    "serious_accountable_tone_not_defensive": false,
+    "approximately_four_short_paragraphs": false,
+    "acknowledges_failed_transactions_specifically": false,
+    "explains_root_cause_misconfigured_cache_invalidation": false,
+    "describes_fix_and_prevention_canary_and_chaos_testing": false,
+    "offers_goodwill_credit_to_impacted_users": false
+  },
+  "history": [
+    {
+      "attempt": 0,
+      "raw": "{\"serious_accountable_tone_not_defensive\":false,\"approximately_four_short_paragraphs\":false,\"acknowledges_failed_transactions_specifically\":false,\"explains_root_cause_misconfigured_cache_invalidation\":false,\"describes_fix_and_prevention_canary_and_chaos_testing\":false,\"offers_goodwill_credit_to_impacted_users\":false}"
+    }
+  ],
+  "ts": "2026-04-22T10:36:10.245125+00:00"
+}

@@ -1,17 +1,17 @@
 {
   "final": {
-    "warm_professional_tone_present": false,
-    "approximately_three_paragraphs": false,
-    "explains_why_we_built_it_blank_page_problem": false,
-    "explains_how_it_works_one_click_outline_from_title_and_context": false,
-    "mentions_what_is_next_custom_voice_training": false,
-    "addressed_to_existing_users_not_new_audience": false
+    "warm_professional_tone_present": true,
+    "approximately_three_paragraphs": true,
+    "explains_why_we_built_it_blank_page_problem": true,
+    "explains_how_it_works_one_click_outline_from_title_and_context": true,
+    "mentions_what_is_next_custom_voice_training": true,
+    "addressed_to_existing_users_not_new_audience": true
   },
   "history": [
     {
       "attempt": 0,
-      "raw": "{\"warm_professional_tone_present\": false, \"approximately_three_paragraphs\": false, \"explains_why_we_built_it_blank_page_problem\": false, \"explains_how_it_works_one_click_outline_from_title_and_context\": false, \"mentions_what_is_next_custom_voice_training\": false, \"addressed_to_existing_users_not_new_audience\": false}"
+      "raw": "{\"warm_professional_tone_present\": true, \"approximately_three_paragraphs\": true, \"explains_why_we_built_it_blank_page_problem\": true, \"explains_how_it_works_one_click_outline_from_title_and_context\": true, \"mentions_what_is_next_custom_voice_training\": true, \"addressed_to_existing_users_not_new_audience\": true}"
     }
   ],
-  "ts": "2026-04-22T02:02:49.551072+00:00"
+  "ts": "2026-04-23T11:18:44.202053+00:00"
 }

@@ -1,0 +1,105 @@
+{
+  "track": "T3",
+  "arm": "hewn_prompt_only",
+  "prompt_id": "rate-limit-xff-review",
+  "run_index": 3,
+  "arm_order_index": 0,
+  "arm_order_full": [
+    "hewn_prompt_only",
+    "baseline",
+    "caveman_full_plus_ultra_directive",
+    "hewn_full",
+    "terse",
+    "caveman_full"
+  ],
+  "digest_hex": "cffe317c5c73922535ac9a56d76b012bce4c891ed45ea6f65a6644bb758137e0",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T09:49:40.531236+00:00",
+  "output_tokens_tiktoken": 53,
+  "output_tokens_anthropic": 168,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 41034,
+  "total_input_tokens": 41040,
+  "cache_state": "warm",
+  "wallclock_ms": 10676.648018008564,
+  "duration_ms": 4154,
+  "duration_api_ms": 5633,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "ae768ed5-c2a9-458b-8b91-ee10d486a161",
+  "total_cost_usd": 0.030321999999999998,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "The `[Task]` section is empty — what would you like me to do with the Atlas API handbook? Options:\n\n- Review a specific file or change against these standards\n- Answer questions about the handbook\n- Draft code that follows these conventions\n- Something else",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 4154,
+    "duration_api_ms": 5633,
+    "num_turns": 1,
+    "result": "The `[Task]` section is empty — what would you like me to do with the Atlas API handbook? Options:\n\n- Review a specific file or change against these standards\n- Answer questions about the handbook\n- Draft code that follows these conventions\n- Something else",
+    "stop_reason": "end_turn",
+    "session_id": "ae768ed5-c2a9-458b-8b91-ee10d486a161",
+    "total_cost_usd": 0.030321999999999998,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 41034,
+      "output_tokens": 168,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 0,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 168,
+          "cache_read_input_tokens": 41034,
+          "cache_creation_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 5505,
+        "outputTokens": 14,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.005575,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 168,
+        "cacheReadInputTokens": 41034,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.024746999999999998,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "03b29c10-3e0c-4116-937c-22339771c0f8"
+  }
+}

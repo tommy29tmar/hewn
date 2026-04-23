@@ -1,0 +1,105 @@
+{
+  "track": "T3",
+  "arm": "hewn_full",
+  "prompt_id": "body-size-rollout-plan",
+  "run_index": 2,
+  "arm_order_index": 3,
+  "arm_order_full": [
+    "hewn_prompt_only",
+    "baseline",
+    "caveman_full",
+    "hewn_full",
+    "terse",
+    "caveman_full_plus_ultra_directive"
+  ],
+  "digest_hex": "1bd4b0373727fd4210ef8de0e1bbabf2ae481acfbad8df43e44c0380c5d0b4d2",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T09:48:59.253668+00:00",
+  "output_tokens_tiktoken": 1135,
+  "output_tokens_anthropic": 1766,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 25727,
+  "cache_read_input_tokens": 16805,
+  "total_input_tokens": 42538,
+  "cache_state": "warm",
+  "wallclock_ms": 41275.79360900563,
+  "duration_ms": 35097,
+  "duration_api_ms": 36547,
+  "wrapper_overhead_ms": 4728.793609005632,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "9c4668e3-c06a-4b2b-ab04-e7c0f6344171",
+  "total_cost_usd": 0.21911925000000002,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "1. Trusts client-supplied `X-User-Id` header — violates Section 2 rule 1. Header is stripped by `header_sanitize` before handlers run; value will be `undefined` in prod (silent auth bypass / attribution failure). Fix: read `req.user` set by `auth_jwt`, or the internal `X-Internal-User-Id` header added post-verification. Never accept `x-user-id` from the client edge.\n\n2. No authentication / authorization gate — the handler assumes auth ran but never checks `req.user`, org membership, or role. Transfer endpoints are money-movement; missing authz is P0. Fix: require JWT via pipeline, verify `req.user.orgId === req.params.org_id` (or explicit membership check), enforce a role/scope like `transfers:write` before calling `txSvc`.\n\n3. Registered via `app.post(...)` bypasses the Atlas pipeline — `src/edge/pipeline.ts` is the ordered chain (`header_sanitize` → `rate_limit` → `body_size_guard` → `auth_jwt` → `route_dispatcher`). Ad-hoc `app.post` routes skip sanitize/auth/rate-limit. Fix: add the route through `route_dispatcher` config so the full middleware chain runs; do not register handlers directly on `app`.\n\n4. No input validation on body — `from`, `to`, `amount` taken raw from `req.body`. No schema, no type check, no amount-positivity/precision check, no same-org account check. Enables type-confusion, negative transfers, overflow, NaN. Fix: schema-validate (zod/ajv) for strings/UUIDs for accounts and a bounded integer (minor units) for amount > 0; reject on fail with RFC 7807 `400`.\n\n5. No idempotency key — money movement without idempotency means retries double-spend. Fix: require `Idempotency-Key` header, dedupe at `tx-svc` or in a Redis SETNX with TTL before calling transfer.\n\n6. No CSRF / method-scope protection if JWT can live in a cookie — `POST` that mutates funds without verifying the token came from `Authorization` header (not a cookie echoed by browser) is exploitable. Fix: require bearer in `Authorization`, reject cookie-borne auth on mutating routes, or enforce an anti-CSRF token.\n\n7. Unhandled errors — `await txSvc.transfer(...)` can throw; no try/catch, no `next(err)`. Section 11 forbids silent swallows and requires delegation to `src/edge/errorHandler.ts`. A thrown error here leaks default Express 500 HTML with stacktrace, violating Section 2 rule 6. Fix: wrap with async error middleware or `try { ... } catch (e) { next(e) }`.\n\n8. Response is not RFC 7807 shape on errors and lacks `request_id` — Section 2 rule 6 mandates problem+json with `request_id` in every 4xx/5xx. Success `{ok: true}` is fine, but error paths here produce non-compliant bodies. Fix: return via central error handler; on success include trace-correlated identifiers if downstream returns them.\n\n9. No rate limit category for money-movement — default `POST` limit is 30/min/IP (Section 4). For funds transfer that is far too loose; brute-force / enumeration risk on `from`/`to` account IDs. Fix: add a stricter per-user (not just per-IP) limit in `config/rate_limits.json` keyed on `X-Internal-User-Id`, e.g. 5/min, and alert on spikes.\n\n10. Audit logging missing — Section 3 step 9 and Section 9 require security-relevant events in the 365-day audit log. Funds transfer must emit an audit entry with `jti`, `sub`, `org`, `from`, `to`, `amount`, `request_id`, result. Fix: call the audit logger explicitly (or rely on `audit_log` middleware with a route-level tag marking this as auditable).\n\n11. PII / sensitive-field logging risk — if any middleware logs `req.body`, `amount`/account IDs hit logs unredacted. Section 2 rule 5 + Section 11. Fix: ensure `pii_redact` covers account identifiers and amounts for this route, or mark body as non-loggable.\n\n12. `org_id` from path not validated against user's org — even with auth, `req.params.org_id` is attacker-controlled. Without a membership check it is IDOR: any authenticated user transfers inside any org. Fix: assert `req.user.org === req.params.org_id` (or lookup membership), reject with `403` otherwise. Covered partially by #2 but worth calling out explicitly — this is the classic authz flaw reviewers miss.\n\n13. No request size / schema bound — `body_size_guard` rejects >2MB but this endpoint should be far tighter (a few hundred bytes). Large body attempts on a money route are suspicious. Fix: per-route body size cap + schema-enforced shape.\n\n14. No CODEOWNERS-triggering path — route touches money but handler file may not be in the CODEOWNERS-protected set (Section 6). Fix: ensure the transfer handler and its config live under a path requiring human approval; add to CODEOWNERS if adjacent.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 35097,
+    "duration_api_ms": 36547,
+    "num_turns": 1,
+    "result": "1. Trusts client-supplied `X-User-Id` header — violates Section 2 rule 1. Header is stripped by `header_sanitize` before handlers run; value will be `undefined` in prod (silent auth bypass / attribution failure). Fix: read `req.user` set by `auth_jwt`, or the internal `X-Internal-User-Id` header added post-verification. Never accept `x-user-id` from the client edge.\n\n2. No authentication / authorization gate — the handler assumes auth ran but never checks `req.user`, org membership, or role. Transfer endpoints are money-movement; missing authz is P0. Fix: require JWT via pipeline, verify `req.user.orgId === req.params.org_id` (or explicit membership check), enforce a role/scope like `transfers:write` before calling `txSvc`.\n\n3. Registered via `app.post(...)` bypasses the Atlas pipeline — `src/edge/pipeline.ts` is the ordered chain (`header_sanitize` → `rate_limit` → `body_size_guard` → `auth_jwt` → `route_dispatcher`). Ad-hoc `app.post` routes skip sanitize/auth/rate-limit. Fix: add the route through `route_dispatcher` config so the full middleware chain runs; do not register handlers directly on `app`.\n\n4. No input validation on body — `from`, `to`, `amount` taken raw from `req.body`. No schema, no type check, no amount-positivity/precision check, no same-org account check. Enables type-confusion, negative transfers, overflow, NaN. Fix: schema-validate (zod/ajv) for strings/UUIDs for accounts and a bounded integer (minor units) for amount > 0; reject on fail with RFC 7807 `400`.\n\n5. No idempotency key — money movement without idempotency means retries double-spend. Fix: require `Idempotency-Key` header, dedupe at `tx-svc` or in a Redis SETNX with TTL before calling transfer.\n\n6. No CSRF / method-scope protection if JWT can live in a cookie — `POST` that mutates funds without verifying the token came from `Authorization` header (not a cookie echoed by browser) is exploitable. Fix: require bearer in `Authorization`, reject cookie-borne auth on mutating routes, or enforce an anti-CSRF token.\n\n7. Unhandled errors — `await txSvc.transfer(...)` can throw; no try/catch, no `next(err)`. Section 11 forbids silent swallows and requires delegation to `src/edge/errorHandler.ts`. A thrown error here leaks default Express 500 HTML with stacktrace, violating Section 2 rule 6. Fix: wrap with async error middleware or `try { ... } catch (e) { next(e) }`.\n\n8. Response is not RFC 7807 shape on errors and lacks `request_id` — Section 2 rule 6 mandates problem+json with `request_id` in every 4xx/5xx. Success `{ok: true}` is fine, but error paths here produce non-compliant bodies. Fix: return via central error handler; on success include trace-correlated identifiers if downstream returns them.\n\n9. No rate limit category for money-movement — default `POST` limit is 30/min/IP (Section 4). For funds transfer that is far too loose; brute-force / enumeration risk on `from`/`to` account IDs. Fix: add a stricter per-user (not just per-IP) limit in `config/rate_limits.json` keyed on `X-Internal-User-Id`, e.g. 5/min, and alert on spikes.\n\n10. Audit logging missing — Section 3 step 9 and Section 9 require security-relevant events in the 365-day audit log. Funds transfer must emit an audit entry with `jti`, `sub`, `org`, `from`, `to`, `amount`, `request_id`, result. Fix: call the audit logger explicitly (or rely on `audit_log` middleware with a route-level tag marking this as auditable).\n\n11. PII / sensitive-field logging risk — if any middleware logs `req.body`, `amount`/account IDs hit logs unredacted. Section 2 rule 5 + Section 11. Fix: ensure `pii_redact` covers account identifiers and amounts for this route, or mark body as non-loggable.\n\n12. `org_id` from path not validated against user's org — even with auth, `req.params.org_id` is attacker-controlled. Without a membership check it is IDOR: any authenticated user transfers inside any org. Fix: assert `req.user.org === req.params.org_id` (or lookup membership), reject with `403` otherwise. Covered partially by #2 but worth calling out explicitly — this is the classic authz flaw reviewers miss.\n\n13. No request size / schema bound — `body_size_guard` rejects >2MB but this endpoint should be far tighter (a few hundred bytes). Large body attempts on a money route are suspicious. Fix: per-route body size cap + schema-enforced shape.\n\n14. No CODEOWNERS-triggering path — route touches money but handler file may not be in the CODEOWNERS-protected set (Section 6). Fix: ensure the transfer handler and its config live under a path requiring human approval; add to CODEOWNERS if adjacent.",
+    "stop_reason": "end_turn",
+    "session_id": "9c4668e3-c06a-4b2b-ab04-e7c0f6344171",
+    "total_cost_usd": 0.21911925000000002,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 25727,
+      "cache_read_input_tokens": 16805,
+      "output_tokens": 1766,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 25727,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 1766,
+          "cache_read_input_tokens": 16805,
+          "cache_creation_input_tokens": 25727,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 25727
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 5668,
+        "outputTokens": 15,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.005743000000000001,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 1766,
+        "cacheReadInputTokens": 16805,
+        "cacheCreationInputTokens": 25727,
+        "webSearchRequests": 0,
+        "costUSD": 0.21337625000000002,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "7434faee-146a-4660-8273-bfb98228f1d4"
+  }
+}

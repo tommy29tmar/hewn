@@ -14,42 +14,42 @@
   ],
   "digest_hex": "79c7f153f103ae8cb05b518a7c67b3127fd5c21a2990920ab1827dd6eafbf25d",
   "seed": "hewn-bench-v1",
-  "timestamp": "2026-04-22T00:56:03.469170+00:00",
-  "output_tokens_tiktoken": 316,
-  "output_tokens_anthropic": 469,
+  "timestamp": "2026-04-23T10:59:10.940174+00:00",
+  "output_tokens_tiktoken": 335,
+  "output_tokens_anthropic": 522,
   "input_tokens_anthropic": 6,
   "cache_creation_input_tokens": 0,
-  "cache_read_input_tokens": 32726,
-  "total_input_tokens": 32732,
+  "cache_read_input_tokens": 33858,
+  "total_input_tokens": 33864,
   "cache_state": "warm",
-  "wallclock_ms": 15985.64467599499,
-  "duration_ms": 12860,
-  "duration_api_ms": 13888,
+  "wallclock_ms": 14328.941395971924,
+  "duration_ms": 11035,
+  "duration_api_ms": 12307,
   "wrapper_overhead_ms": null,
   "stop_reason": "end_turn",
   "num_turns": 1,
-  "session_id": "2e11b3c0-85af-4fcc-81e3-a2aa38bff0e2",
-  "total_cost_usd": 0.028628,
+  "session_id": "ed40a16c-461c-435a-a359-83f3957172b4",
+  "total_cost_usd": 0.030526,
   "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
-  "result": "# Introducing Smart Drafts: Never Stare at a Blank Page Again\n\nWe've all been there. You open a new document, ready to capture that important proposal, meeting recap, or project brief — and then the cursor blinks. And blinks. The hardest part of writing has never been the writing itself; it's the starting. After hearing from so many of you that the blank page was the single biggest drag on your day, we knew we had to do something about it. Today, we're thrilled to introduce **Smart Drafts**.\n\nSmart Drafts turns that empty canvas into a running start. Give your document a title, click *Generate Outline*, and within seconds you'll see a thoughtful, structured starting point — informed by your title and the recent context of your workspace, so the suggestions actually fit the work you're already doing. Whether it's a launch plan, a one-on-one agenda, or a customer update, you'll get a scaffold you can accept as-is, reshape, or toss entirely. It's not here to write for you; it's here to get you past the hardest sentence of any document: the first one.\n\nThis is just the beginning of where we're taking Smart Drafts. Next up, we're working on **custom voice training** — so the outlines (and eventually the prose) you generate will sound like *you* and your team, not like a generic assistant. We can't wait to share it. In the meantime, give Smart Drafts a try on your next document and let us know what you think. As always, thank you for building alongside us.",
+  "result": "Subject: Yesterday's payments outage — what happened, and what we're doing about it\n\nHi there,\n\nYesterday, our payments service was degraded for approximately four hours. During that window, some of you saw transactions fail at checkout — payments that should have gone through didn't, and we know that's more than an inconvenience. Whether it cost you a sale, a customer's trust, or just your time, we're sorry. You rely on us to move money, and yesterday we didn't hold up our end.\n\nThe root cause was a misconfigured cache invalidation rule that behaved correctly under normal load but broke down under a traffic spike, causing stale data to be served to the payment path and transactions to fail. Once we identified it, we corrected the rule and restored full service. The fix is already in production and has been stable since.\n\nTo make sure this doesn't happen again, we're rolling out two changes: all cache and configuration changes will now go through canary rollouts so a bad rule can only affect a small slice of traffic before being caught, and we're adding chaos testing in staging to specifically exercise traffic-spike and cache-invalidation failure modes before they can reach production. These aren't one-off patches — they're permanent additions to how we ship.\n\nIf your transactions were affected, we'd like to offer a goodwill credit as a small acknowledgment that the cost of this fell on you, not just on us. You'll receive a separate email with the details in the next 24 hours; if you believe you were impacted and don't hear from us, please reply to this message and we'll make it right. Thank you for your patience, and for continuing to trust us with your payments.\n\n— The Payments Team",
   "assertion_pass": true,
   "raw_payload": {
     "type": "result",
     "subtype": "success",
     "is_error": false,
     "api_error_status": null,
-    "duration_ms": 12860,
-    "duration_api_ms": 13888,
+    "duration_ms": 11035,
+    "duration_api_ms": 12307,
     "num_turns": 1,
-    "result": "# Introducing Smart Drafts: Never Stare at a Blank Page Again\n\nWe've all been there. You open a new document, ready to capture that important proposal, meeting recap, or project brief — and then the cursor blinks. And blinks. The hardest part of writing has never been the writing itself; it's the starting. After hearing from so many of you that the blank page was the single biggest drag on your day, we knew we had to do something about it. Today, we're thrilled to introduce **Smart Drafts**.\n\nSmart Drafts turns that empty canvas into a running start. Give your document a title, click *Generate Outline*, and within seconds you'll see a thoughtful, structured starting point — informed by your title and the recent context of your workspace, so the suggestions actually fit the work you're already doing. Whether it's a launch plan, a one-on-one agenda, or a customer update, you'll get a scaffold you can accept as-is, reshape, or toss entirely. It's not here to write for you; it's here to get you past the hardest sentence of any document: the first one.\n\nThis is just the beginning of where we're taking Smart Drafts. Next up, we're working on **custom voice training** — so the outlines (and eventually the prose) you generate will sound like *you* and your team, not like a generic assistant. We can't wait to share it. In the meantime, give Smart Drafts a try on your next document and let us know what you think. As always, thank you for building alongside us.",
+    "result": "Subject: Yesterday's payments outage — what happened, and what we're doing about it\n\nHi there,\n\nYesterday, our payments service was degraded for approximately four hours. During that window, some of you saw transactions fail at checkout — payments that should have gone through didn't, and we know that's more than an inconvenience. Whether it cost you a sale, a customer's trust, or just your time, we're sorry. You rely on us to move money, and yesterday we didn't hold up our end.\n\nThe root cause was a misconfigured cache invalidation rule that behaved correctly under normal load but broke down under a traffic spike, causing stale data to be served to the payment path and transactions to fail. Once we identified it, we corrected the rule and restored full service. The fix is already in production and has been stable since.\n\nTo make sure this doesn't happen again, we're rolling out two changes: all cache and configuration changes will now go through canary rollouts so a bad rule can only affect a small slice of traffic before being caught, and we're adding chaos testing in staging to specifically exercise traffic-spike and cache-invalidation failure modes before they can reach production. These aren't one-off patches — they're permanent additions to how we ship.\n\nIf your transactions were affected, we'd like to offer a goodwill credit as a small acknowledgment that the cost of this fell on you, not just on us. You'll receive a separate email with the details in the next 24 hours; if you believe you were impacted and don't hear from us, please reply to this message and we'll make it right. Thank you for your patience, and for continuing to trust us with your payments.\n\n— The Payments Team",
     "stop_reason": "end_turn",
-    "session_id": "2e11b3c0-85af-4fcc-81e3-a2aa38bff0e2",
-    "total_cost_usd": 0.028628,
+    "session_id": "ed40a16c-461c-435a-a359-83f3957172b4",
+    "total_cost_usd": 0.030526,
     "usage": {
       "input_tokens": 6,
       "cache_creation_input_tokens": 0,
-      "cache_read_input_tokens": 32726,
-      "output_tokens": 469,
+      "cache_read_input_tokens": 33858,
+      "output_tokens": 522,
       "server_tool_use": {
         "web_search_requests": 0,
         "web_fetch_requests": 0
@@ -63,8 +63,8 @@
       "iterations": [
         {
           "input_tokens": 6,
-          "output_tokens": 469,
-          "cache_read_input_tokens": 32726,
+          "output_tokens": 522,
+          "cache_read_input_tokens": 33858,
           "cache_creation_input_tokens": 0,
           "cache_creation": {
             "ephemeral_5m_input_tokens": 0,
@@ -77,22 +77,22 @@
     },
     "modelUsage": {
       "claude-haiku-4-5-20251001": {
-        "inputTokens": 435,
+        "inputTokens": 442,
         "outputTokens": 15,
         "cacheReadInputTokens": 0,
         "cacheCreationInputTokens": 0,
         "webSearchRequests": 0,
-        "costUSD": 0.00051,
+        "costUSD": 0.000517,
         "contextWindow": 200000,
         "maxOutputTokens": 32000
       },
       "claude-opus-4-7": {
         "inputTokens": 6,
-        "outputTokens": 469,
-        "cacheReadInputTokens": 32726,
+        "outputTokens": 522,
+        "cacheReadInputTokens": 33858,
         "cacheCreationInputTokens": 0,
         "webSearchRequests": 0,
-        "costUSD": 0.028118,
+        "costUSD": 0.030009,
         "contextWindow": 1000000,
         "maxOutputTokens": 64000
       }
@@ -100,6 +100,6 @@
     "permission_denials": [],
     "terminal_reason": "completed",
     "fast_mode_state": "off",
-    "uuid": "4bab897b-1171-47f4-8d89-e0b0ceea61b1"
+    "uuid": "a2fafe8d-c31b-4d8a-87dc-23336ac6b47d"
   }
 }

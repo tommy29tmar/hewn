@@ -14,61 +14,61 @@
   ],
   "digest_hex": "1bd4b0373727fd4210ef8de0e1bbabf2ae481acfbad8df43e44c0380c5d0b4d2",
   "seed": "hewn-bench-v1",
-  "timestamp": "2026-04-22T00:44:57.000440+00:00",
-  "output_tokens_tiktoken": 851,
-  "output_tokens_anthropic": 1313,
+  "timestamp": "2026-04-23T10:18:18.459186+00:00",
+  "output_tokens_tiktoken": 783,
+  "output_tokens_anthropic": 2289,
   "input_tokens_anthropic": 6,
-  "cache_creation_input_tokens": 17891,
-  "cache_read_input_tokens": 15201,
-  "total_input_tokens": 33098,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 32948,
+  "total_input_tokens": 32954,
   "cache_state": "warm",
-  "wallclock_ms": 28571.3302490185,
-  "duration_ms": 25343,
-  "duration_api_ms": 26505,
+  "wallclock_ms": 47407.732371997554,
+  "duration_ms": 44308,
+  "duration_api_ms": 45557,
   "wrapper_overhead_ms": null,
   "stop_reason": "end_turn",
   "num_turns": 1,
-  "session_id": "eb2268ad-f414-4a8c-8e23-6c54e65c258e",
-  "total_cost_usd": 0.15802225,
+  "session_id": "67b0197c-2a3c-46ee-9b65-11dc11c5cd93",
+  "total_cost_usd": 0.079444,
   "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
-  "result": "# Review: `POST /v1/orgs/:org_id/transfer`\n\n## P0 — Security\n\n**1. Trusts client-supplied `X-User-Id`** (§2 rule 1, §5)\n- Exploit: client sends any `x-user-id` → impersonation. Handler bypasses JWT entirely.\n- Fix: remove `req.headers['x-user-id']`. Use `req.user.sub` set by `auth_jwt` middleware (or internal `X-Internal-User-Id` downstream). Confirm `header_sanitize` strips `x-user-id` on ingress before auth.\n- Verify: curl with forged `X-User-Id` + no bearer → expect `401`.\n\n**2. No authentication enforced on route** (§3, §5)\n- Handler registered directly on `app.post`, not through pipeline. No JWT check, no rate limit, no header sanitize, no body size guard.\n- Fix: register under the Atlas pipeline router so all 9 middlewares run. Or require `req.user` and 401 otherwise.\n\n**3. No authorization check** (§2)\n- `org_id` from path never checked against caller's `org` claim / roles. Cross-org transfer possible.\n- Fix: assert `req.user.org === req.params.org_id` (or RBAC for admins). Return `403` on mismatch.\n\n## P1 — Correctness\n\n**4. No input validation**\n- `from`, `to`, `amount` untyped. `amount` could be negative, string, `NaN`, huge. `from`/`to` could belong to another org.\n- Fix: schema validate (zod/ajv). Assert `amount > 0`, integer minor units, `from !== to`, both accounts belong to `org_id` (enforced by `tx-svc`, but edge should pre-reject).\n\n**5. No idempotency key**\n- Money movement. Client retry → double transfer.\n- Fix: require `Idempotency-Key` header, forward to `tx-svc`.\n\n**6. No error handling**\n- `await txSvc.transfer(...)` throws → unhandled rejection → default Express error → possible stacktrace leak (§2 rule 6).\n- Fix: `try/catch` + `next(err)` to central handler in `src/edge/errorHandler.ts`. Response must be RFC 7807 with `request_id`, no internals.\n\n**7. `POST` rate limit too loose for money ops**\n- Default 30/min/IP (§4). Transfer endpoint should be tighter.\n- Fix: add entry in `config/rate_limits.json` for `/v1/orgs/:org_id/transfer` (e.g. 5/min/user, not per-IP).\n\n## P2 — Operational\n\n**8. Not keyed per user for rate limit**\n- IP-keyed limiting is wrong for authenticated money ops (NAT, shared egress).\n- Fix: rate-limit key should include `req.user.sub` for authenticated routes.\n\n**9. No audit log of transfer intent at edge**\n- §9 audit retention. Money ops should hit audit log explicitly.\n- Fix: emit audit entry with `jti`, `user_id`, `org_id`, `from`, `to`, `amount` (no PII leak), `request_id`.\n\n**10. Response shape inconsistent**\n- `{ok: true}` not RFC 7807-ish, no `request_id`, no transfer id for client reconciliation.\n- Fix: return `{request_id, transfer_id, status}`.\n\n## P3 — Style\n\n**11. Direct `app.post` registration** — bypasses router module structure. Route should live in `src/edge/routes/` and go through `route_dispatcher`.\n\n**12. No test.** Unit + integration (real Redis + Postgres replica, §11) covering: no-auth→401, wrong-org→403, negative amount→400, replay same idempotency key→same response, rate limit→429.\n\n## CODEOWNERS\n\nTouches auth-adjacent + rate-limit config → human approval required (§6).",
+  "result": "**Code**\n- `src/edge/pipeline.ts`: `body_size_guard` currently hardcoded 2MB global. Refactor → read per-route from config, fallback 2MB.\n- New helper `src/edge/body_size_guard.ts` (if not split yet): `resolveLimit(method, routePrefix) → bytes`. Return 413 RFC7807 problem+json, `type:/errors/payload-too-large`, include `request_id`.\n- Place stays at pipeline step 4 (post sanitize + rate_limit, pre auth) — no reorder.\n\n**Config**\n- New `config/body_size_limits.json`. Same shape as `rate_limits.json`: keyed `{method}:{routePrefix}` → bytes. Entry: `\"POST:/v1/media/upload-meta\": 524288`. Default 2097152.\n- Not in CODEOWNERS protected list → regular review. Still tag `@platform`.\n\n**Tests**\n- Unit `src/edge/body_size_guard.test.ts`: 524287 B → pass, 524289 B → 413 on target route; 1.5MB → pass on other routes; 2.1MB → 413 everywhere.\n- Integration `tests/integration/body_size.int.test.ts`: real Express + real Redis/PG cluster (no mocks, per Sec 11). Assert 413 body shape RFC7807 + `request_id`.\n- Lint: no new patterns trigger `no-direct-xff-read` / `no-unbounded-redis-key`.\n\n**Observability**\n- Existing `atlas_edge_requests_total{route,method,status_class=\"4xx\"}` captures it — add recording rule `atlas_edge_body_rejected:rate5m` split by route for dashboard.\n- Add route to `config/always_trace_routes.json` for rollout window (100% sample) → revert after soak.\n- Grafana panel on Atlas dashboard: 413 rate on `/v1/media/upload-meta`, pre/post.\n- Alert (Slack `#oncall-platform`, SEV3): 413 rate >X/min sustained 10m post-rollout → false-positive signal.\n\n**Rollout**\n- GitOps: PR → `main` → Argo. Blue/green per region: us-east-1 canary 5% × 30min → full us-east-1 → 10min soak → eu-west-1 → soak → ap-southeast-1.\n- Canary gate: watch 413 rate + legit-client error reports in `#client-apps`.\n\n**Rollback**\n- Limit in config → revert via config-only PR (fast, no image rebuild). Argo sync ~2min/region.\n- SEV1 auto-rollback already wired per region.\n- Keep prior image SHA pinned in `infra/argo/atlas-edge` overlay comment.\n\n**Comms**\n- T-7d: email partners using route (pull list from `auth-svc` API-key usage + JWT `sub` top callers last 30d). Subject: new 512KB limit + date + 413 shape.\n- T-7d: post `#client-apps` (mobile + web owners), `#product`, `#support` (CS scripts for 413).\n- T-1d: `#oncall-platform` rollout notice + dashboard link.\n- T-0: update public API docs (`docs/api/media.md`) + changelog.\n- Post-rollout: retro note in `incidents/` only if abuse pattern recurs; otherwise ops-review bullet.\n\n**Risks**\n- Legit mobile uploaders sending >512KB meta blobs → surface in canary 30min window. If >0.1% of route traffic 413s, pause rollout, extend deadline.\n- `media-svc` owner sign-off needed — route is Atlas-side guard but semantically media's contract.",
   "assertion_pass": true,
   "raw_payload": {
     "type": "result",
     "subtype": "success",
     "is_error": false,
     "api_error_status": null,
-    "duration_ms": 25343,
-    "duration_api_ms": 26505,
+    "duration_ms": 44308,
+    "duration_api_ms": 45557,
     "num_turns": 1,
-    "result": "# Review: `POST /v1/orgs/:org_id/transfer`\n\n## P0 — Security\n\n**1. Trusts client-supplied `X-User-Id`** (§2 rule 1, §5)\n- Exploit: client sends any `x-user-id` → impersonation. Handler bypasses JWT entirely.\n- Fix: remove `req.headers['x-user-id']`. Use `req.user.sub` set by `auth_jwt` middleware (or internal `X-Internal-User-Id` downstream). Confirm `header_sanitize` strips `x-user-id` on ingress before auth.\n- Verify: curl with forged `X-User-Id` + no bearer → expect `401`.\n\n**2. No authentication enforced on route** (§3, §5)\n- Handler registered directly on `app.post`, not through pipeline. No JWT check, no rate limit, no header sanitize, no body size guard.\n- Fix: register under the Atlas pipeline router so all 9 middlewares run. Or require `req.user` and 401 otherwise.\n\n**3. No authorization check** (§2)\n- `org_id` from path never checked against caller's `org` claim / roles. Cross-org transfer possible.\n- Fix: assert `req.user.org === req.params.org_id` (or RBAC for admins). Return `403` on mismatch.\n\n## P1 — Correctness\n\n**4. No input validation**\n- `from`, `to`, `amount` untyped. `amount` could be negative, string, `NaN`, huge. `from`/`to` could belong to another org.\n- Fix: schema validate (zod/ajv). Assert `amount > 0`, integer minor units, `from !== to`, both accounts belong to `org_id` (enforced by `tx-svc`, but edge should pre-reject).\n\n**5. No idempotency key**\n- Money movement. Client retry → double transfer.\n- Fix: require `Idempotency-Key` header, forward to `tx-svc`.\n\n**6. No error handling**\n- `await txSvc.transfer(...)` throws → unhandled rejection → default Express error → possible stacktrace leak (§2 rule 6).\n- Fix: `try/catch` + `next(err)` to central handler in `src/edge/errorHandler.ts`. Response must be RFC 7807 with `request_id`, no internals.\n\n**7. `POST` rate limit too loose for money ops**\n- Default 30/min/IP (§4). Transfer endpoint should be tighter.\n- Fix: add entry in `config/rate_limits.json` for `/v1/orgs/:org_id/transfer` (e.g. 5/min/user, not per-IP).\n\n## P2 — Operational\n\n**8. Not keyed per user for rate limit**\n- IP-keyed limiting is wrong for authenticated money ops (NAT, shared egress).\n- Fix: rate-limit key should include `req.user.sub` for authenticated routes.\n\n**9. No audit log of transfer intent at edge**\n- §9 audit retention. Money ops should hit audit log explicitly.\n- Fix: emit audit entry with `jti`, `user_id`, `org_id`, `from`, `to`, `amount` (no PII leak), `request_id`.\n\n**10. Response shape inconsistent**\n- `{ok: true}` not RFC 7807-ish, no `request_id`, no transfer id for client reconciliation.\n- Fix: return `{request_id, transfer_id, status}`.\n\n## P3 — Style\n\n**11. Direct `app.post` registration** — bypasses router module structure. Route should live in `src/edge/routes/` and go through `route_dispatcher`.\n\n**12. No test.** Unit + integration (real Redis + Postgres replica, §11) covering: no-auth→401, wrong-org→403, negative amount→400, replay same idempotency key→same response, rate limit→429.\n\n## CODEOWNERS\n\nTouches auth-adjacent + rate-limit config → human approval required (§6).",
+    "result": "**Code**\n- `src/edge/pipeline.ts`: `body_size_guard` currently hardcoded 2MB global. Refactor → read per-route from config, fallback 2MB.\n- New helper `src/edge/body_size_guard.ts` (if not split yet): `resolveLimit(method, routePrefix) → bytes`. Return 413 RFC7807 problem+json, `type:/errors/payload-too-large`, include `request_id`.\n- Place stays at pipeline step 4 (post sanitize + rate_limit, pre auth) — no reorder.\n\n**Config**\n- New `config/body_size_limits.json`. Same shape as `rate_limits.json`: keyed `{method}:{routePrefix}` → bytes. Entry: `\"POST:/v1/media/upload-meta\": 524288`. Default 2097152.\n- Not in CODEOWNERS protected list → regular review. Still tag `@platform`.\n\n**Tests**\n- Unit `src/edge/body_size_guard.test.ts`: 524287 B → pass, 524289 B → 413 on target route; 1.5MB → pass on other routes; 2.1MB → 413 everywhere.\n- Integration `tests/integration/body_size.int.test.ts`: real Express + real Redis/PG cluster (no mocks, per Sec 11). Assert 413 body shape RFC7807 + `request_id`.\n- Lint: no new patterns trigger `no-direct-xff-read` / `no-unbounded-redis-key`.\n\n**Observability**\n- Existing `atlas_edge_requests_total{route,method,status_class=\"4xx\"}` captures it — add recording rule `atlas_edge_body_rejected:rate5m` split by route for dashboard.\n- Add route to `config/always_trace_routes.json` for rollout window (100% sample) → revert after soak.\n- Grafana panel on Atlas dashboard: 413 rate on `/v1/media/upload-meta`, pre/post.\n- Alert (Slack `#oncall-platform`, SEV3): 413 rate >X/min sustained 10m post-rollout → false-positive signal.\n\n**Rollout**\n- GitOps: PR → `main` → Argo. Blue/green per region: us-east-1 canary 5% × 30min → full us-east-1 → 10min soak → eu-west-1 → soak → ap-southeast-1.\n- Canary gate: watch 413 rate + legit-client error reports in `#client-apps`.\n\n**Rollback**\n- Limit in config → revert via config-only PR (fast, no image rebuild). Argo sync ~2min/region.\n- SEV1 auto-rollback already wired per region.\n- Keep prior image SHA pinned in `infra/argo/atlas-edge` overlay comment.\n\n**Comms**\n- T-7d: email partners using route (pull list from `auth-svc` API-key usage + JWT `sub` top callers last 30d). Subject: new 512KB limit + date + 413 shape.\n- T-7d: post `#client-apps` (mobile + web owners), `#product`, `#support` (CS scripts for 413).\n- T-1d: `#oncall-platform` rollout notice + dashboard link.\n- T-0: update public API docs (`docs/api/media.md`) + changelog.\n- Post-rollout: retro note in `incidents/` only if abuse pattern recurs; otherwise ops-review bullet.\n\n**Risks**\n- Legit mobile uploaders sending >512KB meta blobs → surface in canary 30min window. If >0.1% of route traffic 413s, pause rollout, extend deadline.\n- `media-svc` owner sign-off needed — route is Atlas-side guard but semantically media's contract.",
     "stop_reason": "end_turn",
-    "session_id": "eb2268ad-f414-4a8c-8e23-6c54e65c258e",
-    "total_cost_usd": 0.15802225,
+    "session_id": "67b0197c-2a3c-46ee-9b65-11dc11c5cd93",
+    "total_cost_usd": 0.079444,
     "usage": {
       "input_tokens": 6,
-      "cache_creation_input_tokens": 17891,
-      "cache_read_input_tokens": 15201,
-      "output_tokens": 1313,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 32948,
+      "output_tokens": 2289,
       "server_tool_use": {
         "web_search_requests": 0,
         "web_fetch_requests": 0
       },
       "service_tier": "standard",
       "cache_creation": {
-        "ephemeral_1h_input_tokens": 17891,
+        "ephemeral_1h_input_tokens": 0,
         "ephemeral_5m_input_tokens": 0
       },
       "inference_geo": "",
       "iterations": [
         {
           "input_tokens": 6,
-          "output_tokens": 1313,
-          "cache_read_input_tokens": 15201,
-          "cache_creation_input_tokens": 17891,
+          "output_tokens": 2289,
+          "cache_read_input_tokens": 32948,
+          "cache_creation_input_tokens": 0,
           "cache_creation": {
             "ephemeral_5m_input_tokens": 0,
-            "ephemeral_1h_input_tokens": 17891
+            "ephemeral_1h_input_tokens": 0
           },
           "type": "message"
         }
@@ -77,22 +77,22 @@
     },
     "modelUsage": {
       "claude-haiku-4-5-20251001": {
-        "inputTokens": 5668,
-        "outputTokens": 16,
+        "inputTokens": 5595,
+        "outputTokens": 24,
         "cacheReadInputTokens": 0,
         "cacheCreationInputTokens": 0,
         "webSearchRequests": 0,
-        "costUSD": 0.0057480000000000005,
+        "costUSD": 0.0057150000000000005,
         "contextWindow": 200000,
         "maxOutputTokens": 32000
       },
       "claude-opus-4-7": {
         "inputTokens": 6,
-        "outputTokens": 1313,
-        "cacheReadInputTokens": 15201,
-        "cacheCreationInputTokens": 17891,
+        "outputTokens": 2289,
+        "cacheReadInputTokens": 32948,
+        "cacheCreationInputTokens": 0,
         "webSearchRequests": 0,
-        "costUSD": 0.15227425,
+        "costUSD": 0.073729,
         "contextWindow": 1000000,
         "maxOutputTokens": 64000
       }
@@ -100,6 +100,6 @@
     "permission_denials": [],
     "terminal_reason": "completed",
     "fast_mode_state": "off",
-    "uuid": "6fabb82f-4681-4394-a478-bcbf39730be0"
+    "uuid": "573dc299-30e9-4f65-8739-0886606f3b37"
   }
 }

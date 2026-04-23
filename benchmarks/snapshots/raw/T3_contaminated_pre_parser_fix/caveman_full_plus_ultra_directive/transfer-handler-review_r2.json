@@ -1,0 +1,105 @@
+{
+  "track": "T3",
+  "arm": "caveman_full_plus_ultra_directive",
+  "prompt_id": "transfer-handler-review",
+  "run_index": 2,
+  "arm_order_index": 1,
+  "arm_order_full": [
+    "caveman_full",
+    "caveman_full_plus_ultra_directive",
+    "hewn_prompt_only",
+    "terse",
+    "hewn_full",
+    "baseline"
+  ],
+  "digest_hex": "394d162344f9342c7b47283b28bfa130e4fb435382a1f0a8aa819239935b955a",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T00:40:24.377869+00:00",
+  "output_tokens_tiktoken": 286,
+  "output_tokens_anthropic": 560,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 32986,
+  "total_input_tokens": 32992,
+  "cache_state": "warm",
+  "wallclock_ms": 13965.600726980483,
+  "duration_ms": 9540,
+  "duration_api_ms": 10676,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "bc5b6c57-e42b-429a-8884-beec49ac8673",
+  "total_cost_usd": 0.036192,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "**Risks**\n1. XFF spoof → bypass limiter. `req.headers['x-forwarded-for']` forbidden outside `trustedClientIp`. SEV1 2025-09 repeat. Lint rule `no-direct-xff-read` will trip.\n2. `incr` no `EXPIRE` → Redis OOM. SEV2 2025-11 repeat. Lint `no-unbounded-redis-key` trip.\n3. Key missing route prefix + minute bucket + region → collisions, global-limit bug (SEV2 2025-12).\n\n**Mitigate**\n```\nconst key = `rl:${region}:${trustedClientIp(req)}:${routePrefix}:${minuteBucket}`\nconst m = redis.multi()\nm.incr(key); m.expire(key, 90)\nconst [count] = await m.exec()\n```\n\n**Verify**\n- `npm run lint` → both custom rules pass.\n- Integration test: spoof `X-Forwarded-For`, assert key uses socket IP.\n- Integration test: assert `TTL key` > 0 post-INCR.\n- Regression test per SEV2 2025-12: two regions, same user, independent counters.\n\n**Residual**\n- Trusted-proxy list `config/trusted_proxies.json` must be current.\n- Confirm `minuteBucket` = `Math.floor(Date.now()/60000)` per §4.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 9540,
+    "duration_api_ms": 10676,
+    "num_turns": 1,
+    "result": "**Risks**\n1. XFF spoof → bypass limiter. `req.headers['x-forwarded-for']` forbidden outside `trustedClientIp`. SEV1 2025-09 repeat. Lint rule `no-direct-xff-read` will trip.\n2. `incr` no `EXPIRE` → Redis OOM. SEV2 2025-11 repeat. Lint `no-unbounded-redis-key` trip.\n3. Key missing route prefix + minute bucket + region → collisions, global-limit bug (SEV2 2025-12).\n\n**Mitigate**\n```\nconst key = `rl:${region}:${trustedClientIp(req)}:${routePrefix}:${minuteBucket}`\nconst m = redis.multi()\nm.incr(key); m.expire(key, 90)\nconst [count] = await m.exec()\n```\n\n**Verify**\n- `npm run lint` → both custom rules pass.\n- Integration test: spoof `X-Forwarded-For`, assert key uses socket IP.\n- Integration test: assert `TTL key` > 0 post-INCR.\n- Regression test per SEV2 2025-12: two regions, same user, independent counters.\n\n**Residual**\n- Trusted-proxy list `config/trusted_proxies.json` must be current.\n- Confirm `minuteBucket` = `Math.floor(Date.now()/60000)` per §4.",
+    "stop_reason": "end_turn",
+    "session_id": "bc5b6c57-e42b-429a-8884-beec49ac8673",
+    "total_cost_usd": 0.036192,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 32986,
+      "output_tokens": 560,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 0,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 560,
+          "cache_read_input_tokens": 32986,
+          "cache_creation_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 5584,
+        "outputTokens": 17,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.005669,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 560,
+        "cacheReadInputTokens": 32986,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.030523,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "b3aacfc4-997e-4cf6-a7b2-b0ae81d102b0"
+  }
+}

@@ -14,42 +14,42 @@
   ],
   "digest_hex": "36e797c847e3757d1a2926befe138e80e847ce989079f243b0c9f2ab5130be3e",
   "seed": "hewn-bench-v1",
-  "timestamp": "2026-04-22T00:53:51.797796+00:00",
-  "output_tokens_tiktoken": 332,
-  "output_tokens_anthropic": 493,
+  "timestamp": "2026-04-23T10:55:39.740716+00:00",
+  "output_tokens_tiktoken": 319,
+  "output_tokens_anthropic": 487,
   "input_tokens_anthropic": 6,
   "cache_creation_input_tokens": 0,
-  "cache_read_input_tokens": 32726,
-  "total_input_tokens": 32732,
+  "cache_read_input_tokens": 33858,
+  "total_input_tokens": 33864,
   "cache_state": "warm",
-  "wallclock_ms": 13520.258934993763,
-  "duration_ms": 10181,
-  "duration_api_ms": 11859,
+  "wallclock_ms": 14761.183094989974,
+  "duration_ms": 11329,
+  "duration_api_ms": 12527,
   "wrapper_overhead_ms": null,
   "stop_reason": "end_turn",
   "num_turns": 1,
-  "session_id": "ddf7bf80-bc11-41aa-a625-0cf95917f0eb",
-  "total_cost_usd": 0.029228,
+  "session_id": "bf094eb2-08d0-440e-95b6-a521576ccf6d",
+  "total_cost_usd": 0.029651,
   "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
-  "result": "# Introducing Smart Drafts: Never Stare at a Blank Page Again\n\nWe've all been there. You open a new document, the cursor blinks, and suddenly every good idea you had in the shower evaporates. The blank page is one of the oldest problems in writing, and for a while now, we've watched our users wrestle with it — pausing mid-flow, tabbing away, coming back ten minutes later no closer to a first sentence. Smart Drafts is our answer. It's designed to turn that intimidating white space into a running start.\n\nHere's how it works. When you create a new document, you'll see a new **Smart Draft** option right next to the blank template. Give your doc a title, click once, and we'll generate a tailored outline based on what you typed and the recent documents you've been working on. Writing a project kickoff? You'll get sections for goals, stakeholders, and timelines. Drafting a postmortem? Expect a root-cause framework ready to fill in. Nothing is locked — every heading, bullet, and suggestion is fully editable, so you stay in the driver's seat. It's scaffolding, not autopilot.\n\nThis is just the first step. Over the coming months, we're building **custom voice training** so Smart Drafts don't just know the shape of your document, but the sound of *you* — your phrasing, your structure, the little turns that make your writing feel like yours. We can't wait to share more soon. In the meantime, give Smart Drafts a try on your next doc and let us know what you think. As always, thank you for writing with us.",
+  "result": "Subject: Payments outage on April 22 — what happened and what we're doing\n\nHi there,\n\nYesterday, April 22, our payments service was degraded for roughly four hours. During that window, some of you saw transactions fail outright — purchases declined, checkouts stalled, retries that went nowhere. That is not the experience you trust us to deliver, and we're sorry. If a failed payment cost you a sale, a customer, or simply your time, that's on us.\n\nThe root cause was a misconfigured cache invalidation rule that, under a traffic spike, began evicting entries faster than they could be repopulated. Downstream payment calls started timing out, and the failures cascaded. We've corrected the rule, added guardrails around invalidation behavior under load, and verified the fix in production. Full service was restored and has been stable since.\n\nTo make sure this does not happen again, we're changing how we ship changes to the payments path: all future updates will go out via canary rollouts with automated rollback on error-rate regressions, and we're introducing chaos testing in staging so failure modes like this surface before they reach you. These are not one-off fixes — they're becoming standard practice for anything touching payments.\n\nIf your account was impacted during the outage window, we're applying a goodwill credit automatically — you'll see it on your next statement, no action needed. If you believe you were affected and don't see a credit within 48 hours, please reply to this email and we'll make it right. Thank you for your patience, and again, we're sorry.\n\n— The Payments Team",
   "assertion_pass": true,
   "raw_payload": {
     "type": "result",
     "subtype": "success",
     "is_error": false,
     "api_error_status": null,
-    "duration_ms": 10181,
-    "duration_api_ms": 11859,
+    "duration_ms": 11329,
+    "duration_api_ms": 12527,
     "num_turns": 1,
-    "result": "# Introducing Smart Drafts: Never Stare at a Blank Page Again\n\nWe've all been there. You open a new document, the cursor blinks, and suddenly every good idea you had in the shower evaporates. The blank page is one of the oldest problems in writing, and for a while now, we've watched our users wrestle with it — pausing mid-flow, tabbing away, coming back ten minutes later no closer to a first sentence. Smart Drafts is our answer. It's designed to turn that intimidating white space into a running start.\n\nHere's how it works. When you create a new document, you'll see a new **Smart Draft** option right next to the blank template. Give your doc a title, click once, and we'll generate a tailored outline based on what you typed and the recent documents you've been working on. Writing a project kickoff? You'll get sections for goals, stakeholders, and timelines. Drafting a postmortem? Expect a root-cause framework ready to fill in. Nothing is locked — every heading, bullet, and suggestion is fully editable, so you stay in the driver's seat. It's scaffolding, not autopilot.\n\nThis is just the first step. Over the coming months, we're building **custom voice training** so Smart Drafts don't just know the shape of your document, but the sound of *you* — your phrasing, your structure, the little turns that make your writing feel like yours. We can't wait to share more soon. In the meantime, give Smart Drafts a try on your next doc and let us know what you think. As always, thank you for writing with us.",
+    "result": "Subject: Payments outage on April 22 — what happened and what we're doing\n\nHi there,\n\nYesterday, April 22, our payments service was degraded for roughly four hours. During that window, some of you saw transactions fail outright — purchases declined, checkouts stalled, retries that went nowhere. That is not the experience you trust us to deliver, and we're sorry. If a failed payment cost you a sale, a customer, or simply your time, that's on us.\n\nThe root cause was a misconfigured cache invalidation rule that, under a traffic spike, began evicting entries faster than they could be repopulated. Downstream payment calls started timing out, and the failures cascaded. We've corrected the rule, added guardrails around invalidation behavior under load, and verified the fix in production. Full service was restored and has been stable since.\n\nTo make sure this does not happen again, we're changing how we ship changes to the payments path: all future updates will go out via canary rollouts with automated rollback on error-rate regressions, and we're introducing chaos testing in staging so failure modes like this surface before they reach you. These are not one-off fixes — they're becoming standard practice for anything touching payments.\n\nIf your account was impacted during the outage window, we're applying a goodwill credit automatically — you'll see it on your next statement, no action needed. If you believe you were affected and don't see a credit within 48 hours, please reply to this email and we'll make it right. Thank you for your patience, and again, we're sorry.\n\n— The Payments Team",
     "stop_reason": "end_turn",
-    "session_id": "ddf7bf80-bc11-41aa-a625-0cf95917f0eb",
-    "total_cost_usd": 0.029228,
+    "session_id": "bf094eb2-08d0-440e-95b6-a521576ccf6d",
+    "total_cost_usd": 0.029651,
     "usage": {
       "input_tokens": 6,
       "cache_creation_input_tokens": 0,
-      "cache_read_input_tokens": 32726,
-      "output_tokens": 493,
+      "cache_read_input_tokens": 33858,
+      "output_tokens": 487,
       "server_tool_use": {
         "web_search_requests": 0,
         "web_fetch_requests": 0
@@ -63,8 +63,8 @@
       "iterations": [
         {
           "input_tokens": 6,
-          "output_tokens": 493,
-          "cache_read_input_tokens": 32726,
+          "output_tokens": 487,
+          "cache_read_input_tokens": 33858,
           "cache_creation_input_tokens": 0,
           "cache_creation": {
             "ephemeral_5m_input_tokens": 0,
@@ -77,22 +77,22 @@
     },
     "modelUsage": {
       "claude-haiku-4-5-20251001": {
-        "inputTokens": 435,
+        "inputTokens": 442,
         "outputTokens": 15,
         "cacheReadInputTokens": 0,
         "cacheCreationInputTokens": 0,
         "webSearchRequests": 0,
-        "costUSD": 0.00051,
+        "costUSD": 0.000517,
         "contextWindow": 200000,
         "maxOutputTokens": 32000
       },
       "claude-opus-4-7": {
         "inputTokens": 6,
-        "outputTokens": 493,
-        "cacheReadInputTokens": 32726,
+        "outputTokens": 487,
+        "cacheReadInputTokens": 33858,
         "cacheCreationInputTokens": 0,
         "webSearchRequests": 0,
-        "costUSD": 0.028718,
+        "costUSD": 0.029134,
         "contextWindow": 1000000,
         "maxOutputTokens": 64000
       }
@@ -100,6 +100,6 @@
     "permission_denials": [],
     "terminal_reason": "completed",
     "fast_mode_state": "off",
-    "uuid": "bb19bcf6-e6dc-43af-8022-3bab20628d8c"
+    "uuid": "6f8f6f5b-2658-487a-9657-6f891eb6bf6d"
   }
 }

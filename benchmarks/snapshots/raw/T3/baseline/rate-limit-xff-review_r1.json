@@ -14,61 +14,61 @@
   ],
   "digest_hex": "150affe2992c9d3e327b5311fcd06bb30c21d46606c27a5d4b2a456ecbc0ba71",
   "seed": "hewn-bench-v1",
-  "timestamp": "2026-04-22T00:30:36.696003+00:00",
-  "output_tokens_tiktoken": 28,
-  "output_tokens_anthropic": 214,
+  "timestamp": "2026-04-23T08:44:06.759678+00:00",
+  "output_tokens_tiktoken": 492,
+  "output_tokens_anthropic": 1284,
   "input_tokens_anthropic": 6,
-  "cache_creation_input_tokens": 0,
-  "cache_read_input_tokens": 39804,
-  "total_input_tokens": 39810,
+  "cache_creation_input_tokens": 24196,
+  "cache_read_input_tokens": 16794,
+  "total_input_tokens": 40996,
   "cache_state": "warm",
-  "wallclock_ms": 9479.159669979708,
-  "duration_ms": 5823,
-  "duration_api_ms": 7105,
+  "wallclock_ms": 24692.30583301396,
+  "duration_ms": 21309,
+  "duration_api_ms": 22512,
   "wrapper_overhead_ms": null,
   "stop_reason": "end_turn",
   "num_turns": 1,
-  "session_id": "4af9fc09-abe4-4a1f-8eed-86c2cbd8a315",
-  "total_cost_usd": 0.030882,
+  "session_id": "d749b54f-1853-4fc4-b3be-60815e568721",
+  "total_cost_usd": 0.197421,
   "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
-  "result": "The `[Task]` section is empty — just an opening quote and nothing after. What would you like me to do with the handbook?",
+  "result": "**Risks**\n\n1. **XFF spoof bypass (SEV1 class, ref 2025-09).** `req.headers['x-forwarded-for']` is client-controlled. Attacker rotates the header per request → unbounded distinct keys → per-IP limiter defeated. Also violates Section 2 rule 2 and the `no-direct-xff-read` lint rule — CI should block this.\n2. **Redis OOM (SEV2 class, ref 2025-11).** `incr` with no `expire` → keys live forever. `no-unbounded-redis-key` should fire. Combined with (1), XFF rotation explodes the keyspace.\n3. **Key shape wrong.** Missing route prefix, minute bucket, and region prefix (ref 2025-12). Collisions across routes/regions; limit math meaningless.\n\n**Mitigation**\n\n```javascript\nconst ip = trustedClientIp(req) // src/edge/util/trustedClientIp.ts\nconst bucket = Math.floor(Date.now() / 60000)\nconst key = `rl:${region}:${ip}:${routePrefix}:${bucket}`\nconst multi = redis.multi()\nmulti.incr(key)\nmulti.expire(key, 90)\nconst [count] = await multi.exec()\n```\n\nReturn RFC 7807 `429` with `retry_after` per Section 4.\n\n**Verify**\n\n- Unit: send request with spoofed `X-Forwarded-For: 1.2.3.4` from a non-trusted-proxy socket → key derives from `req.socket.remoteAddress`, not the header.\n- Integration (real Redis, per Section 11): after N `incr` calls, `TTL key` returns a value in `(0, 90]`; never `-1`.\n- Lint: `eslint` passes (`no-direct-xff-read`, `no-unbounded-redis-key`).\n- Metric: `atlas_edge_rate_limit_total{action=\"throttled\"}` increments when limit exceeded; `redis_command_duration_seconds{command=\"expire\"}` non-zero on every throttled path.\n- Regression: key string includes region + route prefix + minute bucket (assert in test).\n\n**Residual**\n\nTrust chain for `trustedClientIp` depends on `config/trusted_proxies.json` staying current — out of scope for this diff but worth confirming if edge ingress topology changed recently.",
   "assertion_pass": true,
   "raw_payload": {
     "type": "result",
     "subtype": "success",
     "is_error": false,
     "api_error_status": null,
-    "duration_ms": 5823,
-    "duration_api_ms": 7105,
+    "duration_ms": 21309,
+    "duration_api_ms": 22512,
     "num_turns": 1,
-    "result": "The `[Task]` section is empty — just an opening quote and nothing after. What would you like me to do with the handbook?",
+    "result": "**Risks**\n\n1. **XFF spoof bypass (SEV1 class, ref 2025-09).** `req.headers['x-forwarded-for']` is client-controlled. Attacker rotates the header per request → unbounded distinct keys → per-IP limiter defeated. Also violates Section 2 rule 2 and the `no-direct-xff-read` lint rule — CI should block this.\n2. **Redis OOM (SEV2 class, ref 2025-11).** `incr` with no `expire` → keys live forever. `no-unbounded-redis-key` should fire. Combined with (1), XFF rotation explodes the keyspace.\n3. **Key shape wrong.** Missing route prefix, minute bucket, and region prefix (ref 2025-12). Collisions across routes/regions; limit math meaningless.\n\n**Mitigation**\n\n```javascript\nconst ip = trustedClientIp(req) // src/edge/util/trustedClientIp.ts\nconst bucket = Math.floor(Date.now() / 60000)\nconst key = `rl:${region}:${ip}:${routePrefix}:${bucket}`\nconst multi = redis.multi()\nmulti.incr(key)\nmulti.expire(key, 90)\nconst [count] = await multi.exec()\n```\n\nReturn RFC 7807 `429` with `retry_after` per Section 4.\n\n**Verify**\n\n- Unit: send request with spoofed `X-Forwarded-For: 1.2.3.4` from a non-trusted-proxy socket → key derives from `req.socket.remoteAddress`, not the header.\n- Integration (real Redis, per Section 11): after N `incr` calls, `TTL key` returns a value in `(0, 90]`; never `-1`.\n- Lint: `eslint` passes (`no-direct-xff-read`, `no-unbounded-redis-key`).\n- Metric: `atlas_edge_rate_limit_total{action=\"throttled\"}` increments when limit exceeded; `redis_command_duration_seconds{command=\"expire\"}` non-zero on every throttled path.\n- Regression: key string includes region + route prefix + minute bucket (assert in test).\n\n**Residual**\n\nTrust chain for `trustedClientIp` depends on `config/trusted_proxies.json` staying current — out of scope for this diff but worth confirming if edge ingress topology changed recently.",
     "stop_reason": "end_turn",
-    "session_id": "4af9fc09-abe4-4a1f-8eed-86c2cbd8a315",
-    "total_cost_usd": 0.030882,
+    "session_id": "d749b54f-1853-4fc4-b3be-60815e568721",
+    "total_cost_usd": 0.197421,
     "usage": {
       "input_tokens": 6,
-      "cache_creation_input_tokens": 0,
-      "cache_read_input_tokens": 39804,
-      "output_tokens": 214,
+      "cache_creation_input_tokens": 24196,
+      "cache_read_input_tokens": 16794,
+      "output_tokens": 1284,
       "server_tool_use": {
         "web_search_requests": 0,
         "web_fetch_requests": 0
       },
       "service_tier": "standard",
       "cache_creation": {
-        "ephemeral_1h_input_tokens": 0,
+        "ephemeral_1h_input_tokens": 24196,
         "ephemeral_5m_input_tokens": 0
       },
       "inference_geo": "",
       "iterations": [
         {
           "input_tokens": 6,
-          "output_tokens": 214,
-          "cache_read_input_tokens": 39804,
-          "cache_creation_input_tokens": 0,
+          "output_tokens": 1284,
+          "cache_read_input_tokens": 16794,
+          "cache_creation_input_tokens": 24196,
           "cache_creation": {
             "ephemeral_5m_input_tokens": 0,
-            "ephemeral_1h_input_tokens": 0
+            "ephemeral_1h_input_tokens": 24196
           },
           "type": "message"
         }
@@ -77,22 +77,22 @@
     },
     "modelUsage": {
       "claude-haiku-4-5-20251001": {
-        "inputTokens": 5505,
-        "outputTokens": 19,
+        "inputTokens": 5584,
+        "outputTokens": 17,
         "cacheReadInputTokens": 0,
         "cacheCreationInputTokens": 0,
         "webSearchRequests": 0,
-        "costUSD": 0.0056,
+        "costUSD": 0.005669,
         "contextWindow": 200000,
         "maxOutputTokens": 32000
       },
       "claude-opus-4-7": {
         "inputTokens": 6,
-        "outputTokens": 214,
-        "cacheReadInputTokens": 39804,
-        "cacheCreationInputTokens": 0,
+        "outputTokens": 1284,
+        "cacheReadInputTokens": 16794,
+        "cacheCreationInputTokens": 24196,
         "webSearchRequests": 0,
-        "costUSD": 0.025282,
+        "costUSD": 0.191752,
         "contextWindow": 1000000,
         "maxOutputTokens": 64000
       }
@@ -100,6 +100,6 @@
     "permission_denials": [],
     "terminal_reason": "completed",
     "fast_mode_state": "off",
-    "uuid": "423a7096-050d-4015-989b-8a9a16ac15ce"
+    "uuid": "03c0129d-c569-4e13-901b-d9e5895628f6"
   }
 }

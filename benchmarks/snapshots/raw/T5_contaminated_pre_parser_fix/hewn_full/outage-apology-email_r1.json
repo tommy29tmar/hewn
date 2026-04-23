@@ -1,0 +1,105 @@
+{
+  "track": "T5",
+  "arm": "hewn_full",
+  "prompt_id": "outage-apology-email",
+  "run_index": 1,
+  "arm_order_index": 4,
+  "arm_order_full": [
+    "hewn_prompt_only",
+    "terse",
+    "caveman_full_plus_ultra_directive",
+    "baseline",
+    "hewn_full",
+    "caveman_full"
+  ],
+  "digest_hex": "36e797c847e3757d1a2926befe138e80e847ce989079f243b0c9f2ab5130be3e",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T09:54:00.612936+00:00",
+  "output_tokens_tiktoken": 362,
+  "output_tokens_anthropic": 510,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 18364,
+  "cache_read_input_tokens": 16805,
+  "total_input_tokens": 35175,
+  "cache_state": "warm",
+  "wallclock_ms": 18390.39610599866,
+  "duration_ms": 11842,
+  "duration_api_ms": 13184,
+  "wrapper_overhead_ms": 5206.396105998661,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "aaa3671d-99f6-4928-9a8f-7ba55065a560",
+  "total_cost_usd": 0.13647249999999997,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "# Introducing Smart Drafts\n\nWe've all been there: you open a new document, type a title, and then... nothing. The cursor blinks. You stare at the white space. You make another coffee. The blank page is one of the oldest creative blockers there is, and it shows up whether you're drafting a quarterly update, a product spec, or a quick note to your team. We built Smart Drafts because we kept hearing the same thing from you — getting started is the hardest part, and once you have *something* on the page, the rest tends to follow.\n\nSmart Drafts gives you a running start. As soon as you create a new document, you'll see a single button near the top: **Suggest an outline**. One click, and we'll generate a structured starting point based on your document title and the context of your recent work — the docs you've been editing, the projects you're active in, the patterns of how your team writes. It's not a finished draft, and that's intentional. Think of it as scaffolding: a clear set of headings and prompts to push against, rewrite, or throw away entirely. You stay the author; we just hand you the first sentence.\n\nThis is the first step in a longer arc we're excited about. Next up is **custom voice training**, which will let Smart Drafts learn the cadence, structure, and word choices that are distinctly yours — so the outlines you get start to feel less like a generic template and more like something you might have sketched yourself on a good day. We'll have more to share on that in the coming weeks. In the meantime, Smart Drafts is rolling out to all workspaces today. Open a new doc, give it a try, and let us know what you think — we read every reply.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 11842,
+    "duration_api_ms": 13184,
+    "num_turns": 1,
+    "result": "# Introducing Smart Drafts\n\nWe've all been there: you open a new document, type a title, and then... nothing. The cursor blinks. You stare at the white space. You make another coffee. The blank page is one of the oldest creative blockers there is, and it shows up whether you're drafting a quarterly update, a product spec, or a quick note to your team. We built Smart Drafts because we kept hearing the same thing from you — getting started is the hardest part, and once you have *something* on the page, the rest tends to follow.\n\nSmart Drafts gives you a running start. As soon as you create a new document, you'll see a single button near the top: **Suggest an outline**. One click, and we'll generate a structured starting point based on your document title and the context of your recent work — the docs you've been editing, the projects you're active in, the patterns of how your team writes. It's not a finished draft, and that's intentional. Think of it as scaffolding: a clear set of headings and prompts to push against, rewrite, or throw away entirely. You stay the author; we just hand you the first sentence.\n\nThis is the first step in a longer arc we're excited about. Next up is **custom voice training**, which will let Smart Drafts learn the cadence, structure, and word choices that are distinctly yours — so the outlines you get start to feel less like a generic template and more like something you might have sketched yourself on a good day. We'll have more to share on that in the coming weeks. In the meantime, Smart Drafts is rolling out to all workspaces today. Open a new doc, give it a try, and let us know what you think — we read every reply.",
+    "stop_reason": "end_turn",
+    "session_id": "aaa3671d-99f6-4928-9a8f-7ba55065a560",
+    "total_cost_usd": 0.13647249999999997,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 18364,
+      "cache_read_input_tokens": 16805,
+      "output_tokens": 510,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 18364,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 510,
+          "cache_read_input_tokens": 16805,
+          "cache_creation_input_tokens": 18364,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 18364
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 435,
+        "outputTokens": 16,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.000515,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 510,
+        "cacheReadInputTokens": 16805,
+        "cacheCreationInputTokens": 18364,
+        "webSearchRequests": 0,
+        "costUSD": 0.13595749999999998,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "e4b707e1-0b7c-4f47-b344-dd03af1045af"
+  }
+}

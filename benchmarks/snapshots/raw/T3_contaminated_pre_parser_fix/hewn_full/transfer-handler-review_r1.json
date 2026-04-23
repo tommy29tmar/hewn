@@ -1,0 +1,105 @@
+{
+  "track": "T3",
+  "arm": "hewn_full",
+  "prompt_id": "transfer-handler-review",
+  "run_index": 1,
+  "arm_order_index": 3,
+  "arm_order_full": [
+    "baseline",
+    "caveman_full",
+    "hewn_prompt_only",
+    "hewn_full",
+    "caveman_full_plus_ultra_directive",
+    "terse"
+  ],
+  "digest_hex": "3ea6924fe84cc48072e626740e2896f1f2e17be2cf1e47da115cdde4ccbeab3a",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T09:43:44.154971+00:00",
+  "output_tokens_tiktoken": 715,
+  "output_tokens_anthropic": 1132,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 25621,
+  "cache_read_input_tokens": 16805,
+  "total_input_tokens": 42432,
+  "cache_state": "warm",
+  "wallclock_ms": 28805.624316009926,
+  "duration_ms": 22537,
+  "duration_api_ms": 23664,
+  "wrapper_overhead_ms": 5141.624316009926,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "8ed08cba-3865-4bb5-9c0d-ee39d8ed2f5f",
+  "total_cost_usd": 0.20253275,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "1. Trusts client `X-Forwarded-For` for rate-limit keying\nevidence: `req.headers['x-forwarded-for']||req.ip` in diff; Section 2 rule 2; SEV1 2025-09 same bug\nimpact: attacker rotates XFF per request, bypasses per-IP limit, enables brute-force/credential-stuffing\nfix: key off `trustedClientIp(req)` from `src/edge/util/trustedClientIp.ts`; fall back to `req.socket.remoteAddress`; never read `req.headers['x-forwarded-for']` here — `no-direct-xff-read` lint rule already forbids it\nverify: add unit test sending forged `X-Forwarded-For: 1.2.3.4` from fixed socket, assert counter keyed on socket IP; `pnpm lint` must flag the current line\n\n2. `INCR` without `EXPIRE` — unbounded Redis keys\nevidence: `await redis.incr(key)` with no paired `expire`; Section 4 code sample; SEV2 2025-11 Redis OOM same bug\nimpact: keys accumulate forever under traffic, Redis hits maxmemory, eviction storm knocks edge offline\nfix: wrap in `redis.multi().incr(key).expire(key, 90).exec()` per Section 4; `no-unbounded-redis-key` lint rule should catch this\nverify: integration test asserting `TTL key` > 0 after first increment; load test confirms key count bounded\n\n3. Missing route prefix + region in key — cross-route/cross-region collision\nevidence: key is `rl:${ip}` only; handbook spec is `rl:{ip}:{route_prefix}:{minute_bucket}` with region per SEV2 2025-12\nimpact: one busy route/region exhausts limit for unrelated routes and other regions; spurious `429`s, and a single global budget instead of per-route/per-region\nfix: `rl:${region}:${trustedClientIp(req)}:${routePrefix}:${minuteBucket}`; pull region from env, bucket from `Math.floor(Date.now()/60000)`\nverify: regression test from 2025-12 RCA; assert keys differ across regions and routes for same IP\n\n4. No limit comparison / no 429 response\nevidence: diff increments but never reads count, never compares to limit, never returns RFC 7807 `429`\nimpact: limiter is effectively a counter only — no throttling actually happens; SLO + abuse controls silently broken\nfix: capture `[count] = await multi.exec()`, compare against per-route limit from `config/rate_limits.json`, return problem+json body with `type:/errors/rate-limited`, `retry_after`\nverify: unit test exceeding limit returns `429` with RFC 7807 shape and `retry_after` seconds\n\n5. No error handling on Redis call\nevidence: bare `await redis.incr` — transient Redis failure throws, likely surfaces as `5xx`\nimpact: Redis blip fails open or fails closed unpredictably; metric `atlas_edge_rate_limit_total{action=errored}` not emitted\nfix: try/catch, emit `action=errored` metric, use `src/util/retry.ts` (≤3 attempts, exp backoff) for transient errors, fail-open with logged warning per team convention\nverify: inject Redis connection error in test; assert metric increment and request still served",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 22537,
+    "duration_api_ms": 23664,
+    "num_turns": 1,
+    "result": "1. Trusts client `X-Forwarded-For` for rate-limit keying\nevidence: `req.headers['x-forwarded-for']||req.ip` in diff; Section 2 rule 2; SEV1 2025-09 same bug\nimpact: attacker rotates XFF per request, bypasses per-IP limit, enables brute-force/credential-stuffing\nfix: key off `trustedClientIp(req)` from `src/edge/util/trustedClientIp.ts`; fall back to `req.socket.remoteAddress`; never read `req.headers['x-forwarded-for']` here — `no-direct-xff-read` lint rule already forbids it\nverify: add unit test sending forged `X-Forwarded-For: 1.2.3.4` from fixed socket, assert counter keyed on socket IP; `pnpm lint` must flag the current line\n\n2. `INCR` without `EXPIRE` — unbounded Redis keys\nevidence: `await redis.incr(key)` with no paired `expire`; Section 4 code sample; SEV2 2025-11 Redis OOM same bug\nimpact: keys accumulate forever under traffic, Redis hits maxmemory, eviction storm knocks edge offline\nfix: wrap in `redis.multi().incr(key).expire(key, 90).exec()` per Section 4; `no-unbounded-redis-key` lint rule should catch this\nverify: integration test asserting `TTL key` > 0 after first increment; load test confirms key count bounded\n\n3. Missing route prefix + region in key — cross-route/cross-region collision\nevidence: key is `rl:${ip}` only; handbook spec is `rl:{ip}:{route_prefix}:{minute_bucket}` with region per SEV2 2025-12\nimpact: one busy route/region exhausts limit for unrelated routes and other regions; spurious `429`s, and a single global budget instead of per-route/per-region\nfix: `rl:${region}:${trustedClientIp(req)}:${routePrefix}:${minuteBucket}`; pull region from env, bucket from `Math.floor(Date.now()/60000)`\nverify: regression test from 2025-12 RCA; assert keys differ across regions and routes for same IP\n\n4. No limit comparison / no 429 response\nevidence: diff increments but never reads count, never compares to limit, never returns RFC 7807 `429`\nimpact: limiter is effectively a counter only — no throttling actually happens; SLO + abuse controls silently broken\nfix: capture `[count] = await multi.exec()`, compare against per-route limit from `config/rate_limits.json`, return problem+json body with `type:/errors/rate-limited`, `retry_after`\nverify: unit test exceeding limit returns `429` with RFC 7807 shape and `retry_after` seconds\n\n5. No error handling on Redis call\nevidence: bare `await redis.incr` — transient Redis failure throws, likely surfaces as `5xx`\nimpact: Redis blip fails open or fails closed unpredictably; metric `atlas_edge_rate_limit_total{action=errored}` not emitted\nfix: try/catch, emit `action=errored` metric, use `src/util/retry.ts` (≤3 attempts, exp backoff) for transient errors, fail-open with logged warning per team convention\nverify: inject Redis connection error in test; assert metric increment and request still served",
+    "stop_reason": "end_turn",
+    "session_id": "8ed08cba-3865-4bb5-9c0d-ee39d8ed2f5f",
+    "total_cost_usd": 0.20253275,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 25621,
+      "cache_read_input_tokens": 16805,
+      "output_tokens": 1132,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 25621,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 1132,
+          "cache_read_input_tokens": 16805,
+          "cache_creation_input_tokens": 25621,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 25621
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 5584,
+        "outputTokens": 17,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.005669,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 1132,
+        "cacheReadInputTokens": 16805,
+        "cacheCreationInputTokens": 25621,
+        "webSearchRequests": 0,
+        "costUSD": 0.19686375,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "9441a221-db50-4596-a9fb-8a70b5b7579a"
+  }
+}

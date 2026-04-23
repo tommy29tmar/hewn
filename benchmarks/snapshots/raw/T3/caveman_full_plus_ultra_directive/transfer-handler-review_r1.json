@@ -14,61 +14,61 @@
   ],
   "digest_hex": "3ea6924fe84cc48072e626740e2896f1f2e17be2cf1e47da115cdde4ccbeab3a",
   "seed": "hewn-bench-v1",
-  "timestamp": "2026-04-22T00:33:58.122256+00:00",
-  "output_tokens_tiktoken": 222,
-  "output_tokens_anthropic": 416,
+  "timestamp": "2026-04-23T08:47:37.198059+00:00",
+  "output_tokens_tiktoken": 746,
+  "output_tokens_anthropic": 2043,
   "input_tokens_anthropic": 6,
-  "cache_creation_input_tokens": 17785,
-  "cache_read_input_tokens": 15201,
-  "total_input_tokens": 32992,
+  "cache_creation_input_tokens": 17848,
+  "cache_read_input_tokens": 15199,
+  "total_input_tokens": 33053,
   "cache_state": "warm",
-  "wallclock_ms": 12329.702828021254,
-  "duration_ms": 8223,
-  "duration_api_ms": 9226,
+  "wallclock_ms": 37618.914435006445,
+  "duration_ms": 34658,
+  "duration_api_ms": 35972,
   "wrapper_overhead_ms": null,
   "stop_reason": "end_turn",
   "num_turns": 1,
-  "session_id": "dce0c4d2-ed92-4687-8618-bd89d78c773e",
-  "total_cost_usd": 0.13486075,
+  "session_id": "28d4acd5-bd31-4ff7-a4d2-012f6158328d",
+  "total_cost_usd": 0.1759925,
   "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
-  "result": "**Risk**\n1. `req.headers['x-forwarded-for']` → spoof bypass limiter (SEV1 2025-09 repeat). Violates §2 rule 2 + lint `no-direct-xff-read`.\n2. No `EXPIRE` → Redis OOM (SEV2 2025-11 repeat). Violates §2 rule 3 + lint `no-unbounded-redis-key`.\n3. Key missing route prefix + minute bucket + region → collision, global limit (SEV2 2025-12).\n\n**Mitigate**\n```\nconst key = `rl:${region}:${trustedClientIp(req)}:${routePrefix}:${minuteBucket}`\nconst m = redis.multi(); m.incr(key); m.expire(key, 90)\nconst [count] = await m.exec()\n```\n\n**Verify**\n- unit: XFF header ignored, `socket.remoteAddress` keyed\n- integration: `TTL key` > 0 post-INCR\n- lint: both custom rules pass\n- regression: per-region isolation test (§10 2025-12)",
+  "result": "**P0 Security — trust boundary violation**\n- `req.headers['x-user-id']` trusted as identity. §2 rule 1: client-supplied identity headers stripped at edge before handler. Fix: read from `req.user.sub` set by `auth_jwt` middleware. Use `X-Internal-User-Id` only downstream.\n\n**P0 Security — missing authz**\n- No check that caller's `req.user.org` == `req.params.org_id`. Cross-org transfer. Fix: explicit org match → `403` if mismatch.\n\n**P0 Security — no auth invocation shown**\n- Handler bypasses pipeline if `app.post` registered outside the chain in `src/edge/pipeline.ts`. §3 order mandatory. Fix: route through pipeline, never attach raw `app.post` bypassing `auth_jwt`.\n\n**P0 Architecture — Atlas is edge, not business logic**\n- Direct `txSvc.transfer(...)` call skips `route_dispatcher` + `mTLS_egress` (§3 steps 6–7). Atlas forwards, doesn't invoke. Fix: dispatch to `tx-svc` over mTLS; let it own transfer.\n\n**P1 Correctness — no input validation**\n- `from`, `to`, `amount` unchecked. Negative, `NaN`, string, overflow, same-account, non-UUID all pass. Fix: schema (zod/ajv) — amount positive integer minor units, `from != to`, accounts belong to `org_id`.\n\n**P1 Correctness — no idempotency**\n- Money mutation w/o `Idempotency-Key` header → double-debit on retry. Fix: require header, dedupe in `tx-svc`.\n\n**P1 Error handling**\n- `await` no try/catch, no `next(err)`. §11: always `next(err)`. Response on failure not RFC 7807 (§2 rule 6). Fix: `try { ... } catch (e) { next(e) }`; central handler emits `problem+json` w/ `request_id`.\n\n**P1 Rate limit**\n- Default POST 30/min too loose for fund transfer. §4. Fix: add tight entry in `config/rate_limits.json` for `/v1/orgs/:org_id/transfer`, key by `user_id` not IP (authed path).\n\n**P2 Audit log**\n- Financial action → §3 step 9 audit log mandatory, §9 365-day retention. Fix: emit audit event w/ `jti`, `sub`, `org`, `from`, `to`, `amount`, `request_id`.\n\n**P2 Logging hygiene**\n- Don't log `amount`/account IDs raw if PII-adjacent. §2 rule 5, §11. Fix: redact or hash account refs.\n\n**P2 Process**\n- Touches auth/trust → CODEOWNERS human approval (§6). Integration test against real Redis+PG (§11). Add regression test for cross-org authz + spoofed `X-User-Id` reject.\n\n**Verification steps author runs**\n- `curl` w/ injected `X-User-Id: attacker` → must `401`/`403`, header absent downstream.\n- `curl` w/ valid JWT, mismatched `:org_id` → `403`.\n- `amount: -100`, `amount: \"1e999\"`, `from == to` → `400` problem+json.\n- Replay same `Idempotency-Key` → one debit.\n- Load test → `429` past configured limit, keyed by user.",
   "assertion_pass": true,
   "raw_payload": {
     "type": "result",
     "subtype": "success",
     "is_error": false,
     "api_error_status": null,
-    "duration_ms": 8223,
-    "duration_api_ms": 9226,
+    "duration_ms": 34658,
+    "duration_api_ms": 35972,
     "num_turns": 1,
-    "result": "**Risk**\n1. `req.headers['x-forwarded-for']` → spoof bypass limiter (SEV1 2025-09 repeat). Violates §2 rule 2 + lint `no-direct-xff-read`.\n2. No `EXPIRE` → Redis OOM (SEV2 2025-11 repeat). Violates §2 rule 3 + lint `no-unbounded-redis-key`.\n3. Key missing route prefix + minute bucket + region → collision, global limit (SEV2 2025-12).\n\n**Mitigate**\n```\nconst key = `rl:${region}:${trustedClientIp(req)}:${routePrefix}:${minuteBucket}`\nconst m = redis.multi(); m.incr(key); m.expire(key, 90)\nconst [count] = await m.exec()\n```\n\n**Verify**\n- unit: XFF header ignored, `socket.remoteAddress` keyed\n- integration: `TTL key` > 0 post-INCR\n- lint: both custom rules pass\n- regression: per-region isolation test (§10 2025-12)",
+    "result": "**P0 Security — trust boundary violation**\n- `req.headers['x-user-id']` trusted as identity. §2 rule 1: client-supplied identity headers stripped at edge before handler. Fix: read from `req.user.sub` set by `auth_jwt` middleware. Use `X-Internal-User-Id` only downstream.\n\n**P0 Security — missing authz**\n- No check that caller's `req.user.org` == `req.params.org_id`. Cross-org transfer. Fix: explicit org match → `403` if mismatch.\n\n**P0 Security — no auth invocation shown**\n- Handler bypasses pipeline if `app.post` registered outside the chain in `src/edge/pipeline.ts`. §3 order mandatory. Fix: route through pipeline, never attach raw `app.post` bypassing `auth_jwt`.\n\n**P0 Architecture — Atlas is edge, not business logic**\n- Direct `txSvc.transfer(...)` call skips `route_dispatcher` + `mTLS_egress` (§3 steps 6–7). Atlas forwards, doesn't invoke. Fix: dispatch to `tx-svc` over mTLS; let it own transfer.\n\n**P1 Correctness — no input validation**\n- `from`, `to`, `amount` unchecked. Negative, `NaN`, string, overflow, same-account, non-UUID all pass. Fix: schema (zod/ajv) — amount positive integer minor units, `from != to`, accounts belong to `org_id`.\n\n**P1 Correctness — no idempotency**\n- Money mutation w/o `Idempotency-Key` header → double-debit on retry. Fix: require header, dedupe in `tx-svc`.\n\n**P1 Error handling**\n- `await` no try/catch, no `next(err)`. §11: always `next(err)`. Response on failure not RFC 7807 (§2 rule 6). Fix: `try { ... } catch (e) { next(e) }`; central handler emits `problem+json` w/ `request_id`.\n\n**P1 Rate limit**\n- Default POST 30/min too loose for fund transfer. §4. Fix: add tight entry in `config/rate_limits.json` for `/v1/orgs/:org_id/transfer`, key by `user_id` not IP (authed path).\n\n**P2 Audit log**\n- Financial action → §3 step 9 audit log mandatory, §9 365-day retention. Fix: emit audit event w/ `jti`, `sub`, `org`, `from`, `to`, `amount`, `request_id`.\n\n**P2 Logging hygiene**\n- Don't log `amount`/account IDs raw if PII-adjacent. §2 rule 5, §11. Fix: redact or hash account refs.\n\n**P2 Process**\n- Touches auth/trust → CODEOWNERS human approval (§6). Integration test against real Redis+PG (§11). Add regression test for cross-org authz + spoofed `X-User-Id` reject.\n\n**Verification steps author runs**\n- `curl` w/ injected `X-User-Id: attacker` → must `401`/`403`, header absent downstream.\n- `curl` w/ valid JWT, mismatched `:org_id` → `403`.\n- `amount: -100`, `amount: \"1e999\"`, `from == to` → `400` problem+json.\n- Replay same `Idempotency-Key` → one debit.\n- Load test → `429` past configured limit, keyed by user.",
     "stop_reason": "end_turn",
-    "session_id": "dce0c4d2-ed92-4687-8618-bd89d78c773e",
-    "total_cost_usd": 0.13486075,
+    "session_id": "28d4acd5-bd31-4ff7-a4d2-012f6158328d",
+    "total_cost_usd": 0.1759925,
     "usage": {
       "input_tokens": 6,
-      "cache_creation_input_tokens": 17785,
-      "cache_read_input_tokens": 15201,
-      "output_tokens": 416,
+      "cache_creation_input_tokens": 17848,
+      "cache_read_input_tokens": 15199,
+      "output_tokens": 2043,
       "server_tool_use": {
         "web_search_requests": 0,
         "web_fetch_requests": 0
       },
       "service_tier": "standard",
       "cache_creation": {
-        "ephemeral_1h_input_tokens": 17785,
+        "ephemeral_1h_input_tokens": 17848,
         "ephemeral_5m_input_tokens": 0
       },
       "inference_geo": "",
       "iterations": [
         {
           "input_tokens": 6,
-          "output_tokens": 416,
-          "cache_read_input_tokens": 15201,
-          "cache_creation_input_tokens": 17785,
+          "output_tokens": 2043,
+          "cache_read_input_tokens": 15199,
+          "cache_creation_input_tokens": 17848,
           "cache_creation": {
             "ephemeral_5m_input_tokens": 0,
-            "ephemeral_1h_input_tokens": 17785
+            "ephemeral_1h_input_tokens": 17848
           },
           "type": "message"
         }
@@ -77,22 +77,22 @@
     },
     "modelUsage": {
       "claude-haiku-4-5-20251001": {
-        "inputTokens": 5584,
-        "outputTokens": 18,
+        "inputTokens": 5668,
+        "outputTokens": 14,
         "cacheReadInputTokens": 0,
         "cacheCreationInputTokens": 0,
         "webSearchRequests": 0,
-        "costUSD": 0.005674,
+        "costUSD": 0.005738,
         "contextWindow": 200000,
         "maxOutputTokens": 32000
       },
       "claude-opus-4-7": {
         "inputTokens": 6,
-        "outputTokens": 416,
-        "cacheReadInputTokens": 15201,
-        "cacheCreationInputTokens": 17785,
+        "outputTokens": 2043,
+        "cacheReadInputTokens": 15199,
+        "cacheCreationInputTokens": 17848,
         "webSearchRequests": 0,
-        "costUSD": 0.12918675,
+        "costUSD": 0.1702545,
         "contextWindow": 1000000,
         "maxOutputTokens": 64000
       }
@@ -100,6 +100,6 @@
     "permission_denials": [],
     "terminal_reason": "completed",
     "fast_mode_state": "off",
-    "uuid": "4f508025-dc1c-4275-be2d-7c7957b20619"
+    "uuid": "2ad578b5-db22-4815-bae9-ff7487966eff"
   }
 }

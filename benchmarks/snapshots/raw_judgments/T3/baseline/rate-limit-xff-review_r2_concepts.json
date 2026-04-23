@@ -1,17 +1,17 @@
 {
   "final": {
-    "identifies_xff_spoof_risk": false,
-    "names_redis_unbounded_key_risk_no_expire": false,
-    "suggests_using_validated_or_socket_ip_not_raw_xff": false,
-    "suggests_atomic_incr_plus_expire": false,
-    "preserves_literal_X_Forwarded_For": false,
-    "preserves_literal_Redis": false
+    "identifies_xff_spoof_risk": true,
+    "names_redis_unbounded_key_risk_no_expire": true,
+    "suggests_using_validated_or_socket_ip_not_raw_xff": true,
+    "suggests_atomic_incr_plus_expire": true,
+    "preserves_literal_X_Forwarded_For": true,
+    "preserves_literal_Redis": true
   },
   "history": [
     {
       "attempt": 0,
-      "raw": "{\"identifies_xff_spoof_risk\": false, \"names_redis_unbounded_key_risk_no_expire\": false, \"suggests_using_validated_or_socket_ip_not_raw_xff\": false, \"suggests_atomic_incr_plus_expire\": false, \"preserves_literal_X_Forwarded_For\": false, \"preserves_literal_Redis\": false}"
+      "raw": "{\"identifies_xff_spoof_risk\": true, \"names_redis_unbounded_key_risk_no_expire\": true, \"suggests_using_validated_or_socket_ip_not_raw_xff\": true, \"suggests_atomic_incr_plus_expire\": true, \"preserves_literal_X_Forwarded_For\": true, \"preserves_literal_Redis\": true}"
     }
   ],
-  "ts": "2026-04-22T01:51:41.123318+00:00"
+  "ts": "2026-04-23T11:06:10.017115+00:00"
 }

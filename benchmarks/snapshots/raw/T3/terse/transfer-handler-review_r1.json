@@ -14,61 +14,61 @@
   ],
   "digest_hex": "3ea6924fe84cc48072e626740e2896f1f2e17be2cf1e47da115cdde4ccbeab3a",
   "seed": "hewn-bench-v1",
-  "timestamp": "2026-04-22T00:34:10.452932+00:00",
-  "output_tokens_tiktoken": 436,
-  "output_tokens_anthropic": 866,
+  "timestamp": "2026-04-23T08:48:14.818295+00:00",
+  "output_tokens_tiktoken": 1234,
+  "output_tokens_anthropic": 1884,
   "input_tokens_anthropic": 6,
-  "cache_creation_input_tokens": 17786,
-  "cache_read_input_tokens": 13741,
-  "total_input_tokens": 31533,
+  "cache_creation_input_tokens": 17849,
+  "cache_read_input_tokens": 13739,
+  "total_input_tokens": 31594,
   "cache_state": "warm",
-  "wallclock_ms": 19235.972575988853,
-  "duration_ms": 15402,
-  "duration_api_ms": 17070,
+  "wallclock_ms": 38796.64058299386,
+  "duration_ms": 35823,
+  "duration_api_ms": 37145,
   "wrapper_overhead_ms": null,
   "stop_reason": "end_turn",
   "num_turns": 1,
-  "session_id": "2da0bc81-5e54-446f-9e4a-57b7bdedff39",
-  "total_cost_usd": 0.145382,
+  "session_id": "34723d7d-49db-4a56-9ce1-1ce798eb7796",
+  "total_cost_usd": 0.17129375,
   "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
-  "result": "**Risks**\n- Spoofable key: `req.headers['x-forwarded-for']` is attacker-controlled; rotating `X-Forwarded-For` defeats per-IP limits (repeat of 2025-09 SEV1). Also violates `no-direct-xff-read`.\n- Unbounded key: `incr` with no `expire` — Redis OOM (repeat of 2025-11 SEV2). Violates `no-unbounded-redis-key`.\n- Key shape missing `route_prefix`, `minute_bucket`, and region prefix (repeat of 2025-12 SEV2) — global collision and no window rollover.\n- No limit check / no `429` RFC 7807 response path.\n\n**Mitigation**\n```\nconst key = `rl:${region}:${trustedClientIp(req)}:${routePrefix}:${minuteBucket}`\nconst multi = redis.multi()\nmulti.incr(key)\nmulti.expire(key, 90)\nconst [count] = await multi.exec()\nif (count > limit) return res.status(429).json({ type:'/errors/rate-limited', title:'Too Many Requests', status:429, detail:`Limit ${limit}/min exceeded`, retry_after: secondsUntilNextBucket() })\n```\nUse `trustedClientIp(req)` (validates proxy chain against `config/trusted_proxies.json`).\n\n**Verify**\n- Unit: XFF-spoof test — two requests with differing `X-Forwarded-For` but same `socket.remoteAddress` share a counter.\n- Integration (real Redis): assert `TTL key` ∈ [1,90] after `INCR`; assert key contains region + route prefix + minute bucket.\n- Lint: `eslint` passes `no-direct-xff-read` and `no-unbounded-redis-key`.\n- Metric: `atlas_edge_rate_limit_total{action=\"throttled\"}` increments past `limit`.\n\n**Residual**\n- Clock skew across edge pods can shift `minute_bucket` by ±1; acceptable given 30s grace in TTL.\n- CODEOWNERS approval required (`src/edge/rate_limit.ts`).",
+  "result": "# Review: `POST /v1/orgs/:org_id/transfer`\n\n## P0 — Security\n\n**1. Trusting client-supplied `X-User-Id` header.** Violates Section 2 rule 1. The edge strips `X-User-Id` precisely so clients can't inject it; reading it back yields either `undefined` or a spoofed value. Any caller could impersonate any user.\nFix: read `req.user.sub` (set by `auth_jwt` middleware after JWT verification). Never read identity from raw headers.\n\n**2. No authentication enforced.** The handler is registered directly on `app.post` with no guarantee the `auth_jwt` middleware ran and succeeded for this route. Per Section 3, auth must precede dispatch.\nFix: mount under the authenticated router, or assert `req.user` exists and `401` otherwise.\n\n**3. No authorization check on `org_id`.** Nothing verifies the authenticated user belongs to `req.params.org_id`, nor that their roles permit transfers. A valid JWT for org A could move funds in org B.\nFix: check `req.user.org === req.params.org_id` (or membership lookup) and require a transfer-capable role from `req.user.roles`.\n\n## P0 — Correctness / Input validation\n\n**4. No body validation.** `from`, `to`, `amount` are used untyped and untrusted. `amount` could be negative, a string, `NaN`, or missing; `from`/`to` could be accounts outside the org, or identical.\nFix: validate with the project's schema validator (zod/ajv per repo convention): `amount` positive integer in minor units, `from !== to`, both account IDs well-formed, both belong to `org_id`.\n\n**5. No idempotency key.** Money movement over HTTP without an idempotency key guarantees double-transfers on client retry or edge retry. Section 11 retry helper will happily re-send.\nFix: require `Idempotency-Key` header, forward to `tx-svc`, and ensure the route is NOT eligible for automatic retry in `src/util/retry.ts`.\n\n## P1 — Pipeline / conventions\n\n**6. Bypasses the pipeline.** Direct `app.post` registration skips `route_dispatcher` and `mTLS_egress` (Section 3). Downstream calls must go through the Envoy sidecar with internal headers (`X-Internal-User-Id`, `X-Internal-Org-Id`, `X-Internal-Roles`, `X-Internal-Auth-Method`) — not an ad-hoc `txSvc.transfer` call.\nFix: declare the route in the dispatcher config and let the pipeline forward it; if a custom handler is truly needed, call through the mTLS egress helper and set the internal headers explicitly.\n\n**7. No rate limiting scoped for money movement.** Default `POST` limit is 30/min/IP (Section 4) — far too loose for `transfer`. A compromised session could drain accounts 30/min.\nFix: add a tight per-user (not just per-IP) limit in `config/rate_limits.json` for this route prefix; key on `req.user.sub` as well.\n\n## P1 — Error handling & response shape\n\n**8. No error handling.** `await txSvc.transfer(...)` can throw (network, validation, insufficient funds); the handler has no `try/catch` and doesn't call `next(err)` (Section 11). The client gets a generic `500` with whatever Express's default leaks.\nFix: wrap with `try/catch` and `next(err)`, or use an `asyncHandler` wrapper; the central handler in `src/edge/errorHandler.ts` produces RFC 7807 responses.\n\n**9. Response is not RFC 7807-shaped on errors, and success is underspecified.** Section 2 rule 6 requires `problem+json` for 4xx/5xx with `request_id`. Success `{ok: true}` discards the transfer ID the caller needs for reconciliation.\nFix: return the transfer ID and status from `tx-svc`; let the error handler format failures.\n\n## P2 — Observability & audit\n\n**10. No audit log entry.** Money movement is exactly what the 365-day audit log (Section 9) exists for. `audit_log` middleware runs only if the route goes through the pipeline (see P1 #6).\n\n**11. No structured logging of the operation.** Per Section 11, use `logger` with redaction; ensure `amount` is logged but account IDs are treated as the project requires.\n\n## P2 — Deploy gating\n\n**12. CODEOWNERS / tests.** New money-moving route needs unit + integration tests (real Redis + PG per Section 6/11), and likely a CODEOWNERS touch depending on which files change. Confirm before merging.\n\n## Verification steps for the author\n\n- Curl with a spoofed `X-User-Id` and no `Authorization` → must `401`.\n- Valid JWT for org A, path `org_id=B` → must `403`.\n- Replay same `Idempotency-Key` twice → second call returns the first result, no double-transfer.\n- Negative / zero / string `amount` → `400` RFC 7807.\n- 31st POST in 60s from one user → `429`.\n- Force `tx-svc` error → `5xx` RFC 7807 with `request_id`, no stacktrace, no internal host.\n\n## Main residual risks after fixes\n\n- Authorization model (who in an org may transfer) lives in `tx-svc`; edge can only coarse-gate. Confirm `tx-svc` enforces fine-grained policy — do not rely on edge alone.\n- Idempotency storage TTL must outlive reasonable client retry windows; coordinate with `tx-svc`.",
   "assertion_pass": true,
   "raw_payload": {
     "type": "result",
     "subtype": "success",
     "is_error": false,
     "api_error_status": null,
-    "duration_ms": 15402,
-    "duration_api_ms": 17070,
+    "duration_ms": 35823,
+    "duration_api_ms": 37145,
     "num_turns": 1,
-    "result": "**Risks**\n- Spoofable key: `req.headers['x-forwarded-for']` is attacker-controlled; rotating `X-Forwarded-For` defeats per-IP limits (repeat of 2025-09 SEV1). Also violates `no-direct-xff-read`.\n- Unbounded key: `incr` with no `expire` — Redis OOM (repeat of 2025-11 SEV2). Violates `no-unbounded-redis-key`.\n- Key shape missing `route_prefix`, `minute_bucket`, and region prefix (repeat of 2025-12 SEV2) — global collision and no window rollover.\n- No limit check / no `429` RFC 7807 response path.\n\n**Mitigation**\n```\nconst key = `rl:${region}:${trustedClientIp(req)}:${routePrefix}:${minuteBucket}`\nconst multi = redis.multi()\nmulti.incr(key)\nmulti.expire(key, 90)\nconst [count] = await multi.exec()\nif (count > limit) return res.status(429).json({ type:'/errors/rate-limited', title:'Too Many Requests', status:429, detail:`Limit ${limit}/min exceeded`, retry_after: secondsUntilNextBucket() })\n```\nUse `trustedClientIp(req)` (validates proxy chain against `config/trusted_proxies.json`).\n\n**Verify**\n- Unit: XFF-spoof test — two requests with differing `X-Forwarded-For` but same `socket.remoteAddress` share a counter.\n- Integration (real Redis): assert `TTL key` ∈ [1,90] after `INCR`; assert key contains region + route prefix + minute bucket.\n- Lint: `eslint` passes `no-direct-xff-read` and `no-unbounded-redis-key`.\n- Metric: `atlas_edge_rate_limit_total{action=\"throttled\"}` increments past `limit`.\n\n**Residual**\n- Clock skew across edge pods can shift `minute_bucket` by ±1; acceptable given 30s grace in TTL.\n- CODEOWNERS approval required (`src/edge/rate_limit.ts`).",
+    "result": "# Review: `POST /v1/orgs/:org_id/transfer`\n\n## P0 — Security\n\n**1. Trusting client-supplied `X-User-Id` header.** Violates Section 2 rule 1. The edge strips `X-User-Id` precisely so clients can't inject it; reading it back yields either `undefined` or a spoofed value. Any caller could impersonate any user.\nFix: read `req.user.sub` (set by `auth_jwt` middleware after JWT verification). Never read identity from raw headers.\n\n**2. No authentication enforced.** The handler is registered directly on `app.post` with no guarantee the `auth_jwt` middleware ran and succeeded for this route. Per Section 3, auth must precede dispatch.\nFix: mount under the authenticated router, or assert `req.user` exists and `401` otherwise.\n\n**3. No authorization check on `org_id`.** Nothing verifies the authenticated user belongs to `req.params.org_id`, nor that their roles permit transfers. A valid JWT for org A could move funds in org B.\nFix: check `req.user.org === req.params.org_id` (or membership lookup) and require a transfer-capable role from `req.user.roles`.\n\n## P0 — Correctness / Input validation\n\n**4. No body validation.** `from`, `to`, `amount` are used untyped and untrusted. `amount` could be negative, a string, `NaN`, or missing; `from`/`to` could be accounts outside the org, or identical.\nFix: validate with the project's schema validator (zod/ajv per repo convention): `amount` positive integer in minor units, `from !== to`, both account IDs well-formed, both belong to `org_id`.\n\n**5. No idempotency key.** Money movement over HTTP without an idempotency key guarantees double-transfers on client retry or edge retry. Section 11 retry helper will happily re-send.\nFix: require `Idempotency-Key` header, forward to `tx-svc`, and ensure the route is NOT eligible for automatic retry in `src/util/retry.ts`.\n\n## P1 — Pipeline / conventions\n\n**6. Bypasses the pipeline.** Direct `app.post` registration skips `route_dispatcher` and `mTLS_egress` (Section 3). Downstream calls must go through the Envoy sidecar with internal headers (`X-Internal-User-Id`, `X-Internal-Org-Id`, `X-Internal-Roles`, `X-Internal-Auth-Method`) — not an ad-hoc `txSvc.transfer` call.\nFix: declare the route in the dispatcher config and let the pipeline forward it; if a custom handler is truly needed, call through the mTLS egress helper and set the internal headers explicitly.\n\n**7. No rate limiting scoped for money movement.** Default `POST` limit is 30/min/IP (Section 4) — far too loose for `transfer`. A compromised session could drain accounts 30/min.\nFix: add a tight per-user (not just per-IP) limit in `config/rate_limits.json` for this route prefix; key on `req.user.sub` as well.\n\n## P1 — Error handling & response shape\n\n**8. No error handling.** `await txSvc.transfer(...)` can throw (network, validation, insufficient funds); the handler has no `try/catch` and doesn't call `next(err)` (Section 11). The client gets a generic `500` with whatever Express's default leaks.\nFix: wrap with `try/catch` and `next(err)`, or use an `asyncHandler` wrapper; the central handler in `src/edge/errorHandler.ts` produces RFC 7807 responses.\n\n**9. Response is not RFC 7807-shaped on errors, and success is underspecified.** Section 2 rule 6 requires `problem+json` for 4xx/5xx with `request_id`. Success `{ok: true}` discards the transfer ID the caller needs for reconciliation.\nFix: return the transfer ID and status from `tx-svc`; let the error handler format failures.\n\n## P2 — Observability & audit\n\n**10. No audit log entry.** Money movement is exactly what the 365-day audit log (Section 9) exists for. `audit_log` middleware runs only if the route goes through the pipeline (see P1 #6).\n\n**11. No structured logging of the operation.** Per Section 11, use `logger` with redaction; ensure `amount` is logged but account IDs are treated as the project requires.\n\n## P2 — Deploy gating\n\n**12. CODEOWNERS / tests.** New money-moving route needs unit + integration tests (real Redis + PG per Section 6/11), and likely a CODEOWNERS touch depending on which files change. Confirm before merging.\n\n## Verification steps for the author\n\n- Curl with a spoofed `X-User-Id` and no `Authorization` → must `401`.\n- Valid JWT for org A, path `org_id=B` → must `403`.\n- Replay same `Idempotency-Key` twice → second call returns the first result, no double-transfer.\n- Negative / zero / string `amount` → `400` RFC 7807.\n- 31st POST in 60s from one user → `429`.\n- Force `tx-svc` error → `5xx` RFC 7807 with `request_id`, no stacktrace, no internal host.\n\n## Main residual risks after fixes\n\n- Authorization model (who in an org may transfer) lives in `tx-svc`; edge can only coarse-gate. Confirm `tx-svc` enforces fine-grained policy — do not rely on edge alone.\n- Idempotency storage TTL must outlive reasonable client retry windows; coordinate with `tx-svc`.",
     "stop_reason": "end_turn",
-    "session_id": "2da0bc81-5e54-446f-9e4a-57b7bdedff39",
-    "total_cost_usd": 0.145382,
+    "session_id": "34723d7d-49db-4a56-9ce1-1ce798eb7796",
+    "total_cost_usd": 0.17129375,
     "usage": {
       "input_tokens": 6,
-      "cache_creation_input_tokens": 17786,
-      "cache_read_input_tokens": 13741,
-      "output_tokens": 866,
+      "cache_creation_input_tokens": 17849,
+      "cache_read_input_tokens": 13739,
+      "output_tokens": 1884,
       "server_tool_use": {
         "web_search_requests": 0,
         "web_fetch_requests": 0
       },
       "service_tier": "standard",
       "cache_creation": {
-        "ephemeral_1h_input_tokens": 17786,
+        "ephemeral_1h_input_tokens": 17849,
         "ephemeral_5m_input_tokens": 0
       },
       "inference_geo": "",
       "iterations": [
         {
           "input_tokens": 6,
-          "output_tokens": 866,
-          "cache_read_input_tokens": 13741,
-          "cache_creation_input_tokens": 17786,
+          "output_tokens": 1884,
+          "cache_read_input_tokens": 13739,
+          "cache_creation_input_tokens": 17849,
           "cache_creation": {
             "ephemeral_5m_input_tokens": 0,
-            "ephemeral_1h_input_tokens": 17786
+            "ephemeral_1h_input_tokens": 17849
           },
           "type": "message"
         }
@@ -77,22 +77,22 @@
     },
     "modelUsage": {
       "claude-haiku-4-5-20251001": {
-        "inputTokens": 5584,
-        "outputTokens": 17,
+        "inputTokens": 5668,
+        "outputTokens": 14,
         "cacheReadInputTokens": 0,
         "cacheCreationInputTokens": 0,
         "webSearchRequests": 0,
-        "costUSD": 0.005669,
+        "costUSD": 0.005738,
         "contextWindow": 200000,
         "maxOutputTokens": 32000
       },
       "claude-opus-4-7": {
         "inputTokens": 6,
-        "outputTokens": 866,
-        "cacheReadInputTokens": 13741,
-        "cacheCreationInputTokens": 17786,
+        "outputTokens": 1884,
+        "cacheReadInputTokens": 13739,
+        "cacheCreationInputTokens": 17849,
         "webSearchRequests": 0,
-        "costUSD": 0.139713,
+        "costUSD": 0.16555575,
         "contextWindow": 1000000,
         "maxOutputTokens": 64000
       }
@@ -100,6 +100,6 @@
     "permission_denials": [],
     "terminal_reason": "completed",
     "fast_mode_state": "off",
-    "uuid": "140fc04d-8542-4d3f-8a45-b5aa437ca05c"
+    "uuid": "1a395116-528b-42af-925e-4e509a4452bd"
   }
 }

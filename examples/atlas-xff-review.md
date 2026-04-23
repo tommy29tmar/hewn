@@ -1,7 +1,8 @@
 # Long-prompt example — Atlas API security review
 
 Illustrative Atlas side-by-side example from an earlier benchmark
-iteration. Use it as a qualitative prompt-shape example; use the
+iteration. Use it as a qualitative prompt-shape example for the kind of
+long-context, constrained task where token burn matters; use the
 current benchmark report for aggregate numbers.
 
 ## Historical result

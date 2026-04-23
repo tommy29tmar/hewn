@@ -14,61 +14,61 @@
   ],
   "digest_hex": "3ea6924fe84cc48072e626740e2896f1f2e17be2cf1e47da115cdde4ccbeab3a",
   "seed": "hewn-bench-v1",
-  "timestamp": "2026-04-22T09:43:22.504335+00:00",
-  "output_tokens_tiktoken": 330,
-  "output_tokens_anthropic": 540,
+  "timestamp": "2026-04-23T08:46:18.927591+00:00",
+  "output_tokens_tiktoken": 1352,
+  "output_tokens_anthropic": 2066,
   "input_tokens_anthropic": 6,
-  "cache_creation_input_tokens": 24343,
-  "cache_read_input_tokens": 16796,
-  "total_input_tokens": 41145,
+  "cache_creation_input_tokens": 24308,
+  "cache_read_input_tokens": 16794,
+  "total_input_tokens": 41108,
   "cache_state": "warm",
-  "wallclock_ms": 21649.598513991805,
-  "duration_ms": 15296,
-  "duration_api_ms": 17228,
+  "wallclock_ms": 39873.414508998394,
+  "duration_ms": 36883,
+  "duration_api_ms": 38087,
   "wrapper_overhead_ms": null,
   "stop_reason": "end_turn",
   "num_turns": 1,
-  "session_id": "47371aa5-a7ab-4410-8943-6ffc6ce6ee7c",
-  "total_cost_usd": 0.17974575,
+  "session_id": "44a8c66c-bdf0-4055-a30e-29e233d54741",
+  "total_cost_usd": 0.21774000000000002,
   "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
-  "result": "**Risk**: Reads `req.headers['x-forwarded-for']` directly — spoofable per-request to defeat per-IP limits (exact repeat of 2025-09 SEV1). Also missing `EXPIRE` → unbounded Redis keys → OOM (2025-11 SEV2). No minute bucket or region prefix → global key collision (2025-12 SEV2).\n\n**Mitigation**:\n```js\nconst key = `rl:${region}:${trustedClientIp(req)}:${routePrefix}:${Math.floor(Date.now()/60000)}`\nconst multi = redis.multi()\nmulti.incr(key)\nmulti.expire(key, 90)\nconst [count] = await multi.exec()\n```\nRoute via `trustedClientIp` helper (Section 2 rule 2); `no-direct-xff-read` lint rule should already block this.\n\n**Verify**:\n- `eslint src/edge/rate_limit.ts` — expect `no-direct-xff-read` violation on current diff.\n- Integration test: send 200 requests rotating `X-Forwarded-For`, assert 429 after limit (keyed on socket IP, not header).\n- Integration test: assert `TTL` on created key ∈ (0, 90].\n- Check `atlas_edge_rate_limit_total{action=\"throttled\"}` fires under spoofed-XFF load.\n\n**Residual risk**: `trustedClientIp` must validate proxy chain against `config/trusted_proxies.json`; if that allowlist drifts, XFF trust reopens. CODEOWNERS approval required on `src/edge/rate_limit.ts`.",
+  "result": "# Review: `POST /v1/orgs/:org_id/transfer`\n\n## P0 — Security (blockers)\n\n**1. Trusts client-supplied `X-User-Id` header.** Reads `req.headers['x-user-id']` as the caller identity. Section 2 rule 1: client-supplied identity headers must be stripped at the edge before handlers run; only internal headers set after JWT verification are trusted. This is an auth bypass — any caller can transfer funds as any user by setting the header.\n- Fix: remove the header read entirely. After the `auth_jwt` middleware runs, identity is on `req.user` (validated `sub`). Use `req.user.id` (or equivalent) as `userId`. Handler should also assert the route is mounted after `header_sanitize` and `auth_jwt` in `src/edge/pipeline.ts`.\n\n**2. No authorization check that the caller belongs to `:org_id`.** The handler accepts any authenticated user transferring inside any org. Section 2 treats the edge as the trust boundary; even with downstream re-checks, the edge must not forward unauthenticated cross-org requests.\n- Fix: verify `req.params.org_id` is in `req.user.orgs` (or matches `X-Internal-Org-Id` after JWT verification) and that the user's `roles` permit transfers. Return `403` with RFC 7807 problem+json on mismatch.\n\n**3. No input validation on `from`, `to`, `amount`, or `org_id`.** `amount` could be negative, a string, `Infinity`, or missing; `from`/`to` are forwarded unvalidated to `tx-svc`. Section 12 priority 1 (input validation at the trust boundary) and Section 2 (edge is the only untrusted boundary).\n- Fix: schema-validate the body (e.g., zod/ajv): `amount` positive integer (minor units), `from`/`to` non-empty strings matching account-id format, both accounts belong to `org_id`. Validate `org_id` param shape. Reject with `400` problem+json on failure.\n\n## P1 — Correctness\n\n**4. No idempotency key.** `POST /transfer` is non-idempotent; a retry after a network blip double-moves funds. Not spelled out in the handbook but standard for money movement, and Section 5 notes `jti` replay detection is left to downstream — `tx-svc` needs a key to dedupe on.\n- Fix: require `Idempotency-Key` header, forward it to `txSvc.transfer`. Return `400` if missing.\n\n**5. No error handling.** `await txSvc.transfer(...)` can throw; the handler has no `try/catch` and doesn't call `next(err)`. Section 11: \"use `next(err)` in Express middleware to delegate to the central error handler.\" Without it the request hangs until the client timeout and the `5xx` response won't match the RFC 7807 shape or carry the `request_id`.\n- Fix: `try { ... } catch (err) { next(err) }`, or use an `asyncHandler` wrapper. Let `errorHandler.ts` produce the response.\n\n**6. Success response doesn't include `request_id`.** Section 2 rule 6 mandates it on `4xx`/`5xx`; the house style (see other handlers) extends it to `2xx` for traceability. Also `{ok: true}` discards the transfer receipt (id, new balances, timestamp) `tx-svc` presumably returns.\n- Fix: return `{ request_id, transfer_id, status, ... }` from the `tx-svc` response.\n\n## P2 — Operational\n\n**7. No route-specific rate limit.** Falls back to the default `30 req/min/IP` for POST (Section 4). Money-movement should be tighter and keyed on `user_id`, not just IP, to resist credential-stuffed accounts.\n- Fix: add an entry in `config/rate_limits.json` for `/v1/orgs/*/transfer` with a low per-user limit, and confirm the limiter keys include user id for authenticated routes.\n\n**8. No audit log line.** Section 3 step 9 and Section 9 (365-day audit retention) — money movement is exactly what audit logs exist for.\n- Fix: ensure the route flows through `audit_log` with `{user_id, org_id, from, to, amount, idempotency_key, result}`. Confirm no PII leaks (Section 2 rule 5) — account ids are fine, but don't log full names/emails if `tx-svc` returns them.\n\n**9. Not in `always_trace_routes.json`.** Section 7: critical routes should be 100% sampled, not 5%.\n- Fix: add `/v1/orgs/:org_id/transfer` to `config/always_trace_routes.json`.\n\n## P3 — Review process\n\n**10. CODEOWNERS / handbook check.** Section 6 requires human approval on changes to auth/rate-limit/header-sanitize files. This handler isn't in that list, but the `rate_limits.json` and any new middleware it needs will pull in reviewers — make sure the PR is scoped so the right owners see it.\n\n**11. Tests.** Section 6 requires integration tests against real Redis + Postgres (not mocks). Needs: happy path, spoofed `X-User-Id` ignored, cross-org caller rejected, negative/zero/overflow amount rejected, missing idempotency key rejected, retry with same key returns same result, rate-limit trips at threshold.\n\n---\n\n**Minimum viable rewrite sketch** (illustrative, not final):\n\n```javascript\napp.post(\n  '/v1/orgs/:org_id/transfer',\n  requireRole('transfers:write'),\n  requireOrgMembership('org_id'),\n  validate(transferSchema),\n  requireIdempotencyKey,\n  asyncHandler(async (req, res) => {\n    const result = await txSvc.transfer({\n      orgId: req.params.org_id,\n      userId: req.user.id,\n      from: req.body.from,\n      to: req.body.to,\n      amount: req.body.amount,\n      idempotencyKey: req.get('Idempotency-Key'),\n      requestId: req.id,\n    })\n    res.json({ request_id: req.id, ...result })\n  })\n)\n```",
   "assertion_pass": true,
   "raw_payload": {
     "type": "result",
     "subtype": "success",
     "is_error": false,
     "api_error_status": null,
-    "duration_ms": 15296,
-    "duration_api_ms": 17228,
+    "duration_ms": 36883,
+    "duration_api_ms": 38087,
     "num_turns": 1,
-    "result": "**Risk**: Reads `req.headers['x-forwarded-for']` directly — spoofable per-request to defeat per-IP limits (exact repeat of 2025-09 SEV1). Also missing `EXPIRE` → unbounded Redis keys → OOM (2025-11 SEV2). No minute bucket or region prefix → global key collision (2025-12 SEV2).\n\n**Mitigation**:\n```js\nconst key = `rl:${region}:${trustedClientIp(req)}:${routePrefix}:${Math.floor(Date.now()/60000)}`\nconst multi = redis.multi()\nmulti.incr(key)\nmulti.expire(key, 90)\nconst [count] = await multi.exec()\n```\nRoute via `trustedClientIp` helper (Section 2 rule 2); `no-direct-xff-read` lint rule should already block this.\n\n**Verify**:\n- `eslint src/edge/rate_limit.ts` — expect `no-direct-xff-read` violation on current diff.\n- Integration test: send 200 requests rotating `X-Forwarded-For`, assert 429 after limit (keyed on socket IP, not header).\n- Integration test: assert `TTL` on created key ∈ (0, 90].\n- Check `atlas_edge_rate_limit_total{action=\"throttled\"}` fires under spoofed-XFF load.\n\n**Residual risk**: `trustedClientIp` must validate proxy chain against `config/trusted_proxies.json`; if that allowlist drifts, XFF trust reopens. CODEOWNERS approval required on `src/edge/rate_limit.ts`.",
+    "result": "# Review: `POST /v1/orgs/:org_id/transfer`\n\n## P0 — Security (blockers)\n\n**1. Trusts client-supplied `X-User-Id` header.** Reads `req.headers['x-user-id']` as the caller identity. Section 2 rule 1: client-supplied identity headers must be stripped at the edge before handlers run; only internal headers set after JWT verification are trusted. This is an auth bypass — any caller can transfer funds as any user by setting the header.\n- Fix: remove the header read entirely. After the `auth_jwt` middleware runs, identity is on `req.user` (validated `sub`). Use `req.user.id` (or equivalent) as `userId`. Handler should also assert the route is mounted after `header_sanitize` and `auth_jwt` in `src/edge/pipeline.ts`.\n\n**2. No authorization check that the caller belongs to `:org_id`.** The handler accepts any authenticated user transferring inside any org. Section 2 treats the edge as the trust boundary; even with downstream re-checks, the edge must not forward unauthenticated cross-org requests.\n- Fix: verify `req.params.org_id` is in `req.user.orgs` (or matches `X-Internal-Org-Id` after JWT verification) and that the user's `roles` permit transfers. Return `403` with RFC 7807 problem+json on mismatch.\n\n**3. No input validation on `from`, `to`, `amount`, or `org_id`.** `amount` could be negative, a string, `Infinity`, or missing; `from`/`to` are forwarded unvalidated to `tx-svc`. Section 12 priority 1 (input validation at the trust boundary) and Section 2 (edge is the only untrusted boundary).\n- Fix: schema-validate the body (e.g., zod/ajv): `amount` positive integer (minor units), `from`/`to` non-empty strings matching account-id format, both accounts belong to `org_id`. Validate `org_id` param shape. Reject with `400` problem+json on failure.\n\n## P1 — Correctness\n\n**4. No idempotency key.** `POST /transfer` is non-idempotent; a retry after a network blip double-moves funds. Not spelled out in the handbook but standard for money movement, and Section 5 notes `jti` replay detection is left to downstream — `tx-svc` needs a key to dedupe on.\n- Fix: require `Idempotency-Key` header, forward it to `txSvc.transfer`. Return `400` if missing.\n\n**5. No error handling.** `await txSvc.transfer(...)` can throw; the handler has no `try/catch` and doesn't call `next(err)`. Section 11: \"use `next(err)` in Express middleware to delegate to the central error handler.\" Without it the request hangs until the client timeout and the `5xx` response won't match the RFC 7807 shape or carry the `request_id`.\n- Fix: `try { ... } catch (err) { next(err) }`, or use an `asyncHandler` wrapper. Let `errorHandler.ts` produce the response.\n\n**6. Success response doesn't include `request_id`.** Section 2 rule 6 mandates it on `4xx`/`5xx`; the house style (see other handlers) extends it to `2xx` for traceability. Also `{ok: true}` discards the transfer receipt (id, new balances, timestamp) `tx-svc` presumably returns.\n- Fix: return `{ request_id, transfer_id, status, ... }` from the `tx-svc` response.\n\n## P2 — Operational\n\n**7. No route-specific rate limit.** Falls back to the default `30 req/min/IP` for POST (Section 4). Money-movement should be tighter and keyed on `user_id`, not just IP, to resist credential-stuffed accounts.\n- Fix: add an entry in `config/rate_limits.json` for `/v1/orgs/*/transfer` with a low per-user limit, and confirm the limiter keys include user id for authenticated routes.\n\n**8. No audit log line.** Section 3 step 9 and Section 9 (365-day audit retention) — money movement is exactly what audit logs exist for.\n- Fix: ensure the route flows through `audit_log` with `{user_id, org_id, from, to, amount, idempotency_key, result}`. Confirm no PII leaks (Section 2 rule 5) — account ids are fine, but don't log full names/emails if `tx-svc` returns them.\n\n**9. Not in `always_trace_routes.json`.** Section 7: critical routes should be 100% sampled, not 5%.\n- Fix: add `/v1/orgs/:org_id/transfer` to `config/always_trace_routes.json`.\n\n## P3 — Review process\n\n**10. CODEOWNERS / handbook check.** Section 6 requires human approval on changes to auth/rate-limit/header-sanitize files. This handler isn't in that list, but the `rate_limits.json` and any new middleware it needs will pull in reviewers — make sure the PR is scoped so the right owners see it.\n\n**11. Tests.** Section 6 requires integration tests against real Redis + Postgres (not mocks). Needs: happy path, spoofed `X-User-Id` ignored, cross-org caller rejected, negative/zero/overflow amount rejected, missing idempotency key rejected, retry with same key returns same result, rate-limit trips at threshold.\n\n---\n\n**Minimum viable rewrite sketch** (illustrative, not final):\n\n```javascript\napp.post(\n  '/v1/orgs/:org_id/transfer',\n  requireRole('transfers:write'),\n  requireOrgMembership('org_id'),\n  validate(transferSchema),\n  requireIdempotencyKey,\n  asyncHandler(async (req, res) => {\n    const result = await txSvc.transfer({\n      orgId: req.params.org_id,\n      userId: req.user.id,\n      from: req.body.from,\n      to: req.body.to,\n      amount: req.body.amount,\n      idempotencyKey: req.get('Idempotency-Key'),\n      requestId: req.id,\n    })\n    res.json({ request_id: req.id, ...result })\n  })\n)\n```",
     "stop_reason": "end_turn",
-    "session_id": "47371aa5-a7ab-4410-8943-6ffc6ce6ee7c",
-    "total_cost_usd": 0.17974575,
+    "session_id": "44a8c66c-bdf0-4055-a30e-29e233d54741",
+    "total_cost_usd": 0.21774000000000002,
     "usage": {
       "input_tokens": 6,
-      "cache_creation_input_tokens": 24343,
-      "cache_read_input_tokens": 16796,
-      "output_tokens": 540,
+      "cache_creation_input_tokens": 24308,
+      "cache_read_input_tokens": 16794,
+      "output_tokens": 2066,
       "server_tool_use": {
         "web_search_requests": 0,
         "web_fetch_requests": 0
       },
       "service_tier": "standard",
       "cache_creation": {
-        "ephemeral_1h_input_tokens": 24343,
+        "ephemeral_1h_input_tokens": 24308,
         "ephemeral_5m_input_tokens": 0
       },
       "inference_geo": "",
       "iterations": [
         {
           "input_tokens": 6,
-          "output_tokens": 540,
-          "cache_read_input_tokens": 16796,
-          "cache_creation_input_tokens": 24343,
+          "output_tokens": 2066,
+          "cache_read_input_tokens": 16794,
+          "cache_creation_input_tokens": 24308,
           "cache_creation": {
             "ephemeral_5m_input_tokens": 0,
-            "ephemeral_1h_input_tokens": 24343
+            "ephemeral_1h_input_tokens": 24308
           },
           "type": "message"
         }
@@ -77,22 +77,22 @@
     },
     "modelUsage": {
       "claude-haiku-4-5-20251001": {
-        "inputTokens": 5584,
-        "outputTokens": 18,
+        "inputTokens": 5668,
+        "outputTokens": 14,
         "cacheReadInputTokens": 0,
         "cacheCreationInputTokens": 0,
         "webSearchRequests": 0,
-        "costUSD": 0.005674,
+        "costUSD": 0.005738,
         "contextWindow": 200000,
         "maxOutputTokens": 32000
       },
       "claude-opus-4-7": {
         "inputTokens": 6,
-        "outputTokens": 540,
-        "cacheReadInputTokens": 16796,
-        "cacheCreationInputTokens": 24343,
+        "outputTokens": 2066,
+        "cacheReadInputTokens": 16794,
+        "cacheCreationInputTokens": 24308,
         "webSearchRequests": 0,
-        "costUSD": 0.17407175,
+        "costUSD": 0.21200200000000002,
         "contextWindow": 1000000,
         "maxOutputTokens": 64000
       }
@@ -100,6 +100,6 @@
     "permission_denials": [],
     "terminal_reason": "completed",
     "fast_mode_state": "off",
-    "uuid": "98fc24ff-68d0-496a-b19a-7828c6b7925b"
+    "uuid": "7c059d27-81e4-439f-b0fb-d42058bce11c"
   }
 }

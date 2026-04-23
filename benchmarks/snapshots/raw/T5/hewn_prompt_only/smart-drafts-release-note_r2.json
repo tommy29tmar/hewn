@@ -14,61 +14,61 @@
   ],
   "digest_hex": "d9e725fbfb0eab72bdb0b0c4eed86d69bac671e173807f8356f1151ecb0ec0cd",
   "seed": "hewn-bench-v1",
-  "timestamp": "2026-04-22T09:54:19.004406+00:00",
-  "output_tokens_tiktoken": 7,
-  "output_tokens_anthropic": 15,
+  "timestamp": "2026-04-23T10:56:54.634543+00:00",
+  "output_tokens_tiktoken": 323,
+  "output_tokens_anthropic": 496,
   "input_tokens_anthropic": 6,
-  "cache_creation_input_tokens": 17035,
-  "cache_read_input_tokens": 16796,
-  "total_input_tokens": 33837,
+  "cache_creation_input_tokens": 17029,
+  "cache_read_input_tokens": 16794,
+  "total_input_tokens": 33829,
   "cache_state": "warm",
-  "wallclock_ms": 8271.217432018602,
-  "duration_ms": 1892,
-  "duration_api_ms": 1842,
+  "wallclock_ms": 14331.529602990486,
+  "duration_ms": 10679,
+  "duration_api_ms": 11602,
   "wrapper_overhead_ms": null,
   "stop_reason": "end_turn",
   "num_turns": 1,
-  "session_id": "833c22ce-c416-456c-b246-c7ea62daf360",
-  "total_cost_usd": 0.11527175000000002,
-  "model_used": "claude-opus-4-7",
-  "result": "I'll wait for your actual request.",
+  "session_id": "7929f343-a28b-4fbc-877b-417ddaa47f2d",
+  "total_cost_usd": 0.12776825,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "# Introducing Smart Drafts: Never Stare at a Blank Page Again\n\nWe've all been there — a fresh document open, cursor blinking, and that familiar pause before the first word. Writing doesn't usually stall because we lack ideas; it stalls because shaping them from nothing is the hardest part. That quiet friction at the top of every document is what we set out to remove, and today we're excited to share what we built: **Smart Drafts**, a new way to begin any document with a thoughtful, AI-suggested outline already in place.\n\nSmart Drafts works the moment you need it. Give your document a title, click *Suggest Outline*, and we'll generate a structured starting point tailored to what you're writing — informed by the title itself and the recent context of your workspace, so a \"Q2 Planning Review\" reads nothing like a \"Customer Onboarding Guide.\" The outline is fully yours from the first keystroke: rearrange sections, rewrite headings, throw half of it out. It's a scaffold, not a script — designed to get you past the blank page and into the part you're actually good at.\n\nThis is the first step in a bigger direction for us. Next up: **custom voice training**, so Smart Drafts doesn't just understand what you're writing about, but *how you write*. Your cadence, your vocabulary, the small stylistic habits that make a document feel like yours. We'll be rolling that out to early-access users in the coming weeks — keep an eye on your inbox. As always, thank you for writing with us. We can't wait to see what you start next.",
   "assertion_pass": true,
   "raw_payload": {
     "type": "result",
     "subtype": "success",
     "is_error": false,
     "api_error_status": null,
-    "duration_ms": 1892,
-    "duration_api_ms": 1842,
+    "duration_ms": 10679,
+    "duration_api_ms": 11602,
     "num_turns": 1,
-    "result": "I'll wait for your actual request.",
+    "result": "# Introducing Smart Drafts: Never Stare at a Blank Page Again\n\nWe've all been there — a fresh document open, cursor blinking, and that familiar pause before the first word. Writing doesn't usually stall because we lack ideas; it stalls because shaping them from nothing is the hardest part. That quiet friction at the top of every document is what we set out to remove, and today we're excited to share what we built: **Smart Drafts**, a new way to begin any document with a thoughtful, AI-suggested outline already in place.\n\nSmart Drafts works the moment you need it. Give your document a title, click *Suggest Outline*, and we'll generate a structured starting point tailored to what you're writing — informed by the title itself and the recent context of your workspace, so a \"Q2 Planning Review\" reads nothing like a \"Customer Onboarding Guide.\" The outline is fully yours from the first keystroke: rearrange sections, rewrite headings, throw half of it out. It's a scaffold, not a script — designed to get you past the blank page and into the part you're actually good at.\n\nThis is the first step in a bigger direction for us. Next up: **custom voice training**, so Smart Drafts doesn't just understand what you're writing about, but *how you write*. Your cadence, your vocabulary, the small stylistic habits that make a document feel like yours. We'll be rolling that out to early-access users in the coming weeks — keep an eye on your inbox. As always, thank you for writing with us. We can't wait to see what you start next.",
     "stop_reason": "end_turn",
-    "session_id": "833c22ce-c416-456c-b246-c7ea62daf360",
-    "total_cost_usd": 0.11527175000000002,
+    "session_id": "7929f343-a28b-4fbc-877b-417ddaa47f2d",
+    "total_cost_usd": 0.12776825,
     "usage": {
       "input_tokens": 6,
-      "cache_creation_input_tokens": 17035,
-      "cache_read_input_tokens": 16796,
-      "output_tokens": 15,
+      "cache_creation_input_tokens": 17029,
+      "cache_read_input_tokens": 16794,
+      "output_tokens": 496,
       "server_tool_use": {
         "web_search_requests": 0,
         "web_fetch_requests": 0
       },
       "service_tier": "standard",
       "cache_creation": {
-        "ephemeral_1h_input_tokens": 17035,
+        "ephemeral_1h_input_tokens": 17029,
         "ephemeral_5m_input_tokens": 0
       },
       "inference_geo": "",
       "iterations": [
         {
           "input_tokens": 6,
-          "output_tokens": 15,
-          "cache_read_input_tokens": 16796,
-          "cache_creation_input_tokens": 17035,
+          "output_tokens": 496,
+          "cache_read_input_tokens": 16794,
+          "cache_creation_input_tokens": 17029,
           "cache_creation": {
             "ephemeral_5m_input_tokens": 0,
-            "ephemeral_1h_input_tokens": 17035
+            "ephemeral_1h_input_tokens": 17029
           },
           "type": "message"
         }
@@ -76,13 +76,23 @@
       "speed": "standard"
     },
     "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 435,
+        "outputTokens": 15,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.00051,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
       "claude-opus-4-7": {
         "inputTokens": 6,
-        "outputTokens": 15,
-        "cacheReadInputTokens": 16796,
-        "cacheCreationInputTokens": 17035,
+        "outputTokens": 496,
+        "cacheReadInputTokens": 16794,
+        "cacheCreationInputTokens": 17029,
         "webSearchRequests": 0,
-        "costUSD": 0.11527175000000002,
+        "costUSD": 0.12725825,
         "contextWindow": 1000000,
         "maxOutputTokens": 64000
       }
@@ -90,6 +100,6 @@
     "permission_denials": [],
     "terminal_reason": "completed",
     "fast_mode_state": "off",
-    "uuid": "452a710d-9975-40c5-aba6-89985df59c86"
+    "uuid": "83ace5fe-12ce-4fab-9733-a908fe8adf42"
   }
 }

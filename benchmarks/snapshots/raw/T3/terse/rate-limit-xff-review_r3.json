@@ -14,61 +14,61 @@
   ],
   "digest_hex": "cffe317c5c73922535ac9a56d76b012bce4c891ed45ea6f65a6644bb758137e0",
   "seed": "hewn-bench-v1",
-  "timestamp": "2026-04-22T00:47:06.792350+00:00",
-  "output_tokens_tiktoken": 26,
-  "output_tokens_anthropic": 101,
+  "timestamp": "2026-04-23T10:20:25.582941+00:00",
+  "output_tokens_tiktoken": 422,
+  "output_tokens_anthropic": 781,
   "input_tokens_anthropic": 6,
-  "cache_creation_input_tokens": 0,
-  "cache_read_input_tokens": 31422,
-  "total_input_tokens": 31428,
+  "cache_creation_input_tokens": 17743,
+  "cache_read_input_tokens": 13739,
+  "total_input_tokens": 31488,
   "cache_state": "warm",
-  "wallclock_ms": 5865.516047982965,
-  "duration_ms": 2556,
-  "duration_api_ms": 4862,
+  "wallclock_ms": 17075.96189400647,
+  "duration_ms": 13835,
+  "duration_api_ms": 15027,
   "wrapper_overhead_ms": null,
   "stop_reason": "end_turn",
   "num_turns": 1,
-  "session_id": "07ee3114-f31a-42ec-aa81-5b1c840c4ca7",
-  "total_cost_usd": 0.023840999999999998,
+  "session_id": "21d95071-807e-4f05-8b15-8275282f3507",
+  "total_cost_usd": 0.14298724999999998,
   "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
-  "result": "No task specified — the `[Task]` block is empty. What would you like me to do with the Atlas API handbook?",
+  "result": "**Risks**\n- Reads `req.headers['x-forwarded-for']` directly — violates Section 2 rule 2 and the `no-direct-xff-read` lint rule. Spoofable per-request to bypass per-IP limits (repeat of 2025-09 SEV1).\n- No `EXPIRE` paired with `INCR` — unbounded Redis keys, OOM risk (repeat of 2025-11 SEV2). Also trips `no-unbounded-redis-key`.\n- Key missing `route_prefix`, `minute_bucket`, and region prefix (2025-12 SEV2); collapses all routes/regions into one counter.\n- Not atomic: `INCR` without `MULTI`+`EXPIRE` leaves a window where a key exists with no TTL if the process crashes between calls.\n\n**Mitigation**\n```\nconst key = `rl:${region}:${trustedClientIp(req)}:${routePrefix}:${minuteBucket}`\nconst multi = redis.multi()\nmulti.incr(key)\nmulti.expire(key, 90)\nconst [count] = await multi.exec()\n```\nUse `trustedClientIp(req)` from `src/edge/util/trustedClientIp.ts` (validates against `config/trusted_proxies.json`, falls back to `req.socket.remoteAddress`). Enforce limits from `config/rate_limits.json`; return RFC 7807 `429` with `retry_after`.\n\n**Verify**\n- `eslint` passes (`no-direct-xff-read`, `no-unbounded-redis-key`).\n- Integration test: send 200 requests with rotating `X-Forwarded-For`, same socket IP → throttled at configured limit.\n- `redis-cli TTL <key>` returns 60–90, never `-1`.\n- Metric `atlas_edge_rate_limit_total{action=\"throttled\"}` increments; `atlas_edge_redis_command_duration_seconds{command=\"expire\"}` non-zero.\n\n**Residual risk**\nShared-NAT false positives (unchanged from baseline); consider user-scoped key post-auth for authenticated routes.",
   "assertion_pass": true,
   "raw_payload": {
     "type": "result",
     "subtype": "success",
     "is_error": false,
     "api_error_status": null,
-    "duration_ms": 2556,
-    "duration_api_ms": 4862,
+    "duration_ms": 13835,
+    "duration_api_ms": 15027,
     "num_turns": 1,
-    "result": "No task specified — the `[Task]` block is empty. What would you like me to do with the Atlas API handbook?",
+    "result": "**Risks**\n- Reads `req.headers['x-forwarded-for']` directly — violates Section 2 rule 2 and the `no-direct-xff-read` lint rule. Spoofable per-request to bypass per-IP limits (repeat of 2025-09 SEV1).\n- No `EXPIRE` paired with `INCR` — unbounded Redis keys, OOM risk (repeat of 2025-11 SEV2). Also trips `no-unbounded-redis-key`.\n- Key missing `route_prefix`, `minute_bucket`, and region prefix (2025-12 SEV2); collapses all routes/regions into one counter.\n- Not atomic: `INCR` without `MULTI`+`EXPIRE` leaves a window where a key exists with no TTL if the process crashes between calls.\n\n**Mitigation**\n```\nconst key = `rl:${region}:${trustedClientIp(req)}:${routePrefix}:${minuteBucket}`\nconst multi = redis.multi()\nmulti.incr(key)\nmulti.expire(key, 90)\nconst [count] = await multi.exec()\n```\nUse `trustedClientIp(req)` from `src/edge/util/trustedClientIp.ts` (validates against `config/trusted_proxies.json`, falls back to `req.socket.remoteAddress`). Enforce limits from `config/rate_limits.json`; return RFC 7807 `429` with `retry_after`.\n\n**Verify**\n- `eslint` passes (`no-direct-xff-read`, `no-unbounded-redis-key`).\n- Integration test: send 200 requests with rotating `X-Forwarded-For`, same socket IP → throttled at configured limit.\n- `redis-cli TTL <key>` returns 60–90, never `-1`.\n- Metric `atlas_edge_rate_limit_total{action=\"throttled\"}` increments; `atlas_edge_redis_command_duration_seconds{command=\"expire\"}` non-zero.\n\n**Residual risk**\nShared-NAT false positives (unchanged from baseline); consider user-scoped key post-auth for authenticated routes.",
     "stop_reason": "end_turn",
-    "session_id": "07ee3114-f31a-42ec-aa81-5b1c840c4ca7",
-    "total_cost_usd": 0.023840999999999998,
+    "session_id": "21d95071-807e-4f05-8b15-8275282f3507",
+    "total_cost_usd": 0.14298724999999998,
     "usage": {
       "input_tokens": 6,
-      "cache_creation_input_tokens": 0,
-      "cache_read_input_tokens": 31422,
-      "output_tokens": 101,
+      "cache_creation_input_tokens": 17743,
+      "cache_read_input_tokens": 13739,
+      "output_tokens": 781,
       "server_tool_use": {
         "web_search_requests": 0,
         "web_fetch_requests": 0
       },
       "service_tier": "standard",
       "cache_creation": {
-        "ephemeral_1h_input_tokens": 0,
+        "ephemeral_1h_input_tokens": 17743,
         "ephemeral_5m_input_tokens": 0
       },
       "inference_geo": "",
       "iterations": [
         {
           "input_tokens": 6,
-          "output_tokens": 101,
-          "cache_read_input_tokens": 31422,
-          "cache_creation_input_tokens": 0,
+          "output_tokens": 781,
+          "cache_read_input_tokens": 13739,
+          "cache_creation_input_tokens": 17743,
           "cache_creation": {
             "ephemeral_5m_input_tokens": 0,
-            "ephemeral_1h_input_tokens": 0
+            "ephemeral_1h_input_tokens": 17743
           },
           "type": "message"
         }
@@ -77,22 +77,22 @@
     },
     "modelUsage": {
       "claude-haiku-4-5-20251001": {
-        "inputTokens": 5505,
-        "outputTokens": 14,
+        "inputTokens": 5584,
+        "outputTokens": 17,
         "cacheReadInputTokens": 0,
         "cacheCreationInputTokens": 0,
         "webSearchRequests": 0,
-        "costUSD": 0.005575,
+        "costUSD": 0.005669,
         "contextWindow": 200000,
         "maxOutputTokens": 32000
       },
       "claude-opus-4-7": {
         "inputTokens": 6,
-        "outputTokens": 101,
-        "cacheReadInputTokens": 31422,
-        "cacheCreationInputTokens": 0,
+        "outputTokens": 781,
+        "cacheReadInputTokens": 13739,
+        "cacheCreationInputTokens": 17743,
         "webSearchRequests": 0,
-        "costUSD": 0.018265999999999998,
+        "costUSD": 0.13731824999999998,
         "contextWindow": 1000000,
         "maxOutputTokens": 64000
       }
@@ -100,6 +100,6 @@
     "permission_denials": [],
     "terminal_reason": "completed",
     "fast_mode_state": "off",
-    "uuid": "91467762-d9a5-4838-a980-2401c25d9f37"
+    "uuid": "c9238709-fd4d-460f-8815-0b1dd31c374e"
   }
 }

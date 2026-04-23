@@ -5,12 +5,22 @@
 [![Latest release](https://img.shields.io/github/v/release/tommy29tmar/hewn?style=flat-square&v=091)](https://github.com/tommy29tmar/hewn/releases)
 [![Made for Claude Code](https://img.shields.io/badge/made%20for-Claude%20Code-84cc16?style=flat-square)](https://claude.com/claude-code)
 
-> **Make Claude Code talk less. Same answers, ~3× fewer tokens.**
+> **Make Claude Code go longer before limits hit.**
 >
-> *why burn many token when few do job*
+> *Less output burn. Less drift. Faster long sessions.*
 
-Claude talks too much. Hewn makes it get to the point — without losing
-what the prompt actually asked for.
+Claude Code is best when you stay in one session and keep pushing. It
+is also where it hurts most: repeated context, long answers, and output
+burn exactly when the budget starts to matter.
+
+Hewn is built for that failure mode. It keeps Claude Code tighter over
+long sessions by routing each turn into a compact answer shape and then
+re-asserting that route every turn, so the model spends less output on
+restating context and more on the actual work.
+
+Caveman already showed that compressed prompting helps. Hewn is tuned
+for a different bottleneck: long-session efficiency when Claude Code
+limits get tight.
 
 No proxy. No telemetry. Default `claude` untouched.
 
@@ -33,7 +43,7 @@ curl -fsSL https://raw.githubusercontent.com/tommy29tmar/hewn/main/integrations/
 ## Use
 
 ```bash
-hewn                     # interactive session with Hewn thinking-mode
+hewn                     # interactive session with Hewn long-session routing
 hewn -p "your prompt"    # non-interactive
 ```
 
@@ -44,6 +54,11 @@ The default `claude` command is untouched. Want normal Claude? Just
 type `claude`.
 
 ## Beyond the headline
+
+- **Built for Claude Code's real bottleneck** — Hewn is not trying to
+  make Claude merely sound shorter in isolation. The goal is to reduce
+  output burn, latency, and turn-by-turn drift once a real coding
+  session gets deep.
 
 - **The drift-fix hook is doing real work** — In multi-turn sessions,
   removing Hewn's classifier hook costs **+4,700 to +5,300 cumulative
@@ -72,18 +87,26 @@ type `claude`.
 
 ## Where Hewn doesn't win
 
-Honesty matters. In practice there are three cases where Hewn is not
-the right tool:
+Honesty matters. The benchmark shows three cases where Hewn is not the
+right tool — and one of them is "use Caveman instead":
 
+- **Single-shot long-context tasks (~5k+ token prompts)** — Caveman
+  Full beats Hewn on tokens here: 1,224 mean output tokens vs Hewn's
+  2,099 across three long-context review/planning prompts, both at
+  100% concept coverage. If your bottleneck is one big prompt and you
+  want the most aggressive single-shot compression, Caveman is the
+  better fit. Hewn's design assumption is that the win compounds across
+  *many* turns (T4), not within one giant turn.
+  *Source: T3, 3 prompts × 3 runs per arm.*
 - **Vibe / non-tech prompts** — Hewn 63% concept coverage vs Caveman 78%.
   Hewn is agent-mode (asks before guessing); Caveman is tutorial-mode
   (enumerates options). Different design philosophy, both valid.
-- **Polished marketing / apology copy** — Hewn is tuned for technical
-  compression, not expansive prose. If you want the model to lean into
-  voice and polish, use plain `claude`.
-- **Tasks that genuinely need a long answer** — when the prompt
-  legitimately requires a full plan, Hewn uses similar tokens to
-  baseline. Compression degrades when there is little fluff to cut.
+  *Source: T2, 5 prompts × 3 runs per arm.*
+- **Expansive prose (release notes, apology emails)** — All arms
+  including Hewn produce ~100% concept coverage at near-identical
+  token cost (~500 tokens). No advantage either direction; just use
+  whatever you have open.
+  *Source: T5, 2 prompts × 2 runs per arm.*
 
 ## How it works
 
@@ -95,7 +118,7 @@ Hewn wraps `claude` with two pieces:
    based on task structure.
 2. **A per-turn drift-fix hook** registered via `--settings`, which
    classifies every user prompt and re-injects the routing directive as
-   `additionalContext`. This prevents the multi-turn drift you see when
+   `additionalContext`. This prevents the long-session drift you see when
    relying on the system prompt alone.
 
 Technical tasks may route into a tiny IR:
@@ -109,7 +132,8 @@ V: verify
 A: action
 ```
 
-Most users do not need to care. Run `hewn`; Claude gets shorter.
+Most users do not need to care. Run `hewn`; Claude Code wastes less
+output on the way to the answer.
 
 ## Locales
 
@@ -132,8 +156,8 @@ Details: [integrations/claude-code/README.md](integrations/claude-code/README.md
 ## Examples
 
 - [Long-context security review (Atlas API)](examples/atlas-xff-review.md) —
-  side-by-side Verbose / Caveman Ultra-style / Hewn output on a real
-  16k-token handbook + IR-style task.
+  qualitative side-by-side example showing the kind of constrained
+  long-context task where reducing token burn matters.
 
 ## What gets installed
 

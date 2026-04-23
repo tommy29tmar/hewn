@@ -1,6 +1,7 @@
 # Hewn — Claude Code integration
 
-Hewn is a Claude Code CLI wrapper. It runs `claude` with:
+Hewn is a Claude Code CLI wrapper for long sessions under tight limits.
+It runs `claude` with:
 
 - A thinking-mode **system prompt** appended via `--append-system-prompt`,
   which routes each turn to one of six shapes (IR, prose+code,
@@ -8,8 +9,11 @@ Hewn is a Claude Code CLI wrapper. It runs `claude` with:
   based on task structure.
 - A per-turn **drift-fix hook** registered via `--settings`, which
   classifies every user prompt and re-injects the routing directive as
-  `additionalContext`. This prevents the T2+ drift observed when relying
+  `additionalContext`. This prevents the long-session drift observed when relying
   on the system prompt alone.
+
+Together these two pieces keep Claude Code compact turn after turn
+instead of letting long sessions drift back into output-heavy prose.
 
 ## Install
 
@@ -20,13 +24,15 @@ curl -fsSL https://raw.githubusercontent.com/tommy29tmar/hewn/main/integrations/
 ## Usage
 
 ```bash
-hewn                     # interactive session with Hewn thinking-mode
+hewn                     # interactive session with Hewn long-session routing
 hewn -p "your prompt"    # non-interactive
 ```
 
 Any flag accepted by `claude` is forwarded: `hewn --model claude-opus-4-7 -p "…"`.
 
-The default `claude` command is untouched.
+The default `claude` command is untouched. Use `hewn` when you want
+Claude Code to stay tighter over a long session; use `claude` when you
+want stock behavior.
 
 ## Locales
 

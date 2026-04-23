@@ -14,61 +14,61 @@
   ],
   "digest_hex": "79c7f153f103ae8cb05b518a7c67b3127fd5c21a2990920ab1827dd6eafbf25d",
   "seed": "hewn-bench-v1",
-  "timestamp": "2026-04-22T00:55:20.918900+00:00",
+  "timestamp": "2026-04-23T10:58:28.005723+00:00",
   "output_tokens_tiktoken": 319,
-  "output_tokens_anthropic": 474,
+  "output_tokens_anthropic": 505,
   "input_tokens_anthropic": 6,
-  "cache_creation_input_tokens": 10603,
-  "cache_read_input_tokens": 13741,
-  "total_input_tokens": 24350,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 24334,
+  "total_input_tokens": 24340,
   "cache_state": "warm",
-  "wallclock_ms": 13000.970851979218,
-  "duration_ms": 9733,
-  "duration_api_ms": 10577,
+  "wallclock_ms": 13904.230210988317,
+  "duration_ms": 10655,
+  "duration_api_ms": 11607,
   "wrapper_overhead_ms": null,
   "stop_reason": "end_turn",
   "num_turns": 1,
-  "session_id": "de591419-12a1-450e-ab29-f06463542ff4",
-  "total_cost_usd": 0.08552925,
+  "session_id": "9567c46b-82dc-46dc-b11f-9e6fc304e586",
+  "total_cost_usd": 0.025344000000000005,
   "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
-  "result": "# Introducing Smart Drafts: Never Start From a Blank Page Again\n\nWe've all been there. You open a new doc, type a title, and then... the cursor blinks. Five minutes pass. Maybe ten. The blank page has a way of making even the clearest ideas feel suddenly out of reach, and we heard from so many of you that those first few sentences were the hardest part of your day. That's why we built **Smart Drafts** — because getting started shouldn't be the thing standing between you and your best work.\n\nHere's how it works: when you create a new document, just click the ✨ Smart Draft button next to your title. We'll read the title you've written and glance at your recent docs for context — the project you've been shipping, the team you've been writing for, the shape of what you typically produce — and generate a tailored outline in seconds. Think of it as a thoughtful colleague who's been paying attention in meetings and is ready with a running start. You can accept it, edit it, or toss it entirely. The outline is a springboard, not a script, and your voice stays yours.\n\nThis is just the first step. Next on our roadmap is **custom voice training**, which will let Smart Drafts learn the rhythms and phrasing that make your writing sound like *you* — not a generic helpful assistant. We're rolling Smart Drafts out to everyone this week, and we can't wait to see what you start. As always, reply to this post or drop feedback in-app — we read every note.\n\nHappy drafting. 🪄",
+  "result": "Subject: Yesterday's payments outage — what happened and what we're doing about it\n\nYesterday, our payments service was unavailable for approximately four hours. During that window, some of you saw transactions fail, get stuck mid-flow, or return errors at checkout. That is not the experience you trust us to deliver, and we're sorry. If your business or your customers were affected, the responsibility for that sits with us.\n\nThe root cause was a misconfigured cache invalidation rule that, under a traffic spike, caused our payment authorization layer to repeatedly evict and rebuild critical state. As load climbed, the service degraded until transactions began failing outright. Once we identified the faulty rule, we rolled it back, restored cache stability, and confirmed full recovery before standing down our incident response.\n\nTo prevent a repeat, we're making two concrete changes. First, configuration changes to the payments path will now go through canary rollouts, so a bad rule reaches a small slice of traffic — not all of it — before we catch it. Second, we're expanding chaos testing in staging to specifically exercise cache invalidation and traffic-spike scenarios, so this class of failure is caught before it ever reaches production.\n\nIf you were impacted, we'd like to make it right. We're issuing a goodwill credit to affected accounts, which will appear on your next statement automatically — no action needed on your end. If you have questions, or believe you were affected and don't see a credit within seven days, please reach out to our support team and we'll take care of it directly. Thank you for your patience and for continuing to trust us.",
   "assertion_pass": true,
   "raw_payload": {
     "type": "result",
     "subtype": "success",
     "is_error": false,
     "api_error_status": null,
-    "duration_ms": 9733,
-    "duration_api_ms": 10577,
+    "duration_ms": 10655,
+    "duration_api_ms": 11607,
     "num_turns": 1,
-    "result": "# Introducing Smart Drafts: Never Start From a Blank Page Again\n\nWe've all been there. You open a new doc, type a title, and then... the cursor blinks. Five minutes pass. Maybe ten. The blank page has a way of making even the clearest ideas feel suddenly out of reach, and we heard from so many of you that those first few sentences were the hardest part of your day. That's why we built **Smart Drafts** — because getting started shouldn't be the thing standing between you and your best work.\n\nHere's how it works: when you create a new document, just click the ✨ Smart Draft button next to your title. We'll read the title you've written and glance at your recent docs for context — the project you've been shipping, the team you've been writing for, the shape of what you typically produce — and generate a tailored outline in seconds. Think of it as a thoughtful colleague who's been paying attention in meetings and is ready with a running start. You can accept it, edit it, or toss it entirely. The outline is a springboard, not a script, and your voice stays yours.\n\nThis is just the first step. Next on our roadmap is **custom voice training**, which will let Smart Drafts learn the rhythms and phrasing that make your writing sound like *you* — not a generic helpful assistant. We're rolling Smart Drafts out to everyone this week, and we can't wait to see what you start. As always, reply to this post or drop feedback in-app — we read every note.\n\nHappy drafting. 🪄",
+    "result": "Subject: Yesterday's payments outage — what happened and what we're doing about it\n\nYesterday, our payments service was unavailable for approximately four hours. During that window, some of you saw transactions fail, get stuck mid-flow, or return errors at checkout. That is not the experience you trust us to deliver, and we're sorry. If your business or your customers were affected, the responsibility for that sits with us.\n\nThe root cause was a misconfigured cache invalidation rule that, under a traffic spike, caused our payment authorization layer to repeatedly evict and rebuild critical state. As load climbed, the service degraded until transactions began failing outright. Once we identified the faulty rule, we rolled it back, restored cache stability, and confirmed full recovery before standing down our incident response.\n\nTo prevent a repeat, we're making two concrete changes. First, configuration changes to the payments path will now go through canary rollouts, so a bad rule reaches a small slice of traffic — not all of it — before we catch it. Second, we're expanding chaos testing in staging to specifically exercise cache invalidation and traffic-spike scenarios, so this class of failure is caught before it ever reaches production.\n\nIf you were impacted, we'd like to make it right. We're issuing a goodwill credit to affected accounts, which will appear on your next statement automatically — no action needed on your end. If you have questions, or believe you were affected and don't see a credit within seven days, please reach out to our support team and we'll take care of it directly. Thank you for your patience and for continuing to trust us.",
     "stop_reason": "end_turn",
-    "session_id": "de591419-12a1-450e-ab29-f06463542ff4",
-    "total_cost_usd": 0.08552925,
+    "session_id": "9567c46b-82dc-46dc-b11f-9e6fc304e586",
+    "total_cost_usd": 0.025344000000000005,
     "usage": {
       "input_tokens": 6,
-      "cache_creation_input_tokens": 10603,
-      "cache_read_input_tokens": 13741,
-      "output_tokens": 474,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 24334,
+      "output_tokens": 505,
       "server_tool_use": {
         "web_search_requests": 0,
         "web_fetch_requests": 0
       },
       "service_tier": "standard",
       "cache_creation": {
-        "ephemeral_1h_input_tokens": 10603,
+        "ephemeral_1h_input_tokens": 0,
         "ephemeral_5m_input_tokens": 0
       },
       "inference_geo": "",
       "iterations": [
         {
           "input_tokens": 6,
-          "output_tokens": 474,
-          "cache_read_input_tokens": 13741,
-          "cache_creation_input_tokens": 10603,
+          "output_tokens": 505,
+          "cache_read_input_tokens": 24334,
+          "cache_creation_input_tokens": 0,
           "cache_creation": {
             "ephemeral_5m_input_tokens": 0,
-            "ephemeral_1h_input_tokens": 10603
+            "ephemeral_1h_input_tokens": 0
           },
           "type": "message"
         }
@@ -77,22 +77,22 @@
     },
     "modelUsage": {
       "claude-haiku-4-5-20251001": {
-        "inputTokens": 435,
-        "outputTokens": 15,
+        "inputTokens": 442,
+        "outputTokens": 16,
         "cacheReadInputTokens": 0,
         "cacheCreationInputTokens": 0,
         "webSearchRequests": 0,
-        "costUSD": 0.00051,
+        "costUSD": 0.000522,
         "contextWindow": 200000,
         "maxOutputTokens": 32000
       },
       "claude-opus-4-7": {
         "inputTokens": 6,
-        "outputTokens": 474,
-        "cacheReadInputTokens": 13741,
-        "cacheCreationInputTokens": 10603,
+        "outputTokens": 505,
+        "cacheReadInputTokens": 24334,
+        "cacheCreationInputTokens": 0,
         "webSearchRequests": 0,
-        "costUSD": 0.08501925,
+        "costUSD": 0.024822000000000004,
         "contextWindow": 1000000,
         "maxOutputTokens": 64000
       }
@@ -100,6 +100,6 @@
     "permission_denials": [],
     "terminal_reason": "completed",
     "fast_mode_state": "off",
-    "uuid": "90449abb-a4d8-4d90-8668-93abdf2c0497"
+    "uuid": "4963cd5d-3c14-4245-bd33-3ae9b84f70ff"
   }
 }

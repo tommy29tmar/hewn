@@ -1,0 +1,105 @@
+{
+  "track": "T3",
+  "arm": "baseline",
+  "prompt_id": "body-size-rollout-plan",
+  "run_index": 3,
+  "arm_order_index": 2,
+  "arm_order_full": [
+    "hewn_full",
+    "hewn_prompt_only",
+    "baseline",
+    "terse",
+    "caveman_full_plus_ultra_directive",
+    "caveman_full"
+  ],
+  "digest_hex": "83cf61101f93c83952a720a1c10bb2b89a0fe33cd226823e26742150e5132c55",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T00:50:28.499139+00:00",
+  "output_tokens_tiktoken": 1133,
+  "output_tokens_anthropic": 1712,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 40015,
+  "total_input_tokens": 40021,
+  "cache_state": "warm",
+  "wallclock_ms": 34386.192503006896,
+  "duration_ms": 31205,
+  "duration_api_ms": 32539,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "caadd394-fdd8-4513-992b-390b0015f1cb",
+  "total_cost_usd": 0.06858550000000001,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "# Review: `POST /v1/orgs/:org_id/transfer`\n\n## P0 — Security / Trust boundary\n\n**1. Trusting `x-user-id` from the client.**\n`req.headers['x-user-id']` is a client-supplied header. Per Section 2 rule 1, those are stripped at the edge precisely because they cannot be trusted. Even after `header_sanitize` runs, this handler is reading the wrong header — the authenticated identity lives on `req.user` (set by `auth_jwt`, Section 5). As written, if `header_sanitize` is ever bypassed or misordered, any caller can set `X-User-Id: <victim>` and move funds from their accounts. This is an auth-bypass class bug.\n*Fix:* read `req.user.sub` (and `req.user.org` for org). Never read identity from raw headers.\n*Verify:* test with `X-User-Id: attacker` in the request and confirm the handler ignores it; confirm handler 401s when `req.user` is absent.\n\n**2. No authorization check that the caller belongs to `:org_id`.**\nEven with a valid JWT, nothing here verifies `req.user.org === req.params.org_id` (or that the user has a transfer-capable role). Cross-org fund movement is trivially reachable by swapping the path param.\n*Fix:* reject with `403` if `req.user.org !== req.params.org_id`; additionally gate on a role from `req.user.roles` (e.g. `transfer:write`).\n\n**3. No input validation on `from`, `to`, `amount`.**\n`amount` could be negative, a string, `NaN`, or `Infinity`; `from`/`to` could be accounts in a different org. Section 12 priority 1 (input validation at the trust boundary) and Section 2 rule 1 both apply.\n*Fix:* schema-validate (zod/ajv) — `amount` positive integer (minor units), `from`/`to` UUIDs, `from !== to`; then verify both accounts belong to `:org_id` before calling `txSvc.transfer`.\n\n## P1 — Correctness / pipeline\n\n**4. Registered via `app.post` directly, bypassing the pipeline.**\nSection 3 requires every request to go through `header_sanitize` → `rate_limit` → `body_size_guard` → `auth_jwt` → `route_dispatcher`. A raw `app.post` handler skips `route_dispatcher` and likely the per-route rate-limit config in `config/rate_limits.json`. A mutating endpoint with no rate limit is the shape of the 2025-09 brute-force incident.\n*Fix:* register through the router used by `route_dispatcher`, and add a per-route limit entry in `config/rate_limits.json` (tighter than the default 30/min for mutating verbs — funds transfer should be lower).\n\n**5. No idempotency.**\nFund transfers must be idempotent against client retries and network double-submits. Nothing here honors an `Idempotency-Key` header.\n*Fix:* require `Idempotency-Key`; pass it to `txSvc.transfer` so `tx-svc` can dedupe.\n\n**6. Errors swallowed — no `try/catch` or `next(err)`.**\nSection 11 requires delegating via `next(err)` to the central error handler. An exception from `txSvc.transfer` here leaks as an unhandled rejection and returns a default Express 500 with a stacktrace — violating Section 2 rule 6 (no stacktraces/internals in error bodies) and breaking the RFC 7807 response shape.\n*Fix:* `try { … } catch (err) { return next(err) }`, or use an async-wrapper. Ensure the success response also matches the project's response convention, not ad-hoc `{ok: true}`.\n\n**7. `req.body` used without `body_size_guard` guarantee on this route.**\nTied to issue 4 — if registered outside the pipeline, the 2MB guard may not apply.\n\n## P2 — Observability / standards\n\n**8. No audit log entry.**\nA fund-movement endpoint is exactly what Section 9's 365-day audit log is for. The pipeline's `audit_log` step runs only if the handler is inside it (issue 4).\n\n**9. No structured logger usage; response shape is ad-hoc.**\n`{ok: true}` gives the client nothing actionable (no `transfer_id`, no `request_id`). Errors must follow RFC 7807 (Section 2 rule 6).\n\n**10. CODEOWNERS / review gate.**\nNot a code bug, but: a new mutating, money-moving route deserves the same human-approval gate that `auth_jwt.ts` / `rate_limit.ts` get (Section 6). Worth adding the route's file to CODEOWNERS before merging.\n\n---\n\n**Summary for the author:** the handler has to (a) get identity from `req.user`, not headers; (b) authorize org membership + role; (c) validate inputs; (d) register through the pipeline so rate-limit, body-size, audit, and error handling all apply; (e) require `Idempotency-Key`; (f) delegate errors via `next(err)` and return RFC 7807 on failure.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 31205,
+    "duration_api_ms": 32539,
+    "num_turns": 1,
+    "result": "# Review: `POST /v1/orgs/:org_id/transfer`\n\n## P0 — Security / Trust boundary\n\n**1. Trusting `x-user-id` from the client.**\n`req.headers['x-user-id']` is a client-supplied header. Per Section 2 rule 1, those are stripped at the edge precisely because they cannot be trusted. Even after `header_sanitize` runs, this handler is reading the wrong header — the authenticated identity lives on `req.user` (set by `auth_jwt`, Section 5). As written, if `header_sanitize` is ever bypassed or misordered, any caller can set `X-User-Id: <victim>` and move funds from their accounts. This is an auth-bypass class bug.\n*Fix:* read `req.user.sub` (and `req.user.org` for org). Never read identity from raw headers.\n*Verify:* test with `X-User-Id: attacker` in the request and confirm the handler ignores it; confirm handler 401s when `req.user` is absent.\n\n**2. No authorization check that the caller belongs to `:org_id`.**\nEven with a valid JWT, nothing here verifies `req.user.org === req.params.org_id` (or that the user has a transfer-capable role). Cross-org fund movement is trivially reachable by swapping the path param.\n*Fix:* reject with `403` if `req.user.org !== req.params.org_id`; additionally gate on a role from `req.user.roles` (e.g. `transfer:write`).\n\n**3. No input validation on `from`, `to`, `amount`.**\n`amount` could be negative, a string, `NaN`, or `Infinity`; `from`/`to` could be accounts in a different org. Section 12 priority 1 (input validation at the trust boundary) and Section 2 rule 1 both apply.\n*Fix:* schema-validate (zod/ajv) — `amount` positive integer (minor units), `from`/`to` UUIDs, `from !== to`; then verify both accounts belong to `:org_id` before calling `txSvc.transfer`.\n\n## P1 — Correctness / pipeline\n\n**4. Registered via `app.post` directly, bypassing the pipeline.**\nSection 3 requires every request to go through `header_sanitize` → `rate_limit` → `body_size_guard` → `auth_jwt` → `route_dispatcher`. A raw `app.post` handler skips `route_dispatcher` and likely the per-route rate-limit config in `config/rate_limits.json`. A mutating endpoint with no rate limit is the shape of the 2025-09 brute-force incident.\n*Fix:* register through the router used by `route_dispatcher`, and add a per-route limit entry in `config/rate_limits.json` (tighter than the default 30/min for mutating verbs — funds transfer should be lower).\n\n**5. No idempotency.**\nFund transfers must be idempotent against client retries and network double-submits. Nothing here honors an `Idempotency-Key` header.\n*Fix:* require `Idempotency-Key`; pass it to `txSvc.transfer` so `tx-svc` can dedupe.\n\n**6. Errors swallowed — no `try/catch` or `next(err)`.**\nSection 11 requires delegating via `next(err)` to the central error handler. An exception from `txSvc.transfer` here leaks as an unhandled rejection and returns a default Express 500 with a stacktrace — violating Section 2 rule 6 (no stacktraces/internals in error bodies) and breaking the RFC 7807 response shape.\n*Fix:* `try { … } catch (err) { return next(err) }`, or use an async-wrapper. Ensure the success response also matches the project's response convention, not ad-hoc `{ok: true}`.\n\n**7. `req.body` used without `body_size_guard` guarantee on this route.**\nTied to issue 4 — if registered outside the pipeline, the 2MB guard may not apply.\n\n## P2 — Observability / standards\n\n**8. No audit log entry.**\nA fund-movement endpoint is exactly what Section 9's 365-day audit log is for. The pipeline's `audit_log` step runs only if the handler is inside it (issue 4).\n\n**9. No structured logger usage; response shape is ad-hoc.**\n`{ok: true}` gives the client nothing actionable (no `transfer_id`, no `request_id`). Errors must follow RFC 7807 (Section 2 rule 6).\n\n**10. CODEOWNERS / review gate.**\nNot a code bug, but: a new mutating, money-moving route deserves the same human-approval gate that `auth_jwt.ts` / `rate_limit.ts` get (Section 6). Worth adding the route's file to CODEOWNERS before merging.\n\n---\n\n**Summary for the author:** the handler has to (a) get identity from `req.user`, not headers; (b) authorize org membership + role; (c) validate inputs; (d) register through the pipeline so rate-limit, body-size, audit, and error handling all apply; (e) require `Idempotency-Key`; (f) delegate errors via `next(err)` and return RFC 7807 on failure.",
+    "stop_reason": "end_turn",
+    "session_id": "caadd394-fdd8-4513-992b-390b0015f1cb",
+    "total_cost_usd": 0.06858550000000001,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 40015,
+      "output_tokens": 1712,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 0,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 1712,
+          "cache_read_input_tokens": 40015,
+          "cache_creation_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 5668,
+        "outputTokens": 16,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.0057480000000000005,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 1712,
+        "cacheReadInputTokens": 40015,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.0628375,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "eee30d9a-425b-4566-a296-6ba340070514"
+  }
+}

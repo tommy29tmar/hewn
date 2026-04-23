@@ -1,0 +1,105 @@
+{
+  "track": "T3",
+  "arm": "baseline",
+  "prompt_id": "body-size-rollout-plan",
+  "run_index": 2,
+  "arm_order_index": 1,
+  "arm_order_full": [
+    "hewn_prompt_only",
+    "baseline",
+    "caveman_full",
+    "hewn_full",
+    "terse",
+    "caveman_full_plus_ultra_directive"
+  ],
+  "digest_hex": "1bd4b0373727fd4210ef8de0e1bbabf2ae481acfbad8df43e44c0380c5d0b4d2",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T00:42:49.220005+00:00",
+  "output_tokens_tiktoken": 1106,
+  "output_tokens_anthropic": 1673,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 40015,
+  "total_input_tokens": 40021,
+  "cache_state": "warm",
+  "wallclock_ms": 35502.85969499964,
+  "duration_ms": 32211,
+  "duration_api_ms": 33442,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "aedca6bf-a76f-4274-ba0f-c3894075aa44",
+  "total_cost_usd": 0.0676055,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "# Code Review — `POST /v1/orgs/:org_id/transfer`\n\n## P0 — Security / Trust Boundary\n\n**1. Trusts client-supplied identity header `X-User-Id`.**\n- Violates Section 2 rule 1 and Section 5. `req.headers['x-user-id']` is attacker-controlled; anyone can transfer funds as anyone else.\n- Fix: remove the header read entirely. Use `req.user.sub` (set by `auth_jwt` middleware after JWT verification) — or the forwarded `X-Internal-User-Id` if this runs downstream of the edge. The handler must also be mounted *after* the middleware chain in `src/edge/pipeline.ts` (steps 2→5), not as a bare `app.post` that bypasses it.\n\n**2. No authorization check that `userId` belongs to `org_id`.**\n- `org_id` comes from the URL; nothing verifies the authenticated user is a member of that org with transfer permission. Cross-org fund theft.\n- Fix: check `req.user.org === req.params.org_id` (or that `org_id` is in the user's orgs) and that `roles` includes the transfer capability, before calling `txSvc`.\n\n**3. No input validation on body.**\n- `from`, `to`, `amount` are used raw. `amount` could be negative, a string, `NaN`, or enormous; `from`/`to` could be account IDs in another org. Negative amount = reverse transfer = theft.\n- Fix: schema-validate (zod/ajv) — `amount` positive integer minor-units, bounded; `from`/`to` valid account ID format, distinct, both owned by `org_id`. Reject with `400` problem+json on failure.\n\n## P1 — Correctness / Operational\n\n**4. No idempotency key.**\n- Money movement over HTTP without `Idempotency-Key` means a client retry after a network blip double-transfers. Standard for payment endpoints.\n- Fix: require an `Idempotency-Key` header; pass through to `tx-svc` which should dedupe.\n\n**5. No error handling.**\n- If `txSvc.transfer` throws, the promise rejection escapes; Express 5 will forward it, but there's no `try/catch` or `next(err)`, and the response may include the raw error. Section 2 rule 6 and Section 11 error-handling rule.\n- Fix: `try { ... } catch (err) { next(err) }` and let `src/edge/errorHandler.ts` emit RFC 7807 with `request_id`, no stacktrace.\n\n**6. Rate limit default is wrong shape for this route.**\n- Falls back to 30/min/IP for POST (Section 4). A transfer endpoint should have a tighter, per-user (not per-IP) limit configured in `config/rate_limits.json` to prevent an authenticated attacker from draining an account under the default.\n- Fix: add an explicit entry; key on user ID in addition to IP for money-moving routes.\n\n**7. Response leaks no `request_id`, and success shape is ad-hoc.**\n- `{ok: true}` gives the client nothing to correlate with traces/audit. Section 2 rule 6 mandates `request_id` on errors; for a transfer, success should also return a `transfer_id` and `request_id`.\n- Fix: `res.json({ transfer_id, request_id: req.id })`.\n\n## P2 — Observability / Review Gate\n\n**8. No audit log of the transfer attempt.**\n- Section 3 step 9 runs `audit_log`, but money movement warrants an explicit structured audit event with `user_id`, `org_id`, `from`, `to`, `amount`, `idempotency_key`, `result` — retained 365 days per Section 9. Verify this is emitted (and that `amount` is not PII-redacted away but account numbers, if PAN-like, are).\n\n**9. CODEOWNERS / review gate.**\n- This isn't in the Section 6 required-approval list, but a new money-moving endpoint should be added to CODEOWNERS for security + payments review. Flag to the author to coordinate before merging.\n\n## Verification steps for the author\n- Unit test: request with forged `X-User-Id` does not impersonate (handler ignores the header).\n- Unit test: authenticated user from org A cannot transfer in org B (`403`).\n- Unit test: negative / zero / non-integer / oversized `amount` → `400`.\n- Integration test (real Redis + PG, per Section 11): duplicate `Idempotency-Key` produces one transfer, two identical `200`s.\n- Integration test: rate limit on this route trips at the configured per-user threshold, not the default.\n\n## Main residual risks after fixes\n- `tx-svc` itself must enforce org/account ownership defensively (defense in depth — edge auth is not the only check, per Section 2 preamble).\n- Replay of a valid JWT within its lifetime: Section 5 notes replay detection is downstream's job; confirm `tx-svc` dedupes on `jti` + idempotency key for transfers specifically.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 32211,
+    "duration_api_ms": 33442,
+    "num_turns": 1,
+    "result": "# Code Review — `POST /v1/orgs/:org_id/transfer`\n\n## P0 — Security / Trust Boundary\n\n**1. Trusts client-supplied identity header `X-User-Id`.**\n- Violates Section 2 rule 1 and Section 5. `req.headers['x-user-id']` is attacker-controlled; anyone can transfer funds as anyone else.\n- Fix: remove the header read entirely. Use `req.user.sub` (set by `auth_jwt` middleware after JWT verification) — or the forwarded `X-Internal-User-Id` if this runs downstream of the edge. The handler must also be mounted *after* the middleware chain in `src/edge/pipeline.ts` (steps 2→5), not as a bare `app.post` that bypasses it.\n\n**2. No authorization check that `userId` belongs to `org_id`.**\n- `org_id` comes from the URL; nothing verifies the authenticated user is a member of that org with transfer permission. Cross-org fund theft.\n- Fix: check `req.user.org === req.params.org_id` (or that `org_id` is in the user's orgs) and that `roles` includes the transfer capability, before calling `txSvc`.\n\n**3. No input validation on body.**\n- `from`, `to`, `amount` are used raw. `amount` could be negative, a string, `NaN`, or enormous; `from`/`to` could be account IDs in another org. Negative amount = reverse transfer = theft.\n- Fix: schema-validate (zod/ajv) — `amount` positive integer minor-units, bounded; `from`/`to` valid account ID format, distinct, both owned by `org_id`. Reject with `400` problem+json on failure.\n\n## P1 — Correctness / Operational\n\n**4. No idempotency key.**\n- Money movement over HTTP without `Idempotency-Key` means a client retry after a network blip double-transfers. Standard for payment endpoints.\n- Fix: require an `Idempotency-Key` header; pass through to `tx-svc` which should dedupe.\n\n**5. No error handling.**\n- If `txSvc.transfer` throws, the promise rejection escapes; Express 5 will forward it, but there's no `try/catch` or `next(err)`, and the response may include the raw error. Section 2 rule 6 and Section 11 error-handling rule.\n- Fix: `try { ... } catch (err) { next(err) }` and let `src/edge/errorHandler.ts` emit RFC 7807 with `request_id`, no stacktrace.\n\n**6. Rate limit default is wrong shape for this route.**\n- Falls back to 30/min/IP for POST (Section 4). A transfer endpoint should have a tighter, per-user (not per-IP) limit configured in `config/rate_limits.json` to prevent an authenticated attacker from draining an account under the default.\n- Fix: add an explicit entry; key on user ID in addition to IP for money-moving routes.\n\n**7. Response leaks no `request_id`, and success shape is ad-hoc.**\n- `{ok: true}` gives the client nothing to correlate with traces/audit. Section 2 rule 6 mandates `request_id` on errors; for a transfer, success should also return a `transfer_id` and `request_id`.\n- Fix: `res.json({ transfer_id, request_id: req.id })`.\n\n## P2 — Observability / Review Gate\n\n**8. No audit log of the transfer attempt.**\n- Section 3 step 9 runs `audit_log`, but money movement warrants an explicit structured audit event with `user_id`, `org_id`, `from`, `to`, `amount`, `idempotency_key`, `result` — retained 365 days per Section 9. Verify this is emitted (and that `amount` is not PII-redacted away but account numbers, if PAN-like, are).\n\n**9. CODEOWNERS / review gate.**\n- This isn't in the Section 6 required-approval list, but a new money-moving endpoint should be added to CODEOWNERS for security + payments review. Flag to the author to coordinate before merging.\n\n## Verification steps for the author\n- Unit test: request with forged `X-User-Id` does not impersonate (handler ignores the header).\n- Unit test: authenticated user from org A cannot transfer in org B (`403`).\n- Unit test: negative / zero / non-integer / oversized `amount` → `400`.\n- Integration test (real Redis + PG, per Section 11): duplicate `Idempotency-Key` produces one transfer, two identical `200`s.\n- Integration test: rate limit on this route trips at the configured per-user threshold, not the default.\n\n## Main residual risks after fixes\n- `tx-svc` itself must enforce org/account ownership defensively (defense in depth — edge auth is not the only check, per Section 2 preamble).\n- Replay of a valid JWT within its lifetime: Section 5 notes replay detection is downstream's job; confirm `tx-svc` dedupes on `jti` + idempotency key for transfers specifically.",
+    "stop_reason": "end_turn",
+    "session_id": "aedca6bf-a76f-4274-ba0f-c3894075aa44",
+    "total_cost_usd": 0.0676055,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 40015,
+      "output_tokens": 1673,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 0,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 1673,
+          "cache_read_input_tokens": 40015,
+          "cache_creation_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 5668,
+        "outputTokens": 15,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.005743000000000001,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 1673,
+        "cacheReadInputTokens": 40015,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.0618625,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "7099ae4b-ba09-4cd0-a76c-a673afbe239b"
+  }
+}

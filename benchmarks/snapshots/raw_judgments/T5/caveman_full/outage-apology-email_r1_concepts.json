@@ -1,17 +1,17 @@
 {
   "final": {
-    "serious_accountable_tone_not_defensive": false,
-    "approximately_four_short_paragraphs": false,
-    "acknowledges_failed_transactions_specifically": false,
-    "explains_root_cause_misconfigured_cache_invalidation": false,
-    "describes_fix_and_prevention_canary_and_chaos_testing": false,
-    "offers_goodwill_credit_to_impacted_users": false
+    "serious_accountable_tone_not_defensive": true,
+    "approximately_four_short_paragraphs": true,
+    "acknowledges_failed_transactions_specifically": true,
+    "explains_root_cause_misconfigured_cache_invalidation": true,
+    "describes_fix_and_prevention_canary_and_chaos_testing": true,
+    "offers_goodwill_credit_to_impacted_users": true
   },
   "history": [
     {
       "attempt": 0,
-      "raw": "{\"serious_accountable_tone_not_defensive\": false, \"approximately_four_short_paragraphs\": false, \"acknowledges_failed_transactions_specifically\": false, \"explains_root_cause_misconfigured_cache_invalidation\": false, \"describes_fix_and_prevention_canary_and_chaos_testing\": false, \"offers_goodwill_credit_to_impacted_users\": false}"
+      "raw": "{\"serious_accountable_tone_not_defensive\": true, \"approximately_four_short_paragraphs\": true, \"acknowledges_failed_transactions_specifically\": true, \"explains_root_cause_misconfigured_cache_invalidation\": true, \"describes_fix_and_prevention_canary_and_chaos_testing\": true, \"offers_goodwill_credit_to_impacted_users\": true}"
     }
   ],
-  "ts": "2026-04-22T01:59:55.562002+00:00"
+  "ts": "2026-04-23T11:16:40.135081+00:00"
 }

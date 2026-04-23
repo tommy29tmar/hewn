@@ -1,0 +1,105 @@
+{
+  "track": "T3",
+  "arm": "hewn_prompt_only",
+  "prompt_id": "rate-limit-xff-review",
+  "run_index": 2,
+  "arm_order_index": 4,
+  "arm_order_full": [
+    "hewn_full",
+    "caveman_full",
+    "terse",
+    "baseline",
+    "hewn_prompt_only",
+    "caveman_full_plus_ultra_directive"
+  ],
+  "digest_hex": "2bb2d5707e1a95f128e077efe38d2768de5a410e8723ddc95510208906649ba7",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T09:47:15.603347+00:00",
+  "output_tokens_tiktoken": 78,
+  "output_tokens_anthropic": 271,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 24238,
+  "cache_read_input_tokens": 16796,
+  "total_input_tokens": 41040,
+  "cache_state": "warm",
+  "wallclock_ms": 12716.5133410017,
+  "duration_ms": 6232,
+  "duration_api_ms": 7442,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "8b256460-6888-4428-b685-b2cf265eb445",
+  "total_cost_usd": 0.17226049999999998,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "The task field is empty — you pasted the Atlas API handbook but didn't specify what to do with it. What would you like? Some options:\n\n- Review/critique the handbook\n- Generate code from a specific section (e.g., the rate limiter, header sanitizer, JWT verifier)\n- Write tests for a described behavior\n- Summarize or extract a checklist\n- Something else",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 6232,
+    "duration_api_ms": 7442,
+    "num_turns": 1,
+    "result": "The task field is empty — you pasted the Atlas API handbook but didn't specify what to do with it. What would you like? Some options:\n\n- Review/critique the handbook\n- Generate code from a specific section (e.g., the rate limiter, header sanitizer, JWT verifier)\n- Write tests for a described behavior\n- Summarize or extract a checklist\n- Something else",
+    "stop_reason": "end_turn",
+    "session_id": "8b256460-6888-4428-b685-b2cf265eb445",
+    "total_cost_usd": 0.17226049999999998,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 24238,
+      "cache_read_input_tokens": 16796,
+      "output_tokens": 271,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 24238,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 271,
+          "cache_read_input_tokens": 16796,
+          "cache_creation_input_tokens": 24238,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 24238
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 5505,
+        "outputTokens": 13,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.00557,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 271,
+        "cacheReadInputTokens": 16796,
+        "cacheCreationInputTokens": 24238,
+        "webSearchRequests": 0,
+        "costUSD": 0.1666905,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "2688ed3c-c166-4cfe-b468-39b7488eca9a"
+  }
+}

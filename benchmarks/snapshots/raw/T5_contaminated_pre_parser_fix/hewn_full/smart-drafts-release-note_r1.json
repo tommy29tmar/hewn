@@ -1,0 +1,95 @@
+{
+  "track": "T5",
+  "arm": "hewn_full",
+  "prompt_id": "smart-drafts-release-note",
+  "run_index": 1,
+  "arm_order_index": 2,
+  "arm_order_full": [
+    "terse",
+    "baseline",
+    "hewn_full",
+    "hewn_prompt_only",
+    "caveman_full",
+    "caveman_full_plus_ultra_directive"
+  ],
+  "digest_hex": "6b9578eefb622cf26289d38792f842fa3d9d08227744b4c106b3e2221ce945ab",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T09:53:24.420346+00:00",
+  "output_tokens_tiktoken": 7,
+  "output_tokens_anthropic": 15,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 18471,
+  "cache_read_input_tokens": 16805,
+  "total_input_tokens": 35282,
+  "cache_state": "warm",
+  "wallclock_ms": 9764.980823994847,
+  "duration_ms": 2876,
+  "duration_api_ms": 2782,
+  "wrapper_overhead_ms": 6982.980823994847,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "5723e1a0-e8d3-4894-ac5b-8f773cf10684",
+  "total_cost_usd": 0.12425125000000001,
+  "model_used": "claude-opus-4-7",
+  "result": "Empty prompt. What you need?",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 2876,
+    "duration_api_ms": 2782,
+    "num_turns": 1,
+    "result": "Empty prompt. What you need?",
+    "stop_reason": "end_turn",
+    "session_id": "5723e1a0-e8d3-4894-ac5b-8f773cf10684",
+    "total_cost_usd": 0.12425125000000001,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 18471,
+      "cache_read_input_tokens": 16805,
+      "output_tokens": 15,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 18471,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 15,
+          "cache_read_input_tokens": 16805,
+          "cache_creation_input_tokens": 18471,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 18471
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 15,
+        "cacheReadInputTokens": 16805,
+        "cacheCreationInputTokens": 18471,
+        "webSearchRequests": 0,
+        "costUSD": 0.12425125000000001,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "e0588877-707d-4a92-b0e4-b8b7684d2f32"
+  }
+}

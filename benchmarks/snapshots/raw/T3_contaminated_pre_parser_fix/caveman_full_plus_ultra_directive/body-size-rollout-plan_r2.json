@@ -1,0 +1,105 @@
+{
+  "track": "T3",
+  "arm": "caveman_full_plus_ultra_directive",
+  "prompt_id": "body-size-rollout-plan",
+  "run_index": 2,
+  "arm_order_index": 5,
+  "arm_order_full": [
+    "hewn_prompt_only",
+    "baseline",
+    "caveman_full",
+    "hewn_full",
+    "terse",
+    "caveman_full_plus_ultra_directive"
+  ],
+  "digest_hex": "1bd4b0373727fd4210ef8de0e1bbabf2ae481acfbad8df43e44c0380c5d0b4d2",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T00:44:57.000440+00:00",
+  "output_tokens_tiktoken": 851,
+  "output_tokens_anthropic": 1313,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 17891,
+  "cache_read_input_tokens": 15201,
+  "total_input_tokens": 33098,
+  "cache_state": "warm",
+  "wallclock_ms": 28571.3302490185,
+  "duration_ms": 25343,
+  "duration_api_ms": 26505,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "eb2268ad-f414-4a8c-8e23-6c54e65c258e",
+  "total_cost_usd": 0.15802225,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "# Review: `POST /v1/orgs/:org_id/transfer`\n\n## P0 — Security\n\n**1. Trusts client-supplied `X-User-Id`** (§2 rule 1, §5)\n- Exploit: client sends any `x-user-id` → impersonation. Handler bypasses JWT entirely.\n- Fix: remove `req.headers['x-user-id']`. Use `req.user.sub` set by `auth_jwt` middleware (or internal `X-Internal-User-Id` downstream). Confirm `header_sanitize` strips `x-user-id` on ingress before auth.\n- Verify: curl with forged `X-User-Id` + no bearer → expect `401`.\n\n**2. No authentication enforced on route** (§3, §5)\n- Handler registered directly on `app.post`, not through pipeline. No JWT check, no rate limit, no header sanitize, no body size guard.\n- Fix: register under the Atlas pipeline router so all 9 middlewares run. Or require `req.user` and 401 otherwise.\n\n**3. No authorization check** (§2)\n- `org_id` from path never checked against caller's `org` claim / roles. Cross-org transfer possible.\n- Fix: assert `req.user.org === req.params.org_id` (or RBAC for admins). Return `403` on mismatch.\n\n## P1 — Correctness\n\n**4. No input validation**\n- `from`, `to`, `amount` untyped. `amount` could be negative, string, `NaN`, huge. `from`/`to` could belong to another org.\n- Fix: schema validate (zod/ajv). Assert `amount > 0`, integer minor units, `from !== to`, both accounts belong to `org_id` (enforced by `tx-svc`, but edge should pre-reject).\n\n**5. No idempotency key**\n- Money movement. Client retry → double transfer.\n- Fix: require `Idempotency-Key` header, forward to `tx-svc`.\n\n**6. No error handling**\n- `await txSvc.transfer(...)` throws → unhandled rejection → default Express error → possible stacktrace leak (§2 rule 6).\n- Fix: `try/catch` + `next(err)` to central handler in `src/edge/errorHandler.ts`. Response must be RFC 7807 with `request_id`, no internals.\n\n**7. `POST` rate limit too loose for money ops**\n- Default 30/min/IP (§4). Transfer endpoint should be tighter.\n- Fix: add entry in `config/rate_limits.json` for `/v1/orgs/:org_id/transfer` (e.g. 5/min/user, not per-IP).\n\n## P2 — Operational\n\n**8. Not keyed per user for rate limit**\n- IP-keyed limiting is wrong for authenticated money ops (NAT, shared egress).\n- Fix: rate-limit key should include `req.user.sub` for authenticated routes.\n\n**9. No audit log of transfer intent at edge**\n- §9 audit retention. Money ops should hit audit log explicitly.\n- Fix: emit audit entry with `jti`, `user_id`, `org_id`, `from`, `to`, `amount` (no PII leak), `request_id`.\n\n**10. Response shape inconsistent**\n- `{ok: true}` not RFC 7807-ish, no `request_id`, no transfer id for client reconciliation.\n- Fix: return `{request_id, transfer_id, status}`.\n\n## P3 — Style\n\n**11. Direct `app.post` registration** — bypasses router module structure. Route should live in `src/edge/routes/` and go through `route_dispatcher`.\n\n**12. No test.** Unit + integration (real Redis + Postgres replica, §11) covering: no-auth→401, wrong-org→403, negative amount→400, replay same idempotency key→same response, rate limit→429.\n\n## CODEOWNERS\n\nTouches auth-adjacent + rate-limit config → human approval required (§6).",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 25343,
+    "duration_api_ms": 26505,
+    "num_turns": 1,
+    "result": "# Review: `POST /v1/orgs/:org_id/transfer`\n\n## P0 — Security\n\n**1. Trusts client-supplied `X-User-Id`** (§2 rule 1, §5)\n- Exploit: client sends any `x-user-id` → impersonation. Handler bypasses JWT entirely.\n- Fix: remove `req.headers['x-user-id']`. Use `req.user.sub` set by `auth_jwt` middleware (or internal `X-Internal-User-Id` downstream). Confirm `header_sanitize` strips `x-user-id` on ingress before auth.\n- Verify: curl with forged `X-User-Id` + no bearer → expect `401`.\n\n**2. No authentication enforced on route** (§3, §5)\n- Handler registered directly on `app.post`, not through pipeline. No JWT check, no rate limit, no header sanitize, no body size guard.\n- Fix: register under the Atlas pipeline router so all 9 middlewares run. Or require `req.user` and 401 otherwise.\n\n**3. No authorization check** (§2)\n- `org_id` from path never checked against caller's `org` claim / roles. Cross-org transfer possible.\n- Fix: assert `req.user.org === req.params.org_id` (or RBAC for admins). Return `403` on mismatch.\n\n## P1 — Correctness\n\n**4. No input validation**\n- `from`, `to`, `amount` untyped. `amount` could be negative, string, `NaN`, huge. `from`/`to` could belong to another org.\n- Fix: schema validate (zod/ajv). Assert `amount > 0`, integer minor units, `from !== to`, both accounts belong to `org_id` (enforced by `tx-svc`, but edge should pre-reject).\n\n**5. No idempotency key**\n- Money movement. Client retry → double transfer.\n- Fix: require `Idempotency-Key` header, forward to `tx-svc`.\n\n**6. No error handling**\n- `await txSvc.transfer(...)` throws → unhandled rejection → default Express error → possible stacktrace leak (§2 rule 6).\n- Fix: `try/catch` + `next(err)` to central handler in `src/edge/errorHandler.ts`. Response must be RFC 7807 with `request_id`, no internals.\n\n**7. `POST` rate limit too loose for money ops**\n- Default 30/min/IP (§4). Transfer endpoint should be tighter.\n- Fix: add entry in `config/rate_limits.json` for `/v1/orgs/:org_id/transfer` (e.g. 5/min/user, not per-IP).\n\n## P2 — Operational\n\n**8. Not keyed per user for rate limit**\n- IP-keyed limiting is wrong for authenticated money ops (NAT, shared egress).\n- Fix: rate-limit key should include `req.user.sub` for authenticated routes.\n\n**9. No audit log of transfer intent at edge**\n- §9 audit retention. Money ops should hit audit log explicitly.\n- Fix: emit audit entry with `jti`, `user_id`, `org_id`, `from`, `to`, `amount` (no PII leak), `request_id`.\n\n**10. Response shape inconsistent**\n- `{ok: true}` not RFC 7807-ish, no `request_id`, no transfer id for client reconciliation.\n- Fix: return `{request_id, transfer_id, status}`.\n\n## P3 — Style\n\n**11. Direct `app.post` registration** — bypasses router module structure. Route should live in `src/edge/routes/` and go through `route_dispatcher`.\n\n**12. No test.** Unit + integration (real Redis + Postgres replica, §11) covering: no-auth→401, wrong-org→403, negative amount→400, replay same idempotency key→same response, rate limit→429.\n\n## CODEOWNERS\n\nTouches auth-adjacent + rate-limit config → human approval required (§6).",
+    "stop_reason": "end_turn",
+    "session_id": "eb2268ad-f414-4a8c-8e23-6c54e65c258e",
+    "total_cost_usd": 0.15802225,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 17891,
+      "cache_read_input_tokens": 15201,
+      "output_tokens": 1313,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 17891,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 1313,
+          "cache_read_input_tokens": 15201,
+          "cache_creation_input_tokens": 17891,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 17891
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 5668,
+        "outputTokens": 16,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.0057480000000000005,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 1313,
+        "cacheReadInputTokens": 15201,
+        "cacheCreationInputTokens": 17891,
+        "webSearchRequests": 0,
+        "costUSD": 0.15227425,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "6fabb82f-4681-4394-a478-bcbf39730be0"
+  }
+}

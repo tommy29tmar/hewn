@@ -1,0 +1,105 @@
+{
+  "track": "T3",
+  "arm": "hewn_full",
+  "prompt_id": "rate-limit-xff-review",
+  "run_index": 1,
+  "arm_order_index": 5,
+  "arm_order_full": [
+    "caveman_full_plus_ultra_directive",
+    "hewn_prompt_only",
+    "caveman_full",
+    "baseline",
+    "terse",
+    "hewn_full"
+  ],
+  "digest_hex": "150affe2992c9d3e327b5311fcd06bb30c21d46606c27a5d4b2a456ecbc0ba71",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T09:41:48.862993+00:00",
+  "output_tokens_tiktoken": 1017,
+  "output_tokens_anthropic": 5287,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 25516,
+  "cache_read_input_tokens": 16805,
+  "total_input_tokens": 42327,
+  "cache_state": "warm",
+  "wallclock_ms": 93639.50473698787,
+  "duration_ms": 87201,
+  "duration_api_ms": 89249,
+  "wrapper_overhead_ms": 4390.504736987874,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "4cc4b45d-edf0-432a-a119-bb302ff03d36",
+  "total_cost_usd": 0.30565250000000005,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "1. Rate-limit snippet destructure is wrong. Section 4: `const [count] = await multi.exec()`. In ioredis exec returns `[[err,result],...]` (tuples), in node-redis v4 it returns `[result1,result2]`. Devs copying this get either a tuple (NaN comparison, limit never triggers) or the INCR result by luck. Fix: explicit `const res = await multi.exec(); const count = Array.isArray(res[0]) ? res[0][1] : res[0];` and a unit test that asserts numeric.\n\n2. Documented key format contradicts 2025-12 RCA. Section 4 key: `rl:{ip}:{route_prefix}:{minute_bucket}` — no region. Section 10 says RCA added region prefix. If devs follow the handbook code, the SEV2 reoccurs (busy user 429'd globally). Fix: update Section 4 to `rl:{region}:{ip}:{route_prefix}:{minute_bucket}` and cite the 2025-12 regression test.\n\n3. Auto-rollback conflicts with security forensic hold. Section 6: \"SEV1 ANY HOUR triggers automatic rollback.\" Section 8: \"DO NOT roll back without coordination — security may want to capture forensic state first.\" On a SEV1 caused by a security alert, Argo erases the evidence before IR arrives. Fix: gate auto-rollback to non-security SEV1 (reliability-only) or require a `security-hold` label to suspend.\n\n4. JWT `exp` skew direction stated two ways. Section 5: \"checked against `Date.now() + skewMs`\" then \"rejected if `exp` is before `Date.now() - skewMs`\". One reading admits tokens 30s stale, the other 60s. Fix: pin the rule to `exp > (now - skewMs) / 1000` and delete the `+skewMs` sentence.\n\n5. `request_id` accepts untrusted client UUIDs. Section 3 step 1 runs before `header_sanitize` (step 2). An internet client can pin `request_id` to poison log correlation, collide traces, or overwrite an audit key. Fix: only accept an incoming request_id from the trusted-proxy chain (HAProxy PoP set from `config/trusted_proxies.json`), else generate.\n\n6. JWKS soft-TTL barely exceeds refresh interval. Section 2 rule 4: 15-min refresh, 16-min soft TTL, stale-while-revalidate. One failed refresh (JWKS 5xx, DNS blip) leaves ~60s before hard miss — the 2025-06 SEV1 class. Fix: soft TTL ≥ 2× refresh interval (e.g., 30–60m) with hard TTL only on explicit rotation signal + kid mismatch.\n\n7. `body_size_guard` after `rate_limit`. Section 3 pipeline: step 3 INCRs Redis, step 4 rejects >2MB. An attacker streaming 2MB POSTs burns the Redis command budget and counters before 413. Fix: move `body_size_guard` before `rate_limit` (Express `express.json({ limit: '2mb' })` at ingress), or enforce at HAProxy `http-request deny if`.\n\n8. `no-unbounded-redis-key` lint vs `multi.incr`. Section 11 rule targets `redis.incr` / `redis.lpush`. Section 4 uses `multi.incr` + `multi.expire` on a pipeline object. If the AST rule doesn't walk pipeline method chains, the 2025-11 OOM pattern re-ships silently. Fix: extend rule to match `.multi().incr(...)` / `multi.incr(...)` call-sites and assert a sibling `.expire(...)` on the same pipeline.\n\n9. Trusted-proxy list doesn't match the edge topology. Section 2 rule 2 names cloudfront/cloudflare egress IPs; Section 1 says HAProxy on bare metal at PoP edges terminates TLS. If CDN egress IPs are trusted but HAProxy PoP IPs aren't, legitimate XFF is dropped; if both are trusted, a CDN misconfig becomes a spoof path. Fix: `trusted_proxies.json` must be the HAProxy PoP CIDR set only, rotated with PoP inventory.\n\n10. 100% trace sampling on 5xx has no rate cap. Section 7: \"100% for 5xx responses.\" Section 10 incidents (JWKS outage, Redis OOM) generated floods of 5xx — at 100% sampling this saturates Tempo/Vector during the exact minutes observability is most needed. Fix: tail-sample or cap 5xx trace rate (e.g., max 500 rps), and ensure sampler degrades to head-based under pressure.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 87201,
+    "duration_api_ms": 89249,
+    "num_turns": 1,
+    "result": "1. Rate-limit snippet destructure is wrong. Section 4: `const [count] = await multi.exec()`. In ioredis exec returns `[[err,result],...]` (tuples), in node-redis v4 it returns `[result1,result2]`. Devs copying this get either a tuple (NaN comparison, limit never triggers) or the INCR result by luck. Fix: explicit `const res = await multi.exec(); const count = Array.isArray(res[0]) ? res[0][1] : res[0];` and a unit test that asserts numeric.\n\n2. Documented key format contradicts 2025-12 RCA. Section 4 key: `rl:{ip}:{route_prefix}:{minute_bucket}` — no region. Section 10 says RCA added region prefix. If devs follow the handbook code, the SEV2 reoccurs (busy user 429'd globally). Fix: update Section 4 to `rl:{region}:{ip}:{route_prefix}:{minute_bucket}` and cite the 2025-12 regression test.\n\n3. Auto-rollback conflicts with security forensic hold. Section 6: \"SEV1 ANY HOUR triggers automatic rollback.\" Section 8: \"DO NOT roll back without coordination — security may want to capture forensic state first.\" On a SEV1 caused by a security alert, Argo erases the evidence before IR arrives. Fix: gate auto-rollback to non-security SEV1 (reliability-only) or require a `security-hold` label to suspend.\n\n4. JWT `exp` skew direction stated two ways. Section 5: \"checked against `Date.now() + skewMs`\" then \"rejected if `exp` is before `Date.now() - skewMs`\". One reading admits tokens 30s stale, the other 60s. Fix: pin the rule to `exp > (now - skewMs) / 1000` and delete the `+skewMs` sentence.\n\n5. `request_id` accepts untrusted client UUIDs. Section 3 step 1 runs before `header_sanitize` (step 2). An internet client can pin `request_id` to poison log correlation, collide traces, or overwrite an audit key. Fix: only accept an incoming request_id from the trusted-proxy chain (HAProxy PoP set from `config/trusted_proxies.json`), else generate.\n\n6. JWKS soft-TTL barely exceeds refresh interval. Section 2 rule 4: 15-min refresh, 16-min soft TTL, stale-while-revalidate. One failed refresh (JWKS 5xx, DNS blip) leaves ~60s before hard miss — the 2025-06 SEV1 class. Fix: soft TTL ≥ 2× refresh interval (e.g., 30–60m) with hard TTL only on explicit rotation signal + kid mismatch.\n\n7. `body_size_guard` after `rate_limit`. Section 3 pipeline: step 3 INCRs Redis, step 4 rejects >2MB. An attacker streaming 2MB POSTs burns the Redis command budget and counters before 413. Fix: move `body_size_guard` before `rate_limit` (Express `express.json({ limit: '2mb' })` at ingress), or enforce at HAProxy `http-request deny if`.\n\n8. `no-unbounded-redis-key` lint vs `multi.incr`. Section 11 rule targets `redis.incr` / `redis.lpush`. Section 4 uses `multi.incr` + `multi.expire` on a pipeline object. If the AST rule doesn't walk pipeline method chains, the 2025-11 OOM pattern re-ships silently. Fix: extend rule to match `.multi().incr(...)` / `multi.incr(...)` call-sites and assert a sibling `.expire(...)` on the same pipeline.\n\n9. Trusted-proxy list doesn't match the edge topology. Section 2 rule 2 names cloudfront/cloudflare egress IPs; Section 1 says HAProxy on bare metal at PoP edges terminates TLS. If CDN egress IPs are trusted but HAProxy PoP IPs aren't, legitimate XFF is dropped; if both are trusted, a CDN misconfig becomes a spoof path. Fix: `trusted_proxies.json` must be the HAProxy PoP CIDR set only, rotated with PoP inventory.\n\n10. 100% trace sampling on 5xx has no rate cap. Section 7: \"100% for 5xx responses.\" Section 10 incidents (JWKS outage, Redis OOM) generated floods of 5xx — at 100% sampling this saturates Tempo/Vector during the exact minutes observability is most needed. Fix: tail-sample or cap 5xx trace rate (e.g., max 500 rps), and ensure sampler degrades to head-based under pressure.",
+    "stop_reason": "end_turn",
+    "session_id": "4cc4b45d-edf0-432a-a119-bb302ff03d36",
+    "total_cost_usd": 0.30565250000000005,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 25516,
+      "cache_read_input_tokens": 16805,
+      "output_tokens": 5287,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 25516,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 5287,
+          "cache_read_input_tokens": 16805,
+          "cache_creation_input_tokens": 25516,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 25516
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 5505,
+        "outputTokens": 13,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.00557,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 5287,
+        "cacheReadInputTokens": 16805,
+        "cacheCreationInputTokens": 25516,
+        "webSearchRequests": 0,
+        "costUSD": 0.30008250000000003,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "47105acc-7f3e-4df9-9300-121128328d60"
+  }
+}

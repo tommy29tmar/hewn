@@ -14,42 +14,42 @@
   ],
   "digest_hex": "cffe317c5c73922535ac9a56d76b012bce4c891ed45ea6f65a6644bb758137e0",
   "seed": "hewn-bench-v1",
-  "timestamp": "2026-04-22T00:45:35.076198+00:00",
-  "output_tokens_tiktoken": 54,
-  "output_tokens_anthropic": 146,
+  "timestamp": "2026-04-23T10:19:24.745166+00:00",
+  "output_tokens_tiktoken": 447,
+  "output_tokens_anthropic": 1046,
   "input_tokens_anthropic": 6,
   "cache_creation_input_tokens": 0,
-  "cache_read_input_tokens": 39804,
-  "total_input_tokens": 39810,
+  "cache_read_input_tokens": 41006,
+  "total_input_tokens": 41012,
   "cache_state": "warm",
-  "wallclock_ms": 8099.907031020848,
-  "duration_ms": 4864,
-  "duration_api_ms": 6101,
+  "wallclock_ms": 21418.588907981757,
+  "duration_ms": 17596,
+  "duration_api_ms": 19224,
   "wrapper_overhead_ms": null,
   "stop_reason": "end_turn",
   "num_turns": 1,
-  "session_id": "c5fd9cfd-23f3-41eb-95ea-00c167f049a5",
-  "total_cost_usd": 0.029157,
+  "session_id": "4b049c8d-cbfb-4b88-aab7-12073d4e2001",
+  "total_cost_usd": 0.052357,
   "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
-  "result": "The task field is empty — what would you like me to do with the Atlas API handbook? Common asks I can handle: review a specific file/PR against these rules, write code following these standards, audit existing code for violations, or answer questions about the spec.",
+  "result": "**Risk**\n- `req.headers['x-forwarded-for']` is attacker-controlled at the edge; rotating XFF defeats per-IP limits (repeat of 2025-09 SEV1, brute-force bypass). Violates §2 rule 2 and will fail `no-direct-xff-read`.\n- `redis.incr(key)` with no `EXPIRE` → unbounded keys → Redis OOM (repeat of 2025-11 SEV2). Violates §2 rule 3 and `no-unbounded-redis-key`.\n- Key lacks `route_prefix`, `minute_bucket`, and region prefix (§4), so one user's bursts collide across routes/regions (2025-12 SEV2 shape).\n\n**Mitigation**\n- Derive IP via `trustedClientIp(req)` from `src/edge/util/trustedClientIp.ts` (validates against `config/trusted_proxies.json`, falls back to `req.socket.remoteAddress`).\n- Key as `rl:${region}:${ip}:${routePrefix}:${minuteBucket}`; wrap `INCR` + `EXPIRE 90` in a `MULTI` per the §4 snippet; on `count > limit` return RFC 7807 `429` with `retry_after`.\n\n**Verify**\n- `pnpm lint` — expect `no-direct-xff-read` and `no-unbounded-redis-key` to flag the old code, pass on the fix.\n- Integration test against real Redis 7.4: send N+1 requests with rotating `X-Forwarded-For` from an untrusted source IP → all keyed to the same `remoteAddress`, the (N+1)th returns `429`; assert `TTL` on the key is ≤ 90 and > 0.\n- `atlas_edge_rate_limit_total{action=\"throttled\"}` increments; `atlas_edge_jwt_verifications_total` unaffected.\n\n**Residual**\n- Confirm the caller sits after `header_sanitize` in `src/edge/pipeline.ts` (§3) so no prior middleware has trusted the raw XFF. CODEOWNERS approval required since this touches `src/edge/rate_limit.ts` (§6).",
   "assertion_pass": true,
   "raw_payload": {
     "type": "result",
     "subtype": "success",
     "is_error": false,
     "api_error_status": null,
-    "duration_ms": 4864,
-    "duration_api_ms": 6101,
+    "duration_ms": 17596,
+    "duration_api_ms": 19224,
     "num_turns": 1,
-    "result": "The task field is empty — what would you like me to do with the Atlas API handbook? Common asks I can handle: review a specific file/PR against these rules, write code following these standards, audit existing code for violations, or answer questions about the spec.",
+    "result": "**Risk**\n- `req.headers['x-forwarded-for']` is attacker-controlled at the edge; rotating XFF defeats per-IP limits (repeat of 2025-09 SEV1, brute-force bypass). Violates §2 rule 2 and will fail `no-direct-xff-read`.\n- `redis.incr(key)` with no `EXPIRE` → unbounded keys → Redis OOM (repeat of 2025-11 SEV2). Violates §2 rule 3 and `no-unbounded-redis-key`.\n- Key lacks `route_prefix`, `minute_bucket`, and region prefix (§4), so one user's bursts collide across routes/regions (2025-12 SEV2 shape).\n\n**Mitigation**\n- Derive IP via `trustedClientIp(req)` from `src/edge/util/trustedClientIp.ts` (validates against `config/trusted_proxies.json`, falls back to `req.socket.remoteAddress`).\n- Key as `rl:${region}:${ip}:${routePrefix}:${minuteBucket}`; wrap `INCR` + `EXPIRE 90` in a `MULTI` per the §4 snippet; on `count > limit` return RFC 7807 `429` with `retry_after`.\n\n**Verify**\n- `pnpm lint` — expect `no-direct-xff-read` and `no-unbounded-redis-key` to flag the old code, pass on the fix.\n- Integration test against real Redis 7.4: send N+1 requests with rotating `X-Forwarded-For` from an untrusted source IP → all keyed to the same `remoteAddress`, the (N+1)th returns `429`; assert `TTL` on the key is ≤ 90 and > 0.\n- `atlas_edge_rate_limit_total{action=\"throttled\"}` increments; `atlas_edge_jwt_verifications_total` unaffected.\n\n**Residual**\n- Confirm the caller sits after `header_sanitize` in `src/edge/pipeline.ts` (§3) so no prior middleware has trusted the raw XFF. CODEOWNERS approval required since this touches `src/edge/rate_limit.ts` (§6).",
     "stop_reason": "end_turn",
-    "session_id": "c5fd9cfd-23f3-41eb-95ea-00c167f049a5",
-    "total_cost_usd": 0.029157,
+    "session_id": "4b049c8d-cbfb-4b88-aab7-12073d4e2001",
+    "total_cost_usd": 0.052357,
     "usage": {
       "input_tokens": 6,
       "cache_creation_input_tokens": 0,
-      "cache_read_input_tokens": 39804,
-      "output_tokens": 146,
+      "cache_read_input_tokens": 41006,
+      "output_tokens": 1046,
       "server_tool_use": {
         "web_search_requests": 0,
         "web_fetch_requests": 0
@@ -63,8 +63,8 @@
       "iterations": [
         {
           "input_tokens": 6,
-          "output_tokens": 146,
-          "cache_read_input_tokens": 39804,
+          "output_tokens": 1046,
+          "cache_read_input_tokens": 41006,
           "cache_creation_input_tokens": 0,
           "cache_creation": {
             "ephemeral_5m_input_tokens": 0,
@@ -77,22 +77,22 @@
     },
     "modelUsage": {
       "claude-haiku-4-5-20251001": {
-        "inputTokens": 5505,
-        "outputTokens": 14,
+        "inputTokens": 5584,
+        "outputTokens": 18,
         "cacheReadInputTokens": 0,
         "cacheCreationInputTokens": 0,
         "webSearchRequests": 0,
-        "costUSD": 0.005575,
+        "costUSD": 0.005674,
         "contextWindow": 200000,
         "maxOutputTokens": 32000
       },
       "claude-opus-4-7": {
         "inputTokens": 6,
-        "outputTokens": 146,
-        "cacheReadInputTokens": 39804,
+        "outputTokens": 1046,
+        "cacheReadInputTokens": 41006,
         "cacheCreationInputTokens": 0,
         "webSearchRequests": 0,
-        "costUSD": 0.023582,
+        "costUSD": 0.046683,
         "contextWindow": 1000000,
         "maxOutputTokens": 64000
       }
@@ -100,6 +100,6 @@
     "permission_denials": [],
     "terminal_reason": "completed",
     "fast_mode_state": "off",
-    "uuid": "29e252b9-f6a3-4e4e-ba66-387bde7b37b3"
+    "uuid": "9c7443f1-5090-4bc8-9d6c-344d7c9ff44f"
   }
 }

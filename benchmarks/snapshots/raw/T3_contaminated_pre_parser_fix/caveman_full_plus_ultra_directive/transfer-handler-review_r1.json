@@ -1,0 +1,105 @@
+{
+  "track": "T3",
+  "arm": "caveman_full_plus_ultra_directive",
+  "prompt_id": "transfer-handler-review",
+  "run_index": 1,
+  "arm_order_index": 4,
+  "arm_order_full": [
+    "baseline",
+    "caveman_full",
+    "hewn_prompt_only",
+    "hewn_full",
+    "caveman_full_plus_ultra_directive",
+    "terse"
+  ],
+  "digest_hex": "3ea6924fe84cc48072e626740e2896f1f2e17be2cf1e47da115cdde4ccbeab3a",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T00:33:58.122256+00:00",
+  "output_tokens_tiktoken": 222,
+  "output_tokens_anthropic": 416,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 17785,
+  "cache_read_input_tokens": 15201,
+  "total_input_tokens": 32992,
+  "cache_state": "warm",
+  "wallclock_ms": 12329.702828021254,
+  "duration_ms": 8223,
+  "duration_api_ms": 9226,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "dce0c4d2-ed92-4687-8618-bd89d78c773e",
+  "total_cost_usd": 0.13486075,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "**Risk**\n1. `req.headers['x-forwarded-for']` → spoof bypass limiter (SEV1 2025-09 repeat). Violates §2 rule 2 + lint `no-direct-xff-read`.\n2. No `EXPIRE` → Redis OOM (SEV2 2025-11 repeat). Violates §2 rule 3 + lint `no-unbounded-redis-key`.\n3. Key missing route prefix + minute bucket + region → collision, global limit (SEV2 2025-12).\n\n**Mitigate**\n```\nconst key = `rl:${region}:${trustedClientIp(req)}:${routePrefix}:${minuteBucket}`\nconst m = redis.multi(); m.incr(key); m.expire(key, 90)\nconst [count] = await m.exec()\n```\n\n**Verify**\n- unit: XFF header ignored, `socket.remoteAddress` keyed\n- integration: `TTL key` > 0 post-INCR\n- lint: both custom rules pass\n- regression: per-region isolation test (§10 2025-12)",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 8223,
+    "duration_api_ms": 9226,
+    "num_turns": 1,
+    "result": "**Risk**\n1. `req.headers['x-forwarded-for']` → spoof bypass limiter (SEV1 2025-09 repeat). Violates §2 rule 2 + lint `no-direct-xff-read`.\n2. No `EXPIRE` → Redis OOM (SEV2 2025-11 repeat). Violates §2 rule 3 + lint `no-unbounded-redis-key`.\n3. Key missing route prefix + minute bucket + region → collision, global limit (SEV2 2025-12).\n\n**Mitigate**\n```\nconst key = `rl:${region}:${trustedClientIp(req)}:${routePrefix}:${minuteBucket}`\nconst m = redis.multi(); m.incr(key); m.expire(key, 90)\nconst [count] = await m.exec()\n```\n\n**Verify**\n- unit: XFF header ignored, `socket.remoteAddress` keyed\n- integration: `TTL key` > 0 post-INCR\n- lint: both custom rules pass\n- regression: per-region isolation test (§10 2025-12)",
+    "stop_reason": "end_turn",
+    "session_id": "dce0c4d2-ed92-4687-8618-bd89d78c773e",
+    "total_cost_usd": 0.13486075,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 17785,
+      "cache_read_input_tokens": 15201,
+      "output_tokens": 416,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 17785,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 416,
+          "cache_read_input_tokens": 15201,
+          "cache_creation_input_tokens": 17785,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 17785
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 5584,
+        "outputTokens": 18,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.005674,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 416,
+        "cacheReadInputTokens": 15201,
+        "cacheCreationInputTokens": 17785,
+        "webSearchRequests": 0,
+        "costUSD": 0.12918675,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "4f508025-dc1c-4275-be2d-7c7957b20619"
+  }
+}

@@ -14,61 +14,61 @@
   ],
   "digest_hex": "2bb2d5707e1a95f128e077efe38d2768de5a410e8723ddc95510208906649ba7",
   "seed": "hewn-bench-v1",
-  "timestamp": "2026-04-22T00:39:34.195339+00:00",
-  "output_tokens_tiktoken": 11,
-  "output_tokens_anthropic": 74,
+  "timestamp": "2026-04-23T09:58:18.433670+00:00",
+  "output_tokens_tiktoken": 343,
+  "output_tokens_anthropic": 824,
   "input_tokens_anthropic": 6,
-  "cache_creation_input_tokens": 0,
-  "cache_read_input_tokens": 32867,
-  "total_input_tokens": 32873,
+  "cache_creation_input_tokens": 17743,
+  "cache_read_input_tokens": 15184,
+  "total_input_tokens": 32933,
   "cache_state": "warm",
-  "wallclock_ms": 8367.759988002945,
-  "duration_ms": 3024,
-  "duration_api_ms": 4319,
+  "wallclock_ms": 18153.971399005968,
+  "duration_ms": 15180,
+  "duration_api_ms": 16708,
   "wrapper_overhead_ms": null,
   "stop_reason": "end_turn",
   "num_turns": 1,
-  "session_id": "9dbdd544-152d-4e15-b2e5-2a92ad1f0e78",
-  "total_cost_usd": 0.0238885,
+  "session_id": "56038a03-9eb6-4000-8cde-bd5185f45479",
+  "total_cost_usd": 0.14478475,
   "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
-  "result": "No task given. Handbook read. Waiting for question.",
+  "result": "**risk**\n- XFF spoof. `req.headers['x-forwarded-for']` client-controlled. Attacker rotate header → bypass per-IP limit (SEV1 2025-09 repeat). Violate Sec 2 rule 2 + `no-direct-xff-read` lint.\n- Redis key unbounded. No `EXPIRE` → OOM evict → edge down (SEV2 2025-11 repeat). Violate Sec 2 rule 3 + `no-unbounded-redis-key` lint.\n- Key missing `route_prefix`, `minute_bucket`, region prefix (SEV2 2025-12 repeat). One hot user → global limit.\n\n**mitigation**\n```ts\nconst key = `rl:${region}:${trustedClientIp(req)}:${routePrefix}:${minuteBucket}`\nconst multi = redis.multi()\nmulti.incr(key)\nmulti.expire(key, 90)\nconst [count] = await multi.exec()\n```\nUse `trustedClientIp` helper (Sec 4). `MULTI` pair `INCR`+`EXPIRE` atomic.\n\n**verify**\n- `eslint` — expect `no-direct-xff-read` + `no-unbounded-redis-key` fail on current diff, pass after.\n- Integration test: spoof `X-Forwarded-For`, assert limit keyed on socket IP not header.\n- Integration test: `redis.ttl(key)` > 0 after INCR.\n- Load test: inspect Redis `INFO memory` — no unbounded growth.\n\n**residual risk**\nTrusted proxy list (`config/trusted_proxies.json`) staleness — `trustedClientIp` only safe if list current.",
   "assertion_pass": true,
   "raw_payload": {
     "type": "result",
     "subtype": "success",
     "is_error": false,
     "api_error_status": null,
-    "duration_ms": 3024,
-    "duration_api_ms": 4319,
+    "duration_ms": 15180,
+    "duration_api_ms": 16708,
     "num_turns": 1,
-    "result": "No task given. Handbook read. Waiting for question.",
+    "result": "**risk**\n- XFF spoof. `req.headers['x-forwarded-for']` client-controlled. Attacker rotate header → bypass per-IP limit (SEV1 2025-09 repeat). Violate Sec 2 rule 2 + `no-direct-xff-read` lint.\n- Redis key unbounded. No `EXPIRE` → OOM evict → edge down (SEV2 2025-11 repeat). Violate Sec 2 rule 3 + `no-unbounded-redis-key` lint.\n- Key missing `route_prefix`, `minute_bucket`, region prefix (SEV2 2025-12 repeat). One hot user → global limit.\n\n**mitigation**\n```ts\nconst key = `rl:${region}:${trustedClientIp(req)}:${routePrefix}:${minuteBucket}`\nconst multi = redis.multi()\nmulti.incr(key)\nmulti.expire(key, 90)\nconst [count] = await multi.exec()\n```\nUse `trustedClientIp` helper (Sec 4). `MULTI` pair `INCR`+`EXPIRE` atomic.\n\n**verify**\n- `eslint` — expect `no-direct-xff-read` + `no-unbounded-redis-key` fail on current diff, pass after.\n- Integration test: spoof `X-Forwarded-For`, assert limit keyed on socket IP not header.\n- Integration test: `redis.ttl(key)` > 0 after INCR.\n- Load test: inspect Redis `INFO memory` — no unbounded growth.\n\n**residual risk**\nTrusted proxy list (`config/trusted_proxies.json`) staleness — `trustedClientIp` only safe if list current.",
     "stop_reason": "end_turn",
-    "session_id": "9dbdd544-152d-4e15-b2e5-2a92ad1f0e78",
-    "total_cost_usd": 0.0238885,
+    "session_id": "56038a03-9eb6-4000-8cde-bd5185f45479",
+    "total_cost_usd": 0.14478475,
     "usage": {
       "input_tokens": 6,
-      "cache_creation_input_tokens": 0,
-      "cache_read_input_tokens": 32867,
-      "output_tokens": 74,
+      "cache_creation_input_tokens": 17743,
+      "cache_read_input_tokens": 15184,
+      "output_tokens": 824,
       "server_tool_use": {
         "web_search_requests": 0,
         "web_fetch_requests": 0
       },
       "service_tier": "standard",
       "cache_creation": {
-        "ephemeral_1h_input_tokens": 0,
+        "ephemeral_1h_input_tokens": 17743,
         "ephemeral_5m_input_tokens": 0
       },
       "inference_geo": "",
       "iterations": [
         {
           "input_tokens": 6,
-          "output_tokens": 74,
-          "cache_read_input_tokens": 32867,
-          "cache_creation_input_tokens": 0,
+          "output_tokens": 824,
+          "cache_read_input_tokens": 15184,
+          "cache_creation_input_tokens": 17743,
           "cache_creation": {
             "ephemeral_5m_input_tokens": 0,
-            "ephemeral_1h_input_tokens": 0
+            "ephemeral_1h_input_tokens": 17743
           },
           "type": "message"
         }
@@ -77,22 +77,22 @@
     },
     "modelUsage": {
       "claude-haiku-4-5-20251001": {
-        "inputTokens": 5505,
-        "outputTokens": 14,
+        "inputTokens": 5584,
+        "outputTokens": 17,
         "cacheReadInputTokens": 0,
         "cacheCreationInputTokens": 0,
         "webSearchRequests": 0,
-        "costUSD": 0.005575,
+        "costUSD": 0.005669,
         "contextWindow": 200000,
         "maxOutputTokens": 32000
       },
       "claude-opus-4-7": {
         "inputTokens": 6,
-        "outputTokens": 74,
-        "cacheReadInputTokens": 32867,
-        "cacheCreationInputTokens": 0,
+        "outputTokens": 824,
+        "cacheReadInputTokens": 15184,
+        "cacheCreationInputTokens": 17743,
         "webSearchRequests": 0,
-        "costUSD": 0.0183135,
+        "costUSD": 0.13911574999999998,
         "contextWindow": 1000000,
         "maxOutputTokens": 64000
       }
@@ -100,6 +100,6 @@
     "permission_denials": [],
     "terminal_reason": "completed",
     "fast_mode_state": "off",
-    "uuid": "ac1d1d26-2952-4e8b-966e-cab75a5af1ed"
+    "uuid": "fde33b5a-8918-4880-bd77-a26607025c8a"
   }
 }

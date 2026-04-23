@@ -14,61 +14,61 @@
   ],
   "digest_hex": "5cec5867cbfe8d2d7c19052a4434bcde0ff4203f3deef4f0370586b6544a69c8",
   "seed": "hewn-bench-v1",
-  "timestamp": "2026-04-22T00:36:55.294085+00:00",
-  "output_tokens_tiktoken": 995,
-  "output_tokens_anthropic": 1502,
+  "timestamp": "2026-04-23T09:56:28.650053+00:00",
+  "output_tokens_tiktoken": 1188,
+  "output_tokens_anthropic": 1927,
   "input_tokens_anthropic": 6,
-  "cache_creation_input_tokens": 17892,
-  "cache_read_input_tokens": 15186,
-  "total_input_tokens": 33084,
+  "cache_creation_input_tokens": 19202,
+  "cache_read_input_tokens": 13732,
+  "total_input_tokens": 32940,
   "cache_state": "warm",
-  "wallclock_ms": 33211.9542970031,
-  "duration_ms": 29564,
-  "duration_api_ms": 31219,
+  "wallclock_ms": 40989.76465995656,
+  "duration_ms": 38061,
+  "duration_api_ms": 39310,
   "wrapper_overhead_ms": null,
   "stop_reason": "end_turn",
   "num_turns": 1,
-  "session_id": "b9dbbfed-cda4-4ec1-829c-f908d4cbd123",
-  "total_cost_usd": 0.16274600000000003,
+  "session_id": "838bd50b-4787-4dc1-9271-a9f15b912ce8",
+  "total_cost_usd": 0.1807785,
   "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
-  "result": "# Review: `POST /v1/orgs/:org_id/transfer`\n\n## P0 — Security (blocks merge)\n\n**1. Trusts client-supplied `X-User-Id` header.** Violate §2 rule 1. `header_sanitize` strip client headers, but handler read raw `req.headers['x-user-id']` — attacker set any user, move any fund. Also bypass §3 pipeline order (auth before dispatch).\n- **Fix:** Use `req.user.sub` from `auth_jwt` middleware. Read org from `req.user.org` or validate `req.params.org_id` against it.\n- **Verify:** curl with spoofed `X-User-Id` + no JWT → `401`. With valid JWT for user A + `X-User-Id: B` → act as A.\n\n**2. No auth check.** Handler not gated on JWT. If route registered outside standard pipeline, `auth_jwt` never run. §3: auth MUST precede `route_dispatcher`.\n- **Fix:** Register under router that include full middleware chain. Assert `req.user` present.\n\n**3. No org membership / authorization check.** User in org X can call `/v1/orgs/Y/transfer`. Edge must at least verify `req.params.org_id === req.user.org` (or role include cross-org). Downstream also check, but edge defense-in-depth.\n- **Fix:** `if (req.params.org_id !== req.user.org) return 403`.\n\n## P1 — Correctness\n\n**4. No input validation.** `from`, `to`, `amount` untyped. `amount` could be negative, string, `1e308`, missing. `from`/`to` could be any account id, including cross-org.\n- **Fix:** Schema-validate (zod/ajv). `amount`: positive integer (minor units), bounded. `from`/`to`: UUID format, not equal.\n\n**5. No idempotency key.** Transfer is non-idempotent money op. Retry on network blip = double transfer.\n- **Fix:** Require `Idempotency-Key` header, forward to `tx-svc`.\n\n**6. No error handling.** `txSvc.transfer` throws → unhandled rejection → generic `500` leak. §2 rule 6 + §11 error handling.\n- **Fix:** `try/catch` + `next(err)`. Central error handler emit RFC 7807 with `request_id`.\n\n**7. Response not RFC 7807 on error, and success lacks `request_id`.** §2 rule 6.\n- **Fix:** Include `request_id` / propagate `traceparent`.\n\n## P2 — Operational\n\n**8. Rate limit default wrong tier.** §4 default POST = 30/min/IP. Funds transfer should be tighter + per-user, not per-IP. Add entry in `config/rate_limits.json`.\n\n**9. Body size / content-type.** Rely on `body_size_guard`, but no explicit `application/json` check here.\n\n**10. Audit log.** Money movement = audit-worthy. Ensure route flagged in `config/always_trace_routes.json` and hit `audit_log` middleware with `jti`, `sub`, `org`, `from`, `to`, `amount`.\n\n**11. CODEOWNERS.** Route touch auth/authz semantics → may need human approval gate (§6).\n\n## P3 — Style\n\n**12. No tests.** §11: unit + integration (real Redis/PG) required. Test: spoofed header ignored, cross-org 403, negative amount 400, idempotency replay, 429 under limit.\n\n**13. Logging PII.** If handler later log `from`/`to`/`amount`, ensure `pii_redact` cover account ids if classified PII (§2 rule 5).\n\n## Fixed sketch\n\n```javascript\nrouter.post('/v1/orgs/:org_id/transfer',\n  requireAuth,\n  requireIdempotencyKey,\n  validateBody(transferSchema),\n  async (req, res, next) => {\n    try {\n      if (req.params.org_id !== req.user.org) {\n        return next(problem(403, 'forbidden', 'org mismatch'))\n      }\n      const result = await txSvc.transfer({\n        orgId: req.params.org_id,\n        userId: req.user.sub,\n        idempotencyKey: req.get('Idempotency-Key'),\n        from: req.body.from,\n        to: req.body.to,\n        amount: req.body.amount,\n      })\n      res.json({ ok: true, request_id: req.id, transfer_id: result.id })\n    } catch (err) { next(err) }\n  }\n)\n```",
+  "result": "# Rollout Plan — 512KB Cap on `POST /v1/media/upload-meta`\n\n## Code changes\n\n**`src/edge/body_size_guard.ts`** (middleware from Section 3 step 4): currently single 2MB global. Make per-route.\n\n- Add lookup: `config/body_size_limits.json` → `{ \"POST /v1/media/upload-meta\": 524288 }`, fallback `2097152`.\n- Match by `${req.method} ${routePrefix}` (same `routePrefix` logic as `rate_limit.ts` — reuse helper, don't re-derive).\n- On exceed: `413` RFC 7807 body (`type: /errors/payload-too-large`, `title`, `status: 413`, `detail: \"Limit 524288 bytes for POST /v1/media/upload-meta\"`, `instance: req.requestId`). No internal info (Section 2 rule 6).\n- Must run BEFORE `auth_jwt` (step 5) — keep current order. Must run AFTER `rate_limit` so abusers still burn limiter quota.\n\n**`src/edge/pipeline.ts`**: no order change. Confirm `body_size_guard` reads new config.\n\n## Config\n\n- New file `config/body_size_limits.json`. Keyed by `METHOD route_prefix`.\n- Document fallback in header comment (or `config/README.md`).\n- NOT in CODEOWNERS auto-approve list (Section 6) unless we add it — recommend adding `config/body_size_limits.json` to CODEOWNERS for platform team since it's security-adjacent (DoS knob).\n\n## Tests\n\n**Unit (`src/edge/body_size_guard.test.ts`)**:\n- 512KB+1 on `POST /v1/media/upload-meta` → `413` with problem+json shape.\n- 512KB exact → pass.\n- 2MB on any other route → pass.\n- 2MB+1 on any other route → `413`.\n- Config hot-reload / fallback when route absent.\n\n**Integration (`tests/integration/body_size.int.test.ts`)**:\n- Real Express pipeline + Redis + PG (Section 11 mandate, no mocks). POST to the route with 600KB body, assert `413`, assert rate-limit counter still incremented (pipeline order verified), assert `request_id` echoed.\n- Assert redaction middleware didn't leak body in logs.\n\n**Lint**: no new rules needed.\n\n## Observability\n\n- New metric label on existing `atlas_edge_requests_total` — `status_class=\"4xx\"` already covers it, but add counter `atlas_edge_body_size_rejected_total{route, method, limit_bytes}` in `body_size_guard.ts`.\n- Dashboard: add panel to main Atlas dashboard — rejection rate for `/v1/media/upload-meta`. Compare pre/post rollout.\n- Alert (SEV3, Slack-only per Section 7): if legitimate traffic rejection rate on this route > 1% sustained 15min, page `#oncall-platform`. Tune after soak.\n- Traces: rejections auto-100% sampled (they're 4xx but 413 not 5xx — add to `config/always_trace_routes.json` for the upload-meta route during rollout).\n\n## Rollout\n\nFollow Section 6 blue/green:\n1. Merge to `main` → image built.\n2. `us-east-1` canary 5% for 30min. Watch rejection rate + client error reports.\n3. `us-east-1` full → 10min soak.\n4. `eu-west-1` full → 10min soak.\n5. `ap-southeast-1` full.\n\nFeature flag recommended: gate via `config/body_size_limits.json` value itself — set to 2MB initially in prod overlay, flip to 512KB per-region by committing overlay changes. Gives per-region kill switch without image rollback.\n\n## Rollback\n\n- **Fast path**: revert `config/body_size_limits.json` in Argo overlay to 2MB for the route → Argo sync (~1-2min). No image rollback needed.\n- **Full path**: Argo rollback to previous green per region (Section 6 auto-rollback on SEV1 already covers this).\n- Do NOT rollback if `spoofed-header-detector` or other security alert fires concurrently — coordinate w/ security (Section 8).\n\n## Comms\n\n- **Pre-rollout (T-3 days)**:\n  - `#eng-platform` + `#product-media`: plan, rationale (DoS abuse), timeline, rollback.\n  - Partner integrations team: confirm no legitimate partner exceeds 512KB on `upload-meta` (metadata only — should be <10KB typical; check p99 body size metric from last 30 days first).\n  - Support / CX: template response for users hitting `413`, pointer to docs update.\n- **Docs**: update public API docs for `POST /v1/media/upload-meta` — new limit, `413` response shape.\n- **Rollout day**:\n  - `#oncall-platform` thread opened before canary, updated at each region.\n  - CODEOWNERS reviewers on PR (platform team; security pairing recommended given DoS context).\n- **Post-rollout (T+24h)**:\n  - Short note in weekly ops review w/ rejection-rate graph, any false-positive user reports.\n\n## Pre-flight check\n\nBefore picking 512KB: query `histogram_quantile(0.999, atlas_edge_request_body_size_bytes{route=\"/v1/media/upload-meta\"})` over 30 days. If p99.9 legit body > 512KB, bump to next power-of-two that covers legit traffic w/ margin. Don't guess.",
   "assertion_pass": true,
   "raw_payload": {
     "type": "result",
     "subtype": "success",
     "is_error": false,
     "api_error_status": null,
-    "duration_ms": 29564,
-    "duration_api_ms": 31219,
+    "duration_ms": 38061,
+    "duration_api_ms": 39310,
     "num_turns": 1,
-    "result": "# Review: `POST /v1/orgs/:org_id/transfer`\n\n## P0 — Security (blocks merge)\n\n**1. Trusts client-supplied `X-User-Id` header.** Violate §2 rule 1. `header_sanitize` strip client headers, but handler read raw `req.headers['x-user-id']` — attacker set any user, move any fund. Also bypass §3 pipeline order (auth before dispatch).\n- **Fix:** Use `req.user.sub` from `auth_jwt` middleware. Read org from `req.user.org` or validate `req.params.org_id` against it.\n- **Verify:** curl with spoofed `X-User-Id` + no JWT → `401`. With valid JWT for user A + `X-User-Id: B` → act as A.\n\n**2. No auth check.** Handler not gated on JWT. If route registered outside standard pipeline, `auth_jwt` never run. §3: auth MUST precede `route_dispatcher`.\n- **Fix:** Register under router that include full middleware chain. Assert `req.user` present.\n\n**3. No org membership / authorization check.** User in org X can call `/v1/orgs/Y/transfer`. Edge must at least verify `req.params.org_id === req.user.org` (or role include cross-org). Downstream also check, but edge defense-in-depth.\n- **Fix:** `if (req.params.org_id !== req.user.org) return 403`.\n\n## P1 — Correctness\n\n**4. No input validation.** `from`, `to`, `amount` untyped. `amount` could be negative, string, `1e308`, missing. `from`/`to` could be any account id, including cross-org.\n- **Fix:** Schema-validate (zod/ajv). `amount`: positive integer (minor units), bounded. `from`/`to`: UUID format, not equal.\n\n**5. No idempotency key.** Transfer is non-idempotent money op. Retry on network blip = double transfer.\n- **Fix:** Require `Idempotency-Key` header, forward to `tx-svc`.\n\n**6. No error handling.** `txSvc.transfer` throws → unhandled rejection → generic `500` leak. §2 rule 6 + §11 error handling.\n- **Fix:** `try/catch` + `next(err)`. Central error handler emit RFC 7807 with `request_id`.\n\n**7. Response not RFC 7807 on error, and success lacks `request_id`.** §2 rule 6.\n- **Fix:** Include `request_id` / propagate `traceparent`.\n\n## P2 — Operational\n\n**8. Rate limit default wrong tier.** §4 default POST = 30/min/IP. Funds transfer should be tighter + per-user, not per-IP. Add entry in `config/rate_limits.json`.\n\n**9. Body size / content-type.** Rely on `body_size_guard`, but no explicit `application/json` check here.\n\n**10. Audit log.** Money movement = audit-worthy. Ensure route flagged in `config/always_trace_routes.json` and hit `audit_log` middleware with `jti`, `sub`, `org`, `from`, `to`, `amount`.\n\n**11. CODEOWNERS.** Route touch auth/authz semantics → may need human approval gate (§6).\n\n## P3 — Style\n\n**12. No tests.** §11: unit + integration (real Redis/PG) required. Test: spoofed header ignored, cross-org 403, negative amount 400, idempotency replay, 429 under limit.\n\n**13. Logging PII.** If handler later log `from`/`to`/`amount`, ensure `pii_redact` cover account ids if classified PII (§2 rule 5).\n\n## Fixed sketch\n\n```javascript\nrouter.post('/v1/orgs/:org_id/transfer',\n  requireAuth,\n  requireIdempotencyKey,\n  validateBody(transferSchema),\n  async (req, res, next) => {\n    try {\n      if (req.params.org_id !== req.user.org) {\n        return next(problem(403, 'forbidden', 'org mismatch'))\n      }\n      const result = await txSvc.transfer({\n        orgId: req.params.org_id,\n        userId: req.user.sub,\n        idempotencyKey: req.get('Idempotency-Key'),\n        from: req.body.from,\n        to: req.body.to,\n        amount: req.body.amount,\n      })\n      res.json({ ok: true, request_id: req.id, transfer_id: result.id })\n    } catch (err) { next(err) }\n  }\n)\n```",
+    "result": "# Rollout Plan — 512KB Cap on `POST /v1/media/upload-meta`\n\n## Code changes\n\n**`src/edge/body_size_guard.ts`** (middleware from Section 3 step 4): currently single 2MB global. Make per-route.\n\n- Add lookup: `config/body_size_limits.json` → `{ \"POST /v1/media/upload-meta\": 524288 }`, fallback `2097152`.\n- Match by `${req.method} ${routePrefix}` (same `routePrefix` logic as `rate_limit.ts` — reuse helper, don't re-derive).\n- On exceed: `413` RFC 7807 body (`type: /errors/payload-too-large`, `title`, `status: 413`, `detail: \"Limit 524288 bytes for POST /v1/media/upload-meta\"`, `instance: req.requestId`). No internal info (Section 2 rule 6).\n- Must run BEFORE `auth_jwt` (step 5) — keep current order. Must run AFTER `rate_limit` so abusers still burn limiter quota.\n\n**`src/edge/pipeline.ts`**: no order change. Confirm `body_size_guard` reads new config.\n\n## Config\n\n- New file `config/body_size_limits.json`. Keyed by `METHOD route_prefix`.\n- Document fallback in header comment (or `config/README.md`).\n- NOT in CODEOWNERS auto-approve list (Section 6) unless we add it — recommend adding `config/body_size_limits.json` to CODEOWNERS for platform team since it's security-adjacent (DoS knob).\n\n## Tests\n\n**Unit (`src/edge/body_size_guard.test.ts`)**:\n- 512KB+1 on `POST /v1/media/upload-meta` → `413` with problem+json shape.\n- 512KB exact → pass.\n- 2MB on any other route → pass.\n- 2MB+1 on any other route → `413`.\n- Config hot-reload / fallback when route absent.\n\n**Integration (`tests/integration/body_size.int.test.ts`)**:\n- Real Express pipeline + Redis + PG (Section 11 mandate, no mocks). POST to the route with 600KB body, assert `413`, assert rate-limit counter still incremented (pipeline order verified), assert `request_id` echoed.\n- Assert redaction middleware didn't leak body in logs.\n\n**Lint**: no new rules needed.\n\n## Observability\n\n- New metric label on existing `atlas_edge_requests_total` — `status_class=\"4xx\"` already covers it, but add counter `atlas_edge_body_size_rejected_total{route, method, limit_bytes}` in `body_size_guard.ts`.\n- Dashboard: add panel to main Atlas dashboard — rejection rate for `/v1/media/upload-meta`. Compare pre/post rollout.\n- Alert (SEV3, Slack-only per Section 7): if legitimate traffic rejection rate on this route > 1% sustained 15min, page `#oncall-platform`. Tune after soak.\n- Traces: rejections auto-100% sampled (they're 4xx but 413 not 5xx — add to `config/always_trace_routes.json` for the upload-meta route during rollout).\n\n## Rollout\n\nFollow Section 6 blue/green:\n1. Merge to `main` → image built.\n2. `us-east-1` canary 5% for 30min. Watch rejection rate + client error reports.\n3. `us-east-1` full → 10min soak.\n4. `eu-west-1` full → 10min soak.\n5. `ap-southeast-1` full.\n\nFeature flag recommended: gate via `config/body_size_limits.json` value itself — set to 2MB initially in prod overlay, flip to 512KB per-region by committing overlay changes. Gives per-region kill switch without image rollback.\n\n## Rollback\n\n- **Fast path**: revert `config/body_size_limits.json` in Argo overlay to 2MB for the route → Argo sync (~1-2min). No image rollback needed.\n- **Full path**: Argo rollback to previous green per region (Section 6 auto-rollback on SEV1 already covers this).\n- Do NOT rollback if `spoofed-header-detector` or other security alert fires concurrently — coordinate w/ security (Section 8).\n\n## Comms\n\n- **Pre-rollout (T-3 days)**:\n  - `#eng-platform` + `#product-media`: plan, rationale (DoS abuse), timeline, rollback.\n  - Partner integrations team: confirm no legitimate partner exceeds 512KB on `upload-meta` (metadata only — should be <10KB typical; check p99 body size metric from last 30 days first).\n  - Support / CX: template response for users hitting `413`, pointer to docs update.\n- **Docs**: update public API docs for `POST /v1/media/upload-meta` — new limit, `413` response shape.\n- **Rollout day**:\n  - `#oncall-platform` thread opened before canary, updated at each region.\n  - CODEOWNERS reviewers on PR (platform team; security pairing recommended given DoS context).\n- **Post-rollout (T+24h)**:\n  - Short note in weekly ops review w/ rejection-rate graph, any false-positive user reports.\n\n## Pre-flight check\n\nBefore picking 512KB: query `histogram_quantile(0.999, atlas_edge_request_body_size_bytes{route=\"/v1/media/upload-meta\"})` over 30 days. If p99.9 legit body > 512KB, bump to next power-of-two that covers legit traffic w/ margin. Don't guess.",
     "stop_reason": "end_turn",
-    "session_id": "b9dbbfed-cda4-4ec1-829c-f908d4cbd123",
-    "total_cost_usd": 0.16274600000000003,
+    "session_id": "838bd50b-4787-4dc1-9271-a9f15b912ce8",
+    "total_cost_usd": 0.1807785,
     "usage": {
       "input_tokens": 6,
-      "cache_creation_input_tokens": 17892,
-      "cache_read_input_tokens": 15186,
-      "output_tokens": 1502,
+      "cache_creation_input_tokens": 19202,
+      "cache_read_input_tokens": 13732,
+      "output_tokens": 1927,
       "server_tool_use": {
         "web_search_requests": 0,
         "web_fetch_requests": 0
       },
       "service_tier": "standard",
       "cache_creation": {
-        "ephemeral_1h_input_tokens": 17892,
+        "ephemeral_1h_input_tokens": 19202,
         "ephemeral_5m_input_tokens": 0
       },
       "inference_geo": "",
       "iterations": [
         {
           "input_tokens": 6,
-          "output_tokens": 1502,
-          "cache_read_input_tokens": 15186,
-          "cache_creation_input_tokens": 17892,
+          "output_tokens": 1927,
+          "cache_read_input_tokens": 13732,
+          "cache_creation_input_tokens": 19202,
           "cache_creation": {
             "ephemeral_5m_input_tokens": 0,
-            "ephemeral_1h_input_tokens": 17892
+            "ephemeral_1h_input_tokens": 19202
           },
           "type": "message"
         }
@@ -77,22 +77,22 @@
     },
     "modelUsage": {
       "claude-haiku-4-5-20251001": {
-        "inputTokens": 5668,
-        "outputTokens": 16,
+        "inputTokens": 5595,
+        "outputTokens": 20,
         "cacheReadInputTokens": 0,
         "cacheCreationInputTokens": 0,
         "webSearchRequests": 0,
-        "costUSD": 0.0057480000000000005,
+        "costUSD": 0.005695,
         "contextWindow": 200000,
         "maxOutputTokens": 32000
       },
       "claude-opus-4-7": {
         "inputTokens": 6,
-        "outputTokens": 1502,
-        "cacheReadInputTokens": 15186,
-        "cacheCreationInputTokens": 17892,
+        "outputTokens": 1927,
+        "cacheReadInputTokens": 13732,
+        "cacheCreationInputTokens": 19202,
         "webSearchRequests": 0,
-        "costUSD": 0.15699800000000003,
+        "costUSD": 0.1750835,
         "contextWindow": 1000000,
         "maxOutputTokens": 64000
       }
@@ -100,6 +100,6 @@
     "permission_denials": [],
     "terminal_reason": "completed",
     "fast_mode_state": "off",
-    "uuid": "0ca069fb-d3da-44a8-b514-add7537f1fc0"
+    "uuid": "0ed15119-6c39-49c8-8edc-52463ff716ac"
   }
 }

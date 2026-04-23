@@ -14,61 +14,61 @@
   ],
   "digest_hex": "1bd4b0373727fd4210ef8de0e1bbabf2ae481acfbad8df43e44c0380c5d0b4d2",
   "seed": "hewn-bench-v1",
-  "timestamp": "2026-04-22T00:43:24.724634+00:00",
-  "output_tokens_tiktoken": 762,
-  "output_tokens_anthropic": 1170,
+  "timestamp": "2026-04-23T10:06:36.532160+00:00",
+  "output_tokens_tiktoken": 1050,
+  "output_tokens_anthropic": 2275,
   "input_tokens_anthropic": 6,
-  "cache_creation_input_tokens": 17892,
-  "cache_read_input_tokens": 15186,
-  "total_input_tokens": 33084,
+  "cache_creation_input_tokens": 17750,
+  "cache_read_input_tokens": 15184,
+  "total_input_tokens": 32940,
   "cache_state": "warm",
-  "wallclock_ms": 25571.250576002058,
-  "duration_ms": 22519,
-  "duration_api_ms": 27841,
+  "wallclock_ms": 46147.56297698477,
+  "duration_ms": 42715,
+  "duration_api_ms": 44070,
   "wrapper_overhead_ms": null,
   "stop_reason": "end_turn",
   "num_turns": 1,
-  "session_id": "b0ceb5e1-5be8-400c-9429-63e13b519049",
-  "total_cost_usd": 0.154436,
+  "session_id": "9d37bd75-b950-49df-a673-6dfc36f79c06",
+  "total_cost_usd": 0.18111449999999998,
   "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
-  "result": "# Review: `POST /v1/orgs/:org_id/transfer`\n\n## P0 — Security\n\n**1. Trusts client-supplied `X-User-Id` header.** §2 rule 1, §5. Client can impersonate any user.\nFix: drop `req.headers['x-user-id']`. Use `req.user.sub` set by `auth_jwt` middleware. Confirm `X-User-Id` stripped in `header_sanitize`.\n\n**2. No auth on handler.** Not registered via pipeline in `src/edge/pipeline.ts` — bypasses `auth_jwt`. `auth-bypass-detector` will fire.\nFix: route through edge pipeline. Never `app.post` direct; go through `route_dispatcher`.\n\n**3. No org authorization.** User's JWT `org` claim not checked against `:org_id`. Cross-org transfer possible.\nFix: assert `req.user.org === req.params.org_id` (or roles permit), else `403`.\n\n## P1 — Correctness / Input Validation\n\n**4. No body validation.** `from`, `to`, `amount` untyped. Negative amount = theft. Missing fields crash.\nFix: schema validate (zod/ajv). `amount` positive int, currency-scaled. `from`/`to` UUID. `from !== to`.\n\n**5. No `body_size_guard` / content-type check.** Relies on pipeline; see issue 2.\n\n**6. No idempotency key.** Double-submit = double transfer. Money-moving endpoints require `Idempotency-Key` header + dedup in `tx-svc`.\n\n## P2 — Operational\n\n**7. No error handling.** `txSvc.transfer` rejection → unhandled, leaks stacktrace. §2 rule 6, §11.\nFix: `try/catch` → `next(err)`. Central handler emits RFC 7807 `problem+json` with `request_id`, no internals.\n\n**8. Response not RFC 7807 on error; success shape undocumented.** `{ok: true}` gives caller nothing — no `transfer_id`, no `request_id`.\n\n**9. No audit log entry.** Money movement must hit `audit_log` middleware (§3 step 9) → 365-day S3 bucket (§9).\n\n**10. No rate limit tier.** Default `POST` = 30/min/IP generic. Transfer needs stricter per-user + per-org limit in `config/rate_limits.json`. Key must include region (§4, 2025-12 SEV2) and user, not just IP.\n\n**11. mTLS egress path.** Direct `txSvc.transfer(...)` call bypasses Envoy sidecar pattern (§3 step 7). Confirm client goes through mTLS egress, not raw HTTP.\n\n## P3 — Style\n\n**12. `console.log`-style debugging absent but no `logger` either.** §11. Add structured log with `request_id`, `user_id`, `org_id`, amount — **not** PII, not full body.\n\n**13. CODEOWNERS.** Touches auth-adjacent trust logic → needs human approval per §6.\n\n## Verification\n\n- Unit test: spoofed `X-User-Id` ignored, `req.user.sub` used.\n- Unit test: cross-org request → `403`.\n- Unit test: negative/zero/missing `amount` → `400`.\n- Integration test (real Redis/PG per §11): duplicate `Idempotency-Key` → one transfer.\n- Lint: no `req.headers[...]` identity reads outside sanctioned helpers.",
+  "result": "# Rollout: 512KB cap for `POST /v1/media/upload-meta`\n\n## Code\n- `src/edge/body_size_guard.ts`: replace single const with per-route lookup. Default 2MB stays. Read from config.\n- `src/edge/pipeline.ts`: no order change. Guard already at step 4, before `auth_jwt` — good, DoS rejected pre-auth.\n- Route match: use same `route_prefix` normalization as `rate_limit.ts` so `POST /v1/media/upload-meta` keys cleanly. Method-aware (GET stays 2MB).\n- Error body: RFC 7807, `type: /errors/payload-too-large`, `status: 413`, `detail: \"Body exceeds 512KB for this route\"`, include `request_id`. No internals (Sec 2 rule 6).\n\n## Config\n- New file `config/body_size_limits.json`:\n  ```json\n  { \"default_bytes\": 2097152,\n    \"routes\": [\n      { \"method\": \"POST\", \"prefix\": \"/v1/media/upload-meta\", \"bytes\": 524288 }\n    ] }\n  ```\n- Not in CODEOWNERS auto-gate list, but touches edge behavior → add human approval rule for this file in CODEOWNERS (mirror `rate_limits.json` pattern).\n\n## Tests\n- Unit (`src/edge/body_size_guard.test.ts`): 524287 → pass; 524289 → 413 with RFC7807 shape; non-matching route → 2MB still applies; method mismatch (GET /v1/media/upload-meta) → default.\n- Integration (`tests/integration/body_size.int.test.ts`): real Express + real Redis/PG per Sec 11 \"no mocks\". Assert 413 fires BEFORE `auth_jwt` (send invalid JWT + oversized body → expect 413, not 401).\n- Lint: none new.\n\n## Observability\n- New metric label on existing counter: `atlas_edge_requests_total{status_class=\"4xx\", reason=\"body_too_large\"}` — or add dedicated `atlas_edge_body_size_rejections_total{route, method, limit_bytes}`. Pick latter, cardinality bounded.\n- Dashboard: add panel to `grafana.internal/d/atlas-edge-main` — reject rate for upload-meta.\n- Alert: `atlas_edge_body_size_rejections_total{route=\"/v1/media/upload-meta\"}` rate > 50/s for 5m → SEV3 Slack `#oncall-platform`. Tune after soak.\n- Trace: ensure 413 path emits span with `http.response.status_code=413` and `atlas.reject_reason=body_too_large`. Already in `always_trace_routes.json`? Add `/v1/media/upload-meta` for full sampling during rollout.\n\n## Rollout\n- Blue/green per Sec 6: us-east-1 canary 5% / 30m → us-east-1 full → eu-west-1 → ap-southeast-1. 10m soak between.\n- Gate: during canary, watch `body_size_rejections_total` + `requests_total{route=\"/v1/media/upload-meta\",status_class=\"2xx\"}`. If 2xx drops >10% vs baseline → rollback.\n- Feature flag: gate via `config/body_size_limits.json` only. No code flag needed — revert = revert config commit, Argo resyncs.\n\n## Rollback\n- Revert commit on `atlas-edge` infra repo for `config/body_size_limits.json`. Argo syncs < 2 min.\n- Hot revert: `kubectl -n edge set env deploy/atlas-edge BODY_SIZE_OVERRIDE_DISABLE=1` if env escape hatch added (recommend adding — cheap insurance).\n- SEV1 triggers auto-rollback per Sec 6.\n\n## Comms\n- **Before merge**: post in `#platform-eng` with PR link + handbook Sec 4 style rationale. Tag `@media-svc-owners` (downstream sees fewer uploads).\n- **Partner clients** (legacy API-key integrations, Sec 5): email via partner-ops list 72h before. Include old limit, new limit, exact route, 413 response shape, effective date.\n- **First-party mobile/web**: ping `#client-platform`. They should surface 413 gracefully; confirm before ship.\n- **Security**: notify `@security-oncall` — context: DoS abuse driving change, not an incident.\n- **On-call**: update `runbooks/atlas-edge.md` with new 413 reason + dashboard panel link. Add one-liner to Sec 8 for `5xx`/`4xx` triage.\n- **Status page**: no public post; per-route quiet change.\n\n## Risks\n- Legitimate large metadata uploads break. Mitigation: 7-day log scan of `/v1/media/upload-meta` body sizes → p99.9 should be ≪ 512KB before cutover.\n- Counter cardinality if many routes added later — keep label set bounded.",
   "assertion_pass": true,
   "raw_payload": {
     "type": "result",
     "subtype": "success",
     "is_error": false,
     "api_error_status": null,
-    "duration_ms": 22519,
-    "duration_api_ms": 27841,
+    "duration_ms": 42715,
+    "duration_api_ms": 44070,
     "num_turns": 1,
-    "result": "# Review: `POST /v1/orgs/:org_id/transfer`\n\n## P0 — Security\n\n**1. Trusts client-supplied `X-User-Id` header.** §2 rule 1, §5. Client can impersonate any user.\nFix: drop `req.headers['x-user-id']`. Use `req.user.sub` set by `auth_jwt` middleware. Confirm `X-User-Id` stripped in `header_sanitize`.\n\n**2. No auth on handler.** Not registered via pipeline in `src/edge/pipeline.ts` — bypasses `auth_jwt`. `auth-bypass-detector` will fire.\nFix: route through edge pipeline. Never `app.post` direct; go through `route_dispatcher`.\n\n**3. No org authorization.** User's JWT `org` claim not checked against `:org_id`. Cross-org transfer possible.\nFix: assert `req.user.org === req.params.org_id` (or roles permit), else `403`.\n\n## P1 — Correctness / Input Validation\n\n**4. No body validation.** `from`, `to`, `amount` untyped. Negative amount = theft. Missing fields crash.\nFix: schema validate (zod/ajv). `amount` positive int, currency-scaled. `from`/`to` UUID. `from !== to`.\n\n**5. No `body_size_guard` / content-type check.** Relies on pipeline; see issue 2.\n\n**6. No idempotency key.** Double-submit = double transfer. Money-moving endpoints require `Idempotency-Key` header + dedup in `tx-svc`.\n\n## P2 — Operational\n\n**7. No error handling.** `txSvc.transfer` rejection → unhandled, leaks stacktrace. §2 rule 6, §11.\nFix: `try/catch` → `next(err)`. Central handler emits RFC 7807 `problem+json` with `request_id`, no internals.\n\n**8. Response not RFC 7807 on error; success shape undocumented.** `{ok: true}` gives caller nothing — no `transfer_id`, no `request_id`.\n\n**9. No audit log entry.** Money movement must hit `audit_log` middleware (§3 step 9) → 365-day S3 bucket (§9).\n\n**10. No rate limit tier.** Default `POST` = 30/min/IP generic. Transfer needs stricter per-user + per-org limit in `config/rate_limits.json`. Key must include region (§4, 2025-12 SEV2) and user, not just IP.\n\n**11. mTLS egress path.** Direct `txSvc.transfer(...)` call bypasses Envoy sidecar pattern (§3 step 7). Confirm client goes through mTLS egress, not raw HTTP.\n\n## P3 — Style\n\n**12. `console.log`-style debugging absent but no `logger` either.** §11. Add structured log with `request_id`, `user_id`, `org_id`, amount — **not** PII, not full body.\n\n**13. CODEOWNERS.** Touches auth-adjacent trust logic → needs human approval per §6.\n\n## Verification\n\n- Unit test: spoofed `X-User-Id` ignored, `req.user.sub` used.\n- Unit test: cross-org request → `403`.\n- Unit test: negative/zero/missing `amount` → `400`.\n- Integration test (real Redis/PG per §11): duplicate `Idempotency-Key` → one transfer.\n- Lint: no `req.headers[...]` identity reads outside sanctioned helpers.",
+    "result": "# Rollout: 512KB cap for `POST /v1/media/upload-meta`\n\n## Code\n- `src/edge/body_size_guard.ts`: replace single const with per-route lookup. Default 2MB stays. Read from config.\n- `src/edge/pipeline.ts`: no order change. Guard already at step 4, before `auth_jwt` — good, DoS rejected pre-auth.\n- Route match: use same `route_prefix` normalization as `rate_limit.ts` so `POST /v1/media/upload-meta` keys cleanly. Method-aware (GET stays 2MB).\n- Error body: RFC 7807, `type: /errors/payload-too-large`, `status: 413`, `detail: \"Body exceeds 512KB for this route\"`, include `request_id`. No internals (Sec 2 rule 6).\n\n## Config\n- New file `config/body_size_limits.json`:\n  ```json\n  { \"default_bytes\": 2097152,\n    \"routes\": [\n      { \"method\": \"POST\", \"prefix\": \"/v1/media/upload-meta\", \"bytes\": 524288 }\n    ] }\n  ```\n- Not in CODEOWNERS auto-gate list, but touches edge behavior → add human approval rule for this file in CODEOWNERS (mirror `rate_limits.json` pattern).\n\n## Tests\n- Unit (`src/edge/body_size_guard.test.ts`): 524287 → pass; 524289 → 413 with RFC7807 shape; non-matching route → 2MB still applies; method mismatch (GET /v1/media/upload-meta) → default.\n- Integration (`tests/integration/body_size.int.test.ts`): real Express + real Redis/PG per Sec 11 \"no mocks\". Assert 413 fires BEFORE `auth_jwt` (send invalid JWT + oversized body → expect 413, not 401).\n- Lint: none new.\n\n## Observability\n- New metric label on existing counter: `atlas_edge_requests_total{status_class=\"4xx\", reason=\"body_too_large\"}` — or add dedicated `atlas_edge_body_size_rejections_total{route, method, limit_bytes}`. Pick latter, cardinality bounded.\n- Dashboard: add panel to `grafana.internal/d/atlas-edge-main` — reject rate for upload-meta.\n- Alert: `atlas_edge_body_size_rejections_total{route=\"/v1/media/upload-meta\"}` rate > 50/s for 5m → SEV3 Slack `#oncall-platform`. Tune after soak.\n- Trace: ensure 413 path emits span with `http.response.status_code=413` and `atlas.reject_reason=body_too_large`. Already in `always_trace_routes.json`? Add `/v1/media/upload-meta` for full sampling during rollout.\n\n## Rollout\n- Blue/green per Sec 6: us-east-1 canary 5% / 30m → us-east-1 full → eu-west-1 → ap-southeast-1. 10m soak between.\n- Gate: during canary, watch `body_size_rejections_total` + `requests_total{route=\"/v1/media/upload-meta\",status_class=\"2xx\"}`. If 2xx drops >10% vs baseline → rollback.\n- Feature flag: gate via `config/body_size_limits.json` only. No code flag needed — revert = revert config commit, Argo resyncs.\n\n## Rollback\n- Revert commit on `atlas-edge` infra repo for `config/body_size_limits.json`. Argo syncs < 2 min.\n- Hot revert: `kubectl -n edge set env deploy/atlas-edge BODY_SIZE_OVERRIDE_DISABLE=1` if env escape hatch added (recommend adding — cheap insurance).\n- SEV1 triggers auto-rollback per Sec 6.\n\n## Comms\n- **Before merge**: post in `#platform-eng` with PR link + handbook Sec 4 style rationale. Tag `@media-svc-owners` (downstream sees fewer uploads).\n- **Partner clients** (legacy API-key integrations, Sec 5): email via partner-ops list 72h before. Include old limit, new limit, exact route, 413 response shape, effective date.\n- **First-party mobile/web**: ping `#client-platform`. They should surface 413 gracefully; confirm before ship.\n- **Security**: notify `@security-oncall` — context: DoS abuse driving change, not an incident.\n- **On-call**: update `runbooks/atlas-edge.md` with new 413 reason + dashboard panel link. Add one-liner to Sec 8 for `5xx`/`4xx` triage.\n- **Status page**: no public post; per-route quiet change.\n\n## Risks\n- Legitimate large metadata uploads break. Mitigation: 7-day log scan of `/v1/media/upload-meta` body sizes → p99.9 should be ≪ 512KB before cutover.\n- Counter cardinality if many routes added later — keep label set bounded.",
     "stop_reason": "end_turn",
-    "session_id": "b0ceb5e1-5be8-400c-9429-63e13b519049",
-    "total_cost_usd": 0.154436,
+    "session_id": "9d37bd75-b950-49df-a673-6dfc36f79c06",
+    "total_cost_usd": 0.18111449999999998,
     "usage": {
       "input_tokens": 6,
-      "cache_creation_input_tokens": 17892,
-      "cache_read_input_tokens": 15186,
-      "output_tokens": 1170,
+      "cache_creation_input_tokens": 17750,
+      "cache_read_input_tokens": 15184,
+      "output_tokens": 2275,
       "server_tool_use": {
         "web_search_requests": 0,
         "web_fetch_requests": 0
       },
       "service_tier": "standard",
       "cache_creation": {
-        "ephemeral_1h_input_tokens": 17892,
+        "ephemeral_1h_input_tokens": 17750,
         "ephemeral_5m_input_tokens": 0
       },
       "inference_geo": "",
       "iterations": [
         {
           "input_tokens": 6,
-          "output_tokens": 1170,
-          "cache_read_input_tokens": 15186,
-          "cache_creation_input_tokens": 17892,
+          "output_tokens": 2275,
+          "cache_read_input_tokens": 15184,
+          "cache_creation_input_tokens": 17750,
           "cache_creation": {
             "ephemeral_5m_input_tokens": 0,
-            "ephemeral_1h_input_tokens": 17892
+            "ephemeral_1h_input_tokens": 17750
           },
           "type": "message"
         }
@@ -77,22 +77,22 @@
     },
     "modelUsage": {
       "claude-haiku-4-5-20251001": {
-        "inputTokens": 5668,
-        "outputTokens": 14,
+        "inputTokens": 5595,
+        "outputTokens": 17,
         "cacheReadInputTokens": 0,
         "cacheCreationInputTokens": 0,
         "webSearchRequests": 0,
-        "costUSD": 0.005738,
+        "costUSD": 0.00568,
         "contextWindow": 200000,
         "maxOutputTokens": 32000
       },
       "claude-opus-4-7": {
         "inputTokens": 6,
-        "outputTokens": 1170,
-        "cacheReadInputTokens": 15186,
-        "cacheCreationInputTokens": 17892,
+        "outputTokens": 2275,
+        "cacheReadInputTokens": 15184,
+        "cacheCreationInputTokens": 17750,
         "webSearchRequests": 0,
-        "costUSD": 0.148698,
+        "costUSD": 0.1754345,
         "contextWindow": 1000000,
         "maxOutputTokens": 64000
       }
@@ -100,6 +100,6 @@
     "permission_denials": [],
     "terminal_reason": "completed",
     "fast_mode_state": "off",
-    "uuid": "b4c2bb7b-2ae8-4219-862a-4089d0260945"
+    "uuid": "75165fc3-703b-48be-8654-66f4393b7041"
   }
 }

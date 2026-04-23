@@ -14,61 +14,61 @@
   ],
   "digest_hex": "2bb2d5707e1a95f128e077efe38d2768de5a410e8723ddc95510208906649ba7",
   "seed": "hewn-bench-v1",
-  "timestamp": "2026-04-22T00:39:42.564564+00:00",
-  "output_tokens_tiktoken": 21,
-  "output_tokens_anthropic": 100,
+  "timestamp": "2026-04-23T09:58:36.588635+00:00",
+  "output_tokens_tiktoken": 366,
+  "output_tokens_anthropic": 784,
   "input_tokens_anthropic": 6,
-  "cache_creation_input_tokens": 0,
-  "cache_read_input_tokens": 31422,
-  "total_input_tokens": 31428,
+  "cache_creation_input_tokens": 17743,
+  "cache_read_input_tokens": 13739,
+  "total_input_tokens": 31488,
   "cache_state": "warm",
-  "wallclock_ms": 7435.559006000403,
-  "duration_ms": 2675,
-  "duration_api_ms": 3905,
+  "wallclock_ms": 17490.254681033548,
+  "duration_ms": 14555,
+  "duration_api_ms": 15924,
   "wrapper_overhead_ms": null,
   "stop_reason": "end_turn",
   "num_turns": 1,
-  "session_id": "560737b8-f4e4-4b29-9b9d-fe648c32632a",
-  "total_cost_usd": 0.023816,
+  "session_id": "5cb824ba-f252-42f8-bfdb-6f20b4f5ee9a",
+  "total_cost_usd": 0.14306225,
   "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
-  "result": "No task specified after `[Task]`. What would you like me to do with the Atlas API handbook?",
+  "result": "**Risk**\n- `req.headers['x-forwarded-for']` trusted directly → XFF spoof defeats per-IP limits (repro of 2025-09 SEV1). Also violates lint rule `no-direct-xff-read`.\n- `redis.incr(key)` with no `EXPIRE` → unbounded keys, Redis OOM (repro of 2025-11 SEV2). Violates `no-unbounded-redis-key`.\n- Key missing route prefix, minute bucket, and region → global cross-route collision (repro of 2025-12 SEV2).\n\n**Mitigation**\n```ts\nconst ip = trustedClientIp(req) // validates against config/trusted_proxies.json\nconst bucket = Math.floor(Date.now() / 60000)\nconst key = `rl:${region}:${ip}:${routePrefix}:${bucket}`\nconst multi = redis.multi()\nmulti.incr(key)\nmulti.expire(key, 90)\nconst [count] = await multi.exec()\n```\n\n**Verify**\n- `npm run lint` — must flag the original diff on `no-direct-xff-read` and `no-unbounded-redis-key`; clean after fix.\n- Integration test: spoofed `X-Forwarded-For` per request from one `remoteAddress` still hits the limit.\n- Integration test: after N INCRs, `redis-cli TTL <key>` returns ≤ 90, not `-1`.\n- Unit test: two regions, same user → distinct keys.\n\n**Residual risks**\n- `trustedClientIp` only as strong as `config/trusted_proxies.json`; confirm CODEOWNERS gate on that file is intact.\n- Sliding-window approximation still permits ~2× burst at bucket boundary — acceptable per Section 4, note if route is sensitive.",
   "assertion_pass": true,
   "raw_payload": {
     "type": "result",
     "subtype": "success",
     "is_error": false,
     "api_error_status": null,
-    "duration_ms": 2675,
-    "duration_api_ms": 3905,
+    "duration_ms": 14555,
+    "duration_api_ms": 15924,
     "num_turns": 1,
-    "result": "No task specified after `[Task]`. What would you like me to do with the Atlas API handbook?",
+    "result": "**Risk**\n- `req.headers['x-forwarded-for']` trusted directly → XFF spoof defeats per-IP limits (repro of 2025-09 SEV1). Also violates lint rule `no-direct-xff-read`.\n- `redis.incr(key)` with no `EXPIRE` → unbounded keys, Redis OOM (repro of 2025-11 SEV2). Violates `no-unbounded-redis-key`.\n- Key missing route prefix, minute bucket, and region → global cross-route collision (repro of 2025-12 SEV2).\n\n**Mitigation**\n```ts\nconst ip = trustedClientIp(req) // validates against config/trusted_proxies.json\nconst bucket = Math.floor(Date.now() / 60000)\nconst key = `rl:${region}:${ip}:${routePrefix}:${bucket}`\nconst multi = redis.multi()\nmulti.incr(key)\nmulti.expire(key, 90)\nconst [count] = await multi.exec()\n```\n\n**Verify**\n- `npm run lint` — must flag the original diff on `no-direct-xff-read` and `no-unbounded-redis-key`; clean after fix.\n- Integration test: spoofed `X-Forwarded-For` per request from one `remoteAddress` still hits the limit.\n- Integration test: after N INCRs, `redis-cli TTL <key>` returns ≤ 90, not `-1`.\n- Unit test: two regions, same user → distinct keys.\n\n**Residual risks**\n- `trustedClientIp` only as strong as `config/trusted_proxies.json`; confirm CODEOWNERS gate on that file is intact.\n- Sliding-window approximation still permits ~2× burst at bucket boundary — acceptable per Section 4, note if route is sensitive.",
     "stop_reason": "end_turn",
-    "session_id": "560737b8-f4e4-4b29-9b9d-fe648c32632a",
-    "total_cost_usd": 0.023816,
+    "session_id": "5cb824ba-f252-42f8-bfdb-6f20b4f5ee9a",
+    "total_cost_usd": 0.14306225,
     "usage": {
       "input_tokens": 6,
-      "cache_creation_input_tokens": 0,
-      "cache_read_input_tokens": 31422,
-      "output_tokens": 100,
+      "cache_creation_input_tokens": 17743,
+      "cache_read_input_tokens": 13739,
+      "output_tokens": 784,
       "server_tool_use": {
         "web_search_requests": 0,
         "web_fetch_requests": 0
       },
       "service_tier": "standard",
       "cache_creation": {
-        "ephemeral_1h_input_tokens": 0,
+        "ephemeral_1h_input_tokens": 17743,
         "ephemeral_5m_input_tokens": 0
       },
       "inference_geo": "",
       "iterations": [
         {
           "input_tokens": 6,
-          "output_tokens": 100,
-          "cache_read_input_tokens": 31422,
-          "cache_creation_input_tokens": 0,
+          "output_tokens": 784,
+          "cache_read_input_tokens": 13739,
+          "cache_creation_input_tokens": 17743,
           "cache_creation": {
             "ephemeral_5m_input_tokens": 0,
-            "ephemeral_1h_input_tokens": 0
+            "ephemeral_1h_input_tokens": 17743
           },
           "type": "message"
         }
@@ -77,22 +77,22 @@
     },
     "modelUsage": {
       "claude-haiku-4-5-20251001": {
-        "inputTokens": 5505,
-        "outputTokens": 14,
+        "inputTokens": 5584,
+        "outputTokens": 17,
         "cacheReadInputTokens": 0,
         "cacheCreationInputTokens": 0,
         "webSearchRequests": 0,
-        "costUSD": 0.005575,
+        "costUSD": 0.005669,
         "contextWindow": 200000,
         "maxOutputTokens": 32000
       },
       "claude-opus-4-7": {
         "inputTokens": 6,
-        "outputTokens": 100,
-        "cacheReadInputTokens": 31422,
-        "cacheCreationInputTokens": 0,
+        "outputTokens": 784,
+        "cacheReadInputTokens": 13739,
+        "cacheCreationInputTokens": 17743,
         "webSearchRequests": 0,
-        "costUSD": 0.018241,
+        "costUSD": 0.13739325,
         "contextWindow": 1000000,
         "maxOutputTokens": 64000
       }
@@ -100,6 +100,6 @@
     "permission_denials": [],
     "terminal_reason": "completed",
     "fast_mode_state": "off",
-    "uuid": "77b943ee-4f68-40df-b9df-f6f865490a87"
+    "uuid": "6088c3b6-b574-49ef-a608-acafcd1491b4"
   }
 }

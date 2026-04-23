@@ -69,10 +69,10 @@ balanced strict prose-caveman, v4 = current, with `(a) vague → ask,
 
 ---
 
-_Generated: 2026-04-23T07:39:30.074168+00:00_
+_Generated: 2026-04-23T10:53:26.099310+00:00_
 _Model: `claude-opus-4-7`_
 _Claude CLI: 2.1.118 (Claude Code)_
-_Hewn repo commit: 387d9dfa335c92fb90c29e7b4f7dc31bb0ff6921_
+_Hewn repo commit: 12706ded5cb7bc5498c11dd3c7fb7b76e303caf4_
 _Caveman repo commit pinned: 84cc3c14fa1e10182adaced856e003406ccd250d_
 _Caveman SKILL.md sha256: `1762eb9ab0b566d70f51b040dbfd77d1f5be89cfa70da874564bda38c111be7c`_
 _Random seed: `hewn-bench-v1`_
@@ -304,28 +304,28 @@ Cross-track join: `appended` side from T0 single run; `observed` side and `hewn_
 
 | Prompt | baseline | terse | caveman_full | caveman+ultra | hewn_prompt_only | hewn_full |
 |---|---:|---:|---:|---:|---:|---:|
-| `body-size-rollout-plan` | 1712 | 1548 | 1389 | 1630 | 1783 | 1758 |
-| `rate-limit-xff-review` | 146 | 100 | 72 | 54 | 201 | 4457 |
-| `transfer-handler-review` | 772 | 801 | 532 | 560 | 945 | 1205 |
-| **mean** | **877** | **816** | **664** | **748** | **976** | **2473** |
+| `body-size-rollout-plan` | 5224 | — | 1927 | 2289 | 4487 | 3783 |
+| `rate-limit-xff-review` | 1046 | 784 | 511 | 536 | 1299 | 913 |
+| `transfer-handler-review` | 1802 | 1630 | 1233 | 1556 | 2066 | 1600 |
+| **mean** | **2691** | **1207** | **1224** | **1460** | **2617** | **2099** |
 
 ### Hewn-vs-baseline (causal — both arms inherit default+CLAUDE.md)
 
 | Prompt | baseline | hewn_full | savings |
 |---|---:|---:|---:|
-| `body-size-rollout-plan` | 1712 | 1758 | −3% |
-| `rate-limit-xff-review` | 146 | 4457 | −2953% |
-| `transfer-handler-review` | 772 | 1205 | −56% |
-| **median** | | | **−56%** |
-| **mean** | | | **−1004%** |
+| `body-size-rollout-plan` | 5224 | 3783 | 28% |
+| `rate-limit-xff-review` | 1046 | 913 | 13% |
+| `transfer-handler-review` | 1802 | 1600 | 11% |
+| **median** | | | **13%** |
+| **mean** | | | **17%** |
 
 ### Wall-clock latency (median, ms)
 
 | Prompt | baseline | terse | caveman_full | caveman+ultra | hewn_prompt_only | hewn_full |
 |---|---:|---:|---:|---:|---:|---:|
-| `body-size-rollout-plan` | 31892 | 26159 | 25480 | 30524 | 32756 | 33747 |
-| `rate-limit-xff-review` | 4864 | 2556 | 2968 | 2645 | 4990 | 78529 |
-| `transfer-handler-review` | 12623 | 13293 | 9240 | 9540 | 17180 | 22537 |
+| `body-size-rollout-plan` | 88380 | — | 41435 | 44308 | 77791 | 70724 |
+| `rate-limit-xff-review` | 18847 | 14555 | 10478 | 10736 | 22314 | 18772 |
+| `transfer-handler-review` | 31795 | 30403 | 25611 | 28588 | 36883 | 30879 |
 
 ## T4 — Multi-turn (drift + isolated hook value)
 
@@ -359,25 +359,25 @@ OK — no session_id collision across distinct (arm, seq, run) tuples.
 
 | Prompt | baseline | terse | caveman_full | caveman+ultra | hewn_prompt_only | hewn_full |
 |---|---:|---:|---:|---:|---:|---:|
-| `outage-apology-email` | 481 | 483 | 538 | 450 | 457 | 481 |
-| `smart-drafts-release-note` | 13 | 10 | 12 | 14 | 17 | 15 |
-| **mean** | **247** | **247** | **275** | **232** | **237** | **248** |
+| `outage-apology-email` | 504 | 558 | 492 | 493 | 510 | 527 |
+| `smart-drafts-release-note` | 442 | 473 | 514 | 515 | 465 | 480 |
+| **mean** | **473** | **516** | **503** | **504** | **488** | **504** |
 
 ### Hewn-vs-baseline (causal — both arms inherit default+CLAUDE.md)
 
 | Prompt | baseline | hewn_full | savings |
 |---|---:|---:|---:|
-| `outage-apology-email` | 481 | 481 | 0% |
-| `smart-drafts-release-note` | 13 | 15 | −11% |
-| **median** | | | **−6%** |
-| **mean** | | | **−6%** |
+| `outage-apology-email` | 504 | 527 | −4% |
+| `smart-drafts-release-note` | 442 | 480 | −9% |
+| **median** | | | **−7%** |
+| **mean** | | | **−7%** |
 
 ### Wall-clock latency (median, ms)
 
 | Prompt | baseline | terse | caveman_full | caveman+ultra | hewn_prompt_only | hewn_full |
 |---|---:|---:|---:|---:|---:|---:|
-| `outage-apology-email` | 11520 | 10397 | 11910 | 11079 | 10673 | 12141 |
-| `smart-drafts-release-note` | 1680 | 3024 | 1779 | 1629 | 1978 | 2429 |
+| `outage-apology-email` | 11182 | 11359 | 10844 | 11679 | 11489 | 11210 |
+| `smart-drafts-release-note` | 10470 | 10996 | 13578 | 20260 | 10719 | 11055 |
 
 ## Quality — concepts coverage, literals, format compliance, judge failure rates
 
@@ -425,16 +425,12 @@ OK — no session_id collision across distinct (arm, seq, run) tuples.
 
 | Arm | concepts covered (mean ratio) | literals preserved (mean) | IR valid (rate) | filler/100w (mean) | concept-judge failures | readability (mean true ratio) |
 |---|---:|---:|---:|---:|---:|---:|
-| baseline | 5% | 0% | 0% | 0.5 | 0 | — |
-| caveman_full | 5% | 0% | 0% | 0.0 | 0 | — |
-| caveman_full_plus_ultra_directive | 5% | 0% | 0% | 0.0 | 0 | — |
-| hewn_full | 39% | 33% | 0% | 0.1 | 0 | — |
-| hewn_full_v1 | 27% | 42% | 0% | 0.1 | 0 | — |
-| hewn_full_v2 | 12% | 8% | 0% | 0.0 | 0 | — |
-| hewn_prompt_only | 6% | 0% | 0% | 0.0 | 0 | — |
-| hewn_prompt_only_v1 | 5% | 0% | 0% | 0.0 | 0 | — |
-| hewn_prompt_only_v2 | 5% | 0% | 0% | 0.1 | 0 | — |
-| terse | 5% | 0% | 0% | 0.0 | 0 | — |
+| baseline | 100% | 100% | 0% | 0.1 | 0 | — |
+| caveman_full | 100% | 92% | 0% | 0.1 | 0 | — |
+| caveman_full_plus_ultra_directive | 98% | 83% | 0% | 0.0 | 0 | — |
+| hewn_full | 100% | 100% | 0% | 0.1 | 0 | — |
+| hewn_prompt_only | 100% | 100% | 0% | 0.1 | 0 | — |
+| terse | 100% | 100% | 0% | 0.1 | 0 | — |
 
 ### T4
 
@@ -455,13 +451,9 @@ OK — no session_id collision across distinct (arm, seq, run) tuples.
 
 | Arm | concepts covered (mean ratio) | literals preserved (mean) | IR valid (rate) | filler/100w (mean) | concept-judge failures | readability (mean true ratio) |
 |---|---:|---:|---:|---:|---:|---:|
-| baseline | 0% | 0% | 0% | 0.4 | 0 | — |
-| caveman_full | 0% | 0% | 0% | 0.3 | 0 | — |
-| caveman_full_plus_ultra_directive | 0% | 0% | 0% | 0.2 | 0 | — |
-| hewn_full | 0% | 0% | 0% | 0.2 | 0 | — |
-| hewn_full_v1 | 0% | 0% | 0% | 0.5 | 0 | — |
-| hewn_full_v2 | 0% | 0% | 0% | 0.2 | 0 | — |
-| hewn_prompt_only | 0% | 0% | 0% | 0.5 | 0 | — |
-| hewn_prompt_only_v1 | 0% | 0% | 0% | 0.3 | 0 | — |
-| hewn_prompt_only_v2 | 0% | 0% | 0% | 3.5 | 0 | — |
-| terse | 0% | 0% | 0% | 0.4 | 0 | — |
+| baseline | 100% | 100% | 0% | 1.0 | 0 | — |
+| caveman_full | 100% | 100% | 0% | 0.4 | 0 | — |
+| caveman_full_plus_ultra_directive | 100% | 100% | 0% | 0.9 | 0 | — |
+| hewn_full | 100% | 100% | 0% | 0.4 | 0 | — |
+| hewn_prompt_only | 100% | 100% | 0% | 0.5 | 0 | — |
+| terse | 100% | 100% | 0% | 0.6 | 0 | — |

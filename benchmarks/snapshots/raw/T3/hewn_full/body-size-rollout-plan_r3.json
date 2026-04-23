@@ -14,61 +14,61 @@
   ],
   "digest_hex": "83cf61101f93c83952a720a1c10bb2b89a0fe33cd226823e26742150e5132c55",
   "seed": "hewn-bench-v1",
-  "timestamp": "2026-04-22T09:52:06.527122+00:00",
-  "output_tokens_tiktoken": 996,
-  "output_tokens_anthropic": 1518,
-  "input_tokens_anthropic": 6,
-  "cache_creation_input_tokens": 0,
-  "cache_read_input_tokens": 42532,
-  "total_input_tokens": 42538,
+  "timestamp": "2026-04-23T10:24:00.666409+00:00",
+  "output_tokens_tiktoken": 1514,
+  "output_tokens_anthropic": 4200,
+  "input_tokens_anthropic": 7,
+  "cache_creation_input_tokens": 27441,
+  "cache_read_input_tokens": 59241,
+  "total_input_tokens": 86689,
   "cache_state": "warm",
-  "wallclock_ms": 37947.41418698686,
-  "duration_ms": 31518,
-  "duration_api_ms": 32726,
-  "wrapper_overhead_ms": 5221.414186986862,
+  "wallclock_ms": 82266.82058995357,
+  "duration_ms": 78766,
+  "duration_api_ms": 80395,
+  "wrapper_overhead_ms": 1871.8205899535678,
   "stop_reason": "end_turn",
-  "num_turns": 1,
-  "session_id": "018d1bc9-36de-4153-9432-8611dc007a5a",
-  "total_cost_usd": 0.064984,
+  "num_turns": 3,
+  "session_id": "7e81e84f-9ce4-4e17-94e8-1e1c0782906e",
+  "total_cost_usd": 0.31185175,
   "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
-  "result": "1. Trusts client-supplied identity header. `req.headers['x-user-id']` violates Section 2 rule 1 — any external `X-User-Id` must be stripped by `header_sanitize` before handlers run. Handler lets a caller impersonate any user. Fix: delete the read; use `req.user.sub` (or the internal `X-Internal-User-Id` set after `auth_jwt`). Never read `X-User-Id` from the ingress request.\n\n2. No authentication enforced on handler. Handler does not confirm `req.user` exists; if registered off the main pipeline it bypasses `auth_jwt` entirely. Fix: register under the edge pipeline in `src/edge/pipeline.ts` after `auth_jwt`, and assert `req.user` + required roles (e.g. `transfer:write`) before touching `txSvc`.\n\n3. No org-membership/authorization check. User's validated `org` claim (`X-Internal-Org-Id`) is never compared to `req.params.org_id` — cross-org transfer possible with any valid JWT. Fix: reject with `403` if `req.user.org !== req.params.org_id` (or whatever RBAC rule applies).\n\n4. No input validation on body. `from`, `to`, `amount` used raw — no type, range, currency, or same-org account check; `amount` could be negative, string, NaN, or absurdly large. Fix: schema validate (zod/ajv); require positive integer minor-units, known-currency, `from`/`to` UUIDs, `from !== to`.\n\n5. Not routed through mTLS egress / `route_dispatcher`. Handler calls `txSvc.transfer` directly, bypassing Section 3 pipeline steps 6–8 (`route_dispatcher`, `mTLS_egress`, `response_filter`). Fix: dispatch via the standard egress so Envoy mTLS, internal headers (`X-Internal-User-Id`, `X-Internal-Org-Id`, `X-Internal-Auth-Method`), and response filtering apply.\n\n6. No rate limiting consideration for a money-moving POST. Default POST limit is 30/min/IP (Section 4); a transfer endpoint almost certainly wants a tighter per-user+per-org limit in `config/rate_limits.json`. Fix: add a route-prefix entry with a stricter limit, keyed on trusted IP + user id, not raw IP alone.\n\n7. No error handling / `next(err)`. `await txSvc.transfer(...)` can throw — unhandled rejection leaks to default handler, risks stacktrace/internal detail in response (Section 2 rule 6, Section 11). Fix: `try/catch` → `next(err)`; rely on `errorHandler.ts` for RFC 7807 body with `request_id`.\n\n8. Response is not RFC 7807 / lacks `request_id`. `{ok: true}` on success is fine, but any error path must include `request_id` matching the OTel trace and no internals. Fix: ensure error responses go through `errorHandler`; include `request_id` in success body too if downstream audit expects it.\n\n9. Missing audit log for a financial action. Section 3 step 9 requires `audit_log`; funds transfer is exactly what the 365-day audit bucket (Section 9) exists for. Fix: emit a structured audit event with `user_id`, `org_id`, `from`, `to`, `amount`, `request_id`, `jti`, result.\n\n10. No idempotency key. Money-moving POST with retries will double-transfer on network blips. Fix: require `Idempotency-Key` header, dedupe in `tx-svc` or at edge via Redis `SETNX` with TTL.\n\n11. Body size / content-type not asserted. Relies on `body_size_guard` (2MB default, Section 3) which is fine, but handler should assert `application/json` and a tight per-route size (e.g. 4KB). Fix: route-level `express.json({limit: '4kb'})` or validator rejects oversized.\n\n12. PII risk in logs. `from`/`to` may be account numbers; if logged raw they should go through `pii_redact` (Section 2 rule 5). Fix: extend redactor field list or hash account ids before logging.\n\n13. CODEOWNERS / review gate. Adding a money-moving route and any change to auth/rate-limit config needs CODEOWNERS approval per Section 6. Fix: ensure the PR touches `config/rate_limits.json` and gets a required human approver; add integration test against real Redis+PG (Section 6, Section 11 — no mocks).",
+  "result": "Repo has no `src/edge/` or `config/` — handbook is the spec, not shipped code. Plan targets paths as handbook describes.\n\n1. Per-route body size config — new file `config/body_size_limits.json` keyed by `METHOD route_prefix` → bytes, default 2097152, override `POST /v1/media/upload-meta` → 524288. Mirrors `config/rate_limits.json` shape so ops reviewers recognize it.\n\n2. `body_size_guard` middleware change (`src/edge/pipeline.ts` step 4 / its own file) — lookup limit by `(req.method, matched route prefix)` before reading body. Reject with `413` RFC 7807: `type: '/errors/body-too-large'`, `title: 'Payload Too Large'`, `status: 413`, `detail: 'Limit 524288 bytes exceeded'`, `instance: req.request_id`. No stacktrace, no internal host per Section 2 rule 6.\n\n3. Pipeline ordering preserved — guard stays at step 4 (before `auth_jwt`). DoS defense must not require JWT verify first; don't move it. If route prefix match needs dispatcher, do a lightweight prefix lookup inside the guard (same table as rate_limits), not full dispatcher.\n\n4. Streaming enforcement — enforce via `Content-Length` pre-check AND a streaming byte-counter on the request stream (abort+413 mid-stream). `Content-Length` alone is bypassable by chunked transfer; attackers doing DoS will omit or lie.\n\n5. CODEOWNERS approval — Section 6 lists `src/edge/auth_jwt.ts`, `rate_limit.ts`, `header_sanitize.ts`, `trusted_proxies.json` as gated. `body_size_guard` isn't named, but this is a security-relevant trust-boundary change; request CODEOWNERS add `body_size_guard.ts` and `body_size_limits.json` to the allowlist in the same PR.\n\n6. Unit tests (`src/edge/body_size_guard.test.ts`) — cases: 524287B accepted on `POST /v1/media/upload-meta`, 524289B rejected with exact RFC 7807 body, other routes still accept up to 2097152B, `GET` path unaffected, chunked request exceeding mid-stream aborts with `413`.\n\n7. Integration test (`tests/integration/body_size_media_upload_meta.test.ts`) — hits real Redis+PG per Section 11 rule, posts a real 600KB body to `/v1/media/upload-meta`, asserts `413` + problem+json, asserts no partial forward to `media-svc` (check Envoy egress counter unchanged).\n\n8. Lint / regression guard — add a test that asserts every route in `rate_limits.json` resolves a body_size limit (even if default), so the two configs can't silently drift. Prevents \"new route, forgot body limit\" regression.\n\n9. Metric — new counter `atlas_edge_body_size_rejections_total{route, method, reason}` where `reason ∈ {content_length, streamed}`. Register in same module as other `atlas_edge_*` metrics so Prometheus scrape picks it up with no config change.\n\n10. Alert — Alertmanager rule: sustained `rate(atlas_edge_body_size_rejections_total{route=\"/v1/media/upload-meta\"}[5m]) > X` → `#oncall-platform` (SEV3, not paging). X set from a week of baseline body-size histogram data — see next item. Alert is for \"legit users broken\", not for DoS (DoS being blocked is success).\n\n11. Pre-rollout size histogram — before shipping the clamp, add `atlas_edge_request_body_size_bytes{route, method}` histogram (buckets 64KB, 128KB, 256KB, 512KB, 1MB, 2MB) and ship that alone first. Leave it a week; confirm P99 of legit `POST /v1/media/upload-meta` bodies is well under 512KB. If not, raise the limit before step 12 or the rollout creates a user-visible outage.\n\n12. Rollout sequence per Section 6 — canary `us-east-1` 5% for 30 min, soak 10 min, then eu-west-1 full, soak 10 min, then ap-southeast-1 full. Watch the new rejection counter and `atlas_edge_requests_total{route=\"/v1/media/upload-meta\",status_class=\"4xx\"}` at each step. Add route to `config/always_trace_routes.json` for the rollout week so we have 100% traces on rejections for forensics.\n\n13. Rollback — two levers. (a) Cheap: flip the entry in `config/body_size_limits.json` back to 2097152 and Argo-sync; no code revert needed if limits are hot-loaded. Confirm config is hot-reloaded or triggers a pod restart that's fast enough. (b) If code path is buggy, Argo rollback to previous green per region — same SEV1 auto-rollback that already exists covers it.\n\n14. Config reload semantics — verify whether `config/*.json` is read once at boot or watched. If boot-only, rollback via config is a full re-deploy; either add a SIGHUP reload for `body_size_limits.json` now, or document that rollback = revert PR + re-deploy. Don't leave this ambiguous before rollout.\n\n15. Abuse-pattern confirmation — before clamping, pull 7 days of `media-svc` logs for `POST /v1/media/upload-meta` and verify the DoS pattern (bodies well above 512KB from few IPs, or many small IPs rotating). If the abuse is actually small bodies at high rate, clamp fixes nothing — rate-limit rule in `config/rate_limits.json` is the right lever. Don't ship the wrong fix.\n\n16. Comms — (a) `#oncall-platform` announce + link to PR and rollout window. (b) Partner integrations team (API-key users per Section 5): direct email to their engineering contact if any partner uses this route, with 512KB limit and `413` shape. (c) First-party client teams (web + mobile): Slack DM with the new limit and expected `413` body so clients can surface a user-friendly error instead of generic failure. (d) Public API docs update (changelog + route reference) same day as `us-east-1` canary, not earlier (don't advertise a limit you haven't shipped). (e) Security on-call FYI since this closes a DoS vector — ask whether they want forensic capture of rejected requests (bodies are dropped pre-auth so PII risk is low, but confirm).\n\n17. Audit log field — add `rejected_reason: 'body_too_large'` to the Section 3 step 9 audit log line when the guard fires, so the 365-day S3 audit trail has the abuse signal. Redaction per Section 2 rule 5 still applies to any PII header.\n\nOpen risk: guard runs before `auth_jwt`, so rejections are anonymous — you can count them by IP (from `trustedClientIp`) but cannot attribute to user/org. That's acceptable for DoS defense; note it in the PR so reviewers don't ask.",
   "assertion_pass": true,
   "raw_payload": {
     "type": "result",
     "subtype": "success",
     "is_error": false,
     "api_error_status": null,
-    "duration_ms": 31518,
-    "duration_api_ms": 32726,
-    "num_turns": 1,
-    "result": "1. Trusts client-supplied identity header. `req.headers['x-user-id']` violates Section 2 rule 1 — any external `X-User-Id` must be stripped by `header_sanitize` before handlers run. Handler lets a caller impersonate any user. Fix: delete the read; use `req.user.sub` (or the internal `X-Internal-User-Id` set after `auth_jwt`). Never read `X-User-Id` from the ingress request.\n\n2. No authentication enforced on handler. Handler does not confirm `req.user` exists; if registered off the main pipeline it bypasses `auth_jwt` entirely. Fix: register under the edge pipeline in `src/edge/pipeline.ts` after `auth_jwt`, and assert `req.user` + required roles (e.g. `transfer:write`) before touching `txSvc`.\n\n3. No org-membership/authorization check. User's validated `org` claim (`X-Internal-Org-Id`) is never compared to `req.params.org_id` — cross-org transfer possible with any valid JWT. Fix: reject with `403` if `req.user.org !== req.params.org_id` (or whatever RBAC rule applies).\n\n4. No input validation on body. `from`, `to`, `amount` used raw — no type, range, currency, or same-org account check; `amount` could be negative, string, NaN, or absurdly large. Fix: schema validate (zod/ajv); require positive integer minor-units, known-currency, `from`/`to` UUIDs, `from !== to`.\n\n5. Not routed through mTLS egress / `route_dispatcher`. Handler calls `txSvc.transfer` directly, bypassing Section 3 pipeline steps 6–8 (`route_dispatcher`, `mTLS_egress`, `response_filter`). Fix: dispatch via the standard egress so Envoy mTLS, internal headers (`X-Internal-User-Id`, `X-Internal-Org-Id`, `X-Internal-Auth-Method`), and response filtering apply.\n\n6. No rate limiting consideration for a money-moving POST. Default POST limit is 30/min/IP (Section 4); a transfer endpoint almost certainly wants a tighter per-user+per-org limit in `config/rate_limits.json`. Fix: add a route-prefix entry with a stricter limit, keyed on trusted IP + user id, not raw IP alone.\n\n7. No error handling / `next(err)`. `await txSvc.transfer(...)` can throw — unhandled rejection leaks to default handler, risks stacktrace/internal detail in response (Section 2 rule 6, Section 11). Fix: `try/catch` → `next(err)`; rely on `errorHandler.ts` for RFC 7807 body with `request_id`.\n\n8. Response is not RFC 7807 / lacks `request_id`. `{ok: true}` on success is fine, but any error path must include `request_id` matching the OTel trace and no internals. Fix: ensure error responses go through `errorHandler`; include `request_id` in success body too if downstream audit expects it.\n\n9. Missing audit log for a financial action. Section 3 step 9 requires `audit_log`; funds transfer is exactly what the 365-day audit bucket (Section 9) exists for. Fix: emit a structured audit event with `user_id`, `org_id`, `from`, `to`, `amount`, `request_id`, `jti`, result.\n\n10. No idempotency key. Money-moving POST with retries will double-transfer on network blips. Fix: require `Idempotency-Key` header, dedupe in `tx-svc` or at edge via Redis `SETNX` with TTL.\n\n11. Body size / content-type not asserted. Relies on `body_size_guard` (2MB default, Section 3) which is fine, but handler should assert `application/json` and a tight per-route size (e.g. 4KB). Fix: route-level `express.json({limit: '4kb'})` or validator rejects oversized.\n\n12. PII risk in logs. `from`/`to` may be account numbers; if logged raw they should go through `pii_redact` (Section 2 rule 5). Fix: extend redactor field list or hash account ids before logging.\n\n13. CODEOWNERS / review gate. Adding a money-moving route and any change to auth/rate-limit config needs CODEOWNERS approval per Section 6. Fix: ensure the PR touches `config/rate_limits.json` and gets a required human approver; add integration test against real Redis+PG (Section 6, Section 11 — no mocks).",
+    "duration_ms": 78766,
+    "duration_api_ms": 80395,
+    "num_turns": 3,
+    "result": "Repo has no `src/edge/` or `config/` — handbook is the spec, not shipped code. Plan targets paths as handbook describes.\n\n1. Per-route body size config — new file `config/body_size_limits.json` keyed by `METHOD route_prefix` → bytes, default 2097152, override `POST /v1/media/upload-meta` → 524288. Mirrors `config/rate_limits.json` shape so ops reviewers recognize it.\n\n2. `body_size_guard` middleware change (`src/edge/pipeline.ts` step 4 / its own file) — lookup limit by `(req.method, matched route prefix)` before reading body. Reject with `413` RFC 7807: `type: '/errors/body-too-large'`, `title: 'Payload Too Large'`, `status: 413`, `detail: 'Limit 524288 bytes exceeded'`, `instance: req.request_id`. No stacktrace, no internal host per Section 2 rule 6.\n\n3. Pipeline ordering preserved — guard stays at step 4 (before `auth_jwt`). DoS defense must not require JWT verify first; don't move it. If route prefix match needs dispatcher, do a lightweight prefix lookup inside the guard (same table as rate_limits), not full dispatcher.\n\n4. Streaming enforcement — enforce via `Content-Length` pre-check AND a streaming byte-counter on the request stream (abort+413 mid-stream). `Content-Length` alone is bypassable by chunked transfer; attackers doing DoS will omit or lie.\n\n5. CODEOWNERS approval — Section 6 lists `src/edge/auth_jwt.ts`, `rate_limit.ts`, `header_sanitize.ts`, `trusted_proxies.json` as gated. `body_size_guard` isn't named, but this is a security-relevant trust-boundary change; request CODEOWNERS add `body_size_guard.ts` and `body_size_limits.json` to the allowlist in the same PR.\n\n6. Unit tests (`src/edge/body_size_guard.test.ts`) — cases: 524287B accepted on `POST /v1/media/upload-meta`, 524289B rejected with exact RFC 7807 body, other routes still accept up to 2097152B, `GET` path unaffected, chunked request exceeding mid-stream aborts with `413`.\n\n7. Integration test (`tests/integration/body_size_media_upload_meta.test.ts`) — hits real Redis+PG per Section 11 rule, posts a real 600KB body to `/v1/media/upload-meta`, asserts `413` + problem+json, asserts no partial forward to `media-svc` (check Envoy egress counter unchanged).\n\n8. Lint / regression guard — add a test that asserts every route in `rate_limits.json` resolves a body_size limit (even if default), so the two configs can't silently drift. Prevents \"new route, forgot body limit\" regression.\n\n9. Metric — new counter `atlas_edge_body_size_rejections_total{route, method, reason}` where `reason ∈ {content_length, streamed}`. Register in same module as other `atlas_edge_*` metrics so Prometheus scrape picks it up with no config change.\n\n10. Alert — Alertmanager rule: sustained `rate(atlas_edge_body_size_rejections_total{route=\"/v1/media/upload-meta\"}[5m]) > X` → `#oncall-platform` (SEV3, not paging). X set from a week of baseline body-size histogram data — see next item. Alert is for \"legit users broken\", not for DoS (DoS being blocked is success).\n\n11. Pre-rollout size histogram — before shipping the clamp, add `atlas_edge_request_body_size_bytes{route, method}` histogram (buckets 64KB, 128KB, 256KB, 512KB, 1MB, 2MB) and ship that alone first. Leave it a week; confirm P99 of legit `POST /v1/media/upload-meta` bodies is well under 512KB. If not, raise the limit before step 12 or the rollout creates a user-visible outage.\n\n12. Rollout sequence per Section 6 — canary `us-east-1` 5% for 30 min, soak 10 min, then eu-west-1 full, soak 10 min, then ap-southeast-1 full. Watch the new rejection counter and `atlas_edge_requests_total{route=\"/v1/media/upload-meta\",status_class=\"4xx\"}` at each step. Add route to `config/always_trace_routes.json` for the rollout week so we have 100% traces on rejections for forensics.\n\n13. Rollback — two levers. (a) Cheap: flip the entry in `config/body_size_limits.json` back to 2097152 and Argo-sync; no code revert needed if limits are hot-loaded. Confirm config is hot-reloaded or triggers a pod restart that's fast enough. (b) If code path is buggy, Argo rollback to previous green per region — same SEV1 auto-rollback that already exists covers it.\n\n14. Config reload semantics — verify whether `config/*.json` is read once at boot or watched. If boot-only, rollback via config is a full re-deploy; either add a SIGHUP reload for `body_size_limits.json` now, or document that rollback = revert PR + re-deploy. Don't leave this ambiguous before rollout.\n\n15. Abuse-pattern confirmation — before clamping, pull 7 days of `media-svc` logs for `POST /v1/media/upload-meta` and verify the DoS pattern (bodies well above 512KB from few IPs, or many small IPs rotating). If the abuse is actually small bodies at high rate, clamp fixes nothing — rate-limit rule in `config/rate_limits.json` is the right lever. Don't ship the wrong fix.\n\n16. Comms — (a) `#oncall-platform` announce + link to PR and rollout window. (b) Partner integrations team (API-key users per Section 5): direct email to their engineering contact if any partner uses this route, with 512KB limit and `413` shape. (c) First-party client teams (web + mobile): Slack DM with the new limit and expected `413` body so clients can surface a user-friendly error instead of generic failure. (d) Public API docs update (changelog + route reference) same day as `us-east-1` canary, not earlier (don't advertise a limit you haven't shipped). (e) Security on-call FYI since this closes a DoS vector — ask whether they want forensic capture of rejected requests (bodies are dropped pre-auth so PII risk is low, but confirm).\n\n17. Audit log field — add `rejected_reason: 'body_too_large'` to the Section 3 step 9 audit log line when the guard fires, so the 365-day S3 audit trail has the abuse signal. Redaction per Section 2 rule 5 still applies to any PII header.\n\nOpen risk: guard runs before `auth_jwt`, so rejections are anonymous — you can count them by IP (from `trustedClientIp`) but cannot attribute to user/org. That's acceptable for DoS defense; note it in the PR so reviewers don't ask.",
     "stop_reason": "end_turn",
-    "session_id": "018d1bc9-36de-4153-9432-8611dc007a5a",
-    "total_cost_usd": 0.064984,
+    "session_id": "7e81e84f-9ce4-4e17-94e8-1e1c0782906e",
+    "total_cost_usd": 0.31185175,
     "usage": {
-      "input_tokens": 6,
-      "cache_creation_input_tokens": 0,
-      "cache_read_input_tokens": 42532,
-      "output_tokens": 1518,
+      "input_tokens": 7,
+      "cache_creation_input_tokens": 27441,
+      "cache_read_input_tokens": 59241,
+      "output_tokens": 4200,
       "server_tool_use": {
         "web_search_requests": 0,
         "web_fetch_requests": 0
       },
       "service_tier": "standard",
       "cache_creation": {
-        "ephemeral_1h_input_tokens": 0,
+        "ephemeral_1h_input_tokens": 27441,
         "ephemeral_5m_input_tokens": 0
       },
       "inference_geo": "",
       "iterations": [
         {
-          "input_tokens": 6,
-          "output_tokens": 1518,
-          "cache_read_input_tokens": 42532,
-          "cache_creation_input_tokens": 0,
+          "input_tokens": 1,
+          "output_tokens": 2468,
+          "cache_read_input_tokens": 42438,
+          "cache_creation_input_tokens": 1806,
           "cache_creation": {
             "ephemeral_5m_input_tokens": 0,
-            "ephemeral_1h_input_tokens": 0
+            "ephemeral_1h_input_tokens": 1806
           },
           "type": "message"
         }
@@ -77,22 +77,22 @@
     },
     "modelUsage": {
       "claude-haiku-4-5-20251001": {
-        "inputTokens": 5668,
-        "outputTokens": 14,
+        "inputTokens": 5595,
+        "outputTokens": 19,
         "cacheReadInputTokens": 0,
         "cacheCreationInputTokens": 0,
         "webSearchRequests": 0,
-        "costUSD": 0.005738,
+        "costUSD": 0.00569,
         "contextWindow": 200000,
         "maxOutputTokens": 32000
       },
       "claude-opus-4-7": {
-        "inputTokens": 6,
-        "outputTokens": 1518,
-        "cacheReadInputTokens": 42532,
-        "cacheCreationInputTokens": 0,
+        "inputTokens": 7,
+        "outputTokens": 4200,
+        "cacheReadInputTokens": 59241,
+        "cacheCreationInputTokens": 27441,
         "webSearchRequests": 0,
-        "costUSD": 0.059246,
+        "costUSD": 0.30616175,
         "contextWindow": 1000000,
         "maxOutputTokens": 64000
       }
@@ -100,6 +100,6 @@
     "permission_denials": [],
     "terminal_reason": "completed",
     "fast_mode_state": "off",
-    "uuid": "0e8690a3-1302-480f-b207-11408d9b1f84"
+    "uuid": "f45e2937-83b6-4690-b864-82a638308589"
   }
 }

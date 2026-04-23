@@ -1,0 +1,105 @@
+{
+  "track": "T3",
+  "arm": "hewn_prompt_only",
+  "prompt_id": "body-size-rollout-plan",
+  "run_index": 3,
+  "arm_order_index": 1,
+  "arm_order_full": [
+    "hewn_full",
+    "hewn_prompt_only",
+    "baseline",
+    "terse",
+    "caveman_full_plus_ultra_directive",
+    "caveman_full"
+  ],
+  "digest_hex": "83cf61101f93c83952a720a1c10bb2b89a0fe33cd226823e26742150e5132c55",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T09:52:44.476369+00:00",
+  "output_tokens_tiktoken": 1167,
+  "output_tokens_anthropic": 1783,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 24449,
+  "cache_read_input_tokens": 16796,
+  "total_input_tokens": 41251,
+  "cache_state": "warm",
+  "wallclock_ms": 39074.651201983215,
+  "duration_ms": 32756,
+  "duration_api_ms": 33883,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "3b66a976-aa2e-4b5a-8fbd-49d0a71c57f7",
+  "total_cost_usd": 0.21154725,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "# Review: `POST /v1/orgs/:org_id/transfer`\n\n## P0 — Security / Trust Boundary\n\n**1. Trusts client-supplied `X-User-Id` header** (Section 2 rule 1, Section 5)\n- `req.headers['x-user-id']` is a client-controlled value. Section 2 rule 1 says these MUST be stripped at the edge before handlers run — reading one back is the exact impersonation path `header_sanitize` exists to prevent. A caller sets `X-User-Id: <victim>` and drains their accounts.\n- Fix: read identity from `req.user` populated by `auth_jwt` middleware (the `sub` claim), i.e. `req.user.sub`. If the handler needs org scope, use `req.user.org` and verify it matches `req.params.org_id` (return `403` on mismatch).\n- Verify: add a test that sends `X-User-Id: attacker` with a JWT for a different user and asserts the transfer is attributed to the JWT subject, not the header.\n\n**2. No authorization check that caller belongs to `:org_id`**\n- Even with a valid JWT, nothing confirms `req.user.org === req.params.org_id` or that the user has a role permitting transfers. Cross-tenant transfer is possible.\n- Fix: explicit org-membership + role check before calling `txSvc.transfer`. Return `403` (RFC 7807 problem+json) on failure.\n\n## P1 — Correctness\n\n**3. No input validation on `from`, `to`, `amount`**\n- `amount` could be negative, zero, a string, `NaN`, or wildly large; `from`/`to` could be account IDs outside the org, identical, or missing. The handler hands unvalidated input straight to `txSvc`.\n- Fix: schema-validate the body (zod/ajv), reject with `400` problem+json on failure. At minimum: `amount` is a positive integer (minor units) under a sane cap, `from !== to`, both are UUIDs, both belong to `org_id`.\n\n**4. No body-size / content-type guard at route level**\n- `body_size_guard` runs globally, but a transfer endpoint should also reject non-JSON content-type explicitly.\n\n**5. No error handling — unhandled rejection on `txSvc.transfer` failure**\n- If `txSvc.transfer` rejects (network error, insufficient funds, downstream `5xx`), the promise is unhandled: Express 5 will surface it, but the junior's intent is unclear and there's no mapping to a problem+json response per Section 2 rule 6.\n- Fix: `try/catch` and `next(err)` to the central error handler (Section 11), or `await` inside a wrapper. Map known domain errors (insufficient funds, account not found) to specific `4xx` with stable `type` URIs.\n\n**6. No idempotency key**\n- Funds transfers MUST be idempotent. A retry on a network blip will double-debit. Require `Idempotency-Key` header, reject with `400` if missing, and pass it through to `tx-svc`.\n\n## P2 — Observability / Audit\n\n**7. No audit log line for a money-moving operation**\n- Section 9 requires audit logs for security-relevant events; a funds transfer qualifies. The handler returns `{ok: true}` with no record of who moved what.\n- Fix: emit a structured audit log with `request_id`, `user_id` (from JWT), `org_id`, `from`, `to`, `amount`, outcome. Do not log any PII beyond what Section 2 rule 5 allows.\n\n**8. Response is not RFC 7807 on errors, and success body is thin**\n- Section 2 rule 6: error responses must be problem+json with `request_id`. Success responses should include a `transfer_id` / `request_id` so clients can correlate and retry safely with the idempotency key.\n\n## P3 — Style / Standards\n\n**9. Route registered directly on `app` instead of the pipeline router**\n- Section 3 defines an ordered middleware chain in `src/edge/pipeline.ts`. Ad-hoc `app.post(...)` bypasses the expected registration pattern and risks skipping a middleware in future refactors. Register via the pipeline's router module.\n\n**10. Rate limit category**\n- `POST` default is 30/min/IP (Section 4). A transfer endpoint likely wants a tighter, route-specific limit in `config/rate_limits.json` — abuse of an untightened default is a cheap brute-force on transfer semantics.\n\n**11. No TypeScript / types**\n- Section 11 mandates TS strict. The draft is plain JS; port to `.ts` with typed `req.body` via the validation schema.\n\n---\n\n## Suggested minimum diff direction\n\n- Move to `src/edge/routes/transfer.ts` (TypeScript).\n- Read identity from `req.user.sub` / `req.user.org`; assert `req.user.org === req.params.org_id`.\n- Validate body with a schema; require `Idempotency-Key`.\n- Wrap `txSvc.transfer` in `try/catch` → `next(err)`; map domain errors.\n- Emit audit log on both success and failure.\n- Add route-specific entry in `config/rate_limits.json`.\n- Add CODEOWNERS approval if this pulls in changes to `auth_jwt.ts` or `header_sanitize.ts` (Section 6).",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 32756,
+    "duration_api_ms": 33883,
+    "num_turns": 1,
+    "result": "# Review: `POST /v1/orgs/:org_id/transfer`\n\n## P0 — Security / Trust Boundary\n\n**1. Trusts client-supplied `X-User-Id` header** (Section 2 rule 1, Section 5)\n- `req.headers['x-user-id']` is a client-controlled value. Section 2 rule 1 says these MUST be stripped at the edge before handlers run — reading one back is the exact impersonation path `header_sanitize` exists to prevent. A caller sets `X-User-Id: <victim>` and drains their accounts.\n- Fix: read identity from `req.user` populated by `auth_jwt` middleware (the `sub` claim), i.e. `req.user.sub`. If the handler needs org scope, use `req.user.org` and verify it matches `req.params.org_id` (return `403` on mismatch).\n- Verify: add a test that sends `X-User-Id: attacker` with a JWT for a different user and asserts the transfer is attributed to the JWT subject, not the header.\n\n**2. No authorization check that caller belongs to `:org_id`**\n- Even with a valid JWT, nothing confirms `req.user.org === req.params.org_id` or that the user has a role permitting transfers. Cross-tenant transfer is possible.\n- Fix: explicit org-membership + role check before calling `txSvc.transfer`. Return `403` (RFC 7807 problem+json) on failure.\n\n## P1 — Correctness\n\n**3. No input validation on `from`, `to`, `amount`**\n- `amount` could be negative, zero, a string, `NaN`, or wildly large; `from`/`to` could be account IDs outside the org, identical, or missing. The handler hands unvalidated input straight to `txSvc`.\n- Fix: schema-validate the body (zod/ajv), reject with `400` problem+json on failure. At minimum: `amount` is a positive integer (minor units) under a sane cap, `from !== to`, both are UUIDs, both belong to `org_id`.\n\n**4. No body-size / content-type guard at route level**\n- `body_size_guard` runs globally, but a transfer endpoint should also reject non-JSON content-type explicitly.\n\n**5. No error handling — unhandled rejection on `txSvc.transfer` failure**\n- If `txSvc.transfer` rejects (network error, insufficient funds, downstream `5xx`), the promise is unhandled: Express 5 will surface it, but the junior's intent is unclear and there's no mapping to a problem+json response per Section 2 rule 6.\n- Fix: `try/catch` and `next(err)` to the central error handler (Section 11), or `await` inside a wrapper. Map known domain errors (insufficient funds, account not found) to specific `4xx` with stable `type` URIs.\n\n**6. No idempotency key**\n- Funds transfers MUST be idempotent. A retry on a network blip will double-debit. Require `Idempotency-Key` header, reject with `400` if missing, and pass it through to `tx-svc`.\n\n## P2 — Observability / Audit\n\n**7. No audit log line for a money-moving operation**\n- Section 9 requires audit logs for security-relevant events; a funds transfer qualifies. The handler returns `{ok: true}` with no record of who moved what.\n- Fix: emit a structured audit log with `request_id`, `user_id` (from JWT), `org_id`, `from`, `to`, `amount`, outcome. Do not log any PII beyond what Section 2 rule 5 allows.\n\n**8. Response is not RFC 7807 on errors, and success body is thin**\n- Section 2 rule 6: error responses must be problem+json with `request_id`. Success responses should include a `transfer_id` / `request_id` so clients can correlate and retry safely with the idempotency key.\n\n## P3 — Style / Standards\n\n**9. Route registered directly on `app` instead of the pipeline router**\n- Section 3 defines an ordered middleware chain in `src/edge/pipeline.ts`. Ad-hoc `app.post(...)` bypasses the expected registration pattern and risks skipping a middleware in future refactors. Register via the pipeline's router module.\n\n**10. Rate limit category**\n- `POST` default is 30/min/IP (Section 4). A transfer endpoint likely wants a tighter, route-specific limit in `config/rate_limits.json` — abuse of an untightened default is a cheap brute-force on transfer semantics.\n\n**11. No TypeScript / types**\n- Section 11 mandates TS strict. The draft is plain JS; port to `.ts` with typed `req.body` via the validation schema.\n\n---\n\n## Suggested minimum diff direction\n\n- Move to `src/edge/routes/transfer.ts` (TypeScript).\n- Read identity from `req.user.sub` / `req.user.org`; assert `req.user.org === req.params.org_id`.\n- Validate body with a schema; require `Idempotency-Key`.\n- Wrap `txSvc.transfer` in `try/catch` → `next(err)`; map domain errors.\n- Emit audit log on both success and failure.\n- Add route-specific entry in `config/rate_limits.json`.\n- Add CODEOWNERS approval if this pulls in changes to `auth_jwt.ts` or `header_sanitize.ts` (Section 6).",
+    "stop_reason": "end_turn",
+    "session_id": "3b66a976-aa2e-4b5a-8fbd-49d0a71c57f7",
+    "total_cost_usd": 0.21154725,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 24449,
+      "cache_read_input_tokens": 16796,
+      "output_tokens": 1783,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 24449,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 1783,
+          "cache_read_input_tokens": 16796,
+          "cache_creation_input_tokens": 24449,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 24449
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 5668,
+        "outputTokens": 14,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.005738,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 1783,
+        "cacheReadInputTokens": 16796,
+        "cacheCreationInputTokens": 24449,
+        "webSearchRequests": 0,
+        "costUSD": 0.20580925,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "77f33949-ee47-4564-9e32-5b5daa927bac"
+  }
+}

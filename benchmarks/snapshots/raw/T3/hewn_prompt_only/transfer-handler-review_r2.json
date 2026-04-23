@@ -14,61 +14,61 @@
   ],
   "digest_hex": "394d162344f9342c7b47283b28bfa130e4fb435382a1f0a8aa819239935b955a",
   "seed": "hewn-bench-v1",
-  "timestamp": "2026-04-22T09:47:28.320697+00:00",
-  "output_tokens_tiktoken": 450,
-  "output_tokens_anthropic": 1106,
+  "timestamp": "2026-04-23T10:00:55.056722+00:00",
+  "output_tokens_tiktoken": 1367,
+  "output_tokens_anthropic": 3688,
   "input_tokens_anthropic": 6,
-  "cache_creation_input_tokens": 24343,
-  "cache_read_input_tokens": 16796,
-  "total_input_tokens": 41145,
+  "cache_creation_input_tokens": 24308,
+  "cache_read_input_tokens": 16794,
+  "total_input_tokens": 41108,
   "cache_state": "warm",
-  "wallclock_ms": 25263.253643992357,
-  "duration_ms": 18954,
-  "duration_api_ms": 20132,
+  "wallclock_ms": 63940.145059954375,
+  "duration_ms": 60445,
+  "duration_api_ms": 61699,
   "wrapper_overhead_ms": null,
   "stop_reason": "end_turn",
   "num_turns": 1,
-  "session_id": "8c3215f3-fc75-4f1a-a29f-ffb11f345d19",
-  "total_cost_usd": 0.19389075,
+  "session_id": "44bdfd79-81c3-4ac6-8bd1-6a62231995ae",
+  "total_cost_usd": 0.25832,
   "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
-  "result": "**Risk**\n- XFF spoof bypass: `req.headers['x-forwarded-for']` is attacker-controlled; rotating it defeats per-IP limits. Exact repeat of 2025-09 SEV1. Also violates `no-direct-xff-read` lint.\n- Unbounded Redis key: `incr` without `expire` → OOM under load. Exact repeat of 2025-11 SEV2. Violates `no-unbounded-redis-key`.\n- Key shape wrong: missing `route_prefix`, `minute_bucket`, and region prefix → cross-route/cross-region collisions (2025-12 SEV2 regression). No limit comparison, no `429` RFC 7807 body.\n\n**Mitigation**\n```ts\nconst ip = trustedClientIp(req) // src/edge/util/trustedClientIp.ts\nconst bucket = Math.floor(Date.now() / 60000)\nconst key = `rl:${region}:${ip}:${routePrefix}:${bucket}`\nconst [count] = await redis.multi().incr(key).expire(key, 90).exec()\nif (count > limit) return res.status(429).json({\n  type: '/errors/rate-limited', title: 'Too Many Requests',\n  status: 429, detail: `Limit ${limit}/min exceeded`,\n  retry_after: secondsUntilNextBucket(),\n})\n```\n\n**Verify**\n- `eslint` passes (both `no-direct-xff-read` and `no-unbounded-redis-key` clean).\n- Integration test: spoof `X-Forwarded-For: 1.2.3.4` from untrusted peer → key uses `req.socket.remoteAddress`, not the header.\n- Integration test: after `INCR`, `TTL key` returns > 0.\n- Load test: 10k distinct XFF values from one socket IP → throttled after `limit`; Redis keyspace bounded.\n- Metric check: `atlas_edge_rate_limit_total{action=\"throttled\"}` increments; `atlas_edge_jwt_verifications_total` unaffected.\n\n**Residual**\n- Blocks edge merge: touches `src/edge/rate_limit.ts` → CODEOWNERS human approval required (Section 6).",
+  "result": "Prioritized per Section 12 (security → correctness → ops → readability). Exact handbook rules cited.\n\n## P0 — Security\n\n**1. Trusts client-supplied `X-User-Id` header.** Violates Section 2 rule 1. The `header_sanitize` middleware (pipeline step 2) strips `X-User-Id` before any handler runs, so `userId` here is `undefined` in production — and if sanitize is ever misordered or bypassed, an attacker sets it to any value. This is the same class as the 2025-09 XFF spoof SEV1.\n- Fix: read `req.user.sub` (or equivalent) set by `auth_jwt` (pipeline step 5). If this handler must work with both JWT and API key, use `req.user` which is populated for both. Never read `req.headers['x-user-id']`.\n\n**2. No authorization check against `org_id`.** A valid user from org A can POST to `/v1/orgs/<org-B>/transfer` and move org B's funds. The `sub` claim proves identity; the `org` claim (see Section 5) must match `req.params.org_id`, plus a role check for `transfer` capability.\n- Fix: `if (req.user.orgId !== req.params.org_id) return next(forbidden())`, then role-gate (e.g. `roles` includes `transfer:write`).\n\n**3. No input validation on `from`, `to`, `amount`.** `amount` could be negative, zero, `NaN`, `Infinity`, a string, or an object. `from`/`to` format unchecked, and `from === to` not rejected. Money-movement at a trust boundary needs a schema.\n- Fix: validate with the same schema layer the rest of the edge uses (zod/ajv). Require `amount > 0`, integer minor-units, currency-scoped max, `from !== to`, and both accounts owned by `org_id` (authz'd downstream too, defense in depth).\n\n## P1 — Correctness\n\n**4. No error handling / no `next(err)`.** Section 11: \"use `next(err)` in Express middleware to delegate to the central error handler.\" A thrown `txSvc.transfer` rejection here becomes an unhandled promise; the default Express handler can leak internals, violating Section 2 rule 6 (no stacktrace/internal hostnames in error bodies).\n- Fix: wrap in try/catch and call `next(err)`, or use an `asyncHandler` wrapper. Let `src/edge/errorHandler.ts` produce the RFC 7807 body.\n\n**5. No idempotency on a money-moving POST.** Network retries from mobile clients will double-transfer. Standard practice for mutating financial endpoints is to require an `Idempotency-Key` header and dedupe in `tx-svc`.\n- Fix: require header, forward it to `tx-svc`, reject with `400` if missing.\n\n**6. Success response shape.** `{ok: true}` carries no `request_id` (Section 2 rule 6 requires it for error bodies, and it's standard to include on success too for support/tracing) and no transfer ID for the client to reconcile.\n- Fix: return `{ request_id, transfer_id, status }` at minimum.\n\n## P2 — Operational\n\n**7. Route not wired into the pipeline.** Registering with `app.post(...)` directly risks skipping the middleware chain in `src/edge/pipeline.ts`. New routes must go through `route_dispatcher` (pipeline step 6) so `header_sanitize`, `rate_limit`, `body_size_guard`, `auth_jwt` all run.\n- Fix: register the route via the dispatcher so all pre-handler middleware applies. Verify via integration test.\n\n**8. No entry in `config/rate_limits.json`.** Falls back to the 30/min POST default (Section 4). Money movement warrants a tighter per-user (not just per-IP) limit; this is also where per-region keying matters (2025-12 SEV2).\n- Fix: add an entry keyed by route prefix `/v1/orgs/:org_id/transfer`, likely single-digit-per-minute per user, and key by `user_id` not IP for this route.\n\n**9. Handler does business logic at the edge.** Atlas is stateless forward-proxy with auth/rate-limit/header duties (Section 1). A transfer handler here risks duplicating logic that belongs in `tx-svc`. Keep edge thin: validate, authorize, forward, filter response.\n\n**10. No explicit audit-log field for a financial event.** `audit_log` middleware (pipeline step 9) runs, but high-risk operations typically add domain context (`event=transfer`, `from`, `to`, amount) to feed the 365-day audit bucket (Section 9). Confirm the logger tags this operation.\n\n## Process\n\n**11. CODEOWNERS review.** Not strictly an auth file edit, but a new money-movement route adjacent to auth is a human-approval candidate. Loop in Platform + Security per Section 12 priority 1.\n\n**12. Tests required.** Per Section 6, integration tests against real Redis+Postgres. Must cover: cross-org rejection, spoofed `X-User-Id` (proves sanitize), missing idempotency key, duplicate idempotency key, negative/overflow `amount`, rate-limit trigger, `tx-svc` error propagation as RFC 7807.\n\n## Minimum fixed skeleton\n\n```javascript\nrouter.post(\n  '/v1/orgs/:org_id/transfer',\n  requireRole('transfer:write'),\n  validate(transferSchema),\n  requireIdempotencyKey,\n  asyncHandler(async (req, res, next) => {\n    if (req.user.orgId !== req.params.org_id) return next(forbidden())\n    const { from, to, amount } = req.body\n    const result = await txSvc.transfer({\n      orgId: req.params.org_id,\n      userId: req.user.sub,\n      idempotencyKey: req.get('Idempotency-Key'),\n      from, to, amount,\n    })\n    res.json({ request_id: req.id, transfer_id: result.id, status: result.status })\n  }),\n)\n```\n\nMain residual risk: downstream `tx-svc` must also enforce org ownership of `from`/`to` — edge authz is defense-in-depth, not the sole gate.",
   "assertion_pass": true,
   "raw_payload": {
     "type": "result",
     "subtype": "success",
     "is_error": false,
     "api_error_status": null,
-    "duration_ms": 18954,
-    "duration_api_ms": 20132,
+    "duration_ms": 60445,
+    "duration_api_ms": 61699,
     "num_turns": 1,
-    "result": "**Risk**\n- XFF spoof bypass: `req.headers['x-forwarded-for']` is attacker-controlled; rotating it defeats per-IP limits. Exact repeat of 2025-09 SEV1. Also violates `no-direct-xff-read` lint.\n- Unbounded Redis key: `incr` without `expire` → OOM under load. Exact repeat of 2025-11 SEV2. Violates `no-unbounded-redis-key`.\n- Key shape wrong: missing `route_prefix`, `minute_bucket`, and region prefix → cross-route/cross-region collisions (2025-12 SEV2 regression). No limit comparison, no `429` RFC 7807 body.\n\n**Mitigation**\n```ts\nconst ip = trustedClientIp(req) // src/edge/util/trustedClientIp.ts\nconst bucket = Math.floor(Date.now() / 60000)\nconst key = `rl:${region}:${ip}:${routePrefix}:${bucket}`\nconst [count] = await redis.multi().incr(key).expire(key, 90).exec()\nif (count > limit) return res.status(429).json({\n  type: '/errors/rate-limited', title: 'Too Many Requests',\n  status: 429, detail: `Limit ${limit}/min exceeded`,\n  retry_after: secondsUntilNextBucket(),\n})\n```\n\n**Verify**\n- `eslint` passes (both `no-direct-xff-read` and `no-unbounded-redis-key` clean).\n- Integration test: spoof `X-Forwarded-For: 1.2.3.4` from untrusted peer → key uses `req.socket.remoteAddress`, not the header.\n- Integration test: after `INCR`, `TTL key` returns > 0.\n- Load test: 10k distinct XFF values from one socket IP → throttled after `limit`; Redis keyspace bounded.\n- Metric check: `atlas_edge_rate_limit_total{action=\"throttled\"}` increments; `atlas_edge_jwt_verifications_total` unaffected.\n\n**Residual**\n- Blocks edge merge: touches `src/edge/rate_limit.ts` → CODEOWNERS human approval required (Section 6).",
+    "result": "Prioritized per Section 12 (security → correctness → ops → readability). Exact handbook rules cited.\n\n## P0 — Security\n\n**1. Trusts client-supplied `X-User-Id` header.** Violates Section 2 rule 1. The `header_sanitize` middleware (pipeline step 2) strips `X-User-Id` before any handler runs, so `userId` here is `undefined` in production — and if sanitize is ever misordered or bypassed, an attacker sets it to any value. This is the same class as the 2025-09 XFF spoof SEV1.\n- Fix: read `req.user.sub` (or equivalent) set by `auth_jwt` (pipeline step 5). If this handler must work with both JWT and API key, use `req.user` which is populated for both. Never read `req.headers['x-user-id']`.\n\n**2. No authorization check against `org_id`.** A valid user from org A can POST to `/v1/orgs/<org-B>/transfer` and move org B's funds. The `sub` claim proves identity; the `org` claim (see Section 5) must match `req.params.org_id`, plus a role check for `transfer` capability.\n- Fix: `if (req.user.orgId !== req.params.org_id) return next(forbidden())`, then role-gate (e.g. `roles` includes `transfer:write`).\n\n**3. No input validation on `from`, `to`, `amount`.** `amount` could be negative, zero, `NaN`, `Infinity`, a string, or an object. `from`/`to` format unchecked, and `from === to` not rejected. Money-movement at a trust boundary needs a schema.\n- Fix: validate with the same schema layer the rest of the edge uses (zod/ajv). Require `amount > 0`, integer minor-units, currency-scoped max, `from !== to`, and both accounts owned by `org_id` (authz'd downstream too, defense in depth).\n\n## P1 — Correctness\n\n**4. No error handling / no `next(err)`.** Section 11: \"use `next(err)` in Express middleware to delegate to the central error handler.\" A thrown `txSvc.transfer` rejection here becomes an unhandled promise; the default Express handler can leak internals, violating Section 2 rule 6 (no stacktrace/internal hostnames in error bodies).\n- Fix: wrap in try/catch and call `next(err)`, or use an `asyncHandler` wrapper. Let `src/edge/errorHandler.ts` produce the RFC 7807 body.\n\n**5. No idempotency on a money-moving POST.** Network retries from mobile clients will double-transfer. Standard practice for mutating financial endpoints is to require an `Idempotency-Key` header and dedupe in `tx-svc`.\n- Fix: require header, forward it to `tx-svc`, reject with `400` if missing.\n\n**6. Success response shape.** `{ok: true}` carries no `request_id` (Section 2 rule 6 requires it for error bodies, and it's standard to include on success too for support/tracing) and no transfer ID for the client to reconcile.\n- Fix: return `{ request_id, transfer_id, status }` at minimum.\n\n## P2 — Operational\n\n**7. Route not wired into the pipeline.** Registering with `app.post(...)` directly risks skipping the middleware chain in `src/edge/pipeline.ts`. New routes must go through `route_dispatcher` (pipeline step 6) so `header_sanitize`, `rate_limit`, `body_size_guard`, `auth_jwt` all run.\n- Fix: register the route via the dispatcher so all pre-handler middleware applies. Verify via integration test.\n\n**8. No entry in `config/rate_limits.json`.** Falls back to the 30/min POST default (Section 4). Money movement warrants a tighter per-user (not just per-IP) limit; this is also where per-region keying matters (2025-12 SEV2).\n- Fix: add an entry keyed by route prefix `/v1/orgs/:org_id/transfer`, likely single-digit-per-minute per user, and key by `user_id` not IP for this route.\n\n**9. Handler does business logic at the edge.** Atlas is stateless forward-proxy with auth/rate-limit/header duties (Section 1). A transfer handler here risks duplicating logic that belongs in `tx-svc`. Keep edge thin: validate, authorize, forward, filter response.\n\n**10. No explicit audit-log field for a financial event.** `audit_log` middleware (pipeline step 9) runs, but high-risk operations typically add domain context (`event=transfer`, `from`, `to`, amount) to feed the 365-day audit bucket (Section 9). Confirm the logger tags this operation.\n\n## Process\n\n**11. CODEOWNERS review.** Not strictly an auth file edit, but a new money-movement route adjacent to auth is a human-approval candidate. Loop in Platform + Security per Section 12 priority 1.\n\n**12. Tests required.** Per Section 6, integration tests against real Redis+Postgres. Must cover: cross-org rejection, spoofed `X-User-Id` (proves sanitize), missing idempotency key, duplicate idempotency key, negative/overflow `amount`, rate-limit trigger, `tx-svc` error propagation as RFC 7807.\n\n## Minimum fixed skeleton\n\n```javascript\nrouter.post(\n  '/v1/orgs/:org_id/transfer',\n  requireRole('transfer:write'),\n  validate(transferSchema),\n  requireIdempotencyKey,\n  asyncHandler(async (req, res, next) => {\n    if (req.user.orgId !== req.params.org_id) return next(forbidden())\n    const { from, to, amount } = req.body\n    const result = await txSvc.transfer({\n      orgId: req.params.org_id,\n      userId: req.user.sub,\n      idempotencyKey: req.get('Idempotency-Key'),\n      from, to, amount,\n    })\n    res.json({ request_id: req.id, transfer_id: result.id, status: result.status })\n  }),\n)\n```\n\nMain residual risk: downstream `tx-svc` must also enforce org ownership of `from`/`to` — edge authz is defense-in-depth, not the sole gate.",
     "stop_reason": "end_turn",
-    "session_id": "8c3215f3-fc75-4f1a-a29f-ffb11f345d19",
-    "total_cost_usd": 0.19389075,
+    "session_id": "44bdfd79-81c3-4ac6-8bd1-6a62231995ae",
+    "total_cost_usd": 0.25832,
     "usage": {
       "input_tokens": 6,
-      "cache_creation_input_tokens": 24343,
-      "cache_read_input_tokens": 16796,
-      "output_tokens": 1106,
+      "cache_creation_input_tokens": 24308,
+      "cache_read_input_tokens": 16794,
+      "output_tokens": 3688,
       "server_tool_use": {
         "web_search_requests": 0,
         "web_fetch_requests": 0
       },
       "service_tier": "standard",
       "cache_creation": {
-        "ephemeral_1h_input_tokens": 24343,
+        "ephemeral_1h_input_tokens": 24308,
         "ephemeral_5m_input_tokens": 0
       },
       "inference_geo": "",
       "iterations": [
         {
           "input_tokens": 6,
-          "output_tokens": 1106,
-          "cache_read_input_tokens": 16796,
-          "cache_creation_input_tokens": 24343,
+          "output_tokens": 3688,
+          "cache_read_input_tokens": 16794,
+          "cache_creation_input_tokens": 24308,
           "cache_creation": {
             "ephemeral_5m_input_tokens": 0,
-            "ephemeral_1h_input_tokens": 24343
+            "ephemeral_1h_input_tokens": 24308
           },
           "type": "message"
         }
@@ -77,22 +77,22 @@
     },
     "modelUsage": {
       "claude-haiku-4-5-20251001": {
-        "inputTokens": 5584,
-        "outputTokens": 17,
+        "inputTokens": 5668,
+        "outputTokens": 20,
         "cacheReadInputTokens": 0,
         "cacheCreationInputTokens": 0,
         "webSearchRequests": 0,
-        "costUSD": 0.005669,
+        "costUSD": 0.0057680000000000006,
         "contextWindow": 200000,
         "maxOutputTokens": 32000
       },
       "claude-opus-4-7": {
         "inputTokens": 6,
-        "outputTokens": 1106,
-        "cacheReadInputTokens": 16796,
-        "cacheCreationInputTokens": 24343,
+        "outputTokens": 3688,
+        "cacheReadInputTokens": 16794,
+        "cacheCreationInputTokens": 24308,
         "webSearchRequests": 0,
-        "costUSD": 0.18822175,
+        "costUSD": 0.252552,
         "contextWindow": 1000000,
         "maxOutputTokens": 64000
       }
@@ -100,6 +100,6 @@
     "permission_denials": [],
     "terminal_reason": "completed",
     "fast_mode_state": "off",
-    "uuid": "58871b4b-e1fc-42eb-bac7-2edc90d5be66"
+    "uuid": "45a228eb-56df-471f-a331-f0420ac92103"
   }
 }

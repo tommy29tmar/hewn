@@ -14,61 +14,61 @@
   ],
   "digest_hex": "6b9578eefb622cf26289d38792f842fa3d9d08227744b4c106b3e2221ce945ab",
   "seed": "hewn-bench-v1",
-  "timestamp": "2026-04-22T00:52:35.284263+00:00",
-  "output_tokens_tiktoken": 5,
-  "output_tokens_anthropic": 9,
+  "timestamp": "2026-04-23T10:53:26.101740+00:00",
+  "output_tokens_tiktoken": 311,
+  "output_tokens_anthropic": 475,
   "input_tokens_anthropic": 6,
-  "cache_creation_input_tokens": 10478,
-  "cache_read_input_tokens": 13741,
-  "total_input_tokens": 24225,
+  "cache_creation_input_tokens": 10560,
+  "cache_read_input_tokens": 13739,
+  "total_input_tokens": 24305,
   "cache_state": "warm",
-  "wallclock_ms": 8097.685329004889,
-  "duration_ms": 4761,
-  "duration_api_ms": 4732,
+  "wallclock_ms": 14763.48776195664,
+  "duration_ms": 10672,
+  "duration_api_ms": 11641,
   "wrapper_overhead_ms": null,
   "stop_reason": "end_turn",
   "num_turns": 1,
-  "session_id": "95a837bc-d5c0-405a-b557-ad29cce3c9d5",
-  "total_cost_usd": 0.07261299999999998,
-  "model_used": "claude-opus-4-7",
-  "result": "How can I help?",
+  "session_id": "2ef3e663-cef1-42e7-8dc2-d6186165c379",
+  "total_cost_usd": 0.0852845,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "# Introducing Smart Drafts: Never Start From Zero Again\n\nWe've all felt it — that quiet dread of opening a fresh document and watching the cursor blink back. Whether it's a project brief, a meeting recap, or a quarterly review, the hardest part is rarely the writing itself. It's the staring. We built Smart Drafts because we kept hearing the same thing from you: the ideas are there, but the runway to get going feels too long. So we set out to shorten it.\n\nStarting today, every new document includes a one-click Smart Draft button. Give your doc a title, hit the button, and you'll get a thoughtful outline tailored to what you're working on — informed by your recent docs, shared context from your workspace, and the patterns of how your team tends to structure similar work. It's not a finished draft, and it's not meant to be. Think of it as a generous first sketch: headers in the right places, prompts where you'd want them, and just enough scaffolding to make the next sentence feel obvious. Edit freely, ignore what doesn't fit, or regenerate with a nudge in a different direction.\n\nThis is the first step in a longer arc. Next up: custom voice training, so Smart Drafts don't just match the shape of your work but the sound of it — your phrasing, your cadence, the way your team actually writes. We'll have more to share on that in the coming weeks. In the meantime, open a new doc and give Smart Drafts a try. We'd love to hear what you think.",
   "assertion_pass": true,
   "raw_payload": {
     "type": "result",
     "subtype": "success",
     "is_error": false,
     "api_error_status": null,
-    "duration_ms": 4761,
-    "duration_api_ms": 4732,
+    "duration_ms": 10672,
+    "duration_api_ms": 11641,
     "num_turns": 1,
-    "result": "How can I help?",
+    "result": "# Introducing Smart Drafts: Never Start From Zero Again\n\nWe've all felt it — that quiet dread of opening a fresh document and watching the cursor blink back. Whether it's a project brief, a meeting recap, or a quarterly review, the hardest part is rarely the writing itself. It's the staring. We built Smart Drafts because we kept hearing the same thing from you: the ideas are there, but the runway to get going feels too long. So we set out to shorten it.\n\nStarting today, every new document includes a one-click Smart Draft button. Give your doc a title, hit the button, and you'll get a thoughtful outline tailored to what you're working on — informed by your recent docs, shared context from your workspace, and the patterns of how your team tends to structure similar work. It's not a finished draft, and it's not meant to be. Think of it as a generous first sketch: headers in the right places, prompts where you'd want them, and just enough scaffolding to make the next sentence feel obvious. Edit freely, ignore what doesn't fit, or regenerate with a nudge in a different direction.\n\nThis is the first step in a longer arc. Next up: custom voice training, so Smart Drafts don't just match the shape of your work but the sound of it — your phrasing, your cadence, the way your team actually writes. We'll have more to share on that in the coming weeks. In the meantime, open a new doc and give Smart Drafts a try. We'd love to hear what you think.",
     "stop_reason": "end_turn",
-    "session_id": "95a837bc-d5c0-405a-b557-ad29cce3c9d5",
-    "total_cost_usd": 0.07261299999999998,
+    "session_id": "2ef3e663-cef1-42e7-8dc2-d6186165c379",
+    "total_cost_usd": 0.0852845,
     "usage": {
       "input_tokens": 6,
-      "cache_creation_input_tokens": 10478,
-      "cache_read_input_tokens": 13741,
-      "output_tokens": 9,
+      "cache_creation_input_tokens": 10560,
+      "cache_read_input_tokens": 13739,
+      "output_tokens": 475,
       "server_tool_use": {
         "web_search_requests": 0,
         "web_fetch_requests": 0
       },
       "service_tier": "standard",
       "cache_creation": {
-        "ephemeral_1h_input_tokens": 10478,
+        "ephemeral_1h_input_tokens": 10560,
         "ephemeral_5m_input_tokens": 0
       },
       "inference_geo": "",
       "iterations": [
         {
           "input_tokens": 6,
-          "output_tokens": 9,
-          "cache_read_input_tokens": 13741,
-          "cache_creation_input_tokens": 10478,
+          "output_tokens": 475,
+          "cache_read_input_tokens": 13739,
+          "cache_creation_input_tokens": 10560,
           "cache_creation": {
             "ephemeral_5m_input_tokens": 0,
-            "ephemeral_1h_input_tokens": 10478
+            "ephemeral_1h_input_tokens": 10560
           },
           "type": "message"
         }
@@ -76,13 +76,23 @@
       "speed": "standard"
     },
     "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 435,
+        "outputTokens": 15,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.00051,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
       "claude-opus-4-7": {
         "inputTokens": 6,
-        "outputTokens": 9,
-        "cacheReadInputTokens": 13741,
-        "cacheCreationInputTokens": 10478,
+        "outputTokens": 475,
+        "cacheReadInputTokens": 13739,
+        "cacheCreationInputTokens": 10560,
         "webSearchRequests": 0,
-        "costUSD": 0.07261299999999998,
+        "costUSD": 0.0847745,
         "contextWindow": 1000000,
         "maxOutputTokens": 64000
       }
@@ -90,6 +100,6 @@
     "permission_denials": [],
     "terminal_reason": "completed",
     "fast_mode_state": "off",
-    "uuid": "4e52cb8f-94bf-4070-9e49-0314a6626d91"
+    "uuid": "3630e9de-3ec7-4a83-aa3a-08fd8571e4e5"
   }
 }

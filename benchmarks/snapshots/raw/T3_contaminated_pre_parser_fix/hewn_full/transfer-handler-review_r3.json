@@ -1,0 +1,105 @@
+{
+  "track": "T3",
+  "arm": "hewn_full",
+  "prompt_id": "transfer-handler-review",
+  "run_index": 3,
+  "arm_order_index": 3,
+  "arm_order_full": [
+    "baseline",
+    "terse",
+    "caveman_full_plus_ultra_directive",
+    "hewn_full",
+    "hewn_prompt_only",
+    "caveman_full"
+  ],
+  "digest_hex": "3da3c2e2c5460b8f1a8ef9414263122f0e5b04cd184ce0c20df6d0951ea45236",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T09:51:16.204317+00:00",
+  "output_tokens_tiktoken": 732,
+  "output_tokens_anthropic": 1205,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 25621,
+  "cache_read_input_tokens": 16805,
+  "total_input_tokens": 42432,
+  "cache_state": "warm",
+  "wallclock_ms": 26858.086046006065,
+  "duration_ms": 20690,
+  "duration_api_ms": 22019,
+  "wrapper_overhead_ms": 4839.086046006065,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "bbefe8a5-dea5-4db4-aa90-dbfddfee1bd2",
+  "total_cost_usd": 0.20435775,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "1. Spoofable rate-limit key via `X-Forwarded-For`\n   Evidence: `req.headers['x-forwarded-for']||req.ip` in diff\n   Trigger/impact: attacker rotates XFF per request, per-IP limit bypassed, brute-force enabled. Repeat of 2025-09 SEV1. Violates Section 2 rule 2 and `no-direct-xff-read` lint rule.\n   Fix: key off `trustedClientIp(req)` from `src/edge/util/trustedClientIp.ts` (validates proxy chain against `config/trusted_proxies.json`, falls back to `req.socket.remoteAddress`).\n   Verify: unit test injects forged XFF, asserts key uses socket IP; confirm lint passes.\n\n2. Unbounded Redis key — no `EXPIRE`\n   Evidence: `await redis.incr(key)` with no paired `expire`\n   Trigger/impact: keys accumulate indefinitely → Redis OOM + edge offline. Repeat of 2025-11 SEV2. Violates Section 2 rule 3 and `no-unbounded-redis-key` lint rule.\n   Fix: wrap in `MULTI`: `multi.incr(key); multi.expire(key, 90); await multi.exec();`\n   Verify: integration test asserts `TTL key` > 0 after first INCR.\n\n3. Missing route prefix + minute bucket in key\n   Evidence: key = `rl:${ip}` only\n   Trigger/impact: one global counter per IP across all routes and time — either never trips or permanently trips once hit. Sliding-window approximation broken; limits in `config/rate_limits.json` not enforced per route.\n   Fix: use documented format `rl:{ip}:{route_prefix}:{minute_bucket}` where bucket = `Math.floor(Date.now()/60000)`.\n   Verify: unit test confirms distinct keys per route/minute.\n\n4. Missing region prefix — cross-region collision\n   Evidence: no region segment in key\n   Trigger/impact: repeat of 2025-12 SEV2; busy user limited globally instead of per-region.\n   Fix: prepend region id (e.g. `rl:{region}:{ip}:{route_prefix}:{bucket}`).\n   Verify: regression test from 2025-12 RCA still green.\n\n5. No limit check / 429 response\n   Evidence: diff increments counter but never compares to limit or returns RFC 7807 `429`\n   Trigger/impact: rate limiter is a no-op — counter grows, traffic passes. SLO + abuse exposure.\n   Fix: read `[count] = await multi.exec()`, compare to per-route limit from `config/rate_limits.json`, return `problem+json` body with `retry_after` per Section 4 snippet.\n   Verify: test asserts 429 with correct `type`/`title`/`status`/`detail`/`retry_after` when count > limit.\n\n6. No Redis error handling\n   Evidence: bare `await redis.incr` with no try/catch or retry\n   Trigger/impact: transient Redis blip → unhandled rejection → 500 to client; fail-closed on infra flake. Section 11 requires `src/util/retry.ts` for transient Redis errors; central error handler via `next(err)`.\n   Fix: wrap in retry (3x exponential backoff), on terminal failure `next(err)` and emit `atlas_edge_rate_limit_total{action=\"errored\"}`.\n   Verify: chaos test kills Redis mid-request, asserts retry + metric + clean error.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 20690,
+    "duration_api_ms": 22019,
+    "num_turns": 1,
+    "result": "1. Spoofable rate-limit key via `X-Forwarded-For`\n   Evidence: `req.headers['x-forwarded-for']||req.ip` in diff\n   Trigger/impact: attacker rotates XFF per request, per-IP limit bypassed, brute-force enabled. Repeat of 2025-09 SEV1. Violates Section 2 rule 2 and `no-direct-xff-read` lint rule.\n   Fix: key off `trustedClientIp(req)` from `src/edge/util/trustedClientIp.ts` (validates proxy chain against `config/trusted_proxies.json`, falls back to `req.socket.remoteAddress`).\n   Verify: unit test injects forged XFF, asserts key uses socket IP; confirm lint passes.\n\n2. Unbounded Redis key — no `EXPIRE`\n   Evidence: `await redis.incr(key)` with no paired `expire`\n   Trigger/impact: keys accumulate indefinitely → Redis OOM + edge offline. Repeat of 2025-11 SEV2. Violates Section 2 rule 3 and `no-unbounded-redis-key` lint rule.\n   Fix: wrap in `MULTI`: `multi.incr(key); multi.expire(key, 90); await multi.exec();`\n   Verify: integration test asserts `TTL key` > 0 after first INCR.\n\n3. Missing route prefix + minute bucket in key\n   Evidence: key = `rl:${ip}` only\n   Trigger/impact: one global counter per IP across all routes and time — either never trips or permanently trips once hit. Sliding-window approximation broken; limits in `config/rate_limits.json` not enforced per route.\n   Fix: use documented format `rl:{ip}:{route_prefix}:{minute_bucket}` where bucket = `Math.floor(Date.now()/60000)`.\n   Verify: unit test confirms distinct keys per route/minute.\n\n4. Missing region prefix — cross-region collision\n   Evidence: no region segment in key\n   Trigger/impact: repeat of 2025-12 SEV2; busy user limited globally instead of per-region.\n   Fix: prepend region id (e.g. `rl:{region}:{ip}:{route_prefix}:{bucket}`).\n   Verify: regression test from 2025-12 RCA still green.\n\n5. No limit check / 429 response\n   Evidence: diff increments counter but never compares to limit or returns RFC 7807 `429`\n   Trigger/impact: rate limiter is a no-op — counter grows, traffic passes. SLO + abuse exposure.\n   Fix: read `[count] = await multi.exec()`, compare to per-route limit from `config/rate_limits.json`, return `problem+json` body with `retry_after` per Section 4 snippet.\n   Verify: test asserts 429 with correct `type`/`title`/`status`/`detail`/`retry_after` when count > limit.\n\n6. No Redis error handling\n   Evidence: bare `await redis.incr` with no try/catch or retry\n   Trigger/impact: transient Redis blip → unhandled rejection → 500 to client; fail-closed on infra flake. Section 11 requires `src/util/retry.ts` for transient Redis errors; central error handler via `next(err)`.\n   Fix: wrap in retry (3x exponential backoff), on terminal failure `next(err)` and emit `atlas_edge_rate_limit_total{action=\"errored\"}`.\n   Verify: chaos test kills Redis mid-request, asserts retry + metric + clean error.",
+    "stop_reason": "end_turn",
+    "session_id": "bbefe8a5-dea5-4db4-aa90-dbfddfee1bd2",
+    "total_cost_usd": 0.20435775,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 25621,
+      "cache_read_input_tokens": 16805,
+      "output_tokens": 1205,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 25621,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 1205,
+          "cache_read_input_tokens": 16805,
+          "cache_creation_input_tokens": 25621,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 25621
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 5584,
+        "outputTokens": 17,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.005669,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 1205,
+        "cacheReadInputTokens": 16805,
+        "cacheCreationInputTokens": 25621,
+        "webSearchRequests": 0,
+        "costUSD": 0.19868875,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "8afe924b-f4be-4212-9bc6-6ae221828981"
+  }
+}

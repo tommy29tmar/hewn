@@ -1,0 +1,105 @@
+{
+  "track": "T3",
+  "arm": "hewn_prompt_only",
+  "prompt_id": "body-size-rollout-plan",
+  "run_index": 1,
+  "arm_order_index": 3,
+  "arm_order_full": [
+    "baseline",
+    "hewn_full",
+    "terse",
+    "hewn_prompt_only",
+    "caveman_full",
+    "caveman_full_plus_ultra_directive"
+  ],
+  "digest_hex": "5cec5867cbfe8d2d7c19052a4434bcde0ff4203f3deef4f0370586b6544a69c8",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T09:44:53.035582+00:00",
+  "output_tokens_tiktoken": 1639,
+  "output_tokens_anthropic": 2570,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 24449,
+  "cache_read_input_tokens": 16796,
+  "total_input_tokens": 41251,
+  "cache_state": "warm",
+  "wallclock_ms": 62663.32833399065,
+  "duration_ms": 56170,
+  "duration_api_ms": 57385,
+  "wrapper_overhead_ms": null,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "8d7d9b5d-a6a3-4ff6-9dc3-2747725b74bb",
+  "total_cost_usd": 0.23121724999999999,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "# Review: `POST /v1/orgs/:org_id/transfer`\n\nFindings in priority order (Section 12: security → correctness → ops → readability).\n\n---\n\n## 1. SECURITY — Trusting client-supplied identity header (P0)\n\n**Finding:** `const userId = req.headers['x-user-id']` reads identity directly from a client header.\n\n**Violates:** Section 2 rule 1 (critical, P0). Identity headers arriving from outside the trust zone must be stripped before handlers run, and identity must come from the verified JWT.\n\n**Exploit:** Any caller sends `X-User-Id: <victim-sub>` and initiates a transfer as that user. Complete auth bypass. This is the exact class of bug the `header_sanitize` middleware exists to prevent — reading it in the handler defeats the defense.\n\n**Fix:** Use `req.user.sub` (populated by `auth_jwt` middleware, Section 3 step 5 / Section 5). Never read `X-User-Id`, `X-Org-Id`, or any `X-*` identity header in a handler. The internal `X-Internal-User-Id` / `X-Internal-Org-Id` headers are only meaningful on the downstream side of the mTLS mesh — not in this Express handler.\n\n**Verify:** Send a request with a valid JWT for user A and `X-User-Id: B`; confirm the transfer is attributed to A. Add a unit test.\n\n---\n\n## 2. SECURITY — Missing authorization check (org membership)\n\n**Finding:** No check that the authenticated user belongs to `req.params.org_id` or has a role permitting transfers.\n\n**Exploit:** User in org X calls `POST /v1/orgs/Y/transfer` and moves funds in org Y. Authentication ≠ authorization; `auth_jwt` only proves who the caller is.\n\n**Fix:** After extracting `req.user`, verify `req.user.org === req.params.org_id` (or that the user has an explicit cross-org role in `req.user.roles`). Reject with `403` + RFC 7807 body otherwise. Per Section 2, downstream services also authorize, but the edge must not forward obviously-unauthorized requests.\n\n---\n\n## 3. SECURITY / CORRECTNESS — No input validation on body\n\n**Finding:** `from`, `to`, `amount` are destructured with no schema validation, type check, or range check.\n\n**Failure modes:**\n- `amount` could be negative (reverse transfer), zero, a string, `NaN`, or a float with precision issues.\n- `from` / `to` could be arbitrary strings, missing, or identical (self-transfer loop).\n- Body could be missing entirely → `TypeError` → `500`.\n\n**Fix:** Validate with the project's schema validator (zod/ajv — match existing patterns in other handlers). Require `from !== to`, `amount` is a positive integer in minor units, both accounts are UUIDs belonging to `org_id`. Reject with `400` + RFC 7807.\n\n---\n\n## 4. CORRECTNESS / OPS — Route bypasses the pipeline entirely\n\n**Finding:** `app.post(...)` registers directly on the Express app. Per Section 3, the edge pipeline (request_id, header_sanitize, rate_limit, body_size_guard, auth_jwt, route_dispatcher, mTLS_egress, response_filter, audit_log) is assembled in `src/edge/pipeline.ts`. Handlers registered outside that chain may skip middleware depending on where `app.post` runs relative to `app.use(...)` calls.\n\n**Fix:** Register the route through `route_dispatcher` / the same mechanism used by other `/v1/...` routes. Confirm `req.user` is populated (it only is if `auth_jwt` ran) and that `header_sanitize` has stripped `X-Internal-*` and client identity headers before the handler executes.\n\n---\n\n## 5. CORRECTNESS — No error handling\n\n**Finding:** `await txSvc.transfer(...)` is unguarded. A thrown error escapes the async handler.\n\n**Issues:**\n- In Express 5, async rejections propagate, but the handler still needs to route errors to the central handler per Section 11 (\"use `next(err)` ... never swallow errors silently\").\n- Downstream `tx-svc` errors (insufficient funds, account not found, mTLS failure) need to map to correct status codes, not a generic `500`.\n- Success is always `{ok: true}` — no idempotency, no transfer ID returned, no way for the client to reconcile.\n\n**Fix:** Wrap in `try/catch` and `next(err)`, or rely on Express 5 async propagation *and* ensure `errorHandler.ts` maps `tx-svc` error classes. Return the created transfer's ID. Accept an `Idempotency-Key` header and forward it to `tx-svc` — money movement must be idempotent.\n\n---\n\n## 6. SECURITY — Response leaks and missing error shape\n\n**Finding:** On failure this will produce whatever Express's default 500 page emits, which may include a stacktrace.\n\n**Violates:** Section 2 rule 6 — 4xx/5xx must be RFC 7807 `problem+json` with `request_id`, no stacktrace, no internal hostnames.\n\n**Fix:** Ensure the central `errorHandler.ts` owns all error responses for this route. Success response should also include `request_id` for client-side correlation.\n\n---\n\n## 7. OPS — No rate limit tier for a money-movement route\n\n**Finding:** Route falls through to the default `30/min/IP` for POST per Section 4. A transfer endpoint likely needs a stricter per-user (not just per-IP) limit to slow credential-stuffed fund drains.\n\n**Fix:** Add an entry in `config/rate_limits.json` for `/v1/orgs/*/transfer` with a lower limit, and extend the rate limiter key to include `user_id` for authenticated routes (keeps an attacker rotating IPs from bypassing it — same class of bug as the 2025-09 SEV1).\n\n---\n\n## 8. OPS — No audit log entry beyond the pipeline default\n\n**Finding:** Money movement should produce a dedicated audit entry (who, from, to, amount, idempotency key, trace ID) retained per Section 9 (365 days in `atlas-audit-logs-us-east-1`), not just the general `audit_log` line.\n\n**Fix:** Emit a structured audit event via the audit logger. Ensure `amount`/account IDs are *not* caught by `pii_redact` by accident, but also that this log does not include `Authorization` headers (Section 11).\n\n---\n\n## 9. READABILITY — Handler does too much inline\n\n**Finding:** Validation, authorization, and forwarding are tangled. Other handlers in this repo likely delegate to a service module.\n\n**Fix:** Move the body to a handler function (`handlers/orgs/transfer.ts`) with clear stages: validate → authorize → forward → respond. Matches the pattern of other `/v1` routes and makes the security invariants each reviewable in isolation.\n\n---\n\n## Required pre-merge (Section 6)\n\nChanges to `auth_jwt.ts`, `rate_limit.ts`, `header_sanitize.ts`, or `trusted_proxies.json` need CODEOWNERS approval. This PR doesn't touch those files, but the rate-limit config change in finding #7 and the authorization logic in #2 are security-adjacent enough that a platform-team reviewer should sign off regardless.\n\n## Minimum bar to merge\n\nFindings 1, 2, 3, 5, 6 are blockers. 4, 7, 8 are strongly recommended before shipping to production. 9 is a follow-up.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 56170,
+    "duration_api_ms": 57385,
+    "num_turns": 1,
+    "result": "# Review: `POST /v1/orgs/:org_id/transfer`\n\nFindings in priority order (Section 12: security → correctness → ops → readability).\n\n---\n\n## 1. SECURITY — Trusting client-supplied identity header (P0)\n\n**Finding:** `const userId = req.headers['x-user-id']` reads identity directly from a client header.\n\n**Violates:** Section 2 rule 1 (critical, P0). Identity headers arriving from outside the trust zone must be stripped before handlers run, and identity must come from the verified JWT.\n\n**Exploit:** Any caller sends `X-User-Id: <victim-sub>` and initiates a transfer as that user. Complete auth bypass. This is the exact class of bug the `header_sanitize` middleware exists to prevent — reading it in the handler defeats the defense.\n\n**Fix:** Use `req.user.sub` (populated by `auth_jwt` middleware, Section 3 step 5 / Section 5). Never read `X-User-Id`, `X-Org-Id`, or any `X-*` identity header in a handler. The internal `X-Internal-User-Id` / `X-Internal-Org-Id` headers are only meaningful on the downstream side of the mTLS mesh — not in this Express handler.\n\n**Verify:** Send a request with a valid JWT for user A and `X-User-Id: B`; confirm the transfer is attributed to A. Add a unit test.\n\n---\n\n## 2. SECURITY — Missing authorization check (org membership)\n\n**Finding:** No check that the authenticated user belongs to `req.params.org_id` or has a role permitting transfers.\n\n**Exploit:** User in org X calls `POST /v1/orgs/Y/transfer` and moves funds in org Y. Authentication ≠ authorization; `auth_jwt` only proves who the caller is.\n\n**Fix:** After extracting `req.user`, verify `req.user.org === req.params.org_id` (or that the user has an explicit cross-org role in `req.user.roles`). Reject with `403` + RFC 7807 body otherwise. Per Section 2, downstream services also authorize, but the edge must not forward obviously-unauthorized requests.\n\n---\n\n## 3. SECURITY / CORRECTNESS — No input validation on body\n\n**Finding:** `from`, `to`, `amount` are destructured with no schema validation, type check, or range check.\n\n**Failure modes:**\n- `amount` could be negative (reverse transfer), zero, a string, `NaN`, or a float with precision issues.\n- `from` / `to` could be arbitrary strings, missing, or identical (self-transfer loop).\n- Body could be missing entirely → `TypeError` → `500`.\n\n**Fix:** Validate with the project's schema validator (zod/ajv — match existing patterns in other handlers). Require `from !== to`, `amount` is a positive integer in minor units, both accounts are UUIDs belonging to `org_id`. Reject with `400` + RFC 7807.\n\n---\n\n## 4. CORRECTNESS / OPS — Route bypasses the pipeline entirely\n\n**Finding:** `app.post(...)` registers directly on the Express app. Per Section 3, the edge pipeline (request_id, header_sanitize, rate_limit, body_size_guard, auth_jwt, route_dispatcher, mTLS_egress, response_filter, audit_log) is assembled in `src/edge/pipeline.ts`. Handlers registered outside that chain may skip middleware depending on where `app.post` runs relative to `app.use(...)` calls.\n\n**Fix:** Register the route through `route_dispatcher` / the same mechanism used by other `/v1/...` routes. Confirm `req.user` is populated (it only is if `auth_jwt` ran) and that `header_sanitize` has stripped `X-Internal-*` and client identity headers before the handler executes.\n\n---\n\n## 5. CORRECTNESS — No error handling\n\n**Finding:** `await txSvc.transfer(...)` is unguarded. A thrown error escapes the async handler.\n\n**Issues:**\n- In Express 5, async rejections propagate, but the handler still needs to route errors to the central handler per Section 11 (\"use `next(err)` ... never swallow errors silently\").\n- Downstream `tx-svc` errors (insufficient funds, account not found, mTLS failure) need to map to correct status codes, not a generic `500`.\n- Success is always `{ok: true}` — no idempotency, no transfer ID returned, no way for the client to reconcile.\n\n**Fix:** Wrap in `try/catch` and `next(err)`, or rely on Express 5 async propagation *and* ensure `errorHandler.ts` maps `tx-svc` error classes. Return the created transfer's ID. Accept an `Idempotency-Key` header and forward it to `tx-svc` — money movement must be idempotent.\n\n---\n\n## 6. SECURITY — Response leaks and missing error shape\n\n**Finding:** On failure this will produce whatever Express's default 500 page emits, which may include a stacktrace.\n\n**Violates:** Section 2 rule 6 — 4xx/5xx must be RFC 7807 `problem+json` with `request_id`, no stacktrace, no internal hostnames.\n\n**Fix:** Ensure the central `errorHandler.ts` owns all error responses for this route. Success response should also include `request_id` for client-side correlation.\n\n---\n\n## 7. OPS — No rate limit tier for a money-movement route\n\n**Finding:** Route falls through to the default `30/min/IP` for POST per Section 4. A transfer endpoint likely needs a stricter per-user (not just per-IP) limit to slow credential-stuffed fund drains.\n\n**Fix:** Add an entry in `config/rate_limits.json` for `/v1/orgs/*/transfer` with a lower limit, and extend the rate limiter key to include `user_id` for authenticated routes (keeps an attacker rotating IPs from bypassing it — same class of bug as the 2025-09 SEV1).\n\n---\n\n## 8. OPS — No audit log entry beyond the pipeline default\n\n**Finding:** Money movement should produce a dedicated audit entry (who, from, to, amount, idempotency key, trace ID) retained per Section 9 (365 days in `atlas-audit-logs-us-east-1`), not just the general `audit_log` line.\n\n**Fix:** Emit a structured audit event via the audit logger. Ensure `amount`/account IDs are *not* caught by `pii_redact` by accident, but also that this log does not include `Authorization` headers (Section 11).\n\n---\n\n## 9. READABILITY — Handler does too much inline\n\n**Finding:** Validation, authorization, and forwarding are tangled. Other handlers in this repo likely delegate to a service module.\n\n**Fix:** Move the body to a handler function (`handlers/orgs/transfer.ts`) with clear stages: validate → authorize → forward → respond. Matches the pattern of other `/v1` routes and makes the security invariants each reviewable in isolation.\n\n---\n\n## Required pre-merge (Section 6)\n\nChanges to `auth_jwt.ts`, `rate_limit.ts`, `header_sanitize.ts`, or `trusted_proxies.json` need CODEOWNERS approval. This PR doesn't touch those files, but the rate-limit config change in finding #7 and the authorization logic in #2 are security-adjacent enough that a platform-team reviewer should sign off regardless.\n\n## Minimum bar to merge\n\nFindings 1, 2, 3, 5, 6 are blockers. 4, 7, 8 are strongly recommended before shipping to production. 9 is a follow-up.",
+    "stop_reason": "end_turn",
+    "session_id": "8d7d9b5d-a6a3-4ff6-9dc3-2747725b74bb",
+    "total_cost_usd": 0.23121724999999999,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 24449,
+      "cache_read_input_tokens": 16796,
+      "output_tokens": 2570,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 24449,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 2570,
+          "cache_read_input_tokens": 16796,
+          "cache_creation_input_tokens": 24449,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 24449
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 5668,
+        "outputTokens": 13,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.005733,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 2570,
+        "cacheReadInputTokens": 16796,
+        "cacheCreationInputTokens": 24449,
+        "webSearchRequests": 0,
+        "costUSD": 0.22548425,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "43db0277-a878-4b93-88cf-dd352f231342"
+  }
+}

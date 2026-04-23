@@ -14,61 +14,61 @@
   ],
   "digest_hex": "394d162344f9342c7b47283b28bfa130e4fb435382a1f0a8aa819239935b955a",
   "seed": "hewn-bench-v1",
-  "timestamp": "2026-04-22T00:40:14.237575+00:00",
-  "output_tokens_tiktoken": 159,
-  "output_tokens_anthropic": 259,
+  "timestamp": "2026-04-23T09:59:55.742087+00:00",
+  "output_tokens_tiktoken": 785,
+  "output_tokens_anthropic": 1213,
   "input_tokens_anthropic": 6,
-  "cache_creation_input_tokens": 0,
-  "cache_read_input_tokens": 32972,
-  "total_input_tokens": 32978,
+  "cache_creation_input_tokens": 17849,
+  "cache_read_input_tokens": 15184,
+  "total_input_tokens": 33039,
   "cache_state": "warm",
-  "wallclock_ms": 10139.314350002678,
-  "duration_ms": 5793,
-  "duration_api_ms": 6851,
+  "wallclock_ms": 27501.631457998883,
+  "duration_ms": 24101,
+  "duration_api_ms": 25416,
   "wrapper_overhead_ms": null,
   "stop_reason": "end_turn",
   "num_turns": 1,
-  "session_id": "583aa2f1-f184-4a5b-bdcd-9ca1f6ea0d41",
-  "total_cost_usd": 0.028665000000000003,
+  "session_id": "91410830-86a3-42fa-b919-aba61c2761b7",
+  "total_cost_usd": 0.15524125,
   "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
-  "result": "risk: XFF spoofed → bypass limiter (SEV1 2025-09). raw `redis.incr` no `EXPIRE` → Redis OOM (SEV2 2025-11). key miss route+minute_bucket+region → cross-route/global collision (SEV2 2025-12).\n\nmitigation: key via `trustedClientIp(req)` not `req.headers['x-forwarded-for']`. `redis.multi().incr(key).expire(key,90).exec()`. key format `rl:{region}:{ip}:{route_prefix}:{minute_bucket}`.\n\nverify: lint `no-direct-xff-read` pass. lint `no-unbounded-redis-key` pass. integration test: spoofed XFF ignored, TTL set, region isolation.",
+  "result": "# Review — `POST /v1/orgs/:org_id/transfer`\n\n## P0 — Security\n\n**1. Trusts `x-user-id` client header.** §2 rule 1 + §5: edge strip client identity headers; only `req.user` from verified JWT trust. Handler read `req.headers['x-user-id']` = impersonation bypass. **Fix:** `const userId = req.user.sub` after `auth_jwt` middleware. Downstream see `X-Internal-User-Id` set by edge, not client.\n\n**2. No org authorization.** `:org_id` from URL not checked against `req.user.org` / roles. Any authed user transfer funds in any org. **Fix:** assert `req.params.org_id === req.user.org` (or role check via `X-Internal-Roles`).\n\n**3. Handler bypass pipeline.** Registered via `app.post` raw — skips §3 middleware chain (`header_sanitize`, `rate_limit`, `body_size_guard`, `auth_jwt`, `route_dispatcher`, `response_filter`, `audit_log`). **Fix:** register via `route_dispatcher` in `src/edge/pipeline.ts`, not `app.post` direct. Edge shouldn't call `txSvc.transfer` direct anyway — forward via `mTLS_egress` to `tx-svc`.\n\n## P1 — Correctness\n\n**4. No input validation.** `from`, `to`, `amount` untyped. Negative amount, non-numeric, missing fields, wrong account = undefined behavior or fund theft. **Fix:** schema validate (zod/ajv). Assert `amount > 0`, integer minor units, `from`/`to` UUID, both accounts belong to `org_id`.\n\n**5. No error handling.** `await` throw = unhandled rejection, Express 5 pass to default handler leaking stack. §2 rule 6: RFC 7807 problem+json, no stack/internal hostnames. **Fix:** `try/catch` + `next(err)` to central `src/edge/errorHandler.ts` (§11).\n\n**6. No idempotency.** Money-moving POST without `Idempotency-Key` = double-transfer on client retry. **Fix:** require `Idempotency-Key` header, dedupe in `tx-svc`.\n\n## P2 — Operational\n\n**7. Rate limit.** `POST` default 30/min/IP (§4) likely too loose for fund transfers; define explicit tighter limit in `config/rate_limits.json` per-user not per-IP.\n\n**8. Audit log.** Money movement = security-relevant, needs §9 audit log (365d retention), not just 14d edge log. Record `jti`, `user_id`, `org_id`, `from`, `to`, `amount`, `request_id`.\n\n**9. Response shape.** `{ok: true}` no `request_id`. §2 rule 6 applies to success too for traceability. Return `transfer_id` + `request_id`.\n\n## P3 — Style\n\n**10. CODEOWNERS.** Change touching auth/trust boundary = human approval required (§6). Flag in PR.\n\n**11. Tests.** §11: integration test against real Redis+PG, not mocks. Happy + edge (negative amount, cross-org, missing JWT, spoofed `x-user-id`, replay).\n\n## Verification\n- `curl -H 'x-user-id: victim' ...` without JWT → `401`, not `200`.\n- `curl` with valid JWT for org A, `:org_id` = org B → `403`.\n- Lint: custom rule should flag direct identity-header reads (extend `tools/eslint-plugin-atlas` if not covered).",
   "assertion_pass": true,
   "raw_payload": {
     "type": "result",
     "subtype": "success",
     "is_error": false,
     "api_error_status": null,
-    "duration_ms": 5793,
-    "duration_api_ms": 6851,
+    "duration_ms": 24101,
+    "duration_api_ms": 25416,
     "num_turns": 1,
-    "result": "risk: XFF spoofed → bypass limiter (SEV1 2025-09). raw `redis.incr` no `EXPIRE` → Redis OOM (SEV2 2025-11). key miss route+minute_bucket+region → cross-route/global collision (SEV2 2025-12).\n\nmitigation: key via `trustedClientIp(req)` not `req.headers['x-forwarded-for']`. `redis.multi().incr(key).expire(key,90).exec()`. key format `rl:{region}:{ip}:{route_prefix}:{minute_bucket}`.\n\nverify: lint `no-direct-xff-read` pass. lint `no-unbounded-redis-key` pass. integration test: spoofed XFF ignored, TTL set, region isolation.",
+    "result": "# Review — `POST /v1/orgs/:org_id/transfer`\n\n## P0 — Security\n\n**1. Trusts `x-user-id` client header.** §2 rule 1 + §5: edge strip client identity headers; only `req.user` from verified JWT trust. Handler read `req.headers['x-user-id']` = impersonation bypass. **Fix:** `const userId = req.user.sub` after `auth_jwt` middleware. Downstream see `X-Internal-User-Id` set by edge, not client.\n\n**2. No org authorization.** `:org_id` from URL not checked against `req.user.org` / roles. Any authed user transfer funds in any org. **Fix:** assert `req.params.org_id === req.user.org` (or role check via `X-Internal-Roles`).\n\n**3. Handler bypass pipeline.** Registered via `app.post` raw — skips §3 middleware chain (`header_sanitize`, `rate_limit`, `body_size_guard`, `auth_jwt`, `route_dispatcher`, `response_filter`, `audit_log`). **Fix:** register via `route_dispatcher` in `src/edge/pipeline.ts`, not `app.post` direct. Edge shouldn't call `txSvc.transfer` direct anyway — forward via `mTLS_egress` to `tx-svc`.\n\n## P1 — Correctness\n\n**4. No input validation.** `from`, `to`, `amount` untyped. Negative amount, non-numeric, missing fields, wrong account = undefined behavior or fund theft. **Fix:** schema validate (zod/ajv). Assert `amount > 0`, integer minor units, `from`/`to` UUID, both accounts belong to `org_id`.\n\n**5. No error handling.** `await` throw = unhandled rejection, Express 5 pass to default handler leaking stack. §2 rule 6: RFC 7807 problem+json, no stack/internal hostnames. **Fix:** `try/catch` + `next(err)` to central `src/edge/errorHandler.ts` (§11).\n\n**6. No idempotency.** Money-moving POST without `Idempotency-Key` = double-transfer on client retry. **Fix:** require `Idempotency-Key` header, dedupe in `tx-svc`.\n\n## P2 — Operational\n\n**7. Rate limit.** `POST` default 30/min/IP (§4) likely too loose for fund transfers; define explicit tighter limit in `config/rate_limits.json` per-user not per-IP.\n\n**8. Audit log.** Money movement = security-relevant, needs §9 audit log (365d retention), not just 14d edge log. Record `jti`, `user_id`, `org_id`, `from`, `to`, `amount`, `request_id`.\n\n**9. Response shape.** `{ok: true}` no `request_id`. §2 rule 6 applies to success too for traceability. Return `transfer_id` + `request_id`.\n\n## P3 — Style\n\n**10. CODEOWNERS.** Change touching auth/trust boundary = human approval required (§6). Flag in PR.\n\n**11. Tests.** §11: integration test against real Redis+PG, not mocks. Happy + edge (negative amount, cross-org, missing JWT, spoofed `x-user-id`, replay).\n\n## Verification\n- `curl -H 'x-user-id: victim' ...` without JWT → `401`, not `200`.\n- `curl` with valid JWT for org A, `:org_id` = org B → `403`.\n- Lint: custom rule should flag direct identity-header reads (extend `tools/eslint-plugin-atlas` if not covered).",
     "stop_reason": "end_turn",
-    "session_id": "583aa2f1-f184-4a5b-bdcd-9ca1f6ea0d41",
-    "total_cost_usd": 0.028665000000000003,
+    "session_id": "91410830-86a3-42fa-b919-aba61c2761b7",
+    "total_cost_usd": 0.15524125,
     "usage": {
       "input_tokens": 6,
-      "cache_creation_input_tokens": 0,
-      "cache_read_input_tokens": 32972,
-      "output_tokens": 259,
+      "cache_creation_input_tokens": 17849,
+      "cache_read_input_tokens": 15184,
+      "output_tokens": 1213,
       "server_tool_use": {
         "web_search_requests": 0,
         "web_fetch_requests": 0
       },
       "service_tier": "standard",
       "cache_creation": {
-        "ephemeral_1h_input_tokens": 0,
+        "ephemeral_1h_input_tokens": 17849,
         "ephemeral_5m_input_tokens": 0
       },
       "inference_geo": "",
       "iterations": [
         {
           "input_tokens": 6,
-          "output_tokens": 259,
-          "cache_read_input_tokens": 32972,
-          "cache_creation_input_tokens": 0,
+          "output_tokens": 1213,
+          "cache_read_input_tokens": 15184,
+          "cache_creation_input_tokens": 17849,
           "cache_creation": {
             "ephemeral_5m_input_tokens": 0,
-            "ephemeral_1h_input_tokens": 0
+            "ephemeral_1h_input_tokens": 17849
           },
           "type": "message"
         }
@@ -77,22 +77,22 @@
     },
     "modelUsage": {
       "claude-haiku-4-5-20251001": {
-        "inputTokens": 5584,
-        "outputTokens": 18,
+        "inputTokens": 5668,
+        "outputTokens": 14,
         "cacheReadInputTokens": 0,
         "cacheCreationInputTokens": 0,
         "webSearchRequests": 0,
-        "costUSD": 0.005674,
+        "costUSD": 0.005738,
         "contextWindow": 200000,
         "maxOutputTokens": 32000
       },
       "claude-opus-4-7": {
         "inputTokens": 6,
-        "outputTokens": 259,
-        "cacheReadInputTokens": 32972,
-        "cacheCreationInputTokens": 0,
+        "outputTokens": 1213,
+        "cacheReadInputTokens": 15184,
+        "cacheCreationInputTokens": 17849,
         "webSearchRequests": 0,
-        "costUSD": 0.022991,
+        "costUSD": 0.14950325,
         "contextWindow": 1000000,
         "maxOutputTokens": 64000
       }
@@ -100,6 +100,6 @@
     "permission_denials": [],
     "terminal_reason": "completed",
     "fast_mode_state": "off",
-    "uuid": "07ee18d7-ea79-45a5-b922-e2e11633cffc"
+    "uuid": "e6ff6547-590f-40a4-bc9a-54669e24507c"
   }
 }

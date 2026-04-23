@@ -14,61 +14,61 @@
   ],
   "digest_hex": "150affe2992c9d3e327b5311fcd06bb30c21d46606c27a5d4b2a456ecbc0ba71",
   "seed": "hewn-bench-v1",
-  "timestamp": "2026-04-22T00:30:14.077485+00:00",
-  "output_tokens_tiktoken": 7,
-  "output_tokens_anthropic": 69,
+  "timestamp": "2026-04-23T08:43:13.085147+00:00",
+  "output_tokens_tiktoken": 311,
+  "output_tokens_anthropic": 516,
   "input_tokens_anthropic": 6,
-  "cache_creation_input_tokens": 17680,
-  "cache_read_input_tokens": 15201,
-  "total_input_tokens": 32887,
+  "cache_creation_input_tokens": 17742,
+  "cache_read_input_tokens": 15199,
+  "total_input_tokens": 32947,
   "cache_state": "warm",
-  "wallclock_ms": 5983.420197997475,
-  "duration_ms": 2658,
-  "duration_api_ms": 2625,
+  "wallclock_ms": 13656.417001999216,
+  "duration_ms": 9942,
+  "duration_api_ms": 11445,
   "wrapper_overhead_ms": null,
   "stop_reason": "end_turn",
   "num_turns": 1,
-  "session_id": "1cda1d57-43e2-420d-8382-31e818cb321b",
-  "total_cost_usd": 0.11985550000000002,
-  "model_used": "claude-opus-4-7",
-  "result": "Task empty. What you want?",
+  "session_id": "51ad4735-ac69-4794-bf0c-4414ead06705",
+  "total_cost_usd": 0.13709100000000002,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "**Risk**\n\n- XFF header read direct. `X-Forwarded-For` client-spoofable → attacker rotate header → per-IP limit bypass. Violate §2 rule 2 + §11 `no-direct-xff-read` lint. Repeat of 2025-09 SEV1.\n- `redis.incr` no `EXPIRE`. Unbounded key → Redis OOM. Violate §2 rule 3 + §11 `no-unbounded-redis-key`. Repeat of 2025-11 SEV2.\n- Missing route prefix + region prefix in key. Repeat of 2025-12 SEV2.\n\n**Mitigation**\n\n```ts\nconst ip = trustedClientIp(req)\nconst key = `rl:${region}:${ip}:${routePrefix}:${minuteBucket}`\nconst multi = redis.multi()\nmulti.incr(key)\nmulti.expire(key, 90)\nconst [count] = await multi.exec()\n```\n\n**Verify**\n\n- `grep` no `req.headers['x-forwarded-for']` outside `trustedClientIp.ts`.\n- Lint `no-direct-xff-read` + `no-unbounded-redis-key` pass.\n- Integration test: spoof XFF → limiter key use socket IP.\n- Integration test: `INCR` path pair `EXPIRE` (TTL > 0).\n- Region+route prefix in key format.\n\n**Residual**\n\n- `trustedClientIp` trusted-proxy list fresh?\n- Per-user (not per-IP) limit for auth'd routes?",
   "assertion_pass": true,
   "raw_payload": {
     "type": "result",
     "subtype": "success",
     "is_error": false,
     "api_error_status": null,
-    "duration_ms": 2658,
-    "duration_api_ms": 2625,
+    "duration_ms": 9942,
+    "duration_api_ms": 11445,
     "num_turns": 1,
-    "result": "Task empty. What you want?",
+    "result": "**Risk**\n\n- XFF header read direct. `X-Forwarded-For` client-spoofable → attacker rotate header → per-IP limit bypass. Violate §2 rule 2 + §11 `no-direct-xff-read` lint. Repeat of 2025-09 SEV1.\n- `redis.incr` no `EXPIRE`. Unbounded key → Redis OOM. Violate §2 rule 3 + §11 `no-unbounded-redis-key`. Repeat of 2025-11 SEV2.\n- Missing route prefix + region prefix in key. Repeat of 2025-12 SEV2.\n\n**Mitigation**\n\n```ts\nconst ip = trustedClientIp(req)\nconst key = `rl:${region}:${ip}:${routePrefix}:${minuteBucket}`\nconst multi = redis.multi()\nmulti.incr(key)\nmulti.expire(key, 90)\nconst [count] = await multi.exec()\n```\n\n**Verify**\n\n- `grep` no `req.headers['x-forwarded-for']` outside `trustedClientIp.ts`.\n- Lint `no-direct-xff-read` + `no-unbounded-redis-key` pass.\n- Integration test: spoof XFF → limiter key use socket IP.\n- Integration test: `INCR` path pair `EXPIRE` (TTL > 0).\n- Region+route prefix in key format.\n\n**Residual**\n\n- `trustedClientIp` trusted-proxy list fresh?\n- Per-user (not per-IP) limit for auth'd routes?",
     "stop_reason": "end_turn",
-    "session_id": "1cda1d57-43e2-420d-8382-31e818cb321b",
-    "total_cost_usd": 0.11985550000000002,
+    "session_id": "51ad4735-ac69-4794-bf0c-4414ead06705",
+    "total_cost_usd": 0.13709100000000002,
     "usage": {
       "input_tokens": 6,
-      "cache_creation_input_tokens": 17680,
-      "cache_read_input_tokens": 15201,
-      "output_tokens": 69,
+      "cache_creation_input_tokens": 17742,
+      "cache_read_input_tokens": 15199,
+      "output_tokens": 516,
       "server_tool_use": {
         "web_search_requests": 0,
         "web_fetch_requests": 0
       },
       "service_tier": "standard",
       "cache_creation": {
-        "ephemeral_1h_input_tokens": 17680,
+        "ephemeral_1h_input_tokens": 17742,
         "ephemeral_5m_input_tokens": 0
       },
       "inference_geo": "",
       "iterations": [
         {
           "input_tokens": 6,
-          "output_tokens": 69,
-          "cache_read_input_tokens": 15201,
-          "cache_creation_input_tokens": 17680,
+          "output_tokens": 516,
+          "cache_read_input_tokens": 15199,
+          "cache_creation_input_tokens": 17742,
           "cache_creation": {
             "ephemeral_5m_input_tokens": 0,
-            "ephemeral_1h_input_tokens": 17680
+            "ephemeral_1h_input_tokens": 17742
           },
           "type": "message"
         }
@@ -76,13 +76,23 @@
       "speed": "standard"
     },
     "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 5584,
+        "outputTokens": 18,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.005674,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
       "claude-opus-4-7": {
         "inputTokens": 6,
-        "outputTokens": 69,
-        "cacheReadInputTokens": 15201,
-        "cacheCreationInputTokens": 17680,
+        "outputTokens": 516,
+        "cacheReadInputTokens": 15199,
+        "cacheCreationInputTokens": 17742,
         "webSearchRequests": 0,
-        "costUSD": 0.11985550000000002,
+        "costUSD": 0.131417,
         "contextWindow": 1000000,
         "maxOutputTokens": 64000
       }
@@ -90,6 +100,6 @@
     "permission_denials": [],
     "terminal_reason": "completed",
     "fast_mode_state": "off",
-    "uuid": "46d49a2e-7fe7-4596-8473-3a8edf80e1b1"
+    "uuid": "52d1b5be-f89f-4877-84dd-ff83ecb9aeab"
   }
 }

@@ -1,0 +1,18 @@
+{
+  "final": {
+    "code_change_in_body_size_guard_or_route_specific_override": true,
+    "config_change_in_rate_limits_or_route_config_file": true,
+    "tests_added_for_size_limit_at_412_or_413_or_correct_status": false,
+    "observability_metric_or_alert_for_413_increase": false,
+    "rollout_via_canary_or_blue_green_per_handbook": false,
+    "rollback_plan_via_argo_or_per_region_revert": false,
+    "communication_to_affected_route_users_or_partners": false
+  },
+  "history": [
+    {
+      "attempt": 0,
+      "raw": "{\"code_change_in_body_size_guard_or_route_specific_override\":true,\"config_change_in_rate_limits_or_route_config_file\":true,\"tests_added_for_size_limit_at_412_or_413_or_correct_status\":false,\"observability_metric_or_alert_for_413_increase\":false,\"rollout_via_canary_or_blue_green_per_handbook\":false,\"rollback_plan_via_argo_or_per_region_revert\":false,\"communication_to_affected_route_users_or_partners\":false}"
+    }
+  ],
+  "ts": "2026-04-22T10:32:30.637117+00:00"
+}

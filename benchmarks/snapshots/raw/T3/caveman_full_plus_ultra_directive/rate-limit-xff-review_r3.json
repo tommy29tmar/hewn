@@ -14,42 +14,42 @@
   ],
   "digest_hex": "cffe317c5c73922535ac9a56d76b012bce4c891ed45ea6f65a6644bb758137e0",
   "seed": "hewn-bench-v1",
-  "timestamp": "2026-04-22T00:45:43.176755+00:00",
-  "output_tokens_tiktoken": 7,
-  "output_tokens_anthropic": 54,
+  "timestamp": "2026-04-23T10:19:46.165285+00:00",
+  "output_tokens_tiktoken": 308,
+  "output_tokens_anthropic": 564,
   "input_tokens_anthropic": 6,
   "cache_creation_input_tokens": 0,
-  "cache_read_input_tokens": 32881,
-  "total_input_tokens": 32887,
+  "cache_read_input_tokens": 32941,
+  "total_input_tokens": 32947,
   "cache_state": "warm",
-  "wallclock_ms": 6302.080277993809,
-  "duration_ms": 2645,
-  "duration_api_ms": 3688,
+  "wallclock_ms": 16505.514678021427,
+  "duration_ms": 12669,
+  "duration_api_ms": 15107,
   "wrapper_overhead_ms": null,
   "stop_reason": "end_turn",
   "num_turns": 1,
-  "session_id": "93337043-59b4-44e0-a49b-ae921e318439",
-  "total_cost_usd": 0.0233955,
+  "session_id": "30a7d4fd-5253-4a21-9084-e0a59c2da122",
+  "total_cost_usd": 0.0362895,
   "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
-  "result": "No task given. What want?",
+  "result": "**Risk**\n1. XFF spoof → bypass limit. `req.headers['x-forwarded-for']` client-controlled. Sec2§2 + 2025-09 SEV1 repeat. Lint `no-direct-xff-read` violated.\n2. No `EXPIRE` → Redis OOM. Sec4 + 2025-11 SEV2 repeat. Lint `no-unbounded-redis-key` violated.\n3. Key missing route + minute_bucket + region → cross-route bleed, no window reset, global limit (2025-12 SEV2).\n\n**Mitigation**\n```js\nconst ip = trustedClientIp(req)        // validated proxy chain\nconst bucket = Math.floor(Date.now()/60000)\nconst key = `rl:${region}:${ip}:${routePrefix}:${bucket}`\nconst [count] = await redis.multi().incr(key).expire(key, 90).exec()\nif (count > limit) return res.status(429).json({type:'/errors/rate-limited',...})\n```\n\n**Verify**\n- `grep \"x-forwarded-for\"` outside `trustedClientIp.ts` → 0 hits, lint green.\n- Integration test: spoof XFF → same `req.socket.remoteAddress` → single counter.\n- `redis-cli TTL <key>` → 90, not -1.\n- Region prefix test: same user, 2 regions → 2 counters.\n\n**Residual**\nCODEOWNERS approval required (`rate_limit.ts`). Trusted proxy list current.",
   "assertion_pass": true,
   "raw_payload": {
     "type": "result",
     "subtype": "success",
     "is_error": false,
     "api_error_status": null,
-    "duration_ms": 2645,
-    "duration_api_ms": 3688,
+    "duration_ms": 12669,
+    "duration_api_ms": 15107,
     "num_turns": 1,
-    "result": "No task given. What want?",
+    "result": "**Risk**\n1. XFF spoof → bypass limit. `req.headers['x-forwarded-for']` client-controlled. Sec2§2 + 2025-09 SEV1 repeat. Lint `no-direct-xff-read` violated.\n2. No `EXPIRE` → Redis OOM. Sec4 + 2025-11 SEV2 repeat. Lint `no-unbounded-redis-key` violated.\n3. Key missing route + minute_bucket + region → cross-route bleed, no window reset, global limit (2025-12 SEV2).\n\n**Mitigation**\n```js\nconst ip = trustedClientIp(req)        // validated proxy chain\nconst bucket = Math.floor(Date.now()/60000)\nconst key = `rl:${region}:${ip}:${routePrefix}:${bucket}`\nconst [count] = await redis.multi().incr(key).expire(key, 90).exec()\nif (count > limit) return res.status(429).json({type:'/errors/rate-limited',...})\n```\n\n**Verify**\n- `grep \"x-forwarded-for\"` outside `trustedClientIp.ts` → 0 hits, lint green.\n- Integration test: spoof XFF → same `req.socket.remoteAddress` → single counter.\n- `redis-cli TTL <key>` → 90, not -1.\n- Region prefix test: same user, 2 regions → 2 counters.\n\n**Residual**\nCODEOWNERS approval required (`rate_limit.ts`). Trusted proxy list current.",
     "stop_reason": "end_turn",
-    "session_id": "93337043-59b4-44e0-a49b-ae921e318439",
-    "total_cost_usd": 0.0233955,
+    "session_id": "30a7d4fd-5253-4a21-9084-e0a59c2da122",
+    "total_cost_usd": 0.0362895,
     "usage": {
       "input_tokens": 6,
       "cache_creation_input_tokens": 0,
-      "cache_read_input_tokens": 32881,
-      "output_tokens": 54,
+      "cache_read_input_tokens": 32941,
+      "output_tokens": 564,
       "server_tool_use": {
         "web_search_requests": 0,
         "web_fetch_requests": 0
@@ -63,8 +63,8 @@
       "iterations": [
         {
           "input_tokens": 6,
-          "output_tokens": 54,
-          "cache_read_input_tokens": 32881,
+          "output_tokens": 564,
+          "cache_read_input_tokens": 32941,
           "cache_creation_input_tokens": 0,
           "cache_creation": {
             "ephemeral_5m_input_tokens": 0,
@@ -77,22 +77,22 @@
     },
     "modelUsage": {
       "claude-haiku-4-5-20251001": {
-        "inputTokens": 5505,
-        "outputTokens": 14,
+        "inputTokens": 5584,
+        "outputTokens": 21,
         "cacheReadInputTokens": 0,
         "cacheCreationInputTokens": 0,
         "webSearchRequests": 0,
-        "costUSD": 0.005575,
+        "costUSD": 0.0056890000000000005,
         "contextWindow": 200000,
         "maxOutputTokens": 32000
       },
       "claude-opus-4-7": {
         "inputTokens": 6,
-        "outputTokens": 54,
-        "cacheReadInputTokens": 32881,
+        "outputTokens": 564,
+        "cacheReadInputTokens": 32941,
         "cacheCreationInputTokens": 0,
         "webSearchRequests": 0,
-        "costUSD": 0.0178205,
+        "costUSD": 0.030600500000000003,
         "contextWindow": 1000000,
         "maxOutputTokens": 64000
       }
@@ -100,6 +100,6 @@
     "permission_denials": [],
     "terminal_reason": "completed",
     "fast_mode_state": "off",
-    "uuid": "b7908d70-f393-40ad-b655-3b277c666471"
+    "uuid": "59a0ce88-70d5-4973-a7fa-a41e10931708"
   }
 }

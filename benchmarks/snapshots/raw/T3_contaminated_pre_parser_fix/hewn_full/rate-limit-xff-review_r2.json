@@ -1,0 +1,105 @@
+{
+  "track": "T3",
+  "arm": "hewn_full",
+  "prompt_id": "rate-limit-xff-review",
+  "run_index": 2,
+  "arm_order_index": 0,
+  "arm_order_full": [
+    "hewn_full",
+    "caveman_full",
+    "terse",
+    "baseline",
+    "hewn_prompt_only",
+    "caveman_full_plus_ultra_directive"
+  ],
+  "digest_hex": "2bb2d5707e1a95f128e077efe38d2768de5a410e8723ddc95510208906649ba7",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T09:45:55.701412+00:00",
+  "output_tokens_tiktoken": 1015,
+  "output_tokens_anthropic": 4274,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 25516,
+  "cache_read_input_tokens": 16805,
+  "total_input_tokens": 42327,
+  "cache_state": "warm",
+  "wallclock_ms": 79900.27424599975,
+  "duration_ms": 72948,
+  "duration_api_ms": 74181,
+  "wrapper_overhead_ms": 5719.2742459997535,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "caa5e020-5528-48a1-b3d1-a26023d13493",
+  "total_cost_usd": 0.2803325,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "1. Rate limiter `multi.exec()` destructure bug — Section 4 code. `ioredis` returns `[[err, val], ...]` tuples from `exec()`. `const [count] = await multi.exec()` binds `count` to `[null, <int>]`, so `count > limit` compares array-to-number (coerces, but breaks on `null` errors). Fix: `const [[, count]] = await multi.exec()` and check the err slot.\n\n2. Documented rate-limit key still missing region prefix — Section 4 shows `rl:{ip}:{route_prefix}:{minute_bucket}`, but Section 10 (2025-12 SEV2) says region prefix was added post-incident. Either handbook is stale or the regression returned. Fix: `rl:{region}:{ip}:{route_prefix}:{minute_bucket}` and verify in code/tests.\n\n3. JWT exp/nbf skew logic is self-contradictory — Section 5. \"exp checked against `Date.now() + skewMs`\" would *extend* validity; next sentence rejects when `exp < Date.now() - skewMs` which *shortens* it. Only one of these is right for each of exp/nbf (reject if `exp < now - skew`; reject if `nbf > now + skew`). Clarify and add tests for both boundaries.\n\n4. \"Sliding window\" is actually fixed-bucket — Section 4. `Math.floor(Date.now()/60000)` is a fixed minute bucket, permitting ~2× burst across the boundary. Either rename to \"fixed window\" or switch to a real sliding-window (two-bucket weighted, or sorted-set ZREMRANGEBYSCORE).\n\n5. Per-IP only limits → brute-force still viable via IP rotation post-2025-09 fix — Section 10 2025-09 RCA only hardened IP derivation; attacker moving across residential/NAT IPs still defeats throttling. Add a per-`sub`/per-account failed-auth counter keyed on `X-Internal-User-Id` (or username pre-auth) with lockout.\n\n6. Missing `Retry-After` HTTP header on 429 — Section 4 emits `retry_after` only in JSON body. Standards-compliant clients and CDNs key off the header. Add `res.setHeader('Retry-After', secondsUntilNextBucket())`.\n\n7. Header sanitization is implicit denylist — Section 2 rule 1 lists specific headers to strip. Any future internal header (`X-Internal-*`, `X-Forwarded-*`, `X-Real-*`) added downstream is trusted until someone remembers to update the list. Switch to allowlist: strip any `X-Internal-*` and `X-Forwarded-*` unconditionally at ingress; add only what the pipeline re-sets after auth.\n\n8. JWKS stale-while-revalidate extends poisoning blast radius — Section 2 rule 4 + 2025-06 SEV1. 16-min soft TTL with SWR means a poisoned key set keeps serving beyond the 15-min refresh, compounding the cache-flush recovery. Either drop SWR for JWKS (refresh-ahead only) or gate it behind a signature/kid sanity check before promotion.\n\n9. `jti` replay detection punted to downstream with no enforcement — Section 5. \"Responsibility of downstream services that care\" means services that don't explicitly opt in are vulnerable to token replay within `exp - now`. Track which downstreams implement it, or do edge-side jti blocklist for sensitive routes.\n\n10. Auto-rollback on \"SEV1 ANY HOUR\" thrashes on external-cause incidents — Section 6. A downstream `auth-svc` JWKS outage (cf. 2025-06) or Redis flap triggers SEV1 auto-rollback, which does nothing useful and may interrupt an in-progress fix. Gate auto-rollback on \"error class originated in atlas-edge\" (deploy-correlated signals: new error signatures, timing aligned with sync event), not on raw SEV1.\n\n11. Custom lint rule `no-unbounded-redis-key` likely misses `MULTI` patterns — Section 11. Rule matches `redis.incr` but Section 4 uses `multi.incr` / `multi.expire` on a pipeline object; name resolution differs. Verify the AST matcher covers `.multi()` chains and both `redis.*` and `Pipeline.*` receivers, or the `EXPIRE` invariant is silently unenforceable for the very pattern the code recommends.\n\n12. PII-redaction verification runs staging-only — Section 2 rule 5 + Section 9. Hourly `pii-leak-detector` on staging won't catch a production-only log path (e.g. a route flagged in `always_trace_routes.json` with debug fields). Run the detector against a sampled tail of Loki prod logs too.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 72948,
+    "duration_api_ms": 74181,
+    "num_turns": 1,
+    "result": "1. Rate limiter `multi.exec()` destructure bug — Section 4 code. `ioredis` returns `[[err, val], ...]` tuples from `exec()`. `const [count] = await multi.exec()` binds `count` to `[null, <int>]`, so `count > limit` compares array-to-number (coerces, but breaks on `null` errors). Fix: `const [[, count]] = await multi.exec()` and check the err slot.\n\n2. Documented rate-limit key still missing region prefix — Section 4 shows `rl:{ip}:{route_prefix}:{minute_bucket}`, but Section 10 (2025-12 SEV2) says region prefix was added post-incident. Either handbook is stale or the regression returned. Fix: `rl:{region}:{ip}:{route_prefix}:{minute_bucket}` and verify in code/tests.\n\n3. JWT exp/nbf skew logic is self-contradictory — Section 5. \"exp checked against `Date.now() + skewMs`\" would *extend* validity; next sentence rejects when `exp < Date.now() - skewMs` which *shortens* it. Only one of these is right for each of exp/nbf (reject if `exp < now - skew`; reject if `nbf > now + skew`). Clarify and add tests for both boundaries.\n\n4. \"Sliding window\" is actually fixed-bucket — Section 4. `Math.floor(Date.now()/60000)` is a fixed minute bucket, permitting ~2× burst across the boundary. Either rename to \"fixed window\" or switch to a real sliding-window (two-bucket weighted, or sorted-set ZREMRANGEBYSCORE).\n\n5. Per-IP only limits → brute-force still viable via IP rotation post-2025-09 fix — Section 10 2025-09 RCA only hardened IP derivation; attacker moving across residential/NAT IPs still defeats throttling. Add a per-`sub`/per-account failed-auth counter keyed on `X-Internal-User-Id` (or username pre-auth) with lockout.\n\n6. Missing `Retry-After` HTTP header on 429 — Section 4 emits `retry_after` only in JSON body. Standards-compliant clients and CDNs key off the header. Add `res.setHeader('Retry-After', secondsUntilNextBucket())`.\n\n7. Header sanitization is implicit denylist — Section 2 rule 1 lists specific headers to strip. Any future internal header (`X-Internal-*`, `X-Forwarded-*`, `X-Real-*`) added downstream is trusted until someone remembers to update the list. Switch to allowlist: strip any `X-Internal-*` and `X-Forwarded-*` unconditionally at ingress; add only what the pipeline re-sets after auth.\n\n8. JWKS stale-while-revalidate extends poisoning blast radius — Section 2 rule 4 + 2025-06 SEV1. 16-min soft TTL with SWR means a poisoned key set keeps serving beyond the 15-min refresh, compounding the cache-flush recovery. Either drop SWR for JWKS (refresh-ahead only) or gate it behind a signature/kid sanity check before promotion.\n\n9. `jti` replay detection punted to downstream with no enforcement — Section 5. \"Responsibility of downstream services that care\" means services that don't explicitly opt in are vulnerable to token replay within `exp - now`. Track which downstreams implement it, or do edge-side jti blocklist for sensitive routes.\n\n10. Auto-rollback on \"SEV1 ANY HOUR\" thrashes on external-cause incidents — Section 6. A downstream `auth-svc` JWKS outage (cf. 2025-06) or Redis flap triggers SEV1 auto-rollback, which does nothing useful and may interrupt an in-progress fix. Gate auto-rollback on \"error class originated in atlas-edge\" (deploy-correlated signals: new error signatures, timing aligned with sync event), not on raw SEV1.\n\n11. Custom lint rule `no-unbounded-redis-key` likely misses `MULTI` patterns — Section 11. Rule matches `redis.incr` but Section 4 uses `multi.incr` / `multi.expire` on a pipeline object; name resolution differs. Verify the AST matcher covers `.multi()` chains and both `redis.*` and `Pipeline.*` receivers, or the `EXPIRE` invariant is silently unenforceable for the very pattern the code recommends.\n\n12. PII-redaction verification runs staging-only — Section 2 rule 5 + Section 9. Hourly `pii-leak-detector` on staging won't catch a production-only log path (e.g. a route flagged in `always_trace_routes.json` with debug fields). Run the detector against a sampled tail of Loki prod logs too.",
+    "stop_reason": "end_turn",
+    "session_id": "caa5e020-5528-48a1-b3d1-a26023d13493",
+    "total_cost_usd": 0.2803325,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 25516,
+      "cache_read_input_tokens": 16805,
+      "output_tokens": 4274,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 25516,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 4274,
+          "cache_read_input_tokens": 16805,
+          "cache_creation_input_tokens": 25516,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 25516
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 5505,
+        "outputTokens": 14,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.005575,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 4274,
+        "cacheReadInputTokens": 16805,
+        "cacheCreationInputTokens": 25516,
+        "webSearchRequests": 0,
+        "costUSD": 0.2747575,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "3b56c1fa-8a7f-4a35-987b-2a9d0eb9daf3"
+  }
+}

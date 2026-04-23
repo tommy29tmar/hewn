@@ -1,0 +1,105 @@
+{
+  "track": "T5",
+  "arm": "hewn_full",
+  "prompt_id": "outage-apology-email",
+  "run_index": 2,
+  "arm_order_index": 5,
+  "arm_order_full": [
+    "caveman_full_plus_ultra_directive",
+    "terse",
+    "hewn_prompt_only",
+    "caveman_full",
+    "baseline",
+    "hewn_full"
+  ],
+  "digest_hex": "79c7f153f103ae8cb05b518a7c67b3127fd5c21a2990920ab1827dd6eafbf25d",
+  "seed": "hewn-bench-v1",
+  "timestamp": "2026-04-22T09:54:52.401016+00:00",
+  "output_tokens_tiktoken": 302,
+  "output_tokens_anthropic": 452,
+  "input_tokens_anthropic": 6,
+  "cache_creation_input_tokens": 18364,
+  "cache_read_input_tokens": 16805,
+  "total_input_tokens": 35175,
+  "cache_state": "warm",
+  "wallclock_ms": 18627.82193699968,
+  "duration_ms": 12441,
+  "duration_api_ms": 13362,
+  "wrapper_overhead_ms": 5265.8219369996805,
+  "stop_reason": "end_turn",
+  "num_turns": 1,
+  "session_id": "32bdfa0d-0bd0-4349-889e-fa82c9d1bec0",
+  "total_cost_usd": 0.1350175,
+  "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
+  "result": "# Introducing Smart Drafts\n\nWe've all been there. You open a new document, the cursor blinks, and suddenly the most urgent thing in the world is refilling your coffee. Blank pages are one of the quietest productivity killers we know — not because people lack ideas, but because the jump from *thinking* to *structured writing* is genuinely hard. Today we're shipping Smart Drafts, a feature built specifically for that moment.\n\nHere's how it works. When you create a new document, you'll see a **Start with Smart Draft** button next to the usual blank canvas. Give your document a title, click the button, and we'll generate a first-pass outline tailored to what you're writing — informed by the title you chose and the context of your recent work in the space. It's not a finished draft, and it's not meant to be. Think of it as a thoughtful colleague sketching a shape on the whiteboard before the real meeting starts. You take it from there, edit freely, and the outline collapses into whatever the document actually needs to be.\n\nThis is the first step in a bigger direction. Over the next few months, we'll be rolling out custom voice training, so Smart Drafts can learn the way *you* write — your cadence, your vocabulary, the structural habits that make a document feel like yours rather than like it came from a template. We're excited to get this into your hands, and as always, we'd love to hear what's working and what isn't. Happy writing.",
+  "assertion_pass": true,
+  "raw_payload": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "api_error_status": null,
+    "duration_ms": 12441,
+    "duration_api_ms": 13362,
+    "num_turns": 1,
+    "result": "# Introducing Smart Drafts\n\nWe've all been there. You open a new document, the cursor blinks, and suddenly the most urgent thing in the world is refilling your coffee. Blank pages are one of the quietest productivity killers we know — not because people lack ideas, but because the jump from *thinking* to *structured writing* is genuinely hard. Today we're shipping Smart Drafts, a feature built specifically for that moment.\n\nHere's how it works. When you create a new document, you'll see a **Start with Smart Draft** button next to the usual blank canvas. Give your document a title, click the button, and we'll generate a first-pass outline tailored to what you're writing — informed by the title you chose and the context of your recent work in the space. It's not a finished draft, and it's not meant to be. Think of it as a thoughtful colleague sketching a shape on the whiteboard before the real meeting starts. You take it from there, edit freely, and the outline collapses into whatever the document actually needs to be.\n\nThis is the first step in a bigger direction. Over the next few months, we'll be rolling out custom voice training, so Smart Drafts can learn the way *you* write — your cadence, your vocabulary, the structural habits that make a document feel like yours rather than like it came from a template. We're excited to get this into your hands, and as always, we'd love to hear what's working and what isn't. Happy writing.",
+    "stop_reason": "end_turn",
+    "session_id": "32bdfa0d-0bd0-4349-889e-fa82c9d1bec0",
+    "total_cost_usd": 0.1350175,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 18364,
+      "cache_read_input_tokens": 16805,
+      "output_tokens": 452,
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 18364,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [
+        {
+          "input_tokens": 6,
+          "output_tokens": 452,
+          "cache_read_input_tokens": 16805,
+          "cache_creation_input_tokens": 18364,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 18364
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard"
+    },
+    "modelUsage": {
+      "claude-haiku-4-5-20251001": {
+        "inputTokens": 435,
+        "outputTokens": 15,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.00051,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000
+      },
+      "claude-opus-4-7": {
+        "inputTokens": 6,
+        "outputTokens": 452,
+        "cacheReadInputTokens": 16805,
+        "cacheCreationInputTokens": 18364,
+        "webSearchRequests": 0,
+        "costUSD": 0.1345075,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "uuid": "74bf4f98-a0d4-4208-a5ff-d8283c2e9950"
+  }
+}

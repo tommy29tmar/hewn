@@ -14,61 +14,61 @@
   ],
   "digest_hex": "cffe317c5c73922535ac9a56d76b012bce4c891ed45ea6f65a6644bb758137e0",
   "seed": "hewn-bench-v1",
-  "timestamp": "2026-04-22T00:47:12.658496+00:00",
-  "output_tokens_tiktoken": 6,
-  "output_tokens_anthropic": 66,
+  "timestamp": "2026-04-23T10:20:42.660064+00:00",
+  "output_tokens_tiktoken": 286,
+  "output_tokens_anthropic": 471,
   "input_tokens_anthropic": 6,
-  "cache_creation_input_tokens": 0,
-  "cache_read_input_tokens": 32867,
-  "total_input_tokens": 32873,
+  "cache_creation_input_tokens": 17743,
+  "cache_read_input_tokens": 15184,
+  "total_input_tokens": 32933,
   "cache_state": "warm",
-  "wallclock_ms": 5923.266537021846,
-  "duration_ms": 2347,
-  "duration_api_ms": 3723,
+  "wallclock_ms": 12743.80282900529,
+  "duration_ms": 9560,
+  "duration_api_ms": 11012,
   "wrapper_overhead_ms": null,
   "stop_reason": "end_turn",
   "num_turns": 1,
-  "session_id": "2b3909aa-375f-4f9f-a1cc-d4c376e8773d",
-  "total_cost_usd": 0.0236885,
+  "session_id": "7965ed7a-30fd-41f0-a584-a1aa33311bf1",
+  "total_cost_usd": 0.13596475,
   "model_used": "claude-haiku-4-5-20251001,claude-opus-4-7",
-  "result": "Task empty. What want?",
+  "result": "**Risk (P0)**\n- `req.headers['x-forwarded-for']` direct read → spoof bypass. SEV1 2025-09 repeat. Violate Section 2 rule 2 + lint `no-direct-xff-read`.\n- No `EXPIRE` on `INCR` → Redis OOM. SEV2 2025-11 repeat. Violate Section 2 rule 3 + lint `no-unbounded-redis-key`.\n- No region prefix → global limit leak. SEV2 2025-12 repeat.\n- No minute bucket → key grow forever, count never reset.\n\n**Mitigation**\n```js\nconst key = `rl:${region}:${trustedClientIp(req)}:${routePrefix}:${minuteBucket}`\nconst [count] = await redis.multi().incr(key).expire(key, 90).exec()\n```\n\n**Verify**\n- `grep` no `req.headers['x-forwarded-for']` outside `trustedClientIp.ts`.\n- Integration test: spoofed XFF → same bucket as socket IP.\n- Integration test: post-INCR `TTL key` > 0.\n- Lint pass (`no-direct-xff-read`, `no-unbounded-redis-key`).\n\n**Residual risk**\n- `trustedClientIp` only safe if `trusted_proxies.json` current.\n- Sliding-window approx still bursts 2× at bucket boundary.",
   "assertion_pass": true,
   "raw_payload": {
     "type": "result",
     "subtype": "success",
     "is_error": false,
     "api_error_status": null,
-    "duration_ms": 2347,
-    "duration_api_ms": 3723,
+    "duration_ms": 9560,
+    "duration_api_ms": 11012,
     "num_turns": 1,
-    "result": "Task empty. What want?",
+    "result": "**Risk (P0)**\n- `req.headers['x-forwarded-for']` direct read → spoof bypass. SEV1 2025-09 repeat. Violate Section 2 rule 2 + lint `no-direct-xff-read`.\n- No `EXPIRE` on `INCR` → Redis OOM. SEV2 2025-11 repeat. Violate Section 2 rule 3 + lint `no-unbounded-redis-key`.\n- No region prefix → global limit leak. SEV2 2025-12 repeat.\n- No minute bucket → key grow forever, count never reset.\n\n**Mitigation**\n```js\nconst key = `rl:${region}:${trustedClientIp(req)}:${routePrefix}:${minuteBucket}`\nconst [count] = await redis.multi().incr(key).expire(key, 90).exec()\n```\n\n**Verify**\n- `grep` no `req.headers['x-forwarded-for']` outside `trustedClientIp.ts`.\n- Integration test: spoofed XFF → same bucket as socket IP.\n- Integration test: post-INCR `TTL key` > 0.\n- Lint pass (`no-direct-xff-read`, `no-unbounded-redis-key`).\n\n**Residual risk**\n- `trustedClientIp` only safe if `trusted_proxies.json` current.\n- Sliding-window approx still bursts 2× at bucket boundary.",
     "stop_reason": "end_turn",
-    "session_id": "2b3909aa-375f-4f9f-a1cc-d4c376e8773d",
-    "total_cost_usd": 0.0236885,
+    "session_id": "7965ed7a-30fd-41f0-a584-a1aa33311bf1",
+    "total_cost_usd": 0.13596475,
     "usage": {
       "input_tokens": 6,
-      "cache_creation_input_tokens": 0,
-      "cache_read_input_tokens": 32867,
-      "output_tokens": 66,
+      "cache_creation_input_tokens": 17743,
+      "cache_read_input_tokens": 15184,
+      "output_tokens": 471,
       "server_tool_use": {
         "web_search_requests": 0,
         "web_fetch_requests": 0
       },
       "service_tier": "standard",
       "cache_creation": {
-        "ephemeral_1h_input_tokens": 0,
+        "ephemeral_1h_input_tokens": 17743,
         "ephemeral_5m_input_tokens": 0
       },
       "inference_geo": "",
       "iterations": [
         {
           "input_tokens": 6,
-          "output_tokens": 66,
-          "cache_read_input_tokens": 32867,
-          "cache_creation_input_tokens": 0,
+          "output_tokens": 471,
+          "cache_read_input_tokens": 15184,
+          "cache_creation_input_tokens": 17743,
           "cache_creation": {
             "ephemeral_5m_input_tokens": 0,
-            "ephemeral_1h_input_tokens": 0
+            "ephemeral_1h_input_tokens": 17743
           },
           "type": "message"
         }
@@ -77,22 +77,22 @@
     },
     "modelUsage": {
       "claude-haiku-4-5-20251001": {
-        "inputTokens": 5505,
-        "outputTokens": 14,
+        "inputTokens": 5584,
+        "outputTokens": 18,
         "cacheReadInputTokens": 0,
         "cacheCreationInputTokens": 0,
         "webSearchRequests": 0,
-        "costUSD": 0.005575,
+        "costUSD": 0.005674,
         "contextWindow": 200000,
         "maxOutputTokens": 32000
       },
       "claude-opus-4-7": {
         "inputTokens": 6,
-        "outputTokens": 66,
-        "cacheReadInputTokens": 32867,
-        "cacheCreationInputTokens": 0,
+        "outputTokens": 471,
+        "cacheReadInputTokens": 15184,
+        "cacheCreationInputTokens": 17743,
         "webSearchRequests": 0,
-        "costUSD": 0.0181135,
+        "costUSD": 0.13029074999999998,
         "contextWindow": 1000000,
         "maxOutputTokens": 64000
       }
@@ -100,6 +100,6 @@
     "permission_denials": [],
     "terminal_reason": "completed",
     "fast_mode_state": "off",
-    "uuid": "e9f13acc-c052-4ea9-b57f-a5b1f08ad423"
+    "uuid": "e6fd6249-52e8-4d77-b655-1d756b998a38"
   }
 }
