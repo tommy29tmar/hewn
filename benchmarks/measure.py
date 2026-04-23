@@ -35,7 +35,13 @@ def load_snapshots(track: str) -> dict[str, list[dict]]:
         arm = arm_dir.name
         records = []
         for p in sorted(arm_dir.glob("*.json")):
-            records.append(json.loads(p.read_text()))
+            rec = json.loads(p.read_text())
+            # Skip sentinel snapshots: known-model-timeout combos and
+            # error-after-retries records have no measured output and
+            # would be aggregated as 0 tokens / empty response.
+            if rec.get("skipped") or rec.get("error"):
+                continue
+            records.append(rec)
         out[arm] = records
     return out
 

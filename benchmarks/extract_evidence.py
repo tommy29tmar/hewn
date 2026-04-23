@@ -32,7 +32,10 @@ def load_runs(track: str, arm: str, prompt_id: str) -> list[dict]:
     for p in sorted(path.glob(f"{prompt_id}_r*.json")):
         if "_t" in p.stem:
             continue
-        out.append(json.loads(p.read_text()))
+        rec = json.loads(p.read_text())
+        if rec.get("skipped") or rec.get("error"):
+            continue
+        out.append(rec)
     return out
 
 

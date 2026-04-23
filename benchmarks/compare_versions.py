@@ -28,6 +28,8 @@ def median_of_arm(track: str, arm: str, prompt_id: str,
         if "_t" in p.stem:
             continue
         d = json.loads(p.read_text())
+        if d.get("skipped") or d.get("error"):
+            continue
         arr.append(d.get(key, 0))
     return statistics.median(arr) if arr else 0
 
@@ -40,6 +42,8 @@ def cumulative_seq(track: str, arm: str, seq_id: str,
     by_run: dict[int, int] = {}
     for p in sorted(arm_dir.glob(f"{seq_id}_r*_t*.json")):
         d = json.loads(p.read_text())
+        if d.get("skipped") or d.get("error"):
+            continue
         run = d.get("run_index", 0)
         by_run[run] = by_run.get(run, 0) + d.get(key, 0)
     return list(by_run.values())

@@ -109,14 +109,37 @@ def build_cmd(arm: str, prompt: str, resume: str | None = None) -> list[str]:
     return cmd
 
 
+CALL_TIMEOUT_S = 600  # 10 min per individual claude -p call; covers worst-case
+                      # long-context responses while preventing zombie hangs
+
+
 def call_once(arm: str, prompt: str, resume: str | None = None,
               max_retries: int = 3) -> dict[str, Any]:
-    """Invoke claude -p / hewn -p, capture --output-format json."""
+    """Invoke claude -p / hewn -p, capture --output-format json.
+
+    Each call is bounded by `CALL_TIMEOUT_S` so a model-side stall (Opus
+    occasionally goes silent indefinitely on certain long-context +
+    minimal-system-prompt combos) does not freeze the whole track.
+    """
     cmd = build_cmd(arm, prompt, resume)
     delays = [10.0, 30.0, 90.0]
     for attempt in range(max_retries + 1):
         t0 = time.monotonic()
-        proc = subprocess.run(cmd, capture_output=True, text=True)
+        try:
+            proc = subprocess.run(cmd, capture_output=True, text=True,
+                                  timeout=CALL_TIMEOUT_S)
+        except subprocess.TimeoutExpired as e:
+            elapsed_ms = (time.monotonic() - t0) * 1000
+            if attempt < max_retries:
+                d = delays[min(attempt, len(delays) - 1)]
+                print(f"  [retry {attempt+1}] arm={arm} TIMEOUT after "
+                      f"{CALL_TIMEOUT_S}s sleep={d}s", file=sys.stderr)
+                time.sleep(d)
+                continue
+            raise RuntimeError(
+                f"call timed out (>{CALL_TIMEOUT_S}s) after "
+                f"{max_retries} retries: {e}"
+            )
         elapsed_ms = (time.monotonic() - t0) * 1000
         if proc.returncode != 0:
             err = (proc.stderr or "")[:500]
@@ -289,6 +312,16 @@ def load_multiturn() -> list[dict]:
 # track runners
 # ──────────────────────────────────────────────────────────────────────────────
 
+# (track, arm, prompt_id) combos where Claude Opus 4.7 reproducibly
+# never returns a response. Documented in the report's honesty box
+# rather than wasting CALL_TIMEOUT_S × retries per attempt. Confirmed
+# via standalone reproduction: a single fresh `claude -p` invocation
+# with these exact inputs hangs at 300s+ with no output, exit code 124.
+KNOWN_MODEL_TIMEOUTS = {
+    ("T3", "terse", "body-size-rollout-plan"),
+}
+
+
 def run_single_turn_track(track: str, arms: list[str],
                           prompts: list[tuple[str, str]],
                           n_runs: int, randomize: bool = True) -> None:
@@ -312,6 +345,13 @@ def run_single_turn_track(track: str, arms: list[str],
                     "seed": RAND_SEED,
                     "timestamp": datetime.now(timezone.utc).isoformat(),
                 }
+                if (track, arm, prompt_id) in KNOWN_MODEL_TIMEOUTS:
+                    print(f"  [{track}] {prompt_id} | r{run_index} | {arm} "
+                          f"-> SKIP (known model timeout, see honesty box)",
+                          flush=True)
+                    write_snapshot(path, {**rec_meta,
+                                          "skipped": "known_model_timeout"})
+                    continue
                 print(f"  [{track}] {prompt_id} | r{run_index} | {arm} "
                       f"(pos {arm_order_idx}/{len(ordered)})", flush=True)
                 try:
