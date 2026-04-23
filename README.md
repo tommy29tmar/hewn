@@ -22,12 +22,19 @@ Caveman already showed that compressed prompting helps. Hewn is tuned
 for a different bottleneck: long-session efficiency when Claude Code
 limits get tight.
 
+Simple rule: if you want the most aggressive compression on one giant
+prompt, use Caveman. If you spend hours inside one Claude Code session
+and the limits are the pain, use Hewn.
+
 No proxy. No telemetry. Default `claude` untouched.
 
-![Multi-turn coding session — Hewn vs Caveman vs Verbose Claude](assets/hero-benchmark.png)
+![Long Claude Code sessions — less burn, less drift, more room to work](assets/hero_benchmark.png)
 
-> Multi-turn coding session, Claude Opus 4.7, same model and prompts
-> across all four arms. Concept retention measured by transcript-aware
+> This is the proof asset: the multi-turn benchmark where Hewn is
+> strongest.
+>
+> 5-turn workflow, Claude Opus 4.7, same model and prompts across all
+> four arms. Concept retention measured by transcript-aware
 > LLM-as-judge.
 >
 > Full methodology, raw snapshots, and per-track evidence:
@@ -155,9 +162,11 @@ Details: [integrations/claude-code/README.md](integrations/claude-code/README.md
 
 ## Examples
 
+- [T4 multi-turn benchmark](benchmarks/report/REPORT.md#t4--multi-turn-drift--isolated-hook-value) —
+  the primary proof case for Hewn: long sessions under tighter limits.
 - [Long-context security review (Atlas API)](examples/atlas-xff-review.md) —
-  qualitative side-by-side example showing the kind of constrained
-  long-context task where reducing token burn matters.
+  historical qualitative boundary example; useful for prompt shape, but
+  not the main launch claim.
 
 ## What gets installed
 

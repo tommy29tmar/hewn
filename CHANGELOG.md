@@ -24,7 +24,7 @@ Added:
   rationale, final reference numbers with ±25% tolerance).
 - `benchmarks/codex-review-iterations/` — 8 rounds of cross-model plan
   review with Codex (preserved as launch transparency artefact).
-- `assets/hero-benchmark.png` — 3-KPI dashboard image (tokens /
+- `assets/hero_benchmark.png` — 3-KPI dashboard image (tokens /
   information density / time) for the README hero.
 - `examples/atlas-xff-review.md` — long-context security review
   example (Verbose / Caveman Ultra-style / Hewn side-by-side).

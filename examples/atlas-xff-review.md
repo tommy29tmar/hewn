@@ -5,6 +5,10 @@ iteration. Use it as a qualitative prompt-shape example for the kind of
 long-context, constrained task where token burn matters; use the
 current benchmark report for aggregate numbers.
 
+This is not Hewn's main launch proof. The current benchmark says
+single-shot long-context compression is where Caveman wins on tokens;
+Hewn's strongest public case is multi-turn Claude Code sessions.
+
 ## Historical result
 
 | Mode | Output tokens | Latency |
