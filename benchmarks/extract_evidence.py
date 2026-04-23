@@ -5,9 +5,9 @@ Picks representative cases:
 - 2 from T1a (Caveman parity headline)
 - 2 from T1b (extended with hewn_full)
 - 1 from T2 (vibe / non-tech)
-- 1 from T3 (long context — Hewn's strength)
+- 1 from T3 (long context — honesty case where Caveman wins single-shot)
 - 1 from T4 (multi-turn — sequence summary)
-- 1 from T5 (expansive — honesty: where Hewn loses)
+- 1 from T5 (expansive — neutral control, not a differentiator)
 
 Each evidence file contains: original prompt, every arm's full response
 (token count + median latency), so a reader can verify every claim.
@@ -166,7 +166,7 @@ def main() -> None:
                 "the login button doesnt work people are complaining help",
                 OUT / "05_T2_login_broken.md")
 
-    # T3 — long context
+    # T3 — long context (honesty: Caveman wins single-shot)
     handbook = (BENCH / "prompts" / "long_handbook.txt").read_text()
     raw = (BENCH / "prompts" / "long_en.txt").read_text()
     body = [p.strip() for p in raw.split("---PROMPT---") if p.strip()
@@ -184,7 +184,7 @@ def main() -> None:
     emit_multiturn(seq["id"], arms_t4, seq["turns"],
                    OUT / "07_T4_debug_prod_incident.md")
 
-    # T5 — expansive (honesty: Hewn loses)
+    # T5 — expansive (neutral control)
     raw = (BENCH / "prompts" / "expansive_en.txt").read_text()
     blocks = [p.strip() for p in raw.split("---PROMPT---") if p.strip()
               and not p.lstrip().startswith("#")]

@@ -8,15 +8,17 @@ First public release. Wrapper code unchanged from 0.9.0; this release
 ships the evidence and the launch presentation.
 
 Added:
-- `benchmarks/` — full benchmark suite (538 `claude -p` calls under
-  OAuth, no API billing) comparing Hewn vs Verbose Claude vs Caveman
-  Full vs Caveman Ultra-style across 7 tracks (T0 calibration, T1a/T1b
-  short Q&A, T2 vibe non-tech, T3 long-context, T4 multi-turn 5-turn
-  sequences, T5 expansive prose). Caveman SKILL.md vendored verbatim
-  with sha256 attribution.
+- `benchmarks/` — full benchmark suite (518 benchmark cells run via
+  `claude -p` / `hewn -p` under OAuth, no direct API billing)
+  comparing Hewn vs Verbose Claude vs Caveman Full vs Caveman
+  Ultra-style across 7 tracks (T0 calibration, T1a/T1b short Q&A, T2
+  vibe non-tech, T3 long-context, T4 multi-turn 5-turn sequences, T5
+  expansive prose). Caveman SKILL.md vendored verbatim with sha256
+  attribution.
 - `benchmarks/report/REPORT.md` — full per-prompt breakdown with
-  honesty box (where Hewn does NOT win: T5 expansive prose, T2 vibe
-  prompts, single-prompt long generation).
+  honesty box (single-shot long-context favors Caveman, T2 vibe
+  prompts trade quality for compression, T5 expansive prose is
+  effectively neutral).
 - `benchmarks/RUNBOOK.md` — exact reproduction steps (4 Hewn iterations
   v1→v4 documented with commit hashes, transcript-aware judge
   rationale, final reference numbers with ±25% tolerance).
@@ -38,7 +40,7 @@ Claude Opus 4.7, transcript-aware LLM-as-judge):
 | Verbose Claude             |  7,196 | 124.8s  | 100%              |
 | Caveman Full               |  4,226 |  83.0s  | 100%              |
 | Caveman Full + Ultra-dir.  |  3,901 |  79.3s  | 100%              |
-| Hewn                       |  2,837 |  65.2s  | 100%              |
+| Hewn                       |  2,838 |  65.2s  | 100%              |
 
 Hewn vs Verbose: −61% tokens, −48% latency, 4.6× higher information
 density (concepts kept per 100 tokens). Hewn vs Caveman Ultra-style:

@@ -619,17 +619,18 @@ turns). A local-Python classifier hook re-injects the chosen route
 every turn so the wrapper does not drift into verbose prose over long
 sessions.
 
-We benchmarked Hewn vs verbose Claude vs Caveman on 518 `claude -p`
-calls (no API billing — OAuth subscription) across 7 tracks spanning
-strict Caveman parity, short Q&A, vibe prompts, long-context reviews,
-multi-turn sessions and adversarial polished-prose tasks. Caveman's
-`SKILL.md` is vendored under `caveman_source/` at a pinned commit
-(sha256 recorded in metadata). Concept coverage and readability are
-measured by LLM-as-judge with hardcoded rubrics.
+We benchmarked Hewn vs verbose Claude vs Caveman across 518 benchmark
+cells run via `claude -p` / `hewn -p` (OAuth subscription, no direct
+API billing) spanning strict Caveman parity, short Q&A, vibe prompts,
+long-context reviews, multi-turn sessions and adversarial
+polished-prose tasks. Caveman's `SKILL.md` is vendored under
+`caveman_source/` at a pinned commit (sha256 recorded in metadata).
+Concept coverage and readability are measured by LLM-as-judge with
+hardcoded rubrics.
 
 **Where Hewn wins:**
 - **Short technical Q&A (T1b, 10 prompts × 3 runs)** — Hewn 149 mean
-  output tokens vs Caveman 166 vs baseline 348. Concept coverage
+  output tokens vs Caveman 167 vs baseline 349. Concept coverage
   within 4pp of Caveman (91% vs 95%). Hewn beats Caveman on tokens
   with comparable quality.
 - **Multi-turn (T4, 2 sequences × 5 turns × 2 runs)** — Hewn's hook
@@ -639,20 +640,22 @@ measured by LLM-as-judge with hardcoded rubrics.
   per-turn judge underrated Hewn because Hewn correctly avoids
   repeating already-established facts; a fair evaluator that scores
   the whole conversation closes the gap entirely.
-- **Long-context IR-shaped tasks (T3 `rate-limit-xff-review`)** —
-  39% concept coverage vs Caveman 5% and baseline 5%. Hewn
-  understands compact IR-style task framing; other arms reply "no task
-  specified" to the same prompt.
 
 **Where Hewn trades:**
-- **Non-tech vibe prompts (T2)** — Hewn 60 mean tokens vs Caveman
-  194 (~3x more compressed) at 63% concept coverage vs Caveman 78%.
+- **Single-shot long-context tasks (T3)** — Caveman Full is the token
+  leader here: 1224 mean output tokens vs Hewn's 2099, with both arms
+  at ~100% concept coverage on the current judge. One
+  `terse × body-size-rollout-plan` cell family reproducibly times out
+  at 600s and is reported as not measurable rather than forced into the
+  aggregates.
+- **Non-tech vibe prompts (T2)** — Hewn 58 mean tokens vs Caveman 198
+  (~3x more compressed) at 63% concept
+  coverage vs Caveman 78%.
   Hewn is agent-mode (ask before guessing); Caveman is tutorial-mode
   (enumerate options). Different use cases; design trade-off preserved.
-- **Adversarial polished prose (T5)** — all arms including Hewn
-  produce near-stub responses (~0% rubric concepts across the board);
-  every arm partially refuses the marketing/apology tasks without
-  more context. No Hewn advantage claimed.
+- **Expansive prose (T5)** — all arms, including Hewn, reach ~100%
+  rubric concept coverage at roughly ~500 output tokens. No arm has a
+  meaningful advantage; just use whatever you already have open.
 
 **Methodology guarantees:**
 - Model pinned to full ID `claude-opus-4-7`; every call asserts
@@ -710,7 +713,7 @@ Tracks:
 - **T2** — vibe / non-tech user prompts (5 × 3 × 6)
 - **T3** — long context (~5k handbook + task) (3 × 3 × 6)
 - **T4** — multi-turn 5-turn sequences (2 × 2 × 5)
-- **T5** — expansive prose (honesty: where Hewn should NOT win) (2 × 2 × 6)
+- **T5** — expansive prose (neutral control; not a differentiator) (2 × 2 × 6)
 
 ## Honesty box
 
@@ -722,6 +725,9 @@ Tracks:
   exposure**: `--system-prompt` replaces, `--append-system-prompt` adds.
   T0 calibrates the magnitude on `short_en`; T2-T5 reported as raw
   observational only (no per-prompt calibration).
+- One T3 cell family (`terse` × `body-size-rollout-plan`, all 3 runs)
+  reproducibly timed out at 600s with no model response and is marked
+  **not measurable** (`—`) instead of being coerced to zero.
 - `caveman_full_plus_ultra_directive` is OUR directive-based variant,
   NOT Caveman's official Ultra (which is invoked via `/caveman ultra`
   through the skill runtime, unavailable in `--system-prompt` mode).
@@ -748,7 +754,7 @@ def main() -> None:
         report_observational("T2", "Vibe / non-tech user prompts", 3),
         report_observational("T3", "Long context (~5k handbook prefix)", 3),
         report_T4(),
-        report_observational("T5", "Expansive prose (honesty: Hewn should NOT win)", 2),
+        report_observational("T5", "Expansive prose (neutral control; not a differentiator)", 2),
         report_quality(),
     ]
     REPORT.write_text("\n".join(pieces))

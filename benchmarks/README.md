@@ -41,7 +41,7 @@ What we deliberately **do not** claim or measure:
 | T2  | vibe_en (5) | 3 | 6 | 90 | Non-tech user prompts |
 | T3  | long_en (3, ~5k handbook) | 3 | 6 | 54 | Long context |
 | T4  | multiturn (2 seq × 5 turns) | 2 | 5 | 100 | Drift + isolated hook value |
-| T5  | expansive_en (2) | 2 | 6 | 24 | Honesty: where Hewn should NOT win |
+| T5  | expansive_en (2) | 2 | 6 | 24 | Neutral control: expansive prose should not differentiate |
 
 ## Arms
 

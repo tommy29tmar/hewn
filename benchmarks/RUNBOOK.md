@@ -67,7 +67,7 @@ benchmarks/
 │   ├── long_en.txt             # 3 prompts, paired at runtime with handbook
 │   ├── long_handbook.txt       # ~5k-token Atlas API handbook prefix
 │   ├── multiturn_en.json       # 2 sequences × 5 turns each
-│   └── expansive_en.txt        # 2 polished-prose prompts (honesty: Hewn loses)
+│   └── expansive_en.txt        # 2 polished-prose prompts (neutral control)
 ├── rubrics/
 │   ├── concepts.json           # per prompt_id, list of required concepts (judge)
 │   └── literals.json           # per prompt_id, required quoted strings (regex)
@@ -490,9 +490,9 @@ concept-coverage gap.
 **T2 (5 vibe prompts × 3 runs):**
 | Arm | Mean tokens | Concept coverage | Non-tech readability |
 |---|---:|---:|---:|
-| baseline | 232 | 47% | 78% |
-| caveman_full | 194 | 78% | 20% |
-| **hewn_full (v4)** | **60** | **63%** | 20% |
+| baseline | 233 | 47% | 78% |
+| caveman_full | 198 | 78% | 20% |
+| **hewn_full (v4)** | **58** | **63%** | 20% |
 
 Headline: Hewn ~3x more compressed than Caveman at −15pp concept
 coverage. Readability ties Caveman. Documented design trade-off
