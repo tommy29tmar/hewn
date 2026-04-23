@@ -1,7 +1,10 @@
 # Hewn
 
-[![CI](https://img.shields.io/github/actions/workflow/status/tommy29tmar/hewn/ci.yml?branch=main&label=CI&style=flat-square)](https://github.com/tommy29tmar/hewn/actions/workflows/ci.yml)
-[![License: MIT](https://img.shields.io/github/license/tommy29tmar/hewn?style=flat-square)](LICENSE)
+<!-- Static badges while the repo is private. When flipping public, swap to:
+     [![CI](https://img.shields.io/github/actions/workflow/status/tommy29tmar/hewn/ci.yml?branch=main&label=CI&style=flat-square)](https://github.com/tommy29tmar/hewn/actions/workflows/ci.yml)
+     [![License: MIT](https://img.shields.io/github/license/tommy29tmar/hewn?style=flat-square)](LICENSE) -->
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](LICENSE)
+[![Status: public preview](https://img.shields.io/badge/status-public%20preview-84cc16?style=flat-square)](#)
 [![Made for Claude Code](https://img.shields.io/badge/made%20for-Claude%20Code-84cc16?style=flat-square)](https://claude.com/claude-code)
 
 > **Make Claude Code talk less. Same answers, ~3× fewer tokens.**
